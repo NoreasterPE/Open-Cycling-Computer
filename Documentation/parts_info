@@ -1,0 +1,41 @@
+RPI
+Weight: 42g
+85.60mm x 56mm x 21mm
+120mA
+
+PiTFT
+Item Weight	82 g
+Product Dimensions	11.8 x 8.6 x 3.4 cm
+100mA (max brightness)
+
+LiPo charger:
+http://www.adafruit.com/products/1944
+    Dimensions: 22mm x 37mm x 2mm / 0.9" x 1.5" x 0.08"
+    Height w/ JST: 7mm / 0.3"
+    Weight: 4g
+or if 3.7V all the way:
+LiPo Charger
+http://www.adafruit.com/products/259
+
+    Dimensions: 33mm x 35mm x 7mm (1.3in x 1.4in x 0.3in)
+    Weight: 5.7g ( 0.2oz)
+
+
+LiPo battery
+http://www.adafruit.com/products/328
+    Weight: 52g
+    Size: 2" x 2.55" x 0.30" (51mm x 65mm x 8mm)
+    Output: 2500mAh at 3.7V nominal
+
+GPS
+http://www.adafruit.com/products/746
+
+    Weight (not including coin cell or holder): 8.5g
+    Dimensions (not including coin cell or holder): 25.5mm x 35mm x 6.5mm / 1.0" x 1.35" x 0.25"
+20mA
+
+Altimetr
+http://www.pololu.com/product/2470
+Size: 	25 × 12.5 × 3mm
+Weight: 	0.8 g
+6mA
