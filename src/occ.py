@@ -26,14 +26,14 @@ class open_cycle_computer():
 			for event in pygame.event.get():
 				if event.type in (QUIT, KEYDOWN, MOUSEBUTTONDOWN):
 					sys.exit()
-			t = pygame.time.get_ticks()/1000
+			t = 10
 			self.screen.fill(self.win_color)
 			self.render_top(t)
 			self.render_mid(50 + 10 * t)
 			self.render_bl(t)
 			self.render_br(t)
 			self.draw_frame()
-			self.clock.tick(100)
+			self.clock.tick(20)
 			pygame.display.flip()
 
 	def render_value(self, value, position, size):
