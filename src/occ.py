@@ -27,9 +27,10 @@ class open_cycle_computer():
 				if event.type in (QUIT, KEYDOWN, MOUSEBUTTONDOWN):
 					sys.exit()
 			t = 10
+			#Read values for rendering from a file here
 			self.screen.fill(self.win_color)
 			self.render_top(t)
-			self.render_mid(50 + 10 * t)
+			self.render_mid(t)
 			self.render_bl(t)
 			self.render_br(t)
 			self.draw_frame()
