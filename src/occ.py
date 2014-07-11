@@ -39,16 +39,26 @@ class open_cycle_computer():
 		self.screen.blit(ren, (position[0] - x, position[1] - y))
 
 	def render_top(self, value):
-		self.render_value(str(value), (120 - 20, 75), 18)
+		self.render_value(str(value), (120 - 25, 75), 20)
 
 	def render_mid(self, value):
-		self.render_value(str(value), (120, 195), 10)
+		self.render_value(str(value), (120, 195), 12)
+
+	def render_bl(self, value):
+		self.render_value(str(value), (60, 280), 10)
+
+	def render_br(self, value):
+		self.render_value(str(value), (180, 280), 10)
 
 	def draw_text(self):
 		for i in range(100):
 			self.render_top(i)
 		for i in range(1000):
 			self.render_mid(i)
+		for i in range(100):
+			self.render_bl(i)
+		for i in range(100):
+			self.render_br(i)
 
 	def draw_frame(self):
 		pygame.draw.line(self.screen, (220, 220, 220), (0, 150), (self.width, 150), 1)
