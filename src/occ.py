@@ -56,12 +56,14 @@ class open_cycle_computer():
 	def render_br(self, value):
 		self.render_value(str(value), (180, 280), 10)
 
+	def draw_speed_unit(self):
+		self.render_value("km/h", (210, 75), 3)
+
 	def draw_frame(self):
 		pygame.draw.line(self.screen, (220, 220, 220), (0, 150), (self.width, 150), 1)
 		pygame.draw.line(self.screen, (220, 220, 220), (0, 240), (240, 240), 1)
 		pygame.draw.line(self.screen, (220, 220, 220), (self.width/2, 240), (self.width/2, self.height), 1)
-
-		self.render_value("km/h", (210, 75), 3)
+		self.draw_speed_unit()
 
 
 
