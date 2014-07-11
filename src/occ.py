@@ -21,15 +21,21 @@ class open_cycle_computer():
 		self.win_color = 0, 0, 0
 		self.screen.fill(self.win_color)
 		self.draw_frame()
-		self.draw_text()
 
 	def main_loop(self):
 		while 1:
-			#for event in pygame.event.get():
-			#	if event.type == pygame.QUIT: 
-			if pygame.event.wait().type in (QUIT, KEYDOWN, MOUSEBUTTONDOWN):
-				sys.exit()
+			for event in pygame.event.get():
+				if event.type in (QUIT, KEYDOWN, MOUSEBUTTONDOWN):
+					sys.exit()
 			pygame.display.flip()
+			for i in range(100):
+				self.render_top(i)
+			for i in range(1000):
+				self.render_mid(i)
+			for i in range(100):
+				self.render_bl(i)
+			for i in range(100):
+				self.render_br(i)
 
 	def render_value(self, value, position, size):
 		font = pygame.font.Font(None, 12 * size)
@@ -49,16 +55,6 @@ class open_cycle_computer():
 
 	def render_br(self, value):
 		self.render_value(str(value), (180, 280), 10)
-
-	def draw_text(self):
-		for i in range(100):
-			self.render_top(i)
-		for i in range(1000):
-			self.render_mid(i)
-		for i in range(100):
-			self.render_bl(i)
-		for i in range(100):
-			self.render_br(i)
 
 	def draw_frame(self):
 		pygame.draw.line(self.screen, (220, 220, 220), (0, 150), (self.width, 150), 1)
