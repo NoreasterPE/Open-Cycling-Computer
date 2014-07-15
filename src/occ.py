@@ -17,11 +17,11 @@ class open_cycle_computer():
 		self.height = height
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		self.clock = pygame.time.Clock()
-		#self.fg_colour = 255, 255, 255
-		self.fg_colour = 5, 5, 5
+		self.fg_colour = 255, 255, 255
+		#self.fg_colour = 5, 5, 5
 		#self.win_color = 0, 0, 0
-		#self.bg_image = pygame.image.load("images/occ_dark.png").convert()
-		self.bg_image = pygame.image.load("images/occ_light.png").convert()
+		self.bg_image = pygame.image.load("images/occ_dark.png").convert()
+		#self.bg_image = pygame.image.load("images/occ_light.png").convert()
 
 	def main_loop(self):
 		while 1:
