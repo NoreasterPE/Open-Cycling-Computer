@@ -12,6 +12,12 @@ class open_cycle_computer():
 	'Class for PiTFT 2.8" 320x240 cycle computer'
 
 	def __init__(self, width = 240, height = 320):
+#		Framebuffer initialisation for PiTFT - not used during development undar xorg and not (yet) tested
+#		os.putenv('SDL_FBDEV', '/dev/fb1')
+#		driver = 'fbcon'
+#		if not os.getenv('SDL_VIDEODRIVER'):
+#			os.putenv('SDL_VIDEODRIVER', driver)
+
 		pygame.init()
 		self.width = width
 		self.height = height
