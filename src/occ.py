@@ -20,6 +20,7 @@ class open_cycle_computer():
 		self.fg_colour = 255, 255, 255
 		#self.bg_colour = 5, 5, 5
 		self.win_color = 0, 0, 0
+		self.bg_image = pygame.image.load("images/occ.png").convert()
 
 	def main_loop(self):
 		while 1:
@@ -28,12 +29,13 @@ class open_cycle_computer():
 					sys.exit()
 			t = 10
 			#Read values for rendering from a file here
-			self.screen.fill(self.win_color)
+			#self.screen.fill(self.win_color)
+			self.screen.blit(self.bg_image, [0, 0])
 			self.render_top(t)
 			self.render_mid(t)
 			self.render_bl(t)
 			self.render_br(t)
-			self.draw_frame()
+			#self.draw_frame()
 			self.clock.tick(20)
 			pygame.display.flip()
 
