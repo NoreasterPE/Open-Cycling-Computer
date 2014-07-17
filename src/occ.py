@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import os
 import pygame
 from pygame.locals import *
 from pygame.compat import unichr_, unicode_
@@ -11,17 +12,13 @@ import locale
 class open_cycle_computer():
 	'Class for PiTFT 2.8" 320x240 cycle computer'
 
-	def __init__(self, width = 240, height = 320):
-#		Framebuffer initialisation for PiTFT - not used during development undar xorg and not (yet) tested
-#		os.putenv('SDL_FBDEV', '/dev/fb1')
-#		driver = 'fbcon'
-#		if not os.getenv('SDL_VIDEODRIVER'):
-#			os.putenv('SDL_VIDEODRIVER', driver)
-
+	def __init__(self, width = 320, height = 240):
+		os.environ["SDL_FBDEV"] = "/dev/fb1"
 		pygame.init()
 		self.width = width
 		self.height = height
-		self.screen = pygame.display.set_mode((self.width, self.height))
+		#self.screen = pygame.display.set_mode((self.width, self.height))
+		self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
 		self.clock = pygame.time.Clock()
 		self.fg_colour = 255, 255, 255
 		#self.fg_colour = 5, 5, 5
