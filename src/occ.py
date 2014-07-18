@@ -12,7 +12,7 @@ import locale
 class open_cycle_computer():
 	'Class for PiTFT 2.8" 320x240 cycle computer'
 
-	def __init__(self, width = 320, height = 240):
+	def __init__(self, width = 240, height = 320):
 		os.environ["SDL_FBDEV"] = "/dev/fb1"
 		pygame.init()
 		self.width = width
