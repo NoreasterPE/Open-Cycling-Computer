@@ -20,6 +20,7 @@ class open_cycle_computer():
 		#self.screen = pygame.display.set_mode((self.width, self.height))
 		self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
 		self.clock = pygame.time.Clock()
+		pygame.mouse.set_visible(0)
 		self.fg_colour = 255, 255, 255
 		#self.fg_colour = 5, 5, 5
 		#self.win_color = 0, 0, 0
