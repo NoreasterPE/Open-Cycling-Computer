@@ -17,15 +17,11 @@ class open_cycle_computer():
 		pygame.init()
 		self.width = width
 		self.height = height
-		#self.screen = pygame.display.set_mode((self.width, self.height))
 		self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
 		self.clock = pygame.time.Clock()
 		pygame.mouse.set_visible(0)
 		self.fg_colour = 255, 255, 255
-		#self.fg_colour = 5, 5, 5
-		#self.win_color = 0, 0, 0
 		self.bg_image = pygame.image.load("images/occ_dark_green.png").convert()
-		#self.bg_image = pygame.image.load("images/occ_light.png").convert()
 
 	def main_loop(self):
 		while 1:
@@ -34,13 +30,12 @@ class open_cycle_computer():
 					sys.exit()
 			t = 10
 			#Read values for rendering from a file here
-			#self.screen.fill(self.win_color)
 			self.screen.blit(self.bg_image, [0, 0])
 			self.render_top(t)
 			self.render_mid(t)
 			self.render_bl(t)
 			self.render_br(t)
-			#self.draw_frame()
+			self.draw_speed_unit()
 			self.clock.tick(20)
 			pygame.display.flip()
 
@@ -65,14 +60,6 @@ class open_cycle_computer():
 
 	def draw_speed_unit(self):
 		self.render_value("km/h", (210, 75), 3)
-
-	def draw_frame(self):
-		pygame.draw.line(self.screen, (220, 220, 220), (0, 150), (self.width, 150), 1)
-		pygame.draw.line(self.screen, (220, 220, 220), (0, 240), (240, 240), 1)
-		pygame.draw.line(self.screen, (220, 220, 220), (self.width/2, 240), (self.width/2, self.height), 1)
-		self.draw_speed_unit()
-
-
 
 if __name__ == "__main__":
 	main_window = open_cycle_computer()
