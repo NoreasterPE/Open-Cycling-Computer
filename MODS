@@ -1,0 +1,57 @@
+1. /boot/commandline added for splashscreen:
+quiet
+
+modified for PiTFT in portrait mode:
+fbtft_device.rotate=0
+
+2. added file for splashscreen made executable using "sudo chmod a+x /etc/init.d/asplashscreen":
+/etc/init.d/asplashscreen
+
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          asplashscreen
+# Required-Start:
+# Required-Stop:
+# Should-Start:      
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Show custom splashscreen
+# Description:       Show custom splashscreen
+### END INIT INFO
+
+do_start () {
+
+    omxplayer /ect/occ/occ_splashscreen.mp4 &  
+    exit 0
+}
+
+case "$1" in
+  start|"")
+    do_start
+    ;;
+  restart|reload|force-reload)
+    echo "Error: argument '$1' not supported" >&2
+    exit 3
+    ;;
+  stop)
+    # No-op
+    ;;
+  status)
+    exit 0
+    ;;
+  *)
+    echo "Usage: asplashscreen [start|stop]" >&2
+    exit 3
+    ;;
+esac
+
+:
+
+3. added service:
+sudo insserv /etc/init.d/asplashscreen
+
+4. Added splashscreen video:
+/etc/occ/occ_splashscreen.mp4: ISO Media, MPEG v4 system, version 1
+
+  Duration: 00:00:20.13, start: 0.000000, bitrate: 209 kb/s
+    Stream #0:0(und): Video: h264 (High) (avc1 / 0x31637661), yuv420p, 240x320 [SAR 1:1 DAR 3:4], 11 kb/s, 19.98 fps, 19.98 tbr, 20k tbn, 39.96 tbc (default)
