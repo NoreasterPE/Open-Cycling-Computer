@@ -73,7 +73,11 @@ class open_cycle_computer():
 		self.screen.blit(ren, (position[0] - x, position[1] - y))
 
 	def render_top(self, value):
-		self.render_value(str(value), (120 - 25, 75), 20)
+		size = 20
+		#Shrink font size for 3 digits
+		if (int(value) > 99):
+			size = 13
+		self.render_value(str(value), (120 - 25, 75), size)
 
 	def render_top_mini(self, value):
 		self.render_value(str(value), (210, 115), 8)
