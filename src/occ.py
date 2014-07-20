@@ -4,6 +4,7 @@ import os
 import pygame
 from pygame.locals import *
 from pygame.compat import unichr_, unicode_
+import RPi.GPIO as GPIO
 import sys
 import locale
 
@@ -11,8 +12,25 @@ import locale
 
 class open_cycle_computer():
 	'Class for PiTFT 2.8" 320x240 cycle computer'
-
 	def __init__(self, width = 240, height = 320):
+		#TODO Move gpio handling to separate file 
+		def speed_sensor_prox (channel):
+			speed_prox_time_now = pygame.time.get_ticks()
+			if (self.speed_prox_time != 0):
+				self.speed_prox_time_delta = speed_prox_time_now - self.speed_prox_time 
+
+			self.speed_prox_time = speed_prox_time_now
+		
+		# GPIO setup
+		GPIO.setmode(GPIO.BCM)
+		# 18 will be speed GPIO for now
+		GPIO.setup(18, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+		# bouncetimeis set to 
+		# 120 km/h --> 33.333 m/s @ 20" wheel size (1.596 m) = 20.88 imp/s = 4.788 ms ~5 ms
+		GPIO.add_event_detect(18, GPIO.RISING, callback=speed_sensor_prox, bouncetime=5)
+		self.speed_prox_time = 0
+		self.speed_prox_time_delta = 0
+
 		os.environ["SDL_FBDEV"] = "/dev/fb1"
 		pygame.init()
 		pygame.mouse.set_visible(0)
@@ -29,9 +47,10 @@ class open_cycle_computer():
 				if event.type in (QUIT, KEYDOWN, MOUSEBUTTONDOWN):
 					sys.exit()
 			t = 10
-			#Read values for rendering from a file here
+			#TODO Read values for rendering from a file here
 			self.screen.blit(self.bg_image, [0, 0])
-			self.render_top(t)
+			#TODO Just show delta / 10 for now - not real speed
+			self.render_top(self.speed_prox_time_delta / 10)
 			self.render_mid(t)
 			self.render_bl(t)
 			self.render_br(t)
