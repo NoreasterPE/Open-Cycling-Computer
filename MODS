@@ -58,3 +58,8 @@ sudo insserv /etc/init.d/asplashscreen
 
 5. Install mplayer
 6. Add fbcp and make /etc/init.s/asplashscreen use it. fbcp: https://github.com/tasanakorn/rpi-fbcp
+7. Add service to runlevel 2 
+cd /etc/rc2.d
+sudo ln -s ../init.d/asplashscreen S01asplashscreen
+
+8. sudo apt-get remove wolfram-engine
