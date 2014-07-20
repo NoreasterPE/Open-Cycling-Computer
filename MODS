@@ -55,3 +55,6 @@ sudo insserv /etc/init.d/asplashscreen
 
   Duration: 00:00:20.13, start: 0.000000, bitrate: 209 kb/s
     Stream #0:0(und): Video: h264 (High) (avc1 / 0x31637661), yuv420p, 240x320 [SAR 1:1 DAR 3:4], 11 kb/s, 19.98 fps, 19.98 tbr, 20k tbn, 39.96 tbc (default)
+
+5. Install mplayer
+6. Add fbcp and make /etc/init.s/asplashscreen use it. fbcp: https://github.com/tasanakorn/rpi-fbcp
