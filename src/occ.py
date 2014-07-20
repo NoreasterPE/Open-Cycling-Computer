@@ -6,6 +6,7 @@ from pygame.locals import *
 from pygame.compat import unichr_, unicode_
 import RPi.GPIO as GPIO
 import sys
+import math
 import locale
 
 
@@ -56,6 +57,7 @@ class open_cycle_computer():
 			self.screen.blit(self.bg_image, [0, 0])
 			#TODO other units. m/s --> km/h for now 
 			self.render_top("%.0f" % (self.speed))
+			self.render_top_mini("%.0f" % (math.floor (10 * (self.speed - math.floor(self.speed)))))
 			self.render_mid(t)
 			self.render_bl(t)
 			self.render_br(t)
@@ -72,6 +74,9 @@ class open_cycle_computer():
 
 	def render_top(self, value):
 		self.render_value(str(value), (120 - 25, 75), 20)
+
+	def render_top_mini(self, value):
+		self.render_value(str(value), (210, 115), 8)
 
 	def render_mid(self, value):
 		self.render_value(str(value), (120, 195), 12)
