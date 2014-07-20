@@ -15,21 +15,26 @@ class open_cycle_computer():
 	def __init__(self, width = 240, height = 320):
 		#TODO Move gpio handling to separate file 
 		def speed_sensor_prox (channel):
-			speed_prox_time_now = pygame.time.get_ticks()
+			time_now = pygame.time.get_ticks()
 			if (self.speed_prox_time != 0):
-				self.speed_prox_time_delta = speed_prox_time_now - self.speed_prox_time 
+				#delta in seconds
+				dt = ( time_now - self.speed_prox_time ) / 1000.0
+				#speed in km/h for now
+				self.speed = 3.6 * self.wheel_circumference / dt
 
-			self.speed_prox_time = speed_prox_time_now
+			self.speed_prox_time = time_now
 		
 		# GPIO setup
 		GPIO.setmode(GPIO.BCM)
 		# 18 will be speed GPIO for now
 		GPIO.setup(18, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 		# bouncetimeis set to 
-		# 120 km/h --> 33.333 m/s @ 20" wheel size (1.596 m) = 20.88 imp/s = 4.788 ms ~5 ms
-		GPIO.add_event_detect(18, GPIO.RISING, callback=speed_sensor_prox, bouncetime=5)
+		# 120 km/h --> 33.333 m/s @ 20" wheel size (1.596 m) = 20.88 imp/s = 47.88 ms ~50 ms
+		GPIO.add_event_detect(18, GPIO.RISING, callback=speed_sensor_prox, bouncetime=50)
 		self.speed_prox_time = 0
-		self.speed_prox_time_delta = 0
+		self.speed = 0
+		#TODO tuples with wheel sizes
+		self.wheel_circumference = 2.105 #[m] 700x25c
 
 		os.environ["SDL_FBDEV"] = "/dev/fb1"
 		pygame.init()
@@ -49,8 +54,8 @@ class open_cycle_computer():
 			t = 10
 			#TODO Read values for rendering from a file here
 			self.screen.blit(self.bg_image, [0, 0])
-			#TODO Just show delta / 10 for now - not real speed
-			self.render_top(self.speed_prox_time_delta / 10)
+			#TODO other units. m/s --> km/h for now 
+			self.render_top("%.0f" % (self.speed))
 			self.render_mid(t)
 			self.render_bl(t)
 			self.render_br(t)
