@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<page_set name="Default">
+	<page name="Main" background="images/occ_dark_green.png">
+		<field name="top">
+			<function>speed</function>
+			<x>95</x>
+			<y>75</y>
+			<font_size>20</font_size>
+		</field>
+		<field name="top_auxiliary">
+			<function>speed_tenths</function>
+			<x>210</x>
+			<y>115</y>
+			<font_size>8</font_size>
+		</field>
+		<field name="top_units">
+			<function>units</function>
+			<x>210</x>
+			<y>75</y>
+			<font_size>3</font_size>
+		</field>
+		<field name="middle">
+			<function>heart_rate</function>
+			<x>120</x>
+			<y>195</y>
+			<font_size>12</font_size>
+		</field>
+		<field name="bottom_left">
+			<function>gradient</function>
+			<x>60</x>
+			<y>280</y>
+			<font_size>10</font_size>
+		</field>
+		<field name="bottom_right">
+			<function>cadence</function>
+			<x>100</x>
+			<y>280</y>
+			<font_size>10</font_size>
+		</field>
+	</page>
+</page_set>
+

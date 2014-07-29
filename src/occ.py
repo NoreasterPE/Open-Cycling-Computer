@@ -4,39 +4,28 @@ import os
 import pygame
 from pygame.locals import *
 from pygame.compat import unichr_, unicode_
-import RPi.GPIO as GPIO
+import locale
 import sys
 import math
-import locale
+import xml.etree.ElementTree as eltree
 
 
+class layout():
+	def __init__(self, xml_file):
+		layout_tree = eltree.parse(xml_file)
+		page_set = layout_tree.getroot()
+		for page in page_set:
+			print "page name : ", page.get('name')
+			print "background : ", page.get('background')
+			for field in page:
+				print "function : "  + field.find('function').text
+				print "x : "  + field.find('x').text
+				print "y : " + field.find('y').text
+				print "font size : " + field.find('font_size').text
 
 class open_cycle_computer():
 	'Class for PiTFT 2.8" 320x240 cycle computer'
 	def __init__(self, width = 240, height = 320):
-		#TODO Move gpio handling to separate file 
-		def speed_sensor_prox (channel):
-			time_now = pygame.time.get_ticks()
-			if (self.speed_prox_time != 0):
-				#delta in seconds
-				dt = ( time_now - self.speed_prox_time ) / 1000.0
-				#speed in km/h for now
-				self.speed = 3.6 * self.wheel_circumference / dt
-
-			self.speed_prox_time = time_now
-		
-		# GPIO setup
-		GPIO.setmode(GPIO.BCM)
-		# 18 will be speed GPIO for now
-		GPIO.setup(18, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
-		# bouncetimeis set to 
-		# 120 km/h --> 33.333 m/s @ 20" wheel size (1.596 m) = 20.88 imp/s = 47.88 ms ~50 ms
-		GPIO.add_event_detect(18, GPIO.RISING, callback=speed_sensor_prox, bouncetime=50)
-		self.speed_prox_time = 0
-		self.speed = 0
-		#TODO tuples with wheel sizes
-		self.wheel_circumference = 2.105 #[m] 700x25c
-
 		os.environ["SDL_FBDEV"] = "/dev/fb1"
 		pygame.init()
 		pygame.mouse.set_visible(0)
@@ -46,6 +35,7 @@ class open_cycle_computer():
 		self.clock = pygame.time.Clock()
 		self.fg_colour = 255, 255, 255
 		self.bg_image = pygame.image.load("images/occ_dark_green.png").convert()
+		l = layout("layouts/default.xml")
 
 	def main_loop(self):
 		while 1:
@@ -55,9 +45,8 @@ class open_cycle_computer():
 			t = 10
 			#TODO Read values for rendering from a file here
 			self.screen.blit(self.bg_image, [0, 0])
-			#TODO other units. m/s --> km/h for now 
-			self.render_top("%.0f" % (self.speed))
-			self.render_top_mini("%.0f" % (math.floor (10 * (self.speed - math.floor(self.speed)))))
+			self.render_top("%.0f" % (24.4))
+			self.render_top_mini("%.0f" % (math.floor (10 * (24.4 - math.floor(24.4)))))
 			self.render_mid(t)
 			self.render_bl(t)
 			self.render_br(t)
