@@ -12,9 +12,9 @@ import xml.etree.ElementTree as eltree
 
 class layout():
 	def __init__(self, xml_file):
+		self.layout_path = xml_file
+		self.load_layout()
 		self.fg_colour = 55, 255, 55
-		layout_tree = eltree.parse(xml_file)
-		self.page = layout_tree.getroot()
 		self.bg_image = pygame.image.load(self.page.get('background')).convert() 
 		# Uncomment below to print layout tree
 		#print "page name : ", self.page.get('name')
@@ -24,6 +24,9 @@ class layout():
 		#	print "x : "  + field.find('x').text
 		#	print "y : " + field.find('y').text
 		#	print "font size : " + field.find('font_size').text
+	def load_layout(self):
+		layout_tree = eltree.parse(self.layout_path)
+		self.page = layout_tree.getroot()
 
 	def render_background(self, screen):
 		screen.blit(self.bg_image, [0, 0])
@@ -54,7 +57,8 @@ class open_cycle_computer():
 		while 1:
 			for event in pygame.event.get():
 				if event.type in (QUIT, KEYDOWN, MOUSEBUTTONDOWN):
-					sys.exit()
+					self.layout.load_layout()
+					#sys.exit()
 			t = 10
 			speed = 24.45
 			self.layout.render_background(self.screen)

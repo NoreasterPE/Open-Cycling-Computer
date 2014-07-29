@@ -28,12 +28,12 @@
 		<function>gradient</function>
 		<x>60</x>
 		<y>280</y>
-		<font_size>10</font_size>
+		<font_size>8</font_size>
 	</field>
 	<field name="bottom_right">
 		<function>cadence</function>
 		<x>180</x>
 		<y>280</y>
-		<font_size>10</font_size>
+		<font_size>8</font_size>
 	</field>
 </page>
