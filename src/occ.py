@@ -14,7 +14,7 @@ class layout():
 	def __init__(self, xml_file):
 		self.layout_path = xml_file
 		self.load_layout()
-		self.fg_colour = 55, 255, 55
+		self.fg_colour = 255, 255, 255
 		self.bg_image = pygame.image.load(self.page.get('background')).convert() 
 		# Uncomment below to print layout tree
 		#print "page name : ", self.page.get('name')
@@ -48,7 +48,6 @@ class open_cycle_computer():
 		pygame.mouse.set_visible(0)
 		self.width = width
 		self.height = height
-		self.fg_colour = 255, 255, 255
 		self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
 		self.clock = pygame.time.Clock()
 		self.layout = layout("layouts/default.xml")
