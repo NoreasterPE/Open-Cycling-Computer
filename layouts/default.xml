@@ -20,15 +20,27 @@
 	</field>
 	<field name="middle">
 		<function>heart_rate</function>
-		<x>120</x>
+		<x>105</x>
 		<y>195</y>
 		<font_size>11</font_size>
 	</field>
+	<field name="middle_auxiliary">
+		<function>heart_rate_units</function>
+		<x>210</x>
+		<y>195</y>
+		<font_size>2</font_size>
+	</field>
 	<field name="bottom_left">
 		<function>gradient</function>
-		<x>60</x>
+		<x>50</x>
 		<y>280</y>
 		<font_size>7</font_size>
+	</field>
+	<field name="bottom_left_auxiliary">
+		<function>gradient_units</function>
+		<x>100</x>
+		<y>280</y>
+		<font_size>2</font_size>
 	</field>
 	<field name="bottom_right">
 		<function>cadence</function>
