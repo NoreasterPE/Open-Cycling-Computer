@@ -8,17 +8,19 @@ import locale
 import sys
 import math
 import xml.etree.ElementTree as eltree
+import struct
 
 
 class layout():
 	def __init__(self, xml_file):
 		self.layout_path = xml_file
 		self.load_layout()
-		self.fg_colour = 255, 255, 255
 		self.bg_image = pygame.image.load(self.page.get('background')).convert() 
 		self.font = self.page.get('font') 
 		if (self.font == ""):
 			self.font = None
+		self.fg_colour_rgb = self.page.get('fg_colour') 
+		self.fg_colour = struct.unpack('BBB',self.fg_colour_rgb.decode('hex'))
 
 		# Uncomment below to print layout tree
 		#print "page name : ", self.page.get('name')
