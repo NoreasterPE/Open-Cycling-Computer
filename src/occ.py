@@ -16,6 +16,10 @@ class layout():
 		self.load_layout()
 		self.fg_colour = 255, 255, 255
 		self.bg_image = pygame.image.load(self.page.get('background')).convert() 
+		self.font = self.page.get('font') 
+		if (self.font == ""):
+			self.font = None
+
 		# Uncomment below to print layout tree
 		#print "page name : ", self.page.get('name')
 		#print "background : ", self.page.get('background')
@@ -34,7 +38,7 @@ class layout():
 	def render(self, screen, function, value):
 		for field in self.page:
 			if (field.find('function').text == function):
-				font = pygame.font.Font(None, 12 * int(field.find('font_size').text))
+				font = pygame.font.Font(self.font, 12 * int(field.find('font_size').text))
 				ren = font.render(str(value), 1, self.fg_colour)
 				x = ren.get_rect().centerx
 				y = ren.get_rect().centery

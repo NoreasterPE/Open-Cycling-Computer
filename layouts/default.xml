@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<page name="Main" background="images/occ_dark_green.png">
+<page name="Main" background="images/occ_dark_green.png" font="">
 	<field name="top">
 		<function>speed</function>
 		<x>95</x>
