@@ -1,14 +1,14 @@
 #!/usr/bin/python
 
+from pygame.compat import unichr_, unicode_
+from pygame.locals import *
+import locale
+import math
 import os
 import pygame
-from pygame.locals import *
-from pygame.compat import unichr_, unicode_
-import locale
-import sys
-import math
-import xml.etree.ElementTree as eltree
 import struct
+import sys
+import xml.etree.ElementTree as eltree
 
 
 class layout():
