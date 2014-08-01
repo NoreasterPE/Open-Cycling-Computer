@@ -76,7 +76,7 @@ class open_cycle_computer():
 			self.layout.render(self.screen, "gradient_units", "%")
 			self.layout.render(self.screen, "cadence", 109)
 			self.layout.render(self.screen, "units", "km/h")
-			self.clock.tick(20)
+			self.clock.tick(5)
 			pygame.display.flip()
 
 if __name__ == "__main__":
