@@ -63,3 +63,5 @@ cd /etc/rc2.d
 sudo ln -s ../init.d/asplashscreen S01asplashscreen
 
 8. sudo apt-get remove wolfram-engine
+9. Install font Segment14 in ~/.fonts
+http://openfontlibrary.org/en/font/segment14#Segment14-Regular
