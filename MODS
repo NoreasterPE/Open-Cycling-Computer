@@ -65,3 +65,8 @@ sudo ln -s ../init.d/asplashscreen S01asplashscreen
 8. sudo apt-get remove wolfram-engine
 9. Install font Segment14 in ~/.fonts
 http://openfontlibrary.org/en/font/segment14#Segment14-Regular
+10. Calibrated touchscreen using 
+sudo TSLIB_FBDEVICE=/dev/fb1 TSLIB_TSDEVICE=/dev/input/touchscreen ts_calibrate
+
+and test using:
+sudo TSLIB_FBDEVICE=/dev/fb1 TSLIB_TSDEVICE=/dev/input/touchscreen ts_test
