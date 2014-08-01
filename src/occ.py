@@ -60,11 +60,16 @@ class open_cycle_computer():
 		self.layout = layout("layouts/lcd.xml")
 
 	def main_loop(self):
-		while 1:
-			for event in pygame.event.get():
-				if event.type in (QUIT, KEYDOWN, MOUSEBUTTONDOWN):
-					self.layout.load_layout()
-					#sys.exit()
+		running = 1
+		while running:
+			event = pygame.event.poll()
+			if event.type == pygame.QUIT:
+				running = 0
+			elif event.type == pygame.MOUSEBUTTONDOWN:
+				print "You pressed at (%d, %d)" % event.pos
+				self.layout.load_layout()
+			elif event.type == pygame.MOUSEBUTTONUP:
+				print "You released at (%d, %d)" % event.pos
 			t = 10
 			speed = 24.45
 			self.layout.render_background(self.screen)
@@ -80,5 +85,8 @@ class open_cycle_computer():
 			pygame.display.flip()
 
 if __name__ == "__main__":
+	os.putenv('SDL_MOUSEDRV' , 'TSLIB')
+	os.putenv('SDL_MOUSEDEV' , '/dev/input/touchscreen')
+
 	main_window = open_cycle_computer()
 	main_window.main_loop()
