@@ -37,10 +37,12 @@ class open_cycle_computer():
 					running = 0
 				elif event.type == pygame.MOUSEBUTTONDOWN:
 					pressed_t = time_now
+					pressed_pos = pygame.mouse.get_pos()
 					#print "DOWN:", pressed_t, released_t
 					pygame.event.clear(pygame.MOUSEBUTTONDOWN)
 				elif event.type == pygame.MOUSEBUTTONUP:
 					released_t = time_now
+					released_pos = pygame.mouse.get_pos()
 					#print "UP:", pressed_t, released_t
 					pygame.event.clear(pygame.MOUSEBUTTONUP)
 				elif event.type == pygame.MOUSEMOTION:
