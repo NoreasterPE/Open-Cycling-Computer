@@ -28,6 +28,7 @@ class layout():
 
 	def use_page(self, page_name = "Main"):
 		self.current_page = self.page_list[page_name]
+		self.current_page_name = self.current_page.get('name')
 		self.bg_image = pygame.image.load(self.current_page.get('background')).convert() 
 		self.font = self.current_page.get('font') 
 		if (self.font == ""):

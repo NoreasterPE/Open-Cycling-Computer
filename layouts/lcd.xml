@@ -50,12 +50,12 @@
 			<font_size>5</font_size>
 		</field>
 	</page>
-	<page name="Settings" background="images/occ_lcd.png" font="/home/pi/.fonts/Segment14.otf" fg_colour="000000" >
+	<page name="Settings" background="images/occ_lcd_settings.png" font="/home/pi/.fonts/Segment14.otf" fg_colour="000000" >
 		<field name="top">
 			<function>pair</function>
-			<x>95</x>
-			<y>75</y>
-			<font_size>11</font_size>
+			<x>120</x>
+			<y>50</y>
+			<font_size>4</font_size>
 		</field>
 	</page>
 </layout>

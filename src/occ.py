@@ -56,11 +56,12 @@ class open_cycle_computer():
 				if (released_t != 0):
 					if ((pressed_t - released_t) < LONG_CLICK):	
 						#print "SHORT CLICK", time_now, pressed_t
-						self.layout.load_layout()
+						self.layout.use_page("Settings")
 						pressed_t = 0
 						released_t = 0
 			self.layout.render_background(self.screen)
 			self.layout.render(self.screen, "speed", "%.0f" % self.rp.speed)
+			self.layout.render(self.screen, "pair", "Pair")
 			self.layout.render(self.screen, "speed_tenths", "%.0f" % self.rp.speed_tenths)
 			self.layout.render(self.screen, "heart_rate", self.rp.heart_rate)
 			self.layout.render(self.screen, "heart_rate_units", self.rp.heart_rate_units)
