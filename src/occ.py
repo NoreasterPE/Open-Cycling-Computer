@@ -61,15 +61,37 @@ class open_cycle_computer():
 
 	def main_loop(self):
 		running = 1
+		pressed_t = 0
+		released_t = 0
+		LONG_CLICK = 1000
 		while running:
-			event = pygame.event.poll()
-			if event.type == pygame.QUIT:
-				running = 0
-			elif event.type == pygame.MOUSEBUTTONDOWN:
-				print "You pressed at (%d, %d)" % event.pos
-				self.layout.load_layout()
-			elif event.type == pygame.MOUSEBUTTONUP:
-				print "You released at (%d, %d)" % event.pos
+			time_now = pygame.time.get_ticks()
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					running = 0
+				elif event.type == pygame.MOUSEBUTTONDOWN:
+					pressed_t = time_now
+					#print "DOWN:", pressed_t, released_t
+					pygame.event.clear(pygame.MOUSEBUTTONDOWN)
+				elif event.type == pygame.MOUSEBUTTONUP:
+					released_t = time_now
+					#print "UP:", pressed_t, released_t
+					pygame.event.clear(pygame.MOUSEBUTTONUP)
+				elif event.type == pygame.MOUSEMOTION:
+					pygame.event.clear(pygame.MOUSEMOTION)
+			#print "ticking...:", time_now, pressed_t, released_t
+			if (pressed_t != 0):
+				if (time_now - pressed_t) > LONG_CLICK:
+					#print "LONG CLICK", time_now, pressed_t
+					running = 0
+					pressed_t = 0
+					released_t = 0
+				if (released_t != 0):
+					if ((pressed_t - released_t) < LONG_CLICK):	
+						#print "SHORT CLICK", time_now, pressed_t
+						self.layout.load_layout()
+						pressed_t = 0
+						released_t = 0
 			t = 10
 			speed = 24.45
 			self.layout.render_background(self.screen)
@@ -81,8 +103,11 @@ class open_cycle_computer():
 			self.layout.render(self.screen, "gradient_units", "%")
 			self.layout.render(self.screen, "cadence", 109)
 			self.layout.render(self.screen, "units", "km/h")
-			self.clock.tick(5)
+			#print self.clock.get_fps()
+			#Setting FPS too low causes some click-directly-after-click problems
+			self.clock.tick(25)
 			pygame.display.flip()
+		pygame.quit()
 
 if __name__ == "__main__":
 	os.putenv('SDL_MOUSEDRV' , 'TSLIB')
