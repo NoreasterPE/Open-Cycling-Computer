@@ -1,51 +1,61 @@
 <?xml version="1.0"?>
-<page name="Main" background="images/occ_lcd.png" font="/home/pi/.fonts/Segment14.otf" fg_colour="000000" >
-	<field name="top">
-		<function>speed</function>
-		<x>95</x>
-		<y>75</y>
-		<font_size>11</font_size>
-	</field>
-	<field name="top_auxiliary">
-		<function>speed_tenths</function>
-		<x>210</x>
-		<y>115</y>
-		<font_size>5</font_size>
-	</field>
-	<field name="top_units">
-		<function>units</function>
-		<x>205</x>
-		<y>75</y>
-		<font_size>2</font_size>
-	</field>
-	<field name="middle">
-		<function>heart_rate</function>
-		<x>100</x>
-		<y>195</y>
-		<font_size>8</font_size>
-	</field>
-	<field name="middle_auxiliary">
-		<function>heart_rate_units</function>
-		<x>210</x>
-		<y>195</y>
-		<font_size>2</font_size>
-	</field>
-	<field name="bottom_left">
-		<function>gradient</function>
-		<x>50</x>
-		<y>280</y>
-		<font_size>5</font_size>
-	</field>
-	<field name="bottom_left_auxiliary">
-		<function>gradient_units</function>
-		<x>100</x>
-		<y>280</y>
-		<font_size>2</font_size>
-	</field>
-	<field name="bottom_right">
-		<function>cadence</function>
-		<x>180</x>
-		<y>280</y>
-		<font_size>5</font_size>
-	</field>
-</page>
+<layout>
+	<page name="Main" background="images/occ_lcd.png" font="/home/pi/.fonts/Segment14.otf" fg_colour="000000" >
+		<field name="top">
+			<function>speed</function>
+			<x>95</x>
+			<y>75</y>
+			<font_size>11</font_size>
+		</field>
+		<field name="top_auxiliary">
+			<function>speed_tenths</function>
+			<x>210</x>
+			<y>115</y>
+			<font_size>5</font_size>
+		</field>
+		<field name="top_units">
+			<function>units</function>
+			<x>205</x>
+			<y>75</y>
+			<font_size>2</font_size>
+		</field>
+		<field name="middle">
+			<function>heart_rate</function>
+			<x>100</x>
+			<y>195</y>
+			<font_size>8</font_size>
+		</field>
+		<field name="middle_auxiliary">
+			<function>heart_rate_units</function>
+			<x>210</x>
+			<y>195</y>
+			<font_size>2</font_size>
+		</field>
+		<field name="bottom_left">
+			<function>gradient</function>
+			<x>50</x>
+			<y>280</y>
+			<font_size>5</font_size>
+		</field>
+		<field name="bottom_left_auxiliary">
+			<function>gradient_units</function>
+			<x>100</x>
+			<y>280</y>
+			<font_size>2</font_size>
+		</field>
+		<field name="bottom_right">
+			<function>cadence</function>
+			<x>180</x>
+			<y>280</y>
+			<font_size>5</font_size>
+		</field>
+	</page>
+	<page name="Settings" background="images/occ_lcd.png" font="/home/pi/.fonts/Segment14.otf" fg_colour="000000" >
+		<field name="top">
+			<function>pair</function>
+			<x>95</x>
+			<y>75</y>
+			<font_size>11</font_size>
+		</field>
+	</page>
+</layout>
