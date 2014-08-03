@@ -59,7 +59,6 @@ class open_cycle_computer():
 						self.layout.load_layout()
 						pressed_t = 0
 						released_t = 0
-			t = 10
 			self.layout.render_background(self.screen)
 			self.layout.render(self.screen, "speed", "%.0f" % self.rp.speed)
 			self.layout.render(self.screen, "speed_tenths", "%.0f" % self.rp.speed_tenths)
