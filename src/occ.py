@@ -2,6 +2,7 @@
 
 from pygame.compat import unichr_, unicode_
 from pygame.locals import *
+from ride_parameters import ride_parameters
 import locale
 import math
 import os
@@ -60,6 +61,7 @@ class open_cycle_computer():
 		self.clock = pygame.time.Clock()
 		#self.layout = layout("layouts/default.xml")
 		self.layout = layout("layouts/lcd.xml")
+		self.rp = ride_parameters()
 
 	def main_loop(self):
 		running = 1
@@ -96,10 +98,9 @@ class open_cycle_computer():
 						pressed_t = 0
 						released_t = 0
 			t = 10
-			speed = 24.45
 			self.layout.render_background(self.screen)
-			self.layout.render(self.screen, "speed", "%.0f" % speed)
-			self.layout.render(self.screen, "speed_tenths", "%.0f" % (math.floor (10 * (speed - math.floor(speed)))))
+			self.layout.render(self.screen, "speed", "%.0f" % self.rp.speed)
+			self.layout.render(self.screen, "speed_tenths", "%.0f" % self.rp.speed_tenths)
 			self.layout.render(self.screen, "heart_rate", 165)
 			self.layout.render(self.screen, "heart_rate_units", "BPM")
 			self.layout.render(self.screen, "gradient", 10)
