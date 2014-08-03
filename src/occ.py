@@ -78,6 +78,7 @@ class open_cycle_computer():
 					#print "UP:", pressed_t, released_t
 					pygame.event.clear(pygame.MOUSEBUTTONUP)
 				elif event.type == pygame.MOUSEMOTION:
+					#print "MOTION... cleared"
 					pygame.event.clear(pygame.MOUSEMOTION)
 			#print "ticking...:", time_now, pressed_t, released_t
 			if (pressed_t != 0):
