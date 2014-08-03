@@ -15,6 +15,7 @@ class layout():
 	def __init__(self, xml_file):
 		self.layout_path = xml_file
 		self.load_layout()
+		self.name = None
 
 		# Uncomment below to print layout tree
 		#print "page name : ", self.page.get('name')
@@ -28,6 +29,7 @@ class layout():
 		layout_tree = eltree.parse(self.layout_path)
 		self.page = layout_tree.getroot()
 		self.bg_image = pygame.image.load(self.page.get('background')).convert() 
+		self.name = self.page.get('name') 
 		self.font = self.page.get('font') 
 		if (self.font == ""):
 			self.font = None
