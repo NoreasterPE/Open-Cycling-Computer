@@ -46,6 +46,7 @@
 		<field name="top">
 			<function>pair</function>
 			<text_center x="120" y="50">Pair</text_center>
+			<button x0="0" y0="0" x1="240" y1="80"></button>
 			<font_size>4</font_size>
 		</field>
 	</page>
