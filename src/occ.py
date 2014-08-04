@@ -22,7 +22,8 @@ class open_cycle_computer():
 		self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
 		self.clock = pygame.time.Clock()
 		#self.layout = layout("layouts/default.xml")
-		self.layout = layout("layouts/lcd.xml")
+		#self.layout = layout("layouts/lcd.xml")
+		self.layout = layout("layouts/lcd_white.xml")
 		self.rp = ride_parameters()
 
 	def main_loop(self):
