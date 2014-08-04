@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<layout>
+	<page name="Main" background="images/occ_lcd_white.png" font="/home/pi/.fonts/Segment14.otf" fg_colour="000000" >
+		<field name="top">
+			<function>speed</function>
+			<text_center x="95" y="75">0</text_center>
+			<font_size>11</font_size>
+		</field>
+		<field name="top_auxiliary">
+			<function>speed_tenths</function>
+			<text_center x="210" y="115">0</text_center>
+			<font_size>5</font_size>
+		</field>
+		<field name="top_units">
+			<function>units</function>
+			<text_center x="205" y="75">km/h</text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="middle">
+			<function>heart_rate</function>
+			<text_center x="100" y="195">0</text_center>
+			<font_size>8</font_size>
+		</field>
+		<field name="middle_auxiliary">
+			<function>heart_rate_units</function>
+			<text_center x="210" y="195">BPM</text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="bottom_left">
+			<function>gradient</function>
+			<text_center x="50" y="280">0</text_center>
+			<font_size>5</font_size>
+		</field>
+		<field name="bottom_left_auxiliary">
+			<function>gradient_units</function>
+			<text_center x="100" y="280">%</text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="bottom_right">
+			<function>cadence</function>
+			<text_center x="180" y="280">0</text_center>
+			<font_size>5</font_size>
+		</field>
+	</page>
+	<page name="Settings" background="images/occ_lcd_white_settings.png" font="/home/pi/.fonts/Segment14.otf" fg_colour="000000" >
+		<field name="top">
+			<function>pair</function>
+			<text_center x="120" y="50">Pair</text_center>
+			<font_size>4</font_size>
+		</field>
+	</page>
+</layout>
