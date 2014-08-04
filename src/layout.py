@@ -46,5 +46,7 @@ class layout():
 				ren = font.render(str(value), 1, self.fg_colour)
 				x = ren.get_rect().centerx
 				y = ren.get_rect().centery
-				screen.blit(ren, (int(field.find('x').text) - x, int(field.find('y').text) - y))
+				text_center_x = int(field.find('text_center').get('x'))
+				text_center_y = int(field.find('text_center').get('y'))
+				screen.blit(ren, (text_center_x - x, text_center_y - y))
 
