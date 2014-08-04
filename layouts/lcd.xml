@@ -3,6 +3,7 @@
 	<page name="Main" background="images/occ_lcd.png" font="/home/pi/.fonts/Segment14.otf" fg_colour="000000" >
 		<field name="top">
 			<function>speed</function>
+			<button x0="0" y0="0" w="240" h="80"></button>
 			<text_center x="95" y="75">0</text_center>
 			<font_size>11</font_size>
 		</field>
@@ -18,6 +19,7 @@
 		</field>
 		<field name="middle">
 			<function>heart_rate</function>
+			<button x0="0" y0="80" w="240" h="160"></button>
 			<text_center x="100" y="195">0</text_center>
 			<font_size>8</font_size>
 		</field>
@@ -43,10 +45,29 @@
 		</field>
 	</page>
 	<page name="Settings" background="images/occ_lcd_settings.png" font="/home/pi/.fonts/Segment14.otf" fg_colour="000000" >
-		<field name="top">
-			<function>pair</function>
-			<text_center x="120" y="50">Pair</text_center>
-			<font_size>4</font_size>
+		<field name="first">
+			<function>load_default_layout</function>
+			<button x0="0" y0="0" w="240" h="80"></button>
+			<text_center x="120" y="40">Default</text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="second">
+			<function>load_lcd_layout</function>
+			<button x0="0" y0="79" w="240" h="80"></button>
+			<text_center x="120" y="120">LCD</text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="third">
+			<function>load_white_lcd_layout</function>
+			<button x0="0" y0="159" w="240" h="80"></button>
+			<text_center x="120" y="200">White LCD</text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="fourth">
+			<function>quit</function>
+			<button x0="0" y0="239" w="240" h="80"></button>
+			<text_center x="120" y="280">Quit</text_center>
+			<font_size>2</font_size>
 		</field>
 	</page>
 </layout>

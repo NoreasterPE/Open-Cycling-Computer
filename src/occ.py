@@ -52,19 +52,37 @@ class open_cycle_computer():
 			#print "ticking...:", time_now, pressed_t, released_t
 			if (pressed_t != 0):
 				if (time_now - pressed_t) > LONG_CLICK:
-					#print "LONG CLICK", time_now, pressed_t
-					running = 0
+					print "LONG CLICK", time_now, pressed_t, pressed_pos
+					if self.layout.current_page.get('name') == 'Main':
+						self.layout.use_page("Settings")
+					else:
+						self.layout.use_page("Main")
 					pressed_t = 0
 					released_t = 0
 				if (released_t != 0):
 					if ((pressed_t - released_t) < LONG_CLICK):	
-						#print "SHORT CLICK", time_now, pressed_t
-						self.layout.use_page("Settings")
+						print "SHORT CLICK", time_now, pressed_t, pressed_pos
+						#for fl in self.layout.function_list:
+						#	print fl, self.layout.function_list[fl]
+						if self.layout.current_page.get('name') == 'Settings':
+							if self.layout.function_list['load_default_layout'].collidepoint(pressed_pos):
+								self.layout.load_layout("layouts/default.xml")
+							if self.layout.function_list['load_lcd_layout'].collidepoint(pressed_pos):
+								self.layout.load_layout("layouts/lcd.xml")
+							if self.layout.function_list['load_white_lcd_layout'].collidepoint(pressed_pos):
+								self.layout.load_layout("layouts/lcd_white.xml")
+							if self.layout.function_list['quit'].collidepoint(pressed_pos):
+								running = 0
 						pressed_t = 0
 						released_t = 0
 			self.layout.render_background(self.screen)
 			self.layout.render(self.screen, "speed", "%.0f" % self.rp.speed)
-			self.layout.render(self.screen, "pair")
+
+			self.layout.render(self.screen, "load_default_layout")
+			self.layout.render(self.screen, "load_lcd_layout")
+			self.layout.render(self.screen, "load_white_lcd_layout")
+			self.layout.render(self.screen, "quit")
+
 			self.layout.render(self.screen, "speed_tenths", "%.0f" % self.rp.speed_tenths)
 			self.layout.render(self.screen, "heart_rate", self.rp.heart_rate)
 			self.layout.render(self.screen, "heart_rate_units")

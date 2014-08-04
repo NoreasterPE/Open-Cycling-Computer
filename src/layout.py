@@ -5,8 +5,8 @@ import xml.etree.ElementTree as eltree
 class layout():
 	def __init__(self, xml_file):
 		self.page_list = {}
-		self.layout_path = xml_file
-		self.load_layout()
+		self.function_list = {}
+		self.load_layout(xml_file)
 		self.name = None
 
 		# Uncomment below to print layout tree
@@ -17,7 +17,8 @@ class layout():
 		#	print "x : "  + field.find('x').text
 		#	print "y : " + field.find('y').text
 		#	print "font size : " + field.find('font_size').text
-	def load_layout(self):
+	def load_layout(self, layout_path):
+		self.layout_path = layout_path 
 		layout_tree = eltree.parse(self.layout_path)
 		self.pages = layout_tree.getroot()
 		for page in self.pages:
@@ -35,6 +36,16 @@ class layout():
 			self.font = None
 		self.fg_colour_rgb = self.current_page.get('fg_colour') 
 		self.fg_colour = struct.unpack('BBB',self.fg_colour_rgb.decode('hex'))
+		for field in self.current_page:
+			#print "function name : ", field.find('function').text
+			b = field.find('button')
+			if (b is not None):
+				x0 = int(b.get('x0'))
+				y0 = int(b.get('y0'))
+				w = int(b.get('w'))
+				h = int(b.get('h'))
+				self.function_list[field.find('function').text] = pygame.Rect(x0, y0, w, h)
+				#print self.function_list['speed']
 
 	def render_background(self, screen):
 		screen.blit(self.bg_image, [0, 0])
