@@ -55,6 +55,10 @@
 			<function>pair</function>
 			<x>120</x>
 			<y>50</y>
+			<x0>0</x0>
+			<y0>0</y0>
+			<x1>120</x1>
+			<y1>80</y1>
 			<font_size>4</font_size>
 		</field>
 	</page>
