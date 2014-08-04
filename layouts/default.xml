@@ -12,7 +12,7 @@
 			<font_size>7</font_size>
 		</field>
 		<field name="top_units">
-			<function>units</function>
+			<function>speed_units</function>
 			<text_center x="205" y="75">km/h</text_center>
 			<font_size>2</font_size>
 		</field>

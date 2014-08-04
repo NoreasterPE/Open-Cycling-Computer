@@ -71,7 +71,7 @@ class open_cycle_computer():
 			self.layout.render(self.screen, "gradient", self.rp.gradient)
 			self.layout.render(self.screen, "gradient_units")
 			self.layout.render(self.screen, "cadence", self.rp.cadence)
-			self.layout.render(self.screen, "units")
+			self.layout.render(self.screen, "speed_units")
 			#print self.clock.get_fps()
 			#Setting FPS too low causes some click-directly-after-click problems
 			self.clock.tick(25)

@@ -9,4 +9,4 @@ class ride_parameters():
 		self.gradient = 10
 		self.gradient_units = "%"
 		self.cadence = 109
-		self.units = "km/h"
+		self.speed_units = "km/h"
