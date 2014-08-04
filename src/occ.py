@@ -64,14 +64,14 @@ class open_cycle_computer():
 						released_t = 0
 			self.layout.render_background(self.screen)
 			self.layout.render(self.screen, "speed", "%.0f" % self.rp.speed)
-			self.layout.render(self.screen, "pair", "Pair")
+			self.layout.render(self.screen, "pair")
 			self.layout.render(self.screen, "speed_tenths", "%.0f" % self.rp.speed_tenths)
 			self.layout.render(self.screen, "heart_rate", self.rp.heart_rate)
-			self.layout.render(self.screen, "heart_rate_units", self.rp.heart_rate_units)
+			self.layout.render(self.screen, "heart_rate_units")
 			self.layout.render(self.screen, "gradient", self.rp.gradient)
-			self.layout.render(self.screen, "gradient_units", self.rp.gradient_units)
+			self.layout.render(self.screen, "gradient_units")
 			self.layout.render(self.screen, "cadence", self.rp.cadence)
-			self.layout.render(self.screen, "units", self.rp.units)
+			self.layout.render(self.screen, "units")
 			#print self.clock.get_fps()
 			#Setting FPS too low causes some click-directly-after-click problems
 			self.clock.tick(25)

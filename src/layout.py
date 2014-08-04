@@ -39,10 +39,12 @@ class layout():
 	def render_background(self, screen):
 		screen.blit(self.bg_image, [0, 0])
 
-	def render(self, screen, function, value):
+	def render(self, screen, function, value = None):
 		for field in self.current_page:
 			if (field.find('function').text == function):
 				font = pygame.font.Font(self.font, 12 * int(field.find('font_size').text))
+				if value == None:
+					value = field.find('text_center').text
 				ren = font.render(str(value), 1, self.fg_colour)
 				x = ren.get_rect().centerx
 				y = ren.get_rect().centery
