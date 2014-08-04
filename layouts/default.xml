@@ -42,4 +42,11 @@
 			<font_size>7</font_size>
 		</field>
 	</page>
+	<page name="Settings" background="images/occ_dark_green_settings.png" font="" fg_colour="FFFFFF" >
+		<field name="top">
+			<function>pair</function>
+			<text_center x="120" y="50">Pair</text_center>
+			<font_size>4</font_size>
+		</field>
+	</page>
 </layout>
