@@ -42,8 +42,10 @@ class open_cycle_computer():
 					#print "DOWN:", pressed_t, released_t, "x:", pressed_pos[0], "y:", pressed_pos[1]
 					pygame.event.clear(pygame.MOUSEBUTTONDOWN)
 				elif event.type == pygame.MOUSEBUTTONUP:
-					released_t = time_now
-					released_pos = pygame.mouse.get_pos()
+					#That check prevents setting release_x after long click
+					if (pressed_t != 0):
+						released_t = time_now
+						released_pos = pygame.mouse.get_pos()
 					#print "UP:", pressed_t, released_t, "x:", pressed_pos[0], "y:", pressed_pos[1]
 					pygame.event.clear(pygame.MOUSEBUTTONUP)
 				elif event.type == pygame.MOUSEMOTION:
@@ -52,7 +54,7 @@ class open_cycle_computer():
 			#print "ticking...:", time_now, pressed_t, released_t
 			if (pressed_t != 0):
 				if (time_now - pressed_t) > LONG_CLICK:
-					print "LONG CLICK", time_now, pressed_t, pressed_pos
+					#print "LONG CLICK", time_now, pressed_t, pressed_pos
 					if self.layout.current_page.get('name') == 'Main':
 						self.layout.use_page("Settings")
 					else:
@@ -61,7 +63,7 @@ class open_cycle_computer():
 					released_t = 0
 				if (released_t != 0):
 					if ((pressed_t - released_t) < LONG_CLICK):	
-						print "SHORT CLICK", time_now, pressed_t, pressed_pos
+						#print "SHORT CLICK", time_now, pressed_t, pressed_pos
 						#for fl in self.layout.function_list:
 						#	print fl, self.layout.function_list[fl]
 						if self.layout.current_page.get('name') == 'Settings':
