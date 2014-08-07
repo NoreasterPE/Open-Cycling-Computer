@@ -3,7 +3,8 @@ import struct
 import xml.etree.ElementTree as eltree
 
 class layout():
-	def __init__(self, xml_file):
+	def __init__(self, screen, xml_file):
+		self.screen = screen
 		self.page_list = {}
 		self.function_list = {}
 		self.load_layout(xml_file)
@@ -49,6 +50,23 @@ class layout():
 
 	def render_background(self, screen):
 		screen.blit(self.bg_image, [0, 0])
+
+	def render_page(self, rp):
+		self.render_background(self.screen)
+		self.render(self.screen, "speed", "%.0f" % rp.speed)
+
+		self.render(self.screen, "load_default_layout")
+		self.render(self.screen, "load_lcd_layout")
+		self.render(self.screen, "load_white_lcd_layout")
+		self.render(self.screen, "quit")
+
+		self.render(self.screen, "speed_tenths", "%.0f" % rp.speed_tenths)
+		self.render(self.screen, "heart_rate", rp.heart_rate)
+		self.render(self.screen, "heart_rate_units")
+		self.render(self.screen, "gradient", rp.gradient)
+		self.render(self.screen, "gradient_units")
+		self.render(self.screen, "cadence", rp.cadence)
+		self.render(self.screen, "speed_units")
 
 	def render(self, screen, function, value = None):
 		for field in self.current_page:

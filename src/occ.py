@@ -16,14 +16,14 @@ class open_cycle_computer():
 	def __init__(self, width = 240, height = 320):
 		os.environ["SDL_FBDEV"] = "/dev/fb1"
 		pygame.init()
-		pygame.mouse.set_visible(0)
+		#pygame.mouse.set_visible(0)
 		self.width = width
 		self.height = height
-		self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
+		self.screen = pygame.display.set_mode((self.width, self.height))
 		self.clock = pygame.time.Clock()
-		#self.layout = layout("layouts/default.xml")
+		self.layout = layout(self.screen, "layouts/default.xml")
 		#self.layout = layout("layouts/lcd.xml")
-		self.layout = layout("layouts/lcd_white.xml")
+		#self.layout = layout("layouts/lcd_white.xml")
 		self.rp = ride_parameters()
 
 	def main_loop(self):
@@ -77,21 +77,8 @@ class open_cycle_computer():
 								running = 0
 						pressed_t = 0
 						released_t = 0
-			self.layout.render_background(self.screen)
-			self.layout.render(self.screen, "speed", "%.0f" % self.rp.speed)
 
-			self.layout.render(self.screen, "load_default_layout")
-			self.layout.render(self.screen, "load_lcd_layout")
-			self.layout.render(self.screen, "load_white_lcd_layout")
-			self.layout.render(self.screen, "quit")
-
-			self.layout.render(self.screen, "speed_tenths", "%.0f" % self.rp.speed_tenths)
-			self.layout.render(self.screen, "heart_rate", self.rp.heart_rate)
-			self.layout.render(self.screen, "heart_rate_units")
-			self.layout.render(self.screen, "gradient", self.rp.gradient)
-			self.layout.render(self.screen, "gradient_units")
-			self.layout.render(self.screen, "cadence", self.rp.cadence)
-			self.layout.render(self.screen, "speed_units")
+			self.layout.render_page(self.rp)
 			#print self.clock.get_fps()
 			#Setting FPS too low causes some click-directly-after-click problems
 			self.clock.tick(25)
