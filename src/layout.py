@@ -6,7 +6,8 @@ class layout():
 	def __init__(self, screen, xml_file):
 		self.screen = screen
 		self.page_list = {}
-		self.function_list = {}
+		self.function_rect_list = {}
+		self.current_function_list = {}
 		self.load_layout(xml_file)
 		self.name = None
 
@@ -39,14 +40,16 @@ class layout():
 		self.fg_colour = struct.unpack('BBB',self.fg_colour_rgb.decode('hex'))
 		for field in self.current_page:
 			#print "function name : ", field.find('function').text
+			self.current_function_list[self.current_page] = field.find('function').text
+			print self.current_function_list
 			b = field.find('button')
 			if (b is not None):
 				x0 = int(b.get('x0'))
 				y0 = int(b.get('y0'))
 				w = int(b.get('w'))
 				h = int(b.get('h'))
-				self.function_list[field.find('function').text] = pygame.Rect(x0, y0, w, h)
-				#print self.function_list['speed']
+				self.function_rect_list[field.find('function').text] = pygame.Rect(x0, y0, w, h)
+				#print self.function_rect_list['speed']
 
 	def render_background(self, screen):
 		screen.blit(self.bg_image, [0, 0])
