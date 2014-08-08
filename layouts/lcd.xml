@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <layout>
-	<page name="Main" background="images/occ_lcd.png" font="/home/pi/.fonts/Segment14.otf" fg_colour="000000" >
+	<page name="Main" background="images/occ_lcd.png" font="resources/fonts/Segment14.otf" fg_colour="000000" >
 		<field name="top">
 			<function>speed</function>
 			<button x0="0" y0="0" w="240" h="80"></button>
@@ -44,7 +44,7 @@
 			<font_size>5</font_size>
 		</field>
 	</page>
-	<page name="Settings" background="images/occ_lcd_settings.png" font="/home/pi/.fonts/Segment14.otf" fg_colour="000000" >
+	<page name="Settings" background="images/occ_lcd_settings.png" font="resources/fonts/Segment14.otf" fg_colour="000000" >
 		<field name="first">
 			<function>load_default_layout</function>
 			<button x0="0" y0="0" w="240" h="80"></button>
