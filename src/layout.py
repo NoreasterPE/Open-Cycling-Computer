@@ -7,7 +7,7 @@ class layout():
 		self.screen = screen
 		self.page_list = {}
 		self.function_rect_list = {}
-		self.current_function_list = {}
+		self.current_function_list = []
 		self.load_layout(xml_file)
 		self.name = None
 
@@ -30,6 +30,7 @@ class layout():
 		self.use_page()
 
 	def use_page(self, page_name = "Main"):
+		self.current_function_list = []
 		self.current_page = self.page_list[page_name]
 		self.current_page_name = self.current_page.get('name')
 		self.bg_image = pygame.image.load(self.current_page.get('background')).convert() 
@@ -40,8 +41,7 @@ class layout():
 		self.fg_colour = struct.unpack('BBB',self.fg_colour_rgb.decode('hex'))
 		for field in self.current_page:
 			#print "function name : ", field.find('function').text
-			self.current_function_list[self.current_page] = field.find('function').text
-			print self.current_function_list
+			self.current_function_list.append(field.find('function').text)
 			b = field.find('button')
 			if (b is not None):
 				x0 = int(b.get('x0'))
@@ -56,20 +56,17 @@ class layout():
 
 	def render_page(self, rp):
 		self.render_background(self.screen)
-		self.render(self.screen, "speed", "%.0f" % rp.speed)
+		for func in self.current_function_list:
+			try:
+				self.render(self.screen, func, rp.get_val(func))
+			except KeyError:
+				# if rp.get_val returns KeyError call render with empty value
+				self.render(self.screen, func)
 
 		self.render(self.screen, "load_default_layout")
 		self.render(self.screen, "load_lcd_layout")
 		self.render(self.screen, "load_white_lcd_layout")
 		self.render(self.screen, "quit")
-
-		self.render(self.screen, "speed_tenths", "%.0f" % rp.speed_tenths)
-		self.render(self.screen, "heart_rate", rp.heart_rate)
-		self.render(self.screen, "heart_rate_units")
-		self.render(self.screen, "gradient", rp.gradient)
-		self.render(self.screen, "gradient_units")
-		self.render(self.screen, "cadence", rp.cadence)
-		self.render(self.screen, "speed_units")
 
 	def render(self, screen, function, value = None):
 		for field in self.current_page:
