@@ -2,14 +2,13 @@ import math
 
 class ride_parameters():
         def __init__(self):
-                self.speed = 43.2
-		self.speed_tenths = math.floor (10 * (self.speed - math.floor(self.speed)))
-		self.heart_rate = 165
-		self.heart_rate_units = "BPM"
-		self.gradient = 10
-		self.gradient_units = "%"
-		self.cadence = 109
-		self.speed_units = "km/h"
+                self.set_speed()
+                self.set_speed_units()
+		self.set_heart_rate()
+		self.set_heart_rate_units()
+		self.set_gradient()
+		self.set_gradient_units()
+		self.set_cadence()
 
 	def get_val(self, func):
 		functions = {   "speed" : "%.0f" % self.speed,
@@ -22,3 +21,38 @@ class ride_parameters():
 				"cadence" : self.cadence,
 		}
 		return functions[func]
+
+	def set_val(self, func):
+		functions = {   "speed" : set_speed,
+				"speed_units" : set_speed_units,
+				"gradient" : set_gradient,
+				"gradient_units" : set_gradient_units,
+				"heart_rate" : set_heart_rate,
+				"heart_rate_units" : set_heart_rate_units,
+				"cadence" : set_cadence,
+		}
+
+	def set_speed(self):
+		#Read speed from GPS or sensors here
+                self.speed = 43.2
+		self.speed_tenths = math.floor (10 * (self.speed - math.floor(self.speed)))
+
+	def set_speed_units(self):
+                self.speed_units = "km/h"
+
+	def set_heart_rate(self):
+		#Read heart rate from sensors here
+		self.heart_rate = 165
+
+	def set_heart_rate_units(self):
+		self.heart_rate_units = "BPM"
+
+	def set_gradient(self):
+		self.gradient= 9
+
+	def set_gradient_units(self):
+		self.gradient_units= "%"
+
+	def set_cadence(self):
+		#Read cadence from sensors here
+		self.cadence = 98
