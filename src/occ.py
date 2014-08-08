@@ -16,13 +16,13 @@ class open_cycle_computer():
 	def __init__(self, width = 240, height = 320):
 		os.environ["SDL_FBDEV"] = "/dev/fb1"
 		pygame.init()
-		#pygame.mouse.set_visible(0)
+		pygame.mouse.set_visible(0)
 		self.width = width
 		self.height = height
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		self.clock = pygame.time.Clock()
-		self.layout = layout(self.screen, "layouts/default.xml")
-		#self.layout = layout("layouts/lcd.xml")
+		#self.layout = layout(self.screen, "layouts/default.xml")
+		self.layout = layout("layouts/lcd.xml")
 		#self.layout = layout("layouts/lcd_white.xml")
 		self.rp = ride_parameters()
 
