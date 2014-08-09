@@ -20,6 +20,7 @@ class layout():
 		#	print "y : " + field.find('y').text
 		#	print "font size : " + field.find('font_size').text
 	def load_layout(self, layout_path):
+		#print "load_layout", layout_path
 		self.layout_path = layout_path 
 		layout_tree = eltree.parse(self.layout_path)
 		self.pages = layout_tree.getroot()
@@ -30,6 +31,7 @@ class layout():
 		self.use_page()
 
 	def use_page(self, page_name = "Main"):
+		#print "use_page:", page_name
 		self.current_function_list = []
 		self.current_page = self.page_list[page_name]
 		self.current_page_name = self.current_page.get('name')
