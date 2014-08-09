@@ -78,3 +78,28 @@ class layout():
 				text_center_y = int(field.find('text_center').get('y'))
 				screen.blit(ren, (text_center_x - x, text_center_y - y))
 
+	def check_click(self, position, click):
+		functions = {	"load_default_layout" : self.load_default_layout,
+				"load_lcd_layout" : self.load_lcd_layout,
+				"load_white_lcd_layout" : self.load_lcd_white_layout,
+				"quit" : self.quit
+		}
+		for func in self.current_function_list:
+			try:
+				if self.function_rect_list[func].collidepoint(position):
+					functions[func]()
+					break
+			except KeyError:
+				break
+
+	def load_default_layout(self):
+		self.load_layout("layouts/default.xml")
+
+	def load_lcd_layout(self):
+		self.load_layout("layouts/lcd.xml")
+
+	def load_lcd_white_layout(self):
+		self.load_layout("layouts/lcd_white.xml")
+
+	def quit(self):
+		pygame.quit()

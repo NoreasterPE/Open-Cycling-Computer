@@ -64,17 +64,7 @@ class open_cycle_computer():
 				if (released_t != 0):
 					if ((pressed_t - released_t) < LONG_CLICK):	
 						#print "SHORT CLICK", time_now, pressed_t, pressed_pos
-						#for fl in self.layout.function_list:
-						#	print fl, self.layout.function_list[fl]
-						if self.layout.current_page.get('name') == 'Settings':
-							if self.layout.function_rect_list['load_default_layout'].collidepoint(pressed_pos):
-								self.layout.load_layout("layouts/default.xml")
-							if self.layout.function_rect_list['load_lcd_layout'].collidepoint(pressed_pos):
-								self.layout.load_layout("layouts/lcd.xml")
-							if self.layout.function_rect_list['load_white_lcd_layout'].collidepoint(pressed_pos):
-								self.layout.load_layout("layouts/lcd_white.xml")
-							if self.layout.function_rect_list['quit'].collidepoint(pressed_pos):
-								running = 0
+						self.layout.check_click(pressed_pos, 0)
 						pressed_t = 0
 						released_t = 0
 
