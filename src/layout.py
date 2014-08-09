@@ -65,11 +65,6 @@ class layout():
 				# if rp.get_val returns KeyError call render with empty value
 				self.render(self.screen, func)
 
-		self.render(self.screen, "load_default_layout")
-		self.render(self.screen, "load_lcd_layout")
-		self.render(self.screen, "load_white_lcd_layout")
-		self.render(self.screen, "quit")
-
 	def render(self, screen, function, value = None):
 		for field in self.current_page:
 			if (field.find('function').text == function):
