@@ -34,10 +34,10 @@ class open_cycle_computer():
 		self.layout_path =  self.config.find("layout_path").text
 
 	def write_config(self):
-		config_tree = eltree.Element("Config")
-		eltree.SubElement(config_tree, 'layout_path').text = self.layout.layout_path
+		config_tree = eltree.Element("config")
+		eltree.SubElement(config_tree, "layout_path").text = self.layout.layout_path
 		#FIXME error handling for file operation
-		eltree.ElementTree(config_tree).write("config/config.xml")
+		eltree.ElementTree(config_tree).write(self.config_path, encoding="UTF-8")
 
 	def main_loop(self):
 		pressed_t = 0
