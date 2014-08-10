@@ -25,6 +25,7 @@ class open_cycle_computer():
 		self.read_config()
 		self.layout = layout(self, self.layout_path)
 		self.rp = ride_parameters()
+		self.running = 1
 
 	def read_config(self):
 		#FIXME error handling and emergency config read if main is corrupted
@@ -39,15 +40,14 @@ class open_cycle_computer():
 		eltree.ElementTree(config_tree).write("config/config.xml")
 
 	def main_loop(self):
-		running = 1
 		pressed_t = 0
 		released_t = 0
 		LONG_CLICK = 1000
-		while running:
+		while self.running:
 			time_now = pygame.time.get_ticks()
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
-					running = 0
+					self.running = 0
 				elif event.type == pygame.MOUSEBUTTONDOWN:
 					pressed_t = time_now
 					pressed_pos = pygame.mouse.get_pos()
@@ -85,7 +85,6 @@ class open_cycle_computer():
 			#Setting FPS too low causes some click-directly-after-click problems
 			self.clock.tick(25)
 			pygame.display.flip()
-		pygame.quit()
 
 if __name__ == "__main__":
 	os.environ["SDL_FBDEV"] = "/dev/fb1"
@@ -94,3 +93,7 @@ if __name__ == "__main__":
 
 	main_window = open_cycle_computer()
 	main_window.main_loop()
+	#write current config for future use
+	main_window.write_config()
+	pygame.quit()
+	quit()

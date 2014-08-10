@@ -115,6 +115,4 @@ class layout():
 		self.load_layout("layouts/lcd_white.xml")
 
 	def quit(self):
-		self.occ.write_config()
-		pygame.quit()
-		quit()
+		self.occ.running = 0
