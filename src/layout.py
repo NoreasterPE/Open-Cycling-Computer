@@ -81,18 +81,28 @@ class layout():
 				screen.blit(ren, (text_center_x - x, text_center_y - y))
 
 	def check_click(self, position, click):
+		#print "check_click: ", position, click
+		long_click = {	"settings" : self.load_settings_page,
+		}
 		short_click = {	"load_default_layout" : self.load_default_layout,
 				"load_lcd_layout" : self.load_lcd_layout,
 				"load_white_lcd_layout" : self.load_lcd_white_layout,
 				"quit" : self.quit
 		}
-		for func in self.current_function_list:
-			try:
-				if self.function_rect_list[func].collidepoint(position):
-					short_click[func]()
+		if click == 1:
+			#Currently long click always shows settings page
+			self.use_page("Settings")
+		else:
+			for func in self.current_function_list:
+				try:
+					if self.function_rect_list[func].collidepoint(position):
+						short_click[func]()
+						break
+				except KeyError:
 					break
-			except KeyError:
-				break
+
+	def load_settings_page(self):
+		self.use_page("Settings")
 
 	def load_default_layout(self):
 		self.load_layout("layouts/default.xml")

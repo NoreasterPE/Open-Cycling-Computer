@@ -55,10 +55,7 @@ class open_cycle_computer():
 			if (pressed_t != 0):
 				if (time_now - pressed_t) > LONG_CLICK:
 					#print "LONG CLICK", time_now, pressed_t, pressed_pos
-					if self.layout.current_page.get('name') == 'Main':
-						self.layout.use_page("Settings")
-					else:
-						self.layout.use_page("Main")
+					self.layout.check_click(pressed_pos, 1)
 					pressed_t = 0
 					released_t = 0
 				if (released_t != 0):
