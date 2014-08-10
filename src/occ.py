@@ -15,7 +15,6 @@ import xml.etree.ElementTree as eltree
 class open_cycle_computer():
 	'Class for PiTFT 2.8" 320x240 cycle computer'
 	def __init__(self, width = 240, height = 320):
-		os.environ["SDL_FBDEV"] = "/dev/fb1"
 		self.config_path = "config/config.xml"
 		pygame.init()
 		pygame.mouse.set_visible(0)
@@ -87,6 +86,7 @@ class open_cycle_computer():
 		pygame.quit()
 
 if __name__ == "__main__":
+	os.environ["SDL_FBDEV"] = "/dev/fb1"
 	os.putenv('SDL_MOUSEDRV' , 'TSLIB')
 	os.putenv('SDL_MOUSEDEV' , '/dev/input/touchscreen')
 
