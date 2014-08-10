@@ -1,6 +1,6 @@
 import pygame
 import struct
-import xml.etree.ElementTree as eltree
+import lxml.etree as eltree
 
 class layout():
 	def __init__(self, occ, xml_file):

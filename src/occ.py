@@ -9,7 +9,7 @@ import math
 import os
 import pygame
 import sys
-import xml.etree.ElementTree as eltree
+import lxml.etree as eltree
 
 
 class open_cycle_computer():
@@ -37,7 +37,7 @@ class open_cycle_computer():
 		config_tree = eltree.Element("config")
 		eltree.SubElement(config_tree, "layout_path").text = self.layout.layout_path
 		#FIXME error handling for file operation
-		eltree.ElementTree(config_tree).write(self.config_path, encoding="UTF-8")
+		eltree.ElementTree(config_tree).write(self.config_path, encoding="UTF-8", pretty_print=True)
 
 	def main_loop(self):
 		pressed_t = 0

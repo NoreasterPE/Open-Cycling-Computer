@@ -1,1 +1,3 @@
-<Config><layout_path>layouts/lcd.xml</layout_path></Config>
+<config>
+  <layout_path>layouts/lcd.xml</layout_path>
+</config>
