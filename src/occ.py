@@ -9,22 +9,33 @@ import math
 import os
 import pygame
 import sys
+import xml.etree.ElementTree as eltree
 
 
 class open_cycle_computer():
 	'Class for PiTFT 2.8" 320x240 cycle computer'
 	def __init__(self, width = 240, height = 320):
 		os.environ["SDL_FBDEV"] = "/dev/fb1"
+		self.config_path = "config/config.xml"
 		pygame.init()
 		pygame.mouse.set_visible(0)
 		self.width = width
 		self.height = height
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		self.clock = pygame.time.Clock()
-		#self.layout = layout(self.screen, "layouts/default.xml")
-		#self.layout = layout(self.screen, "layouts/lcd.xml")
-		self.layout = layout(self.screen, "layouts/lcd_white.xml")
+		self.read_config()
+		self.layout = layout(self, self.layout_path)
 		self.rp = ride_parameters()
+
+	def read_config(self):
+		config_tree = eltree.parse(self.config_path)
+		self.config = config_tree.getroot()
+		self.layout_path =  self.config.find("layout_path").text
+
+	def write_config(self):
+		config_tree = eltree.Element("Config")
+		eltree.SubElement(config_tree, 'layout_path').text = self.layout.layout_path
+		eltree.ElementTree(config_tree).write("config/config.xml")
 
 	def main_loop(self):
 		running = 1

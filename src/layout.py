@@ -3,8 +3,9 @@ import struct
 import xml.etree.ElementTree as eltree
 
 class layout():
-	def __init__(self, screen, xml_file):
-		self.screen = screen
+	def __init__(self, occ, xml_file):
+		self.occ = occ
+		self.screen = occ.screen
 		self.page_list = {}
 		self.function_rect_list = {}
 		self.current_function_list = []
@@ -114,5 +115,6 @@ class layout():
 		self.load_layout("layouts/lcd_white.xml")
 
 	def quit(self):
+		self.occ.write_config()
 		pygame.quit()
 		quit()
