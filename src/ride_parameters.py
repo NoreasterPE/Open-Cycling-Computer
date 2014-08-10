@@ -1,3 +1,4 @@
+from time import strftime
 import math
 
 class ride_parameters():
@@ -10,6 +11,7 @@ class ride_parameters():
 		self.set_gradient()
 		self.set_gradient_units()
 		self.set_cadence()
+		self.set_rtc()
 
 	def get_val(self, func):
 		functions = {   "speed" : "%.0f" % self.speed,
@@ -20,6 +22,8 @@ class ride_parameters():
 				"gradient" : self.gradient,
 				"gradient_units" : self.gradient_units,
 				"cadence" : self.cadence,
+				"date" : self.date,
+				"time" : self.time,
 		}
 		return functions[func]
 
@@ -64,3 +68,9 @@ class ride_parameters():
 		#Read cadence from sensors here
 		self.cadence = 98
 		self.params_changed = 1
+
+	def set_rtc(self):
+		#FIXME proper localisation would be nice....
+		self.date = strftime("%d-%m-%Y")
+		self.time = strftime("%H:%M:%S")
+
