@@ -27,6 +27,7 @@ class open_cycle_computer():
 		self.rp = ride_parameters()
 
 	def read_config(self):
+		#FIXME error handling and emergency config read if main is corrupted
 		config_tree = eltree.parse(self.config_path)
 		self.config = config_tree.getroot()
 		self.layout_path =  self.config.find("layout_path").text
@@ -34,6 +35,7 @@ class open_cycle_computer():
 	def write_config(self):
 		config_tree = eltree.Element("Config")
 		eltree.SubElement(config_tree, 'layout_path').text = self.layout.layout_path
+		#FIXME error handling for file operation
 		eltree.ElementTree(config_tree).write("config/config.xml")
 
 	def main_loop(self):
