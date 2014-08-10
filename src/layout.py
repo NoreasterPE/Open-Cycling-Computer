@@ -103,3 +103,4 @@ class layout():
 
 	def quit(self):
 		pygame.quit()
+		quit()
