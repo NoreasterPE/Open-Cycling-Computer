@@ -1,8 +1,15 @@
+Valid function names for use in layout files:
+
 cadence
 gradient
 gradient_units
 heart_rate
 heart_rate_units
-speed
+speed	-	speed from sensor (currently mock value)
 speed_tenths
-units
+speed_units
+date	-	current date
+time	-	current time
+rtc	-	combined date + time 
+
+To add a new value it needs to be added to get_val fnction in rid_parameters.py with corresponding handler.
