@@ -81,7 +81,7 @@ class layout():
 				screen.blit(ren, (text_center_x - x, text_center_y - y))
 
 	def check_click(self, position, click):
-		functions = {	"load_default_layout" : self.load_default_layout,
+		short_click = {	"load_default_layout" : self.load_default_layout,
 				"load_lcd_layout" : self.load_lcd_layout,
 				"load_white_lcd_layout" : self.load_lcd_white_layout,
 				"quit" : self.quit
@@ -89,7 +89,7 @@ class layout():
 		for func in self.current_function_list:
 			try:
 				if self.function_rect_list[func].collidepoint(position):
-					functions[func]()
+					short_click[func]()
 					break
 			except KeyError:
 				break
