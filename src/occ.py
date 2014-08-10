@@ -18,6 +18,7 @@ class open_cycle_computer():
 		self.config_path = "config/config.xml"
 		pygame.init()
 		pygame.mouse.set_visible(0)
+		pygame.time.set_timer(USEREVENT + 1, 1000)
 		self.width = width
 		self.height = height
 		self.screen = pygame.display.set_mode((self.width, self.height))
@@ -48,6 +49,8 @@ class open_cycle_computer():
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					self.running = 0
+				elif event.type == USEREVENT + 1:
+					self.rp.set_val("rtc")
 				elif event.type == pygame.MOUSEBUTTONDOWN:
 					pressed_t = time_now
 					pressed_pos = pygame.mouse.get_pos()

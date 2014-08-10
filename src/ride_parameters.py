@@ -2,16 +2,25 @@ from time import strftime
 import math
 
 class ride_parameters():
-        def __init__(self):
+	def __init__(self):
 		self.params_changed = 0
-                self.set_speed()
-                self.set_speed_units()
-		self.set_heart_rate()
-		self.set_heart_rate_units()
-		self.set_gradient()
-		self.set_gradient_units()
-		self.set_cadence()
-		self.set_rtc()
+		self.speed = 0
+		self.speed_tenths = 0
+		self.speed_units = ""
+		self.heart_rate = 0
+		self.heart_rate_units = ""
+		self.gradient = 0
+		self.gradient_units = ""
+		self.cadence = 0
+		self.rtc = ""
+		self.set_val("speed")
+		self.set_val("speed_units")
+		self.set_val("heart_rate")
+		self.set_val("heart_rate_units")
+		self.set_val("gradient")
+		self.set_val("gradient_units")
+		self.set_val("cadence")
+		self.set_val("rtc")
 
 	def get_val(self, func):
 		functions = {   "speed" : "%.0f" % self.speed,
@@ -22,20 +31,25 @@ class ride_parameters():
 				"gradient" : self.gradient,
 				"gradient_units" : self.gradient_units,
 				"cadence" : self.cadence,
+				"rtc" : self.rtc,
 				"date" : self.date,
 				"time" : self.time,
 		}
 		return functions[func]
 
 	def set_val(self, func):
-		functions = {   "speed" : set_speed,
-				"speed_units" : set_speed_units,
-				"gradient" : set_gradient,
-				"gradient_units" : set_gradient_units,
-				"heart_rate" : set_heart_rate,
-				"heart_rate_units" : set_heart_rate_units,
-				"cadence" : set_cadence,
+		functions = {   "speed" : self.set_speed,
+				"speed_units" : self.set_speed_units,
+				"gradient" : self.set_gradient,
+				"gradient_units" : self.set_gradient_units,
+				"heart_rate" : self.set_heart_rate,
+				"heart_rate_units" : self.set_heart_rate_units,
+				"cadence" : self.set_cadence,
+				"rtc" : self.set_rtc,
+				"date" : self.set_rtc,
+				"time" : self.set_rtc,
 		}
+		functions[func]()
 
 	def set_speed(self):
 		#Read speed from GPS or sensors here
@@ -73,4 +87,6 @@ class ride_parameters():
 		#FIXME proper localisation would be nice....
 		self.date = strftime("%d-%m-%Y")
 		self.time = strftime("%H:%M:%S")
+		self.rtc = self.date + " " + self.time
+		self.params_changed = 1
 
