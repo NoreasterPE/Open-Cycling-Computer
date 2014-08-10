@@ -2,6 +2,7 @@ import math
 
 class ride_parameters():
         def __init__(self):
+		self.params_changed = 0
                 self.set_speed()
                 self.set_speed_units()
 		self.set_heart_rate()
@@ -36,23 +37,30 @@ class ride_parameters():
 		#Read speed from GPS or sensors here
                 self.speed = 43.2
 		self.speed_tenths = math.floor (10 * (self.speed - math.floor(self.speed)))
+		self.params_changed = 1
 
 	def set_speed_units(self):
                 self.speed_units = "km/h"
+		self.params_changed = 1
 
 	def set_heart_rate(self):
 		#Read heart rate from sensors here
 		self.heart_rate = 165
+		self.params_changed = 1
 
 	def set_heart_rate_units(self):
 		self.heart_rate_units = "BPM"
+		self.params_changed = 1
 
 	def set_gradient(self):
 		self.gradient= 9
+		self.params_changed = 1
 
 	def set_gradient_units(self):
 		self.gradient_units= "%"
+		self.params_changed = 1
 
 	def set_cadence(self):
 		#Read cadence from sensors here
 		self.cadence = 98
+		self.params_changed = 1

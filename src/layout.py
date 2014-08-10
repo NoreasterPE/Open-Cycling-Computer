@@ -10,6 +10,7 @@ class layout():
 		self.current_function_list = []
 		self.load_layout(xml_file)
 		self.name = None
+		self.layout_changed = 0
 
 		# Uncomment below to print layout tree
 		#print "page name : ", self.page.get('name')
@@ -32,6 +33,7 @@ class layout():
 
 	def use_page(self, page_name = "Main"):
 		#print "use_page:", page_name
+		self.layout_changed = 1
 		self.current_function_list = []
 		self.current_page = self.page_list[page_name]
 		self.current_page_name = self.current_page.get('name')
