@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-import sys
+#import sys
 import time
 import numpy
 
@@ -54,6 +54,7 @@ class bmp183():
 	}
 
 	def __init__(self):
+		self.real_temp = 0
 		self.SCLK = 8  # GPIO for Clock
 		self.MISO = 10  # GPIO for MISO
 		self.MOSI = 12  # GPIO for MOSI
@@ -218,11 +219,18 @@ class bmp183():
 		#read uncmpensated temperature u_temp
 		self.UT = numpy.int16(self.read_word(self.BMP183_REG['DATA']))
 		self.calculate_real_temperature()
-		print "Temperature: ", self.real_temp
+		#print "Temperature: ", self.real_temp
 
 if __name__ == "__main__":
 	bmp = bmp183()
-	bmp.measure_temperature()
+	try:
+		while (bmp.real_temp < 25.0):
+			bmp.measure_temperature()
+			print "Temperature: ", bmp.real_temp
+			time.sleep(0.3)
+	except KeyboardInterrupt:
+		print "Keyboard Interrupt"
+		
 	bmp.quit()
 	quit()
 
