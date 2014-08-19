@@ -58,7 +58,7 @@ class bmp183():
 		self.MOSI = 12  # GPIO for MOSI
 		self.CE   = 16  # GPIO for Chip Enable
 
-		self.delay = 1/50.0
+		self.delay = 1/1000.0
 
 		#start
 
@@ -69,11 +69,27 @@ class bmp183():
 		GPIO.setup(self.MOSI, GPIO.OUT)
 		GPIO.setup(self.MISO, GPIO.IN)
 
-		#start TEMP measurement
-		GPIO.output(self.CE, 0)
-		time.sleep(self.delay)
+		#Check comunication / read ID
+		ret = self.read_byte(self.BMP183_REG['ID'])
+		if ret != 0x55:
+			print ("BMP183 returned ", ret, " instead of 0x55")
+		#Read calibration data
+		AC1 = self.read_word(self.BMP183_REG['CAL_AC1'])
+		print AC1
+		AC2 = self.read_word(self.BMP183_REG['CAL_AC2'])
+		print AC2
+		AC3 = self.read_word(self.BMP183_REG['CAL_AC3'])
+		print AC3
+		AC4 = self.read_word(self.BMP183_REG['CAL_AC4'])
+		print AC4
+		AC5 = self.read_word(self.BMP183_REG['CAL_AC5'])
+		print AC5
+		AC6 = self.read_word(self.BMP183_REG['CAL_AC6'])
+		print AC6
 
-		self.read_byte(self.BMP183_REG['ID'])
+		#start TEMP measurement
+		self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['TEMP'], 8)
+		time.sleep(0.05)
 		#wait 4.5
 
 		#read uncmpensated temperature u_temp
@@ -89,7 +105,6 @@ class bmp183():
 		#calculate real pressure r_press
 
 		#end
-		GPIO.output(self.CE, 1)
 
 		GPIO.cleanup(self.SCLK)
 		GPIO.cleanup(self.CE)
@@ -101,20 +116,28 @@ class bmp183():
 		ret_value = self.spi_transfer(addr, 0, 1, 8)	
 		return ret_value
 
+	def read_word(self, addr):
+		print 'read_word'
+		ret_value = self.spi_transfer(addr, 0, 1, 16)	
+		return ret_value
+
 	def write_byte(self, addr, value, length):
 		print 'write_byte'
 		self.spi_transfer(addr, value, 0, length)	
 		
 	def spi_transfer(self, addr, value, rw, length):
 		print 'spi_transfer'
+		ret_value = 0
 		if (rw == 0):
 			spi_addr = addr & (~self.BMP183_CMD['READWRITE'])
-			print "addr: ", hex(addr), " spi_addr: ", hex(spi_addr), " value: ", hex(value)
+			print "addr: ", hex(addr), " spi_addr: ", hex(spi_addr), " value: ", hex(value), "length:", length
 		else:
 			spi_addr = addr | self.BMP183_CMD['READWRITE']
-			print "addr: ", hex(addr), " spi_addr: ", hex(spi_addr)
+			print "addr: ", hex(addr), " spi_addr: ", hex(spi_addr), "length:", length
 
 
+		GPIO.output(self.CE, 0)
+		time.sleep(self.delay)
 		#Send address
 		sys.stdout.write('Sending addr: ')
 		for i in range(8):
@@ -132,7 +155,6 @@ class bmp183():
 		print(' ')
 
 		if (rw == 1):
-			ret_value = 0
 			#Read data
 			sys.stdout.write('Received: ')
 			for i in range(length):
@@ -148,7 +170,6 @@ class bmp183():
 				time.sleep(self.delay)
 			print(' ')
 			print 'ret_value: ', hex(ret_value)
-			return ret_value
 
 		if (rw == 0):
 			print('Writing:')
@@ -166,6 +187,8 @@ class bmp183():
 				GPIO.output(self.SCLK, 1)
 				time.sleep(self.delay)
 			print(' ')
+		GPIO.output(self.CE, 1)
+		return ret_value
 
 if __name__ == "__main__":
 	bmp = bmp183()
