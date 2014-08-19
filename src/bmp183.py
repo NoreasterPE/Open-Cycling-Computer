@@ -35,8 +35,7 @@ class bmp183():
 	};
 
 	BMP183_CMD = {
-		'READ' : 0xFF,
-		'WRITE' : 0xEF,
+		'READWRITE' : 0x80,
 
 		# Read TEMPERATURE, Wait time 4.5 ms
 		'TEMP'  : 0x2E,
@@ -73,11 +72,8 @@ class bmp183():
 		#start TEMP measurement
 		GPIO.output(self.CE, 0)
 		time.sleep(self.delay)
-	#ID = 0xD0 1101 000
-		#self.(0x60, 0xB6)
+
 		self.read_byte(self.BMP183_REG['ID'])
-	#GPIO.input(channel)
-	#GPIO.output(channel, state)
 		#wait 4.5
 
 		#read uncmpensated temperature u_temp
@@ -100,22 +96,29 @@ class bmp183():
 		GPIO.cleanup(self.MOSI)
 		GPIO.cleanup(self.MISO)
 
-	def read_byte(self, addr, value = 0x00):
-		ret_value = self.spi_transfer(addr, value, 1, 8)	
+	def read_byte(self, addr):
+		print 'read_byte'
+		ret_value = self.spi_transfer(addr, 0, 1, 8)	
 		return ret_value
+
+	def write_byte(self, addr, value, length):
+		print 'write_byte'
+		self.spi_transfer(addr, value, 0, length)	
 		
 	def spi_transfer(self, addr, value, rw, length):
+		print 'spi_transfer'
 		if (rw == 0):
-			spi_value = value & self.BMP183_CMD['WRITE']
+			spi_addr = addr & (~self.BMP183_CMD['READWRITE'])
+			print "addr: ", hex(addr), " spi_addr: ", hex(spi_addr), " value: ", hex(value)
 		else:
-			spi_value = value & self.BMP183_CMD['READ']
-		print "spi_value: ", spi_value
+			spi_addr = addr | self.BMP183_CMD['READWRITE']
+			print "addr: ", hex(addr), " spi_addr: ", hex(spi_addr)
+
 
 		#Send address
-		print(hex(addr))
-		print('o ')
+		sys.stdout.write('Sending addr: ')
 		for i in range(8):
-			bit = addr & (0x01 << (length - 1 - i))
+			bit = spi_addr & (0x01 << (7 - i))
 			if (bit):
 				sys.stdout.write("1")
 				GPIO.output(self.MOSI, 1)
@@ -126,12 +129,12 @@ class bmp183():
 			time.sleep(self.delay)
 			GPIO.output(self.SCLK, 1)
 			time.sleep(self.delay)
+		print(' ')
 
 		if (rw == 1):
 			ret_value = 0
 			#Read data
-			print(' ')
-			print('r ')
+			sys.stdout.write('Received: ')
 			for i in range(length):
 				GPIO.output(self.SCLK, 0)
 				time.sleep(self.delay)
@@ -143,14 +146,13 @@ class bmp183():
 				GPIO.output(self.SCLK, 1)
 				ret_value = (ret_value << 1) | bit
 				time.sleep(self.delay)
-			print ("")
-			print hex(ret_value)
+			print(' ')
+			print 'ret_value: ', hex(ret_value)
 			return ret_value
 
 		if (rw == 0):
+			print('Writing:')
 			print(hex(value))
-			print(' ')
-			print('i ')
 			for i in range(length):
 				bit = value & (0x01 << (length - 1 - i))
 				if (bit):
@@ -163,6 +165,7 @@ class bmp183():
 				time.sleep(self.delay)
 				GPIO.output(self.SCLK, 1)
 				time.sleep(self.delay)
+			print(' ')
 
 if __name__ == "__main__":
 	bmp = bmp183()
