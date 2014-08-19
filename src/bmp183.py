@@ -59,7 +59,7 @@ class bmp183():
 		self.MOSI = 12  # GPIO for MOSI
 		self.CE   = 16  # GPIO for Chip Enable
 
-		self.delay = 1/1000.0
+		self.delay = 1/10000.0
 
 		#start
 
@@ -99,11 +99,29 @@ class bmp183():
 		print "MD", MD
 
 		#start TEMP measurement
-		#self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['TEMP'], 8)
-		#time.sleep(0.05)
+		self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['TEMP'], 8)
 		#wait 4.5
+		time.sleep(0.05)
+		stop = 0 
+		ret = 0x10
+		while (stop != 10) and (ret & 0x10):
+			ret = self.read_byte(0xF4)
+			print "Counting...:", stop, " ", ret
+			stop = stop + 1
+			time.sleep(0.005)
+			
+			
 
 		#read uncmpensated temperature u_temp
+		UT = numpy.int16(self.read_word(self.BMP183_REG['DATA']))
+		print "UT", UT
+
+		X1 = (UT - AC6) * AC5 / 2**15
+		X2 = MC * 2**11/(X1 + MD) 
+		B5 = X1 + X2
+		T = (B5 + 8)/2**4
+		T= T / 10.0
+		print T
 
 		#start pressure measurement
 
