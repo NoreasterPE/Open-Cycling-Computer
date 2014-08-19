@@ -60,15 +60,8 @@ class bmp183():
 		self.CE   = 16  # GPIO for Chip Enable
 
 		self.delay = 1/10000.0
-
+		self.set_up_gpio()
 		#start
-
-		# GPIO initialisation
-		GPIO.setmode(GPIO.BOARD)
-		GPIO.setup(self.SCLK, GPIO.OUT, initial=GPIO.HIGH)
-		GPIO.setup(self.CE, GPIO.OUT, initial=GPIO.HIGH)
-		GPIO.setup(self.MOSI, GPIO.OUT)
-		GPIO.setup(self.MISO, GPIO.IN)
 
 		#Check comunication / read ID
 		ret = self.read_byte(self.BMP183_REG['ID'])
@@ -89,7 +82,17 @@ class bmp183():
 		#calculate real pressure r_press
 
 		#end
+		self.cleanup_gpio()
 
+	def set_up_gpio(self):
+		# GPIO initialisation
+		GPIO.setmode(GPIO.BOARD)
+		GPIO.setup(self.SCLK, GPIO.OUT, initial=GPIO.HIGH)
+		GPIO.setup(self.CE, GPIO.OUT, initial=GPIO.HIGH)
+		GPIO.setup(self.MOSI, GPIO.OUT)
+		GPIO.setup(self.MISO, GPIO.IN)
+
+	def cleanup_gpio(self):
 		GPIO.cleanup(self.SCLK)
 		GPIO.cleanup(self.CE)
 		GPIO.cleanup(self.MOSI)
