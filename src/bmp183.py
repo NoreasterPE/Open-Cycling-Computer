@@ -69,7 +69,7 @@ class bmp183():
 			print ("BMP183 returned ", ret, " instead of 0x55")
 
 		self.read_calibration_data()
-		self.measure_temperature()
+		#self.measure_temperature()
 
 		#start pressure measurement
 
@@ -82,6 +82,8 @@ class bmp183():
 		#calculate real pressure r_press
 
 		#end
+
+	def quit(self):
 		self.cleanup_gpio()
 
 	def set_up_gpio(self):
@@ -220,5 +222,7 @@ class bmp183():
 
 if __name__ == "__main__":
 	bmp = bmp183()
+	bmp.measure_temperature()
+	bmp.quit()
 	quit()
 
