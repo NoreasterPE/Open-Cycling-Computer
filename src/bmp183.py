@@ -76,23 +76,7 @@ class bmp183():
 			print ("BMP183 returned ", ret, " instead of 0x55")
 
 		self.read_calibration_data()
-		#start TEMP measurement
-		self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['TEMP'], 8)
-		#wait 4.5 ms
-		time.sleep(0.0045)
-		stop = 0 
-		ret = 0x10
-		while (stop != 10) and (ret & 0x10):
-			ret = self.read_byte(0xF4)
-			#print "Counting...:", stop, " ", ret
-			stop = stop + 1
-			time.sleep(0.005)
-
-		#read uncmpensated temperature u_temp
-		self.UT = numpy.int16(self.read_word(self.BMP183_REG['DATA']))
-		#print "UT", UT
-		self.calculate_real_temperature()
-		print "Temperature: ", self.real_temp
+		self.measure_temperature()
 
 		#start pressure measurement
 
@@ -211,6 +195,25 @@ class bmp183():
 		self.B5 = self.X1 + self.X2
 		self.T = (self.B5 + 8)/2**4
 		self.real_temp = self.T / 10.0
+
+	def measure_temperature(self):
+		#start TEMP measurement
+		self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['TEMP'], 8)
+		#wait 4.5 ms
+		time.sleep(0.0045)
+		#wait for 0 on bit 5 in CTRL_MEAS, end of conversion (probably unnecesary wait)
+		stop = 0 
+		ret = 0x10
+		while (stop != 10) and (ret & 0x10):
+			ret = self.read_byte(self.BMP183_REG['CTRL_MEAS'])
+			#print "Counting...:", stop, " ", ret
+			stop = stop + 1
+			time.sleep(0.005)
+
+		#read uncmpensated temperature u_temp
+		self.UT = numpy.int16(self.read_word(self.BMP183_REG['DATA']))
+		self.calculate_real_temperature()
+		print "Temperature: ", self.real_temp
 
 if __name__ == "__main__":
 	bmp = bmp183()
