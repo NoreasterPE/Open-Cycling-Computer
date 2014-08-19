@@ -91,13 +91,7 @@ class bmp183():
 		#read uncmpensated temperature u_temp
 		self.UT = numpy.int16(self.read_word(self.BMP183_REG['DATA']))
 		#print "UT", UT
-
-		#Calculate real temperature
-		self.X1 = (self.UT - self.AC6) * self.AC5 / 2**15
-		self.X2 = self.MC * 2**11/(self.X1 + self.MD) 
-		self.B5 = self.X1 + self.X2
-		self.T = (self.B5 + 8)/2**4
-		self.real_temp = self.T / 10.0
+		self.calculate_real_temperature()
 		print "Temperature: ", self.real_temp
 
 		#start pressure measurement
@@ -209,6 +203,14 @@ class bmp183():
 		self.MB = numpy.int16(self.read_word(self.BMP183_REG['CAL_MB']))
 		self.MC = numpy.int16(self.read_word(self.BMP183_REG['CAL_MC']))
 		self.MD = numpy.int16(self.read_word(self.BMP183_REG['CAL_MD']))
+
+	def calculate_real_temperature(self):
+		#Calculate real temperature
+		self.X1 = (self.UT - self.AC6) * self.AC5 / 2**15
+		self.X2 = self.MC * 2**11/(self.X1 + self.MD) 
+		self.B5 = self.X1 + self.X2
+		self.T = (self.B5 + 8)/2**4
+		self.real_temp = self.T / 10.0
 
 if __name__ == "__main__":
 	bmp = bmp183()
