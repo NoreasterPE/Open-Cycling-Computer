@@ -86,42 +86,41 @@ class bmp183():
 		MB = numpy.int16(self.read_word(self.BMP183_REG['CAL_MB']))
 		MC = numpy.int16(self.read_word(self.BMP183_REG['CAL_MC']))
 		MD = numpy.int16(self.read_word(self.BMP183_REG['CAL_MD']))
-		print "AC1", AC1
-		print "AC2", AC2
-		print "AC3", AC3
-		print "AC4", AC4
-		print "AC5", AC5
-		print "AC6", AC6
-		print "B1", B1
-		print "B2", B2
-		print "MB", MB
-		print "MC", MC
-		print "MD", MD
+		#print "AC1", AC1
+		#print "AC2", AC2
+		#print "AC3", AC3
+		#print "AC4", AC4
+		#print "AC5", AC5
+		#print "AC6", AC6
+		#print "B1", B1
+		#print "B2", B2
+		#print "MB", MB
+		#print "MC", MC
+		#print "MD", MD
 
 		#start TEMP measurement
 		self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['TEMP'], 8)
-		#wait 4.5
-		time.sleep(0.05)
+		#wait 4.5 ms
+		time.sleep(0.0045)
 		stop = 0 
 		ret = 0x10
 		while (stop != 10) and (ret & 0x10):
 			ret = self.read_byte(0xF4)
-			print "Counting...:", stop, " ", ret
+			#print "Counting...:", stop, " ", ret
 			stop = stop + 1
 			time.sleep(0.005)
-			
-			
 
 		#read uncmpensated temperature u_temp
 		UT = numpy.int16(self.read_word(self.BMP183_REG['DATA']))
-		print "UT", UT
+		#print "UT", UT
 
+		#Calculate real temperature
 		X1 = (UT - AC6) * AC5 / 2**15
 		X2 = MC * 2**11/(X1 + MD) 
 		B5 = X1 + X2
 		T = (B5 + 8)/2**4
 		T= T / 10.0
-		print T
+		print "Temperature: ", T
 
 		#start pressure measurement
 
@@ -141,81 +140,81 @@ class bmp183():
 		GPIO.cleanup(self.MISO)
 
 	def read_byte(self, addr):
-		print 'read_byte'
+		#print 'read_byte'
 		ret_value = self.spi_transfer(addr, 0, 1, 8)	
 		return ret_value
 
 	def read_word(self, addr):
-		print 'read_word'
+		#print 'read_word'
 		ret_value = self.spi_transfer(addr, 0, 1, 16)	
 		return ret_value
 
 	def write_byte(self, addr, value, length):
-		print 'write_byte'
+		#print 'write_byte'
 		self.spi_transfer(addr, value, 0, length)	
 		
 	def spi_transfer(self, addr, value, rw, length):
-		print 'spi_transfer'
+		#print 'spi_transfer'
 		ret_value = 0
 		if (rw == 0):
 			spi_addr = addr & (~self.BMP183_CMD['READWRITE'])
-			print "addr: ", hex(addr), " spi_addr: ", hex(spi_addr), " value: ", hex(value), "length:", length
+			#print "addr: ", hex(addr), " spi_addr: ", hex(spi_addr), " value: ", hex(value), "length:", length
 		else:
 			spi_addr = addr | self.BMP183_CMD['READWRITE']
-			print "addr: ", hex(addr), " spi_addr: ", hex(spi_addr), "length:", length
+			#print "addr: ", hex(addr), " spi_addr: ", hex(spi_addr), "length:", length
 
 
 		GPIO.output(self.CE, 0)
 		time.sleep(self.delay)
 		#Send address
-		sys.stdout.write('Sending addr: ')
+		#sys.stdout.write('Sending addr: ')
 		for i in range(8):
 			bit = spi_addr & (0x01 << (7 - i))
 			if (bit):
-				sys.stdout.write("1")
+				#sys.stdout.write("1")
 				GPIO.output(self.MOSI, 1)
 			else:
-				sys.stdout.write("0")
+				#sys.stdout.write("0")
 				GPIO.output(self.MOSI, 0)
 			GPIO.output(self.SCLK, 0)
 			time.sleep(self.delay)
 			GPIO.output(self.SCLK, 1)
 			time.sleep(self.delay)
-		print(' ')
+		#print(' ')
 
 		if (rw == 1):
 			#Read data
-			sys.stdout.write('Received: ')
+			#sys.stdout.write('Received: ')
 			for i in range(length):
 				GPIO.output(self.SCLK, 0)
 				time.sleep(self.delay)
 				bit = GPIO.input(self.MISO)
-				if (bit):
-					sys.stdout.write("1")
-				else:
-					sys.stdout.write("0")
+				#if (bit):
+				#	sys.stdout.write("1")
+				#else:
+				#	sys.stdout.write("0")
 				GPIO.output(self.SCLK, 1)
 				ret_value = (ret_value << 1) | bit
 				time.sleep(self.delay)
-			print(' ')
-			print 'ret_value: ', hex(ret_value)
+			#print(' ')
+			#print 'ret_value: ', hex(ret_value)
 
 		if (rw == 0):
-			print('Writing:')
-			print(hex(value))
+			#print('Writing:')
+			#print(hex(value))
 			for i in range(length):
 				bit = value & (0x01 << (length - 1 - i))
 				if (bit):
-					sys.stdout.write("1")
+				#	sys.stdout.write("1")
 					GPIO.output(self.MOSI, 1)
 				else:
-					sys.stdout.write("0")
+				#	sys.stdout.write("0")
 					GPIO.output(self.MOSI, 0)
 				GPIO.output(self.SCLK, 0)
 				time.sleep(self.delay)
 				GPIO.output(self.SCLK, 1)
 				time.sleep(self.delay)
-			print(' ')
+			#print(' ')
 		GPIO.output(self.CE, 1)
 		return ret_value
 
