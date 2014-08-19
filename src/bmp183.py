@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import sys
 import time
+import numpy
 
 class bmp183():
 	'Class for BMP183 pressure and temperature sensor'
@@ -74,22 +75,32 @@ class bmp183():
 		if ret != 0x55:
 			print ("BMP183 returned ", ret, " instead of 0x55")
 		#Read calibration data
-		AC1 = self.read_word(self.BMP183_REG['CAL_AC1'])
-		print AC1
-		AC2 = self.read_word(self.BMP183_REG['CAL_AC2'])
-		print AC2
-		AC3 = self.read_word(self.BMP183_REG['CAL_AC3'])
-		print AC3
-		AC4 = self.read_word(self.BMP183_REG['CAL_AC4'])
-		print AC4
-		AC5 = self.read_word(self.BMP183_REG['CAL_AC5'])
-		print AC5
-		AC6 = self.read_word(self.BMP183_REG['CAL_AC6'])
-		print AC6
+		AC1 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC1']))
+		AC2 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC2']))
+		AC3 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC3']))
+		AC4 = numpy.uint16(self.read_word(self.BMP183_REG['CAL_AC4']))
+		AC5 = numpy.uint16(self.read_word(self.BMP183_REG['CAL_AC5']))
+		AC6 = numpy.uint16(self.read_word(self.BMP183_REG['CAL_AC6']))
+		B1 = numpy.int16(self.read_word(self.BMP183_REG['CAL_B1']))
+		B2 = numpy.int16(self.read_word(self.BMP183_REG['CAL_B2']))
+		MB = numpy.int16(self.read_word(self.BMP183_REG['CAL_MB']))
+		MC = numpy.int16(self.read_word(self.BMP183_REG['CAL_MC']))
+		MD = numpy.int16(self.read_word(self.BMP183_REG['CAL_MD']))
+		print "AC1", AC1
+		print "AC2", AC2
+		print "AC3", AC3
+		print "AC4", AC4
+		print "AC5", AC5
+		print "AC6", AC6
+		print "B1", B1
+		print "B2", B2
+		print "MB", MB
+		print "MC", MC
+		print "MD", MD
 
 		#start TEMP measurement
-		self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['TEMP'], 8)
-		time.sleep(0.05)
+		#self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['TEMP'], 8)
+		#time.sleep(0.05)
 		#wait 4.5
 
 		#read uncmpensated temperature u_temp
