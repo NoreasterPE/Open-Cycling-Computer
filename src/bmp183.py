@@ -74,30 +74,8 @@ class bmp183():
 		ret = self.read_byte(self.BMP183_REG['ID'])
 		if ret != 0x55:
 			print ("BMP183 returned ", ret, " instead of 0x55")
-		#Read calibration data
-		AC1 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC1']))
-		AC2 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC2']))
-		AC3 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC3']))
-		AC4 = numpy.uint16(self.read_word(self.BMP183_REG['CAL_AC4']))
-		AC5 = numpy.uint16(self.read_word(self.BMP183_REG['CAL_AC5']))
-		AC6 = numpy.uint16(self.read_word(self.BMP183_REG['CAL_AC6']))
-		B1 = numpy.int16(self.read_word(self.BMP183_REG['CAL_B1']))
-		B2 = numpy.int16(self.read_word(self.BMP183_REG['CAL_B2']))
-		MB = numpy.int16(self.read_word(self.BMP183_REG['CAL_MB']))
-		MC = numpy.int16(self.read_word(self.BMP183_REG['CAL_MC']))
-		MD = numpy.int16(self.read_word(self.BMP183_REG['CAL_MD']))
-		#print "AC1", AC1
-		#print "AC2", AC2
-		#print "AC3", AC3
-		#print "AC4", AC4
-		#print "AC5", AC5
-		#print "AC6", AC6
-		#print "B1", B1
-		#print "B2", B2
-		#print "MB", MB
-		#print "MC", MC
-		#print "MD", MD
 
+		self.read_calibration_data()
 		#start TEMP measurement
 		self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['TEMP'], 8)
 		#wait 4.5 ms
@@ -111,16 +89,16 @@ class bmp183():
 			time.sleep(0.005)
 
 		#read uncmpensated temperature u_temp
-		UT = numpy.int16(self.read_word(self.BMP183_REG['DATA']))
+		self.UT = numpy.int16(self.read_word(self.BMP183_REG['DATA']))
 		#print "UT", UT
 
 		#Calculate real temperature
-		X1 = (UT - AC6) * AC5 / 2**15
-		X2 = MC * 2**11/(X1 + MD) 
-		B5 = X1 + X2
-		T = (B5 + 8)/2**4
-		T= T / 10.0
-		print "Temperature: ", T
+		self.X1 = (self.UT - self.AC6) * self.AC5 / 2**15
+		self.X2 = self.MC * 2**11/(self.X1 + self.MD) 
+		self.B5 = self.X1 + self.X2
+		self.T = (self.B5 + 8)/2**4
+		self.real_temp = self.T / 10.0
+		print "Temperature: ", self.real_temp
 
 		#start pressure measurement
 
@@ -217,6 +195,20 @@ class bmp183():
 			#print(' ')
 		GPIO.output(self.CE, 1)
 		return ret_value
+
+	def read_calibration_data(self):
+		#Read calibration data
+		self.AC1 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC1']))
+		self.AC2 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC2']))
+		self.AC3 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC3']))
+		self.AC4 = numpy.uint16(self.read_word(self.BMP183_REG['CAL_AC4']))
+		self.AC5 = numpy.uint16(self.read_word(self.BMP183_REG['CAL_AC5']))
+		self.AC6 = numpy.uint16(self.read_word(self.BMP183_REG['CAL_AC6']))
+		self.B1 = numpy.int16(self.read_word(self.BMP183_REG['CAL_B1']))
+		self.B2 = numpy.int16(self.read_word(self.BMP183_REG['CAL_B2']))
+		self.MB = numpy.int16(self.read_word(self.BMP183_REG['CAL_MB']))
+		self.MC = numpy.int16(self.read_word(self.BMP183_REG['CAL_MC']))
+		self.MD = numpy.int16(self.read_word(self.BMP183_REG['CAL_MD']))
 
 if __name__ == "__main__":
 	bmp = bmp183()
