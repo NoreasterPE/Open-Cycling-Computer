@@ -73,7 +73,7 @@ class bmp183():
 		#self.measure_temperature()
 
 		#start pressure measurement
-		self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['PRESS'] | self.BMP183_CMD['OVERSAMPLE_0'], 8)
+		self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['PRESS'] | self.BMP183_CMD['OVERSAMPLE_2'], 8)
 		#wait 4.5 ms
 		time.sleep(0.0045)
 		#wait for 0 on bit 5 in CTRL_MEAS, end of conversion (probably unnecesary wait)
@@ -86,7 +86,7 @@ class bmp183():
 			time.sleep(0.005)
 
 		#read uncmpensated pressure u_press
-		self.UP = numpy.int32(self.read_word(self.BMP183_REG['DATA']))
+		self.UP = numpy.int32(self.read_word(self.BMP183_REG['DATA'], 2))
 #		print "UP ", self.UP
 		#debug
 #		self.UP = 23843
@@ -97,7 +97,7 @@ class bmp183():
 		self.measure_temperature()
 
 		#calculate real pressure r_press
-		self.OSS = 0
+		self.OSS = 2
 
 		#print "B5 ", self.B5
 		self.B6 = self.B5 - 4000
@@ -159,9 +159,9 @@ class bmp183():
 		ret_value = self.spi_transfer(addr, 0, 1, 8)	
 		return ret_value
 
-	def read_word(self, addr):
+	def read_word(self, addr, extra_bits = 0):
 		#print 'read_word'
-		ret_value = self.spi_transfer(addr, 0, 1, 16)	
+		ret_value = self.spi_transfer(addr, 0, 1, 16 + extra_bits)	
 		return ret_value
 
 	def write_byte(self, addr, value, length):
