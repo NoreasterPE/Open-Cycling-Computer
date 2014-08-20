@@ -73,14 +73,67 @@ class bmp183():
 		#self.measure_temperature()
 
 		#start pressure measurement
+		self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['PRESS'] | self.BMP183_CMD['OVERSAMPLE_0'], 8)
+		#wait 4.5 ms
+		time.sleep(0.0045)
+		#wait for 0 on bit 5 in CTRL_MEAS, end of conversion (probably unnecesary wait)
+		stop = 0 
+		ret = 0x10
+		while (stop != 10) and (ret & 0x10):
+			ret = self.read_byte(self.BMP183_REG['CTRL_MEAS'])
+			#print "Counting...:", stop, " ", ret
+			stop = stop + 1
+			time.sleep(0.005)
+
+		#read uncmpensated pressure u_press
+		self.UP = numpy.int32(self.read_word(self.BMP183_REG['DATA']))
+#		print "UP ", self.UP
+		#debug
+#		self.UP = 23843
 
 		#wait (depend on mode)
 
-		#read uncmpensated pressure u_press
-
 		#calculate real temperature r_temp
+		self.measure_temperature()
 
 		#calculate real pressure r_press
+		self.OSS = 0
+
+		#print "B5 ", self.B5
+		self.B6 = self.B5 - 4000
+	#	print "B6 ", self.B6
+		self.X1 = (self.B2 * (self.B6 * self.B6 / 2**12))/2**11
+	#	print "X1 ", self.X1
+		self.X2 = self.AC2 * self.B6 / 2**11
+	#	print "X2 ", self.X2
+		self.X3 = self.X1 + self.X2
+	#	print "X3 ", self.X3
+		self.B3 = (((self.AC1 * 4 + self.X3) << self.OSS) + 2 )/4
+	#	print "B3 ", self.B3
+		self.X1 = self.AC3 * self.B6 / 2**13
+	#	print "X1 ", self.X1
+		self.X2 = (self.B1 * (self.B6 * self.B6 / 2**12))/2**16
+	#	print "X2 ", self.X2
+		self.X3 = ((self.X1 + self.X2) + 2)/2**2
+	#	print "X3 ", self.X3
+		self.B4 = numpy.uint32(self.AC4 * (self.X3 + 32768)/2**15)
+	#	print "B4 ", self.B4
+		self.B7 = (numpy.uint32(self.UP) - self.B3)*(50000 >> self.OSS)
+	#	print "B7 ", self.B7
+		#if (self.B7 < 0x80000000):
+		p = numpy.uint32((self.B7 * 2)/self.B4)
+		#else:
+		#	p = numpy.uint64((self.B7 / self.B4) * 2)
+	#	print "p ", p
+		self.X1 = (p / 2**8)*( p / 2**8)
+	#	print "X1 ", self.X1
+		self.X1 = int(self.X1 * 3038) / 2**16
+	#	print "X1 ", self.X1
+		self.X2 = int(-7357 * p)/2**16
+	#	print "X2 ", self.X2
+		self.pressure = p + (self.X1 + self.X2 +3791)/2**4
+		print "pressure", self.pressure
+
 
 		#end
 
@@ -193,8 +246,22 @@ class bmp183():
 		self.MB = numpy.int16(self.read_word(self.BMP183_REG['CAL_MB']))
 		self.MC = numpy.int16(self.read_word(self.BMP183_REG['CAL_MC']))
 		self.MD = numpy.int16(self.read_word(self.BMP183_REG['CAL_MD']))
+#debug
+#		self.AC1 =  408
+#		self.AC2 = -72
+#		self.AC3 = -14383
+#		self.AC4 = 32741
+#		self.AC5 = 32757
+#		self.AC6 = 23153
+#		self.B1 = 6190
+#		self.B2 = 4 
+#		self.MB = -32767
+#		self.MC = -8711 
+#		self.MD = 2868 
 
 	def calculate_real_temperature(self):
+#debug
+#		self.UT =  27898
 		#Calculate real temperature
 		self.X1 = (self.UT - self.AC6) * self.AC5 / 2**15
 		self.X2 = self.MC * 2**11/(self.X1 + self.MD) 
@@ -217,19 +284,20 @@ class bmp183():
 			time.sleep(0.005)
 
 		#read uncmpensated temperature u_temp
-		self.UT = numpy.int16(self.read_word(self.BMP183_REG['DATA']))
+		self.UT = numpy.int32(self.read_word(self.BMP183_REG['DATA']))
+#		print "UT ", self.UT
 		self.calculate_real_temperature()
 		#print "Temperature: ", self.real_temp
 
 if __name__ == "__main__":
 	bmp = bmp183()
-	try:
-		while (bmp.real_temp < 25.0):
-			bmp.measure_temperature()
-			print "Temperature: ", bmp.real_temp
-			time.sleep(0.3)
-	except KeyboardInterrupt:
-		print "Keyboard Interrupt"
+#	try:
+#		while (bmp.real_temp < 25.0):
+#			bmp.measure_temperature()
+#			print "Temperature: ", bmp.real_temp
+#			time.sleep(0.3)
+#	except KeyboardInterrupt:
+#		print "Keyboard Interrupt"
 		
 	bmp.quit()
 	quit()
