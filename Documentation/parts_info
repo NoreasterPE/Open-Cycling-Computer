@@ -1,41 +1,44 @@
 RPI
-Weight: 42g
-85.60mm x 56mm x 21mm
-120mA
+Weight:		42 g
+Dimensions:	85.60 x 56 x 21 mm
+Current:	120 mA
 
 PiTFT
-Item Weight	82 g
-Product Dimensions	11.8 x 8.6 x 3.4 cm
-100mA (max brightness)
+Weight:		82 g
+Dimensions:	118 x 86 x 3.4 mm
+Current:	100 mA (max brightness)
 
-LiPo charger:
-http://www.adafruit.com/products/1944
-    Dimensions: 22mm x 37mm x 2mm / 0.9" x 1.5" x 0.08"
-    Height w/ JST: 7mm / 0.3"
-    Weight: 4g
-or if 3.7V all the way:
 LiPo Charger
 http://www.adafruit.com/products/259
-
-    Dimensions: 33mm x 35mm x 7mm (1.3in x 1.4in x 0.3in)
-    Weight: 5.7g ( 0.2oz)
-
+Weight:		5.7 g
+Dimensions:	33 x 35 x 7 mm
 
 LiPo battery
 http://www.adafruit.com/products/328
-    Weight: 52g
-    Size: 2" x 2.55" x 0.30" (51mm x 65mm x 8mm)
-    Output: 2500mAh at 3.7V nominal
+Weight:		52 g
+Dimensions:	51 x 65 x 8 mm
+Output:		2500 mAh at 3.7 V nominal
 
 GPS
 http://www.adafruit.com/products/746
+Weight:		8.5 g
+Dimensions:	25.5 x 35 x 6.5 mm
+Current:	20 mA
 
-    Weight (not including coin cell or holder): 8.5g
-    Dimensions (not including coin cell or holder): 25.5mm x 35mm x 6.5mm / 1.0" x 1.35" x 0.25"
-20mA
+Altimetr + Thermometer
+http://www.adafruit.com/products/1900
+Dimensions:	18 × 18 × 2 mm
+Weight: 	1 g
+Current:	1 mA
 
-Altimetr
-http://www.pololu.com/product/2470
-Size: 	25 × 12.5 × 3mm
-Weight: 	0.8 g
-6mA
+Buetooth Low Energy Module
+http://www.adafruit.com/products/1697
+Weight:		1.8 g
+Dimensions:	29 x 28 x 0.8 mm
+Current:	TBC
+
+Case:
+TBD
+
+Connectors:
+TBD
