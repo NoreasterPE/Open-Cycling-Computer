@@ -35,6 +35,8 @@ class ride_parameters():
 		self.set_val("altitude")
 		self.set_val("altitude_units")
 		self.set_val("altitude_at_home")
+		self.set_val("temperature")
+		self.set_val("temperature_units")
 
 	def get_val(self, func):
 		functions = {   "speed" : "%.0f" % self.speed,
@@ -54,6 +56,8 @@ class ride_parameters():
 				"altitude" : self.altitude,
 				"altitude_units" : self.altitude_units,
 				"altitude_at_home" : self.altitude_at_home
+				"temperature" : self.temperature,
+				"temperature_units" : self.temperature_units,
 		}
 		return functions[func]
 
@@ -68,12 +72,14 @@ class ride_parameters():
 				"rtc" : self.set_rtc,
 				"date" : self.set_rtc,
 				"time" : self.set_rtc,
-				"pressure" : self.set_pressure_and_altitude,
+				"pressure" : self.read_bmp183_sensor,
 				"pressure_units" : self.set_pressure_units,
 				"pressure_at_sea_level" : self.set_pressure_at_sea_level,
-				"altitude" : self.set_pressure_and_altitude,
+				"altitude" : self.read_bmp183_sensor,
 				"altitude_units" : self.set_altitude_units,
 				"altitude_at_home" : self.set_altitude_at_home
+				"temperature" : self.read_bmp183_sensor,
+				"temperature_units" : self.set_temperature_units,
 		}
 		functions[func]()
 
@@ -116,10 +122,11 @@ class ride_parameters():
 		self.rtc = self.date + " " + self.time
 		self.params_changed = 1
 
-	def set_pressure_and_altitude(self):
+	def read_bmp183_sensor(self):
 		#Read pressure from BMP183
 		self.bmp183_sensor.measure_pressure()
 		self.pressure = bmp183_sensor.pressure/100.0
+		self.temperature = bmp183_sensor.temperature
 		#Set current altitude based on current pressure and calculated pressure_at_sea_level, cut to meters
 		self.altitude = int(44330*(1 - pow((self.pressure/self.pressure_at_sea_level), (1/5.255))))
 		self.params_changed = 1
@@ -141,3 +148,8 @@ class ride_parameters():
  #FIXME Ask user for home altitude
 		self.altitude_at_home = 89.0
 		self.params_changed = 1
+
+	def set_temperature_units(self):
+		self.temperature_units = u"\u2103"
+		self.params_changed = 1
+
