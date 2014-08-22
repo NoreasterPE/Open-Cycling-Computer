@@ -12,6 +12,12 @@ class ride_parameters():
 		self.gradient = 0
 		self.gradient_units = ""
 		self.cadence = 0
+		self.altitude_at_home = 89.0
+		self.pressure = 1013.0
+		self.pressure_units = ""
+		self.pressure_at_sea_level = 1013.0
+		self.altitude = 0.0
+		self.altitude_units = ""
 		self.rtc = ""
 		self.set_val("speed")
 		self.set_val("speed_units")
@@ -21,6 +27,12 @@ class ride_parameters():
 		self.set_val("gradient_units")
 		self.set_val("cadence")
 		self.set_val("rtc")
+		self.set_val("pressure")
+		self.set_val("pressure_units")
+		self.set_val("pressure_at_sea_level")
+		self.set_val("altitude")
+		self.set_val("altitude_units")
+		self.set_val("altitude_at_home")
 
 	def get_val(self, func):
 		functions = {   "speed" : "%.0f" % self.speed,
@@ -34,6 +46,12 @@ class ride_parameters():
 				"rtc" : self.rtc,
 				"date" : self.date,
 				"time" : self.time,
+				"pressure" : "%.0f" % self.pressure,
+				"pressure_units" : self.pressure_units,
+				"pressure_at_sea_level" : self.pressure_at_sea_level,
+				"altitude" : self.altitude,
+				"altitude_units" : self.altitude_units,
+				"altitude_at_home" : self.altitude_at_home
 		}
 		return functions[func]
 
@@ -48,6 +66,12 @@ class ride_parameters():
 				"rtc" : self.set_rtc,
 				"date" : self.set_rtc,
 				"time" : self.set_rtc,
+				"pressure" : self.set_pressure_and_altitude,
+				"pressure_units" : self.set_pressure_units,
+				"pressure_at_sea_level" : self.set_pressure_at_sea_level,
+				"altitude" : self.set_pressure_and_altitude,
+				"altitude_units" : self.set_altitude_units,
+				"altitude_at_home" : self.set_altitude_at_home
 		}
 		functions[func]()
 
@@ -90,3 +114,28 @@ class ride_parameters():
 		self.rtc = self.date + " " + self.time
 		self.params_changed = 1
 
+	def set_pressure_and_altitude(self):
+		#Read pressure from BMP183
+# FIXME replace with real readings
+		self.pressure = 1013.0 #in hPa
+		#Set current altitude based on current pressure and calculated pressure_at_sea_level, cut to meters
+		self.altitude = int(44330*(1 - pow((self.pressure/self.pressure_at_sea_level), (1/5.255))))
+		self.params_changed = 1
+
+	def set_pressure_units(self):
+		self.pressure_units = "hPa"
+		self.params_changed = 1
+
+	def set_pressure_at_sea_level(self):
+		#Set pressure_at_sea_level based on given altitude
+		self.pressure_at_sea_level = round((self.pressure/pow((1 - self.altitude_at_home/44330), 5.255)), 0)
+		self.params_changed = 1
+
+	def set_altitude_units(self):
+		self.altitude_units = "m"
+		self.params_changed = 1
+
+	def set_altitude_at_home(self):
+ #FIXME Ask user for home altitude
+		self.altitude_at_home = 89.0
+		self.params_changed = 1

@@ -29,19 +29,24 @@
 			<font_size>2</font_size>
 		</field>
 		<field name="bottom_left">
-			<function>gradient</function>
-			<text_center x="50" y="280">0</text_center>
+			<function>altitude</function>
+			<text_center x="50" y="270">0</text_center>
 			<font_size>5</font_size>
 		</field>
 		<field name="bottom_left_auxiliary">
-			<function>gradient_units</function>
-			<text_center x="100" y="280">%</text_center>
+			<function>altitude_units</function>
+			<text_center x="105" y="305">m</text_center>
 			<font_size>2</font_size>
 		</field>
 		<field name="bottom_right">
-			<function>cadence</function>
-			<text_center x="180" y="280">0</text_center>
-			<font_size>5</font_size>
+			<function>pressure</function>
+			<text_center x="180" y="270">0</text_center>
+			<font_size>3</font_size>
+		</field>
+		<field name="bottom_right_auxiliary">
+			<function>pressure_units</function>
+			<text_center x="210" y="305">hPa</text_center>
+			<font_size>2</font_size>
 		</field>
 	</page>
 	<page name="Settings" background="images/occ_lcd_settings.png" font="resources/fonts/Segment14.otf" fg_colour="000000" >
