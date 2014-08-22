@@ -1,11 +1,12 @@
 import RPi.GPIO as GPIO
-#import sys
 import time
 import numpy
 
 class bmp183():
-	'Class for BMP183 pressure and temperature sensor'
+	'Class for Bosch BMP183 pressure and temperature sensor with SPI interface as sold by Adafruit'
+	# BMP183 registers
 	BMP183_REG = {
+		#@ Calibration data
 		'CAL_AC1' : 0xAA, 
 		'CAL_AC2' : 0xAC,
 		'CAL_AC3' : 0xAE,
@@ -17,224 +18,151 @@ class bmp183():
 		'CAL_MB': 0xBA,
 		'CAL_MC': 0xBC,
 		'CAL_MD': 0xBE,
-		#@ Chip ID. Value fixed to 0x55. Usefull to check if communication works
-		'ID' : 0xD0,
 
-		#@ VER FIXME Undocumented
+		#@ Chip ID. Value fixed to 0x55. Useful to check if communication works
+		'ID' : 0xD0,
+		'ID_VALUE' : 0x55,
+
+		#@ VER Undocumented
 		'VER' : 0xD1,
 
-		#@ SOFT_RESET
-		# Write only. If set to 0xB6, will perform the same sequence as power on reset.
+		#@ SOFT_RESET Write only. If set to 0xB6, will perform the same sequence as power on reset.
 		'SOFT_RESET' : 0xE0,
 
-		#@ CTRL_MEAS
-		# Controls the pressure measurement
+		#@ CTRL_MEAS Controls measurements
 		'CTRL_MEAS' : 0xF4,
 
 		#@ DATA
 		'DATA' : 0xF6,
 	};
 
+	# BMP183 commands
 	BMP183_CMD = {
+		#@ Chip ID Value fixed to 0x55. Useful to check if communication works
+		'ID_VALUE' : 0x55,
+
+		# SPI bit to indicate READ or WRITE operation
 		'READWRITE' : 0x80,
 
 		# Read TEMPERATURE, Wait time 4.5 ms
 		'TEMP'  : 0x2E,
+		'TEMP_WAIT' : 0.0045,
 
 		# Read PRESSURE
 		'PRESS' : 0x34, #001
 		
-		'OVERSAMPLE_0' : 0x00, # ultra low power, no oversampling, wait time 4.5 ms
-		'OVERSAMPLE_1' : 0x40, # standard, 2 internal samples, wait time 7.5 ms
-		'OVERSAMPLE_2' : 0x80, # high resolution, 4 internal samples, wait time 13.5 ms
-		'OVERSAMPLE_3' : 0xC0, # ultra high resolution, 8 internal samples, Wait time 25.5 ms
-		# Usage: (PRESS || OVERSAMPLE_2)
-
-		#FIXME How ADVANCED RESOLUTION mode works? Page 13 of data sheet,  wait time 76.5 ms
+		# PRESSURE reading modes
+		# Example usage: (PRESS || (OVERSAMPLE_2 << 4)
+		'OVERSAMPLE_0' : 0x0, # ultra low power, no oversampling, wait time 4.5 ms
+		'OVERSAMPLE_0_WAIT' : 0.0045,
+		'OVERSAMPLE_1' : 0x1, # standard, 2 internal samples, wait time 7.5 ms
+		'OVERSAMPLE_1_WAIT' : 0.0075,
+		'OVERSAMPLE_2' : 0x2, # high resolution, 4 internal samples, wait time 13.5 ms
+		'OVERSAMPLE_2_WAIT' : 0.0135,
+		'OVERSAMPLE_3' : 0x3, # ultra high resolution, 8 internal samples, Wait time 25.5 ms
+		'OVERSAMPLE_3_WAIT' : 0.0255,
 	}
 
 	def __init__(self):
-		self.real_temp = 0
-		self.SCLK = 8  # GPIO for Clock
-		self.MISO = 10  # GPIO for MISO
-		self.MOSI = 12  # GPIO for MOSI
-		self.CE   = 16  # GPIO for Chip Enable
+		self.temperature = 0
+		self.pressure = 0
+		# Setup Raspberry PINS, as numbered on BOARD
+		self.SCK = 8  # GPIO for SCK, other name SCLK
+		self.SDO = 10  # GPIO for SDO, other name MISO
+		self.SDI = 12  # GPIO for SDI, other name MOSI
+		self.CS = 16  # GPIO for CS, other name CE
 
-		self.delay = 1/10000.0
+		# SCK frequency 1 MHz
+		self.delay = 1/1000000.0
 		self.set_up_gpio()
-		#start
 
-		#Check comunication / read ID
+		# Check comunication / read ID
 		ret = self.read_byte(self.BMP183_REG['ID'])
-		if ret != 0x55:
-			print ("BMP183 returned ", ret, " instead of 0x55")
+		if ret != self.BMP183_CMD['ID_VALUE']:
+			print ("BMP183 returned ", ret, " instead of 0x55. Communication failed, expect problems.")
 
 		self.read_calibration_data()
-		#self.measure_temperature()
+		# Proceed with initial pressure/temperature measurement
+		self.measure_pressure()
 
-		#start pressure measurement
-		self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['PRESS'] | self.BMP183_CMD['OVERSAMPLE_3'], 8)
-		#wait 4.5 ms
-		time.sleep(0.1)
-		#wait for 0 on bit 5 in CTRL_MEAS, end of conversion (probably unnecesary wait)
-		stop = 0 
-		ret = 0x10
-		while (stop != 10) and (ret & 0x10):
-			ret = self.read_byte(self.BMP183_REG['CTRL_MEAS'])
-			#print "Counting...:", stop, " ", ret
-			stop = stop + 1
-			time.sleep(0.005)
-
-		#read uncmpensated pressure u_press
-		self.UP = numpy.int32(self.read_word(self.BMP183_REG['DATA'], 3))
-#		print "UP ", self.UP
-		#debug
-#		self.UP = 23843
-
-		#wait (depend on mode)
-
-		#calculate real temperature r_temp
-		self.measure_temperature()
-
-		#calculate real pressure r_press
-		self.OSS = 3
-
-		#print "B5 ", self.B5
-		self.B6 = self.B5 - 4000
-	#	print "B6 ", self.B6
-		self.X1 = (self.B2 * (self.B6 * self.B6 / 2**12))/2**11
-	#	print "X1 ", self.X1
-		self.X2 = self.AC2 * self.B6 / 2**11
-	#	print "X2 ", self.X2
-		self.X3 = self.X1 + self.X2
-	#	print "X3 ", self.X3
-		self.B3 = (((self.AC1 * 4 + self.X3) << self.OSS) + 2 )/4
-	#	print "B3 ", self.B3
-		self.X1 = self.AC3 * self.B6 / 2**13
-	#	print "X1 ", self.X1
-		self.X2 = (self.B1 * (self.B6 * self.B6 / 2**12))/2**16
-	#	print "X2 ", self.X2
-		self.X3 = ((self.X1 + self.X2) + 2)/2**2
-	#	print "X3 ", self.X3
-		self.B4 = numpy.uint32(self.AC4 * (self.X3 + 32768)/2**15)
-	#	print "B4 ", self.B4
-		self.B7 = (numpy.uint32(self.UP) - self.B3)*(50000 >> self.OSS)
-	#	print "B7 ", self.B7
-		#if (self.B7 < 0x80000000):
-		p = numpy.uint32((self.B7 * 2)/self.B4)
-		#else:
-		#	p = numpy.uint64((self.B7 / self.B4) * 2)
-	#	print "p ", p
-		self.X1 = (p / 2**8)*( p / 2**8)
-	#	print "X1 ", self.X1
-		self.X1 = int(self.X1 * 3038) / 2**16
-	#	print "X1 ", self.X1
-		self.X2 = int(-7357 * p)/2**16
-	#	print "X2 ", self.X2
-		self.pressure = p + (self.X1 + self.X2 +3791)/2**4
-		print "pressure", self.pressure
-
-
-		#end
-
-	def quit(self):
+	def __del__(self):
 		self.cleanup_gpio()
 
 	def set_up_gpio(self):
 		# GPIO initialisation
 		GPIO.setmode(GPIO.BOARD)
-		GPIO.setup(self.SCLK, GPIO.OUT, initial=GPIO.HIGH)
-		GPIO.setup(self.CE, GPIO.OUT, initial=GPIO.HIGH)
-		GPIO.setup(self.MOSI, GPIO.OUT)
-		GPIO.setup(self.MISO, GPIO.IN)
+		GPIO.setup(self.SCK, GPIO.OUT, initial=GPIO.HIGH)
+		GPIO.setup(self.CS, GPIO.OUT, initial=GPIO.HIGH)
+		GPIO.setup(self.SDI, GPIO.OUT)
+		GPIO.setup(self.SDO, GPIO.IN)
 
 	def cleanup_gpio(self):
-		GPIO.cleanup(self.SCLK)
-		GPIO.cleanup(self.CE)
-		GPIO.cleanup(self.MOSI)
-		GPIO.cleanup(self.MISO)
+		# GPIO clean up
+		GPIO.cleanup(self.SCK)
+		GPIO.cleanup(self.CS)
+		GPIO.cleanup(self.SDI)
+		GPIO.cleanup(self.SDO)
 
 	def read_byte(self, addr):
-		#print 'read_byte'
+		# Read byte from SPI interface from address "addr"
 		ret_value = self.spi_transfer(addr, 0, 1, 8)	
 		return ret_value
 
 	def read_word(self, addr, extra_bits = 0):
-		#print 'read_word'
+		# Read word from SPI interface from address "addr", option to extend read by up to 3 bits
 		ret_value = self.spi_transfer(addr, 0, 1, 16 + extra_bits)	
 		return ret_value
 
-	def write_byte(self, addr, value, length):
-		#print 'write_byte'
-		self.spi_transfer(addr, value, 0, length)	
+	def write_byte(self, addr, value):
+		# Write byte of "value" to SPI interface at address "addr"
+		self.spi_transfer(addr, value, 0, 8)	
 		
 	def spi_transfer(self, addr, value, rw, length):
-		#print 'spi_transfer'
+		# Bit banging at address "addr", "rw" indicates READ (1) or WRITE (1) operation
 		ret_value = 0
 		if (rw == 0):
 			spi_addr = addr & (~self.BMP183_CMD['READWRITE'])
-			#print "addr: ", hex(addr), " spi_addr: ", hex(spi_addr), " value: ", hex(value), "length:", length
 		else:
 			spi_addr = addr | self.BMP183_CMD['READWRITE']
-			#print "addr: ", hex(addr), " spi_addr: ", hex(spi_addr), "length:", length
 
-
-		GPIO.output(self.CE, 0)
+		GPIO.output(self.CS, 0)
 		time.sleep(self.delay)
-		#Send address
-		#sys.stdout.write('Sending addr: ')
 		for i in range(8):
 			bit = spi_addr & (0x01 << (7 - i))
 			if (bit):
-				#sys.stdout.write("1")
-				GPIO.output(self.MOSI, 1)
+				GPIO.output(self.SDI, 1)
 			else:
-				#sys.stdout.write("0")
-				GPIO.output(self.MOSI, 0)
-			GPIO.output(self.SCLK, 0)
+				GPIO.output(self.SDI, 0)
+			GPIO.output(self.SCK, 0)
 			time.sleep(self.delay)
-			GPIO.output(self.SCLK, 1)
+			GPIO.output(self.SCK, 1)
 			time.sleep(self.delay)
-		#print(' ')
 
 		if (rw == 1):
-			#Read data
-			#sys.stdout.write('Received: ')
 			for i in range(length):
-				GPIO.output(self.SCLK, 0)
+				GPIO.output(self.SCK, 0)
 				time.sleep(self.delay)
-				bit = GPIO.input(self.MISO)
-				#if (bit):
-				#	sys.stdout.write("1")
-				#else:
-				#	sys.stdout.write("0")
-				GPIO.output(self.SCLK, 1)
+				bit = GPIO.input(self.SDO)
+				GPIO.output(self.SCK, 1)
 				ret_value = (ret_value << 1) | bit
 				time.sleep(self.delay)
-			#print(' ')
-			#print 'ret_value: ', hex(ret_value)
 
 		if (rw == 0):
-			#print('Writing:')
-			#print(hex(value))
 			for i in range(length):
 				bit = value & (0x01 << (length - 1 - i))
 				if (bit):
-				#	sys.stdout.write("1")
-					GPIO.output(self.MOSI, 1)
+					GPIO.output(self.SDI, 1)
 				else:
-				#	sys.stdout.write("0")
-					GPIO.output(self.MOSI, 0)
-				GPIO.output(self.SCLK, 0)
+					GPIO.output(self.SDI, 0)
+				GPIO.output(self.SCK, 0)
 				time.sleep(self.delay)
-				GPIO.output(self.SCLK, 1)
+				GPIO.output(self.SCK, 1)
 				time.sleep(self.delay)
-			#print(' ')
-		GPIO.output(self.CE, 1)
+		GPIO.output(self.CS, 1)
 		return ret_value
 
 	def read_calibration_data(self):
-		#Read calibration data
+		# Read calibration data
 		self.AC1 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC1']))
 		self.AC2 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC2']))
 		self.AC3 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC3']))
@@ -246,59 +174,54 @@ class bmp183():
 		self.MB = numpy.int16(self.read_word(self.BMP183_REG['CAL_MB']))
 		self.MC = numpy.int16(self.read_word(self.BMP183_REG['CAL_MC']))
 		self.MD = numpy.int16(self.read_word(self.BMP183_REG['CAL_MD']))
-#debug
-#		self.AC1 =  408
-#		self.AC2 = -72
-#		self.AC3 = -14383
-#		self.AC4 = 32741
-#		self.AC5 = 32757
-#		self.AC6 = 23153
-#		self.B1 = 6190
-#		self.B2 = 4 
-#		self.MB = -32767
-#		self.MC = -8711 
-#		self.MD = 2868 
-
-	def calculate_real_temperature(self):
-#debug
-#		self.UT =  27898
-		#Calculate real temperature
-		self.X1 = (self.UT - self.AC6) * self.AC5 / 2**15
-		self.X2 = self.MC * 2**11/(self.X1 + self.MD) 
-		self.B5 = self.X1 + self.X2
-		self.T = (self.B5 + 8)/2**4
-		self.real_temp = self.T / 10.0
 
 	def measure_temperature(self):
-		#start TEMP measurement
-		self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['TEMP'], 8)
-		#wait 4.5 ms
-		time.sleep(0.0045)
-		#wait for 0 on bit 5 in CTRL_MEAS, end of conversion (probably unnecesary wait)
-		stop = 0 
-		ret = 0x10
-		while (stop != 10) and (ret & 0x10):
-			ret = self.read_byte(self.BMP183_REG['CTRL_MEAS'])
-			#print "Counting...:", stop, " ", ret
-			stop = stop + 1
-			time.sleep(0.005)
+		# Start temperature measurement
+		self.write_byte (self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['TEMP'])
+		# Wait
+		time.sleep (self.BMP183_CMD['TEMP_WAIT'])
+		# Read uncmpensated temperature
+		self.UT = numpy.int32 (self.read_word(self.BMP183_REG['DATA']))
+		self.calculate_temperature()
 
-		#read uncmpensated temperature u_temp
-		self.UT = numpy.int32(self.read_word(self.BMP183_REG['DATA']))
-#		print "UT ", self.UT
-		self.calculate_real_temperature()
-		#print "Temperature: ", self.real_temp
+	def measure_pressure(self):
+		# Measure temperature - required for calculations
+		self.measure_temperature()
+		# Read 3 samples of uncompensated pressure
+		UP = {}
+		for i in range(3): 
+			# Start pressure measurement
+			self.write_byte (self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['PRESS'] | (self.BMP183_CMD['OVERSAMPLE_3'] << 4))
+			# Wait for conversion
+			time.sleep (self.BMP183_CMD['OVERSAMPLE_3_WAIT'])
+			# Store uncmpensated pressure for averaging
+			UP[i] = numpy.int32 (self.read_word(self.BMP183_REG['DATA'], 3))
+	
+		self.UP = (UP[0] + UP[1] + UP[2]) / 3
+		self.calculate_pressure()
 
-if __name__ == "__main__":
-	bmp = bmp183()
-#	try:
-#		while (bmp.real_temp < 25.0):
-	bmp.measure_temperature()
-	print "Temperature: ", bmp.real_temp
-#			time.sleep(0.3)
-#	except KeyboardInterrupt:
-#		print "Keyboard Interrupt"
-		
-	bmp.quit()
-	quit()
+	def calculate_pressure(self):
+		# Calculate atmospheric pressure in [Pa]
+		self.B6 = self.B5 - 4000
+		X1 = (self.B2 * (self.B6 * self.B6 / 2**12)) / 2**11
+		X2 = self.AC2 * self.B6 / 2**11
+		X3 = X1 + X2
+		self.B3 = (((self.AC1 * 4 + X3) << self.BMP183_CMD['OVERSAMPLE_3']) + 2 ) / 4
+		X1 = self.AC3 * self.B6 / 2**13
+		X2 = (self.B1 * (self.B6 * self.B6 / 2**12)) / 2**16
+		X3 = ((X1 + X2) + 2) / 2**2
+		self.B4 = numpy.uint32 (self.AC4 * (X3 + 32768) / 2**15)
+		self.B7 = (numpy.uint32 (self.UP) - self.B3) * (50000 >> self.BMP183_CMD['OVERSAMPLE_3'])
+		p = numpy.uint32 ((self.B7 * 2) / self.B4)
+		X1 = (p / 2**8) * ( p / 2**8)
+		X1 = int (X1 * 3038) / 2**16
+		X2 = int (-7357 * p) / 2**16
+		self.pressure = p + (X1 + X2 +3791) / 2**4
 
+	def calculate_temperature(self):
+		#Calculate temperature in [degC]
+		X1 = (self.UT - self.AC6) * self.AC5 / 2**15
+		X2 = self.MC * 2**11 / (X1 + self.MD) 
+		self.B5 = X1 + X2
+		self.T = (self.B5 + 8) / 2**4
+		self.temperature = self.T / 10.0

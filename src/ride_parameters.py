@@ -1,4 +1,5 @@
 from time import strftime
+from bmp183 import bmp183
 import math
 
 class ride_parameters():
@@ -27,6 +28,7 @@ class ride_parameters():
 		self.set_val("gradient_units")
 		self.set_val("cadence")
 		self.set_val("rtc")
+		self.bmp183_sensor = bmp183()
 		self.set_val("pressure")
 		self.set_val("pressure_units")
 		self.set_val("pressure_at_sea_level")
@@ -116,8 +118,8 @@ class ride_parameters():
 
 	def set_pressure_and_altitude(self):
 		#Read pressure from BMP183
-# FIXME replace with real readings
-		self.pressure = 1013.0 #in hPa
+		self.bmp183_sensor.measure_pressure()
+		self.pressure = bmp183_sensor.pressure/100.0
 		#Set current altitude based on current pressure and calculated pressure_at_sea_level, cut to meters
 		self.altitude = int(44330*(1 - pow((self.pressure/self.pressure_at_sea_level), (1/5.255))))
 		self.params_changed = 1
