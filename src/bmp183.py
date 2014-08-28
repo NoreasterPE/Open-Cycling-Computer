@@ -1,8 +1,9 @@
 import RPi.GPIO as GPIO
 import time
 import numpy
+import threading
 
-class bmp183():
+class bmp183(threading.Thread):
 	'Class for Bosch BMP183 pressure and temperature sensor with SPI interface as sold by Adafruit'
 	# BMP183 registers
 	BMP183_REG = {
@@ -64,6 +65,12 @@ class bmp183():
 	}
 
 	def __init__(self):
+		# Run init for super class
+		super(bmp183, self).__init__()
+		# Set to 0 to stop measuring
+		self.measurement = 0
+		# Delay between measurements = 1s
+		self.measurement_delay = 1
 		self.temperature = 0
 		self.pressure = 0
 		# Setup Raspberry PINS, as numbered on BOARD
@@ -225,3 +232,12 @@ class bmp183():
 		self.B5 = X1 + X2
 		self.T = (self.B5 + 8) / 2**4
 		self.temperature = self.T / 10.0
+
+	def stop_measurement(self):
+		self.measurement = 0
+
+	def run(self):
+		self.measurement = 1
+		while (self.measurement == 1):
+			self.measure_pressure()
+			time.sleep(1)	
