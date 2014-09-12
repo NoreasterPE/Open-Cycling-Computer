@@ -72,3 +72,9 @@ and test using:
 sudo TSLIB_FBDEVICE=/dev/fb1 TSLIB_TSDEVICE=/dev/input/touchscreen ts_test
 
 10. sudo apt-get install python3-lxml
+
+
+11. sudo apt-get install minicom
+
+12. Remove tty from /boot/cmdline.txt
+13. Comment out serial console from /etc/inittab
