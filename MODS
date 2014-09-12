@@ -78,3 +78,5 @@ sudo TSLIB_FBDEVICE=/dev/fb1 TSLIB_TSDEVICE=/dev/input/touchscreen ts_test
 
 12. Remove tty from /boot/cmdline.txt
 13. Comment out serial console from /etc/inittab
+14. sudo apt-get install gpsd gpsd-clients python-gps
+
