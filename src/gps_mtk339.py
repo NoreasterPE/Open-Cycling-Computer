@@ -15,6 +15,8 @@ class gps_mtk3339(threading.Thread):
 		self.running = True
 		while self.running:
 			self.data.next()
+			#FIXME filetr for nan value and set to 0 or --
+			self.speed = self.data.fix.speed
 	def stop(self):
 		self.running = False
  
