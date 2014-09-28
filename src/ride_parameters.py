@@ -1,6 +1,6 @@
 from time import strftime
 from bmp183 import bmp183
-import gps_mkt3339
+from gps_mtk3339 import gps_mtk3339
 import math
 
 class ride_parameters():
@@ -41,8 +41,12 @@ class ride_parameters():
 
 		#Init gps
 		#FIXME Add clean gps stop and ride_params stop
-		self.gps = gps_mkt3339()
-		self.gps.start()
+		self.gps = gps_mtk3339()
+		try:
+			self.gps.start()
+		except NameError:
+			#gps hardware not cennected
+			self.gps = None
 
 	def get_val(self, func):
 		functions = {   "speed" : "%.0f" % self.speed,
@@ -91,7 +95,11 @@ class ride_parameters():
 
 	def set_speed(self):
 		#Read speed from GPS
-                self.speed = self.gps.speed
+		try:
+			self.speed = self.gps.speed
+		except AttributeError:
+			#gps hardware not connected, use mock value
+			self.speed = 43
 		#FIXME - read speed from wheel sensor
 		self.speed_tenths = math.floor (10 * (self.speed - math.floor(self.speed)))
 		self.params_changed = 1

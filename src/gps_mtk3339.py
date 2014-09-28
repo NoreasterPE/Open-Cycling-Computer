@@ -9,14 +9,20 @@ import time
 class gps_mtk3339(threading.Thread):
 	def __init__(self):
 		threading.Thread.__init__(self)
-		self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
+		self.present = False
+		try:
+			self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
+		except:
+			#can not talk to gps
+			self.present = False
 		self.running = False
 	def run(self):
-		self.running = True
-		while self.running:
-			self.data.next()
-			#FIXME filetr for nan value and set to 0 or --
-			self.speed = self.data.fix.speed
+		if self.present:
+			self.running = True
+			while self.running:
+				self.data.next()
+				#FIXME filter for nan value and set to 0 or --
+				self.speed = self.data.fix.speed
 	def stop(self):
 		self.running = False
  
