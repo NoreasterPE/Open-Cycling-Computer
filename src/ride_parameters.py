@@ -125,8 +125,8 @@ class ride_parameters():
 	def read_bmp183_sensor(self):
 		#Read pressure from BMP183
 		self.bmp183_sensor.measure_pressure()
-		self.pressure = bmp183_sensor.pressure/100.0
-		self.temperature = bmp183_sensor.temperature
+		self.pressure = self.bmp183_sensor.pressure/100.0
+		self.temperature = self.bmp183_sensor.temperature
 		#Set current altitude based on current pressure and calculated pressure_at_sea_level, cut to meters
 		self.altitude = int(44330*(1 - pow((self.pressure/self.pressure_at_sea_level), (1/5.255))))
 		self.params_changed = 1
