@@ -67,6 +67,7 @@ class bmp183(threading.Thread):
 	def __init__(self):
 		# Run init for super class
 		super(bmp183, self).__init__()
+		self.mock = True
 		# Set to 0 to stop measuring
 		self.measurement = 0
 		# Delay between measurements = 1s
@@ -86,11 +87,13 @@ class bmp183(threading.Thread):
 		# Check comunication / read ID
 		ret = self.read_byte(self.BMP183_REG['ID'])
 		if ret != self.BMP183_CMD['ID_VALUE']:
-			print ("BMP183 returned ", ret, " instead of 0x55. Communication failed, expect problems.")
-
-		self.read_calibration_data()
-		# Proceed with initial pressure/temperature measurement
-		self.measure_pressure()
+			print ("BMP183 returned ", ret, " instead of 0x55. Communication failed, using mock value.")
+			self.mock = True
+		else:
+			self.mock = False
+			self.read_calibration_data()
+			# Proceed with initial pressure/temperature measurement
+			self.measure_pressure()
 
 	def __del__(self):
 		self.cleanup_gpio()
@@ -192,20 +195,24 @@ class bmp183(threading.Thread):
 		self.calculate_temperature()
 
 	def measure_pressure(self):
-		# Measure temperature - required for calculations
-		self.measure_temperature()
-		# Read 3 samples of uncompensated pressure
-		UP = {}
-		for i in range(3): 
-			# Start pressure measurement
-			self.write_byte (self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['PRESS'] | (self.BMP183_CMD['OVERSAMPLE_3'] << 4))
-			# Wait for conversion
-			time.sleep (self.BMP183_CMD['OVERSAMPLE_3_WAIT'])
-			# Store uncmpensated pressure for averaging
-			UP[i] = numpy.int32 (self.read_word(self.BMP183_REG['DATA'], 3))
-	
-		self.UP = (UP[0] + UP[1] + UP[2]) / 3
-		self.calculate_pressure()
+		if self.mock:
+			self.pressure = 101300
+			self.temperature = 20.0
+		else:
+			# Measure temperature - required for calculations
+			self.measure_temperature()
+			# Read 3 samples of uncompensated pressure
+			UP = {}
+			for i in range(3): 
+				# Start pressure measurement
+				self.write_byte (self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['PRESS'] | (self.BMP183_CMD['OVERSAMPLE_3'] << 4))
+				# Wait for conversion
+				time.sleep (self.BMP183_CMD['OVERSAMPLE_3_WAIT'])
+				# Store uncmpensated pressure for averaging
+				UP[i] = numpy.int32 (self.read_word(self.BMP183_REG['DATA'], 3))
+		
+			self.UP = (UP[0] + UP[1] + UP[2]) / 3
+			self.calculate_pressure()
 
 	def calculate_pressure(self):
 		# Calculate atmospheric pressure in [Pa]
