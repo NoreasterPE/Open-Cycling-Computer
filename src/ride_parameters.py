@@ -55,7 +55,7 @@ class ride_parameters():
 				"pressure_at_sea_level" : self.pressure_at_sea_level,
 				"altitude" : self.altitude,
 				"altitude_units" : self.altitude_units,
-				"altitude_at_home" : self.altitude_at_home
+				"altitude_at_home" : self.altitude_at_home,
 				"temperature" : self.temperature,
 				"temperature_units" : self.temperature_units,
 		}
@@ -77,7 +77,7 @@ class ride_parameters():
 				"pressure_at_sea_level" : self.set_pressure_at_sea_level,
 				"altitude" : self.read_bmp183_sensor,
 				"altitude_units" : self.set_altitude_units,
-				"altitude_at_home" : self.set_altitude_at_home
+				"altitude_at_home" : self.set_altitude_at_home,
 				"temperature" : self.read_bmp183_sensor,
 				"temperature_units" : self.set_temperature_units,
 		}
