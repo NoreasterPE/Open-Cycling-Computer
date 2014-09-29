@@ -5,6 +5,14 @@ import math
 
 class ride_parameters():
 	def __init__(self):
+		#Init sensors
+		#Init gps
+		#FIXME Add clean gps stop and ride_params stop
+		#print "Initialising GPS"
+		self.gps = gps_mtk3339()
+		#print "GPS thread starting"
+		self.gps.start()
+
 		self.params_changed = 0
 		self.speed = 0
 		self.speed_tenths = 0
@@ -38,15 +46,6 @@ class ride_parameters():
 		self.set_val("altitude_at_home")
 		self.set_val("temperature")
 		self.set_val("temperature_units")
-
-		#Init gps
-		#FIXME Add clean gps stop and ride_params stop
-		self.gps = gps_mtk3339()
-		try:
-			self.gps.start()
-		except NameError:
-			#gps hardware not cennected
-			self.gps = None
 
 	def get_val(self, func):
 		functions = {   "speed" : "%.0f" % self.speed,
@@ -95,11 +94,11 @@ class ride_parameters():
 
 	def set_speed(self):
 		#Read speed from GPS
-		try:
-			self.speed = self.gps.speed
-		except AttributeError:
-			#gps hardware not connected, use mock value
-			self.speed = 43
+		s = self.gps.speed
+		if s is "nan":
+			self.speed = "--"
+		else:
+			self.speed = s
 		#FIXME - read speed from wheel sensor
 		self.speed_tenths = math.floor (10 * (self.speed - math.floor(self.speed)))
 		self.params_changed = 1

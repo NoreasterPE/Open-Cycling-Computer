@@ -10,12 +10,15 @@ class gps_mtk3339(threading.Thread):
 	def __init__(self):
 		threading.Thread.__init__(self)
 		self.present = False
+		self.speed = "--"
 		try:
 			self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
+			self.present = True
 		except:
 			#can not talk to gps
 			self.present = False
-		self.running = False
+		finally:
+			print "GPS present: ", self.present
 	def run(self):
 		if self.present:
 			self.running = True
@@ -29,7 +32,6 @@ class gps_mtk3339(threading.Thread):
 if __name__ == '__main__':
 	gps = gps_mtk3339()
 	try:
-		gps.start()
 		while True:
 			os.system('clear')
 

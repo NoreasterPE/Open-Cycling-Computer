@@ -4,10 +4,12 @@ from pygame.compat import unichr_, unicode_
 from pygame.locals import *
 from ride_parameters import ride_parameters
 from layout import layout
+from time import *
 import locale
 import math
 import os
 import pygame
+import signal
 import sys
 import lxml.etree as eltree
 
@@ -51,6 +53,7 @@ class open_cycle_computer():
 					self.running = 0
 				elif event.type == USEREVENT + 1:
 					self.rp.set_val("rtc")
+					self.rp.set_val("speed")
 				elif event.type == pygame.MOUSEBUTTONDOWN:
 					pressed_t = time_now
 					pressed_pos = pygame.mouse.get_pos()
@@ -89,7 +92,16 @@ class open_cycle_computer():
 			self.clock.tick(25)
 			pygame.display.flip()
 
+def quit_handler(signal, frame):
+	#FIXME quit gps thread
+	#print 'Signal: {}'.format(signal)
+	sleep(1)
+	pygame.quit()
+	sys.exit(0)
+
 if __name__ == "__main__":
+	signal.signal(signal.SIGTERM, quit_handler)
+	signal.signal(signal.SIGINT, quit_handler)
 	os.environ["SDL_FBDEV"] = "/dev/fb1"
 	os.putenv('SDL_MOUSEDRV' , 'TSLIB')
 	os.putenv('SDL_MOUSEDEV' , '/dev/input/touchscreen')
