@@ -48,8 +48,8 @@ class ride_parameters():
 		self.set_val("temperature_units")
 
 	def get_val(self, func):
-		functions = {   "speed" : "%.0f" % self.speed,
-				"speed_tenths" :  "%.0f" % self.speed_tenths,
+		functions = {   "speed" : self.speed,
+				"speed_tenths" : self.speed_tenths,
 				"speed_units" : self.speed_units,
 				"heart_rate" : self.heart_rate,
 				"heart_rate_units" : self.heart_rate_units,
@@ -94,13 +94,14 @@ class ride_parameters():
 
 	def set_speed(self):
 		#Read speed from GPS
-		s = self.gps.speed
-		if s is "nan":
-			self.speed = "--"
-		else:
-			self.speed = s
+		s = self.gps.get_speed()
+		try:
+			self.speed = math.floor(s)
+			self.speed_tenths =  "%.0f" % (math.floor (10 * (s - self.speed)))
+		except TypeError:
+			self.speed = "[]"
+			self.speed_tenths = "-"
 		#FIXME - read speed from wheel sensor
-		self.speed_tenths = math.floor (10 * (self.speed - math.floor(self.speed)))
 		self.params_changed = 1
 
 	def set_speed_units(self):
