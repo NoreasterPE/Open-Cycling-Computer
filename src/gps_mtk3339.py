@@ -12,7 +12,7 @@ class gps_mtk3339(threading.Thread):
 	def __init__(self):
 		threading.Thread.__init__(self)
 		self.present = False
-		self.speed = None
+		self.speed = float('nan')
 		try:
 			#Add check for running gpsd. Restart if missing. Consider watchdog thread to start gpsd
 			self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)

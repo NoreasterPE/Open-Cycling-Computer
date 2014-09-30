@@ -95,11 +95,11 @@ class ride_parameters():
 	def set_speed(self):
 		#Read speed from GPS
 		s = self.gps.get_speed()
-		try:
+		if not math.isnan(s):
 			sf = math.floor(s)
 			self.speed = "%.0f" % sf
 			self.speed_tenths = "%.0f" % (math.floor (10 * (s - sf)))
-		except TypeError:
+		else:
 			self.speed = "[]"
 			self.speed_tenths = "-"
 		#FIXME - read speed from wheel sensor
