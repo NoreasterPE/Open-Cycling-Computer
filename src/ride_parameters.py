@@ -96,8 +96,9 @@ class ride_parameters():
 		#Read speed from GPS
 		s = self.gps.get_speed()
 		try:
-			self.speed = math.floor(s)
-			self.speed_tenths =  "%.0f" % (math.floor (10 * (s - self.speed)))
+			sf = math.floor(s)
+			self.speed = "%.0f" % sf
+			self.speed_tenths = "%.0f" % (math.floor (10 * (s - sf)))
 		except TypeError:
 			self.speed = "[]"
 			self.speed_tenths = "-"
