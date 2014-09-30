@@ -7,6 +7,8 @@ import threading
 import time
  
 class gps_mtk3339(threading.Thread):
+	#Class for gps mtk3339 as sold by Adafruit
+
 	def __init__(self):
 		threading.Thread.__init__(self)
 		self.present = False
