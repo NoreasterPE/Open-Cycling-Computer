@@ -87,7 +87,7 @@ class bmp183(threading.Thread):
 		# Check comunication / read ID
 		ret = self.read_byte(self.BMP183_REG['ID'])
 		if ret != self.BMP183_CMD['ID_VALUE']:
-			print ("BMP183 returned ", ret, " instead of 0x55. Communication failed, using mock value.")
+			print "BMP183 returned ", ret, " instead of 0x55. Communication witn bmp183 failed, using mock values"
 			self.mock = True
 		else:
 			self.mock = False
