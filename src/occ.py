@@ -105,7 +105,6 @@ if __name__ == "__main__":
 	signal.signal(signal.SIGTERM, quit_handler)
 	signal.signal(signal.SIGINT, quit_handler)
 	os.environ["SDL_FBDEV"] = "/dev/fb1"
-	os.putenv('SDL_MOUSEDRV' , 'TSLIB')
 	os.putenv('SDL_MOUSEDEV' , '/dev/input/touchscreen')
 
 	main_window = open_cycle_computer()
