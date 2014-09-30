@@ -12,15 +12,14 @@ class gps_mtk3339(threading.Thread):
 	def __init__(self):
 		threading.Thread.__init__(self)
 		self.present = False
-		self.speed = "--"
+		self.speed = None
 		try:
+			#Add check for running gpsd. Restart if missing. Consider watchdog thread to start gpsd
 			self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
 			self.present = True
 		except:
 			#can not talk to gps
 			self.present = False
-		finally:
-			print "GPS present: ", self.present
 	def run(self):
 		if self.present:
 			self.running = True
