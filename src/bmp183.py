@@ -95,8 +95,11 @@ class bmp183(threading.Thread):
 			# Proceed with initial pressure/temperature measurement
 			self.measure_pressure()
 
-	def __del__(self):
+	def stop(self):
 		self.cleanup_gpio()
+
+	def __del__(self):
+		self.stop()
 
 	def set_up_gpio(self):
 		# GPIO initialisation

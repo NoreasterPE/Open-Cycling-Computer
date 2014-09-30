@@ -93,11 +93,13 @@ class open_cycle_computer():
 			pygame.display.flip()
 
 def quit_handler(signal, frame):
-	#FIXME quit gps thread
-	#print 'Signal: {}'.format(signal)
 	sleep(1)
+	#FIXME quit gps thread in an elegant way
+	main_window.rp.gps.stop()
+	#FIXME quit bmp183 thread in an elegant way
+	main_window.rp.bmp183_sensor.stop()
 	pygame.quit()
-	sys.exit(0)
+	quit()
 
 if __name__ == "__main__":
 	signal.signal(signal.SIGTERM, quit_handler)

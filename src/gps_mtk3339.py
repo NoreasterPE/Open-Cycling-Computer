@@ -26,6 +26,12 @@ class gps_mtk3339(threading.Thread):
 				self.data.next()
 				#FIXME filter for nan value and set to 0 or --
 				self.speed = self.data.fix.speed
+	def get_speed(self):
+		return self.speed
+
+	def __del__(self):
+		self.stop()
+
 	def stop(self):
 		self.running = False
  
