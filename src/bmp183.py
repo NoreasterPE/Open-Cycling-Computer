@@ -75,10 +75,10 @@ class bmp183(threading.Thread):
 		self.temperature = 0
 		self.pressure = 0
 		# Setup Raspberry PINS, as numbered on BOARD
-		self.SCK = 13  # GPIO for SCK, other name SCLK
-		self.SDO = 15  # GPIO for SDO, other name MISO
-		self.SDI = 7  # GPIO for SDI, other name MOSI
-		self.CS = 11  # GPIO for CS, other name CE
+		self.SCK = 15  # GPIO for SCK, other name SCLK
+		self.SDO = 13  # GPIO for SDO, other name MISO
+		self.SDI = 11  # GPIO for SDI, other name MOSI
+		self.CS = 7  # GPIO for CS, other name CE
 
 		# SCK frequency 1 MHz
 		self.delay = 1/1000000.0
