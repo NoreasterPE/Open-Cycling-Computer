@@ -27,6 +27,7 @@ class ride_parameters():
 		self.pressure_units = ""
 		self.pressure_at_sea_level = 1013.0
 		self.altitude = 0.0
+		self.altitude_gps = 0.0
 		self.altitude_units = ""
 		self.rtc = ""
 		self.set_val("speed")
@@ -41,6 +42,7 @@ class ride_parameters():
 		self.set_val("pressure")
 		self.set_val("pressure_units")
 		self.set_val("pressure_at_sea_level")
+		self.set_val("altitude_gps")
 		self.set_val("altitude")
 		self.set_val("altitude_units")
 		self.set_val("altitude_at_home")
@@ -63,6 +65,7 @@ class ride_parameters():
 				"pressure_units" : self.pressure_units,
 				"pressure_at_sea_level" : self.pressure_at_sea_level,
 				"altitude" : self.altitude,
+				"altitude_gps" : self.altitude_gps,
 				"altitude_units" : self.altitude_units,
 				"altitude_at_home" : self.altitude_at_home,
 				"temperature" : self.temperature,
@@ -85,6 +88,7 @@ class ride_parameters():
 				"pressure_units" : self.set_pressure_units,
 				"pressure_at_sea_level" : self.set_pressure_at_sea_level,
 				"altitude" : self.read_bmp183_sensor,
+				"altitude_gps" : self.set_altitude_gps,
 				"altitude_units" : self.set_altitude_units,
 				"altitude_at_home" : self.set_altitude_at_home,
 				"temperature" : self.read_bmp183_sensor,
@@ -103,6 +107,15 @@ class ride_parameters():
 			self.speed = "[]"
 			self.speed_tenths = "-"
 		#FIXME - read speed from wheel sensor
+		self.params_changed = 1
+
+	def set_altitude_gps(self):
+		#Read altitude from GPS
+		a = self.gps.get_altitude()
+		if not math.isnan(a):
+			self.altitude_gps = a
+		else:
+			self.altitude_gps = "-"
 		self.params_changed = 1
 
 	def set_speed_units(self):

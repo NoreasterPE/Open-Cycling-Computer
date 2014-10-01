@@ -18,14 +18,14 @@
 			<font_size>2</font_size>
 		</field>
 		<field name="middle">
-			<function>heart_rate</function>
-			<button x0="0" y0="80" w="240" h="160"></button>
+			<function>altitude_gps</function>
+			<button x0="0" y0="80" w="240" h="140"></button>
 			<text_center x="100" y="195">0</text_center>
-			<font_size>11</font_size>
+			<font_size>6</font_size>
 		</field>
 		<field name="middle_auxiliary">
-			<function>heart_rate_units</function>
-			<text_center x="210" y="195">BPM</text_center>
+			<function>altitude_units</function>
+			<text_center x="210" y="195">m</text_center>
 			<font_size>2</font_size>
 		</field>
 		<field name="bottom_left">

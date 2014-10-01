@@ -54,6 +54,7 @@ class open_cycle_computer():
 				elif event.type == USEREVENT + 1:
 					self.rp.set_val("rtc")
 					self.rp.set_val("speed")
+					self.rp.set_val("altitude_gps")
 				elif event.type == pygame.MOUSEBUTTONDOWN:
 					pressed_t = time_now
 					pressed_pos = pygame.mouse.get_pos()
