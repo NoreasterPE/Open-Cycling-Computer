@@ -38,6 +38,7 @@ class gps_mtk3339(threading.Thread):
  
 if __name__ == '__main__':
 	gps = gps_mtk3339()
+	gps.start()
 	try:
 		while True:
 			os.system('clear')
