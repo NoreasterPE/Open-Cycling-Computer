@@ -29,9 +29,9 @@
 			<font_size>2</font_size>
 		</field>
 		<field name="bottom_left">
-			<function>gradient</function>
+			<function>latitude</function>
 			<text_center x="50" y="280">0</text_center>
-			<font_size>7</font_size>
+			<font_size>2</font_size>
 		</field>
 		<field name="bottom_left_auxiliary">
 			<function>gradient_units</function>
@@ -39,7 +39,7 @@
 			<font_size>2</font_size>
 		</field>
 		<field name="bottom_right">
-			<function>cadence</function>
+			<function>longitude</function>
 			<text_center x="180" y="280">0</text_center>
 			<font_size>7</font_size>
 		</field>

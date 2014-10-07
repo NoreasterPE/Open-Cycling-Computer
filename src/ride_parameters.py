@@ -61,6 +61,8 @@ class ride_parameters():
 				"gradient_units" : self.gradient_units,
 				"heart_rate" : self.heart_rate,
 				"heart_rate_units" : self.heart_rate_units,
+				"latitude" : self.latitude,
+				"longitude" : self.longitude,
 				"pressure" : "%.0f" % self.pressure,
 				"pressure_at_sea_level" : self.pressure_at_sea_level,
 				"pressure_units" : self.pressure_units,
@@ -77,7 +79,7 @@ class ride_parameters():
 	def set_val(self, func):
 		functions = {   "altitude" : self.read_bmp183_sensor,
 				"altitude_at_home" : self.set_altitude_at_home,
-				"altitude_gps" : self.gps.get_data,
+				"altitude_gps" : self.read_gps_data,
 				"altitude_units" : self.set_altitude_units,
 				"cadence" : self.set_cadence,
 				"date" : self.set_rtc,
@@ -85,6 +87,8 @@ class ride_parameters():
 				"gradient_units" : self.set_gradient_units,
 				"heart_rate" : self.set_heart_rate,
 				"heart_rate_units" : self.set_heart_rate_units,
+				"latitude" : self.read_gps_data,
+				"longitude" : self.read_gps_data,
 				"pressure" : self.read_bmp183_sensor,
 				"pressure_at_sea_level" : self.set_pressure_at_sea_level,
 				"pressure_units" : self.set_pressure_units,
@@ -111,9 +115,22 @@ class ride_parameters():
 		#FIXME - read speed from wheel sensor
 		self.params_changed = 1
 
-	def set_altitude_gps(self):
+	def read_gps_data(self):
 		#Read altitude from GPS
-		a = self.gps.get_altitude()
+		data = self.gps.get_data()
+		lat = data[0]
+		lon = data[1]
+		if not math.isnan(lat):
+			self.latitude = lat
+		else:
+			self.latitude = "-"
+
+		if not math.isnan(lon):
+			self.longitude = lon
+		else:
+			self.longitude = "-"
+
+		a = data[2]
 		if not math.isnan(a):
 			self.altitude_gps = a
 		else:
