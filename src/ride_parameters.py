@@ -117,32 +117,23 @@ class ride_parameters():
 		#FIXME - read speed from wheel sensor
 		self.params_changed = 1
 
+	def clean_value(self, variable, empty_string = "-"):
+		if not math.isnan(variable):
+			return variable
+		else:
+			return empty_string
+		
 	def read_gps_data(self):
 		#Read altitude from GPS
 		data = self.gps.get_data()
 		lat = data[0]
 		lon = data[1]
-		if not math.isnan(lat):
-			self.latitude = lat
-		else:
-			self.latitude = "-"
-
-		if not math.isnan(lon):
-			self.longitude = lon
-		else:
-			self.longitude = "-"
-
-		a = data[2]
-		if not math.isnan(a):
-			self.altitude_gps = a
-		else:
-			self.altitude_gps = "-"
-
-		u = data[3]
-		if not math.isnan(u):
-			self.utc = u
-		else:
-			self.utc = "-"
+		alt = data[2]
+		utc = data[3]
+		self.latitude = self.clean_value(lat);
+		self.longitude = self.clean_value(lon);
+		self.altitude_gps = self.clean_value(alt);
+		self.utc = self.clean_value(utc);
 		self.params_changed = 1
 
 	def set_speed_units(self):
