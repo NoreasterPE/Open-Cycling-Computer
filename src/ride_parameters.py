@@ -73,6 +73,7 @@ class ride_parameters():
 				"temperature" : self.temperature,
 				"temperature_units" : self.temperature_units,
 				"time" : self.time,
+				"utc" : self.utc,
 		}
 		return functions[func]
 
@@ -98,6 +99,7 @@ class ride_parameters():
 				"temperature" : self.read_bmp183_sensor,
 				"temperature_units" : self.set_temperature_units,
 				"time" : self.set_rtc,
+				"utc" : self.read_gps_data,
 		}
 		functions[func]()
 
@@ -135,6 +137,12 @@ class ride_parameters():
 			self.altitude_gps = a
 		else:
 			self.altitude_gps = "-"
+
+		u = data[3]
+		if not math.isnan(u):
+			self.utc = u
+		else:
+			self.utc = "-"
 		self.params_changed = 1
 
 	def set_speed_units(self):

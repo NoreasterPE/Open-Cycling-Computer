@@ -34,7 +34,8 @@ class gps_mtk3339(threading.Thread):
 				self.altitude = self.data.fix.altitude
 	def get_data(self):
 		return (self.latitude, self.longitude, 	#0, 1
-			self.altitude, self.speed)	#2, 3
+			self.altitude, self.speed,	#2, 3
+			self.utc)			#4
 
 	def __del__(self):
 		self.stop()
