@@ -170,7 +170,7 @@ class ride_parameters():
 		self.params_changed = 1
 
 	def read_bmp183_sensor(self):
-		#Read pressure from BMP183
+		#Read pressure and temperature from BMP183
 		self.bmp183_sensor.measure_pressure()
 		self.pressure = self.bmp183_sensor.pressure/100.0
 		self.temperature = self.bmp183_sensor.temperature
