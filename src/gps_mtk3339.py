@@ -32,11 +32,9 @@ class gps_mtk3339(threading.Thread):
 				self.climb = self.data.fix.climb #Add to rp module
 				self.speed = self.data.fix.speed
 				self.altitude = self.data.fix.altitude
-	def get_altitude(self):
-		return self.altitude
-
-	def get_speed(self):
-		return self.speed
+	def get_data(self):
+		return (self.latitude, self.longitude, 	#0, 1
+			self.altitude, self.speed)	#2, 3
 
 	def __del__(self):
 		self.stop()
@@ -50,17 +48,17 @@ if __name__ == '__main__':
 	try:
 		while True:
 			os.system('clear')
-
-			print 'latitude    ' , gps.data.fix.latitude
-			print 'longitude   ' , gps.data.fix.longitude
+			data = gps.get_data()
+			print 'latitude    ' , data[0]
+			print 'longitude   ' , data[1]
 			print 'time utc    ' , gps.data.utc
 			print 'fix time    ' , gps.data.fix.time
-			print 'altitude (m)' , gps.data.fix.altitude
+			print 'altitude (m)' , data[2]
 			print 'eps         ' , gps.data.fix.eps
 			print 'epx         ' , gps.data.fix.epx
 			print 'epv         ' , gps.data.fix.epv
 			print 'ept         ' , gps.data.fix.ept
-			print 'speed (m/s) ' , gps.data.fix.speed
+			print 'speed (m/s) ' , data[3]
 			print 'climb       ' , gps.data.fix.climb
 			print 'track       ' , gps.data.fix.track
 			print 'mode        ' , gps.data.fix.mode

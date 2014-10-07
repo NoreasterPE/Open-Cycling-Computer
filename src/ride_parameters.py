@@ -88,7 +88,7 @@ class ride_parameters():
 				"pressure_units" : self.set_pressure_units,
 				"pressure_at_sea_level" : self.set_pressure_at_sea_level,
 				"altitude" : self.read_bmp183_sensor,
-				"altitude_gps" : self.set_altitude_gps,
+				"altitude_gps" : self.get_gps_data,
 				"altitude_units" : self.set_altitude_units,
 				"altitude_at_home" : self.set_altitude_at_home,
 				"temperature" : self.read_bmp183_sensor,
@@ -98,7 +98,8 @@ class ride_parameters():
 
 	def set_speed(self):
 		#Read speed from GPS
-		s = self.gps.get_speed()
+		data = self.gps.get_gps_data()
+		s = data[3]
 		if not math.isnan(s):
 			sf = math.floor(s)
 			self.speed = "%.0f" % sf
