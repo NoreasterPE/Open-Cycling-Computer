@@ -1,21 +1,21 @@
 Valid function names for use in layout files:
 
+altitude	- current altitude in meters, calculated from pressure
+altitude_at_home	- home altitude
+altitude_units	- altitude units
 cadence
+date	-	current date
 gradient
 gradient_units
 heart_rate
 heart_rate_units
+pressure	- current atmospheric pressure measured by hardware (currently BMP1823)
+pressure_at_sea_level	- sea level pressure calculated from pressure on start and given altitude. It's a value fixed at start
+pressure_units	- pressure units
+rtc	-	combined date + time 
 speed	-	speed from sensor (currently mock value)
 speed_tenths
 speed_units
-date	-	current date
 time	-	current time
-rtc	-	combined date + time 
-pressure	- current atmospheric pressure measured by hardware (currently BMP1823)
-pressure_units	- pressure units
-pressure_at_sea_level	- sea level pressure calculated from pressure on start and given altitude. It's a value fixed at start
-altitude	- current altitude in meters, calculated from pressure
-altitude_units	- altitude units
-altitude_at_home	- home altitude
 
 To add a new value it needs to be added to get_val function in ride_parameters.py with corresponding handler.
