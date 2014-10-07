@@ -1,7 +1,7 @@
 #! /usr/bin/python
 
 from gps_mtk3339 import gps_mtk3339
-from time import *
+import time
 import os
 
 if __name__ == '__main__':
@@ -26,7 +26,7 @@ if __name__ == '__main__':
 			print 'mode        ' , gps.data.fix.mode
 			print 'sats        ' , gps.data.satellites
 
-			sleep(1)
+			time.sleep(1)
  
 	except (KeyboardInterrupt, SystemExit):
 	#FIXME possibly required on shutdown

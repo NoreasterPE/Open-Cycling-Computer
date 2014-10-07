@@ -1,3 +1,5 @@
+#! /usr/bin/python
+
 import time
 from bmp183 import bmp183
 #Init sensor
