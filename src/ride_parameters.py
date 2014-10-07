@@ -12,93 +12,94 @@ class ride_parameters():
 		self.gps = gps_mtk3339()
 		#print "GPS thread starting"
 		self.gps.start()
-
+		#Init pressure sensor
+		self.bmp183_sensor = bmp183()
 		self.params_changed = 0
+
+		self.altitude = 0.0
+		self.altitude_at_home = 89.0
+		self.altitude_gps = 0.0
+		self.altitude_units = ""
+		self.cadence = 0
+		self.gradient = 0
+		self.gradient_units = ""
+		self.heart_rate = 0
+		self.heart_rate_units = ""
+		self.pressure = 1013.0
+		self.pressure_at_sea_level = 1013.0
+		self.pressure_units = ""
+		self.rtc = ""
 		self.speed = 0
 		self.speed_tenths = 0
 		self.speed_units = ""
-		self.heart_rate = 0
-		self.heart_rate_units = ""
-		self.gradient = 0
-		self.gradient_units = ""
-		self.cadence = 0
-		self.altitude_at_home = 89.0
-		self.pressure = 1013.0
-		self.pressure_units = ""
-		self.pressure_at_sea_level = 1013.0
-		self.altitude = 0.0
-		self.altitude_gps = 0.0
-		self.altitude_units = ""
-		self.rtc = ""
-		self.set_val("speed")
-		self.set_val("speed_units")
-		self.set_val("heart_rate")
-		self.set_val("heart_rate_units")
+		self.set_val("altitude")
+		self.set_val("altitude_at_home")
+		self.set_val("altitude_gps")
+		self.set_val("altitude_units")
+		self.set_val("cadence")
 		self.set_val("gradient")
 		self.set_val("gradient_units")
-		self.set_val("cadence")
-		self.set_val("rtc")
-		self.bmp183_sensor = bmp183()
+		self.set_val("heart_rate")
+		self.set_val("heart_rate_units")
 		self.set_val("pressure")
-		self.set_val("pressure_units")
 		self.set_val("pressure_at_sea_level")
-		self.set_val("altitude_gps")
-		self.set_val("altitude")
-		self.set_val("altitude_units")
-		self.set_val("altitude_at_home")
+		self.set_val("pressure_units")
+		self.set_val("rtc")
+		self.set_val("speed")
+		self.set_val("speed_units")
 		self.set_val("temperature")
 		self.set_val("temperature_units")
 
 	def get_val(self, func):
-		functions = {   "speed" : self.speed,
-				"speed_tenths" : self.speed_tenths,
-				"speed_units" : self.speed_units,
-				"heart_rate" : self.heart_rate,
-				"heart_rate_units" : self.heart_rate_units,
-				"gradient" : self.gradient,
-				"gradient_units" : self.gradient_units,
-				"cadence" : self.cadence,
-				"rtc" : self.rtc,
-				"date" : self.date,
-				"time" : self.time,
-				"pressure" : "%.0f" % self.pressure,
-				"pressure_units" : self.pressure_units,
-				"pressure_at_sea_level" : self.pressure_at_sea_level,
-				"altitude" : self.altitude,
+		functions = {   "altitude" : self.altitude,
+				"altitude_at_home" : self.altitude_at_home,
 				"altitude_gps" : self.altitude_gps,
 				"altitude_units" : self.altitude_units,
-				"altitude_at_home" : self.altitude_at_home,
+				"cadence" : self.cadence,
+				"date" : self.date,
+				"gradient" : self.gradient,
+				"gradient_units" : self.gradient_units,
+				"heart_rate" : self.heart_rate,
+				"heart_rate_units" : self.heart_rate_units,
+				"pressure" : "%.0f" % self.pressure,
+				"pressure_at_sea_level" : self.pressure_at_sea_level,
+				"pressure_units" : self.pressure_units,
+				"rtc" : self.rtc,
+				"speed" : self.speed,
+				"speed_tenths" : self.speed_tenths,
+				"speed_units" : self.speed_units,
 				"temperature" : self.temperature,
 				"temperature_units" : self.temperature_units,
+				"time" : self.time,
 		}
 		return functions[func]
 
 	def set_val(self, func):
-		functions = {   "speed" : self.set_speed,
-				"speed_units" : self.set_speed_units,
+		functions = {   "altitude" : self.read_bmp183_sensor,
+				"altitude_at_home" : self.set_altitude_at_home,
+				"altitude_gps" : self.gps.get_data,
+				"altitude_units" : self.set_altitude_units,
+				"cadence" : self.set_cadence,
+				"date" : self.set_rtc,
 				"gradient" : self.set_gradient,
 				"gradient_units" : self.set_gradient_units,
 				"heart_rate" : self.set_heart_rate,
 				"heart_rate_units" : self.set_heart_rate_units,
-				"cadence" : self.set_cadence,
-				"rtc" : self.set_rtc,
-				"date" : self.set_rtc,
-				"time" : self.set_rtc,
 				"pressure" : self.read_bmp183_sensor,
-				"pressure_units" : self.set_pressure_units,
 				"pressure_at_sea_level" : self.set_pressure_at_sea_level,
-				"altitude" : self.read_bmp183_sensor,
-				"altitude_gps" : self.get_gps_data,
-				"altitude_units" : self.set_altitude_units,
-				"altitude_at_home" : self.set_altitude_at_home,
+				"pressure_units" : self.set_pressure_units,
+				"rtc" : self.set_rtc,
+				"speed" : self.set_speed,
+				"speed_units" : self.set_speed_units,
 				"temperature" : self.read_bmp183_sensor,
 				"temperature_units" : self.set_temperature_units,
+				"time" : self.set_rtc,
 		}
 		functions[func]()
 
 	def set_speed(self):
 		#Read speed from GPS
-		data = self.gps.get_gps_data()
+		data = self.gps.get_data()
 		s = data[3]
 		if not math.isnan(s):
 			sf = math.floor(s)
