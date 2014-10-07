@@ -1,21 +1,26 @@
 Valid function names for use in layout files:
 
 altitude	- current altitude in meters, calculated from pressure
-altitude_at_home	- home altitude
+altitude_at_home	- home altitude - not implemented yet (fixed value) 
+altitude_gps	- altitude as reported by gps unit
 altitude_units	- altitude units
-cadence
+cadence	-	not implemented yet (fixed value)
 date	-	current date
-gradient
-gradient_units
-heart_rate
-heart_rate_units
+gradient	- gradient of the road - not implemented yet (fixed value)
+gradient_units	- units of the gradient, % or deg - not implemented yet (fixed value)
+heart_rate - not implemented yet (fixed value)
+heart_rate_units - not implemented yet (fixed value)
+latitude	- latitude as reported by gps unit
+longitude	- longitude as reported by gps unit
 pressure	- current atmospheric pressure measured by hardware (currently BMP1823)
 pressure_at_sea_level	- sea level pressure calculated from pressure on start and given altitude. It's a value fixed at start
 pressure_units	- pressure units
 rtc	-	combined date + time 
-speed	-	speed from sensor (currently mock value)
-speed_tenths
-speed_units
+speed	-	speed, to be calculated using Kalman filter from gps + wheel sensor - not implemented yet (fixed value)
+speed_tenths - first decimal place of speed
+speed_units - km/h, mph or m/s - not implemented yet (fixed value)
 time	-	current time
+utc	-	utc time as reported by gps unit
+
 
 To add a new value it needs to be added to get_val function in ride_parameters.py with corresponding handler.
