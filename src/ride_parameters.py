@@ -191,6 +191,7 @@ class ride_parameters():
 		self.params_changed = 1
 
 	def set_temperature_units(self):
-		self.temperature_units = u"\u2103"
+		#FIXME Add unit selection in options
+		self.temperature_units = u'\N{DEGREE SIGN}' + "C"
 		self.params_changed = 1
 
