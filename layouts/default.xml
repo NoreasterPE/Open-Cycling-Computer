@@ -82,7 +82,7 @@
 		</field>
 		<field name="bottom_right">
 			<function>temperature</function>
-			<text_center x="180" y="280">0</text_center>
+			<text_center x="180" y="280"></text_center>
 			<font_size>5</font_size>
 		</field>
 		<field name="bottom_right_auxiliary">
