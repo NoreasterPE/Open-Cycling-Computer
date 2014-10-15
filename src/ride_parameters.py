@@ -124,7 +124,7 @@ class ride_parameters():
 		if not math.isnan(spd):
 			sf = math.floor(spd)
 			self.speed = "%.0f" % sf
-			self.speed_tenths = "%.0f" % (math.floor (10 * (s - sf)))
+			self.speed_tenths = "%.0f" % (math.floor (10 * (spd - sf)))
 		else:
 			self.speed = "[]"
 			self.speed_tenths = "-"
