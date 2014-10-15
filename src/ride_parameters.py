@@ -124,16 +124,14 @@ class ride_parameters():
 			return empty_string
 		
 	def read_gps_data(self):
-		#Read altitude from GPS
 		data = self.gps.get_data()
 		lat = data[0]
 		lon = data[1]
 		alt = data[2]
-		utc = data[3]
+		self.utc = data[4]
 		self.latitude = self.clean_value(lat);
 		self.longitude = self.clean_value(lon);
 		self.altitude_gps = self.clean_value(alt);
-		self.utc = self.clean_value(utc);
 		self.params_changed = 1
 
 	def set_speed_units(self):
