@@ -49,6 +49,38 @@
 			<font_size>2</font_size>
 		</field>
 	</page>
+	<page name="Weather" background="images/occ_dark_green_frame.png" font="" fg_colour="FFFFFF">
+		<field name="latitude">
+			<function>latitude</function>
+			<text_center x="20" y="20"></text_center>
+			<font_size>5</font_size>
+		</field>
+		<field name="longitude">
+			<function>longitude</function>
+			<text_center x="20" y="20"></text_center>
+			<font_size>5</font_size>
+		</field>
+		<field name="bottom_left">
+			<function>pressure</function>
+			<text_center x="50" y="280">0</text_center>
+			<font_size>5</font_size>
+		</field>
+		<field name="bottom_left_auxiliary">
+			<function>pressure_units</function>
+			<text_center x="100" y="310"></text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="bottom_right">
+			<function>temperature</function>
+			<text_center x="180" y="280">0</text_center>
+			<font_size>5</font_size>
+		</field>
+		<field name="bottom_right_auxiliary">
+			<function>temperature_units</function>
+			<text_center x="220" y="310"></text_center>
+			<font_size>2</font_size>
+		</field>
+	</page>
 	<page name="Settings" background="images/occ_dark_green_settings.png" font="" fg_colour="FFFFFF" >
 		<field name="first">
 			<function>load_default_layout</function>
