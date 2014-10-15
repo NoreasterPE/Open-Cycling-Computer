@@ -50,6 +50,11 @@ class ride_parameters():
 		self.set_val("temperature")
 		self.set_val("temperature_units")
 
+	def update_values(self):
+		self.set_rtc()
+		self.read_bmp183_sensor()
+		self.read_gps_data()
+
 	def get_val(self, func):
 		functions = {   "altitude" : self.altitude,
 				"altitude_at_home" : self.altitude_at_home,
