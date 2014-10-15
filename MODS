@@ -81,3 +81,5 @@ sudo TSLIB_FBDEVICE=/dev/fb1 TSLIB_TSDEVICE=/dev/input/touchscreen ts_test
 14. sudo apt-get install gpsd gpsd-clients python-gps
 
 15. Reconfigure gpsd config file to run gpsd by default
+16. sudo apt-get install python3-tz
+17. Install tzwhere for python from https://github.com/pegler/pytzwhere
