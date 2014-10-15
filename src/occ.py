@@ -93,10 +93,7 @@ class open_cycle_computer():
 
 def cleanup():
 	sleep(1)
-	#FIXME quit gps thread in an elegant way
-	main_window.rp.gps.stop()
-	#FIXME quit bmp183 thread in an elegant way
-	main_window.rp.bmp183_sensor.stop()
+	main_window.rp.stop()
 	#write current config for future use
 	main_window.write_config()
 	pygame.quit()

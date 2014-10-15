@@ -50,6 +50,13 @@ class ride_parameters():
 		self.set_val("temperature")
 		self.set_val("temperature_units")
 
+	def stop(self):
+		self.gps.stop()
+		self.bmp183_sensor.stop()
+
+	def __del__(self):
+		self.stop()
+
 	def update_values(self):
 		self.set_rtc()
 		self.read_bmp183_sensor()
