@@ -73,7 +73,7 @@ class layout():
 				font = pygame.font.Font(self.font, 12 * int(field.find('font_size').text))
 				if value == None:
 					value = field.find('text_center').text
-				ren = font.render(str(value), 1, self.fg_colour)
+				ren = font.render(unicode(value), 1, self.fg_colour)
 				x = ren.get_rect().centerx
 				y = ren.get_rect().centery
 				text_center_x = int(field.find('text_center').get('x'))
