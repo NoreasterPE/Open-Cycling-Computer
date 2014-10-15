@@ -22,10 +22,9 @@ class gps_mtk3339(threading.Thread):
 			self.running = True
 			while self.running:
 				self.data.next()
-				#FIXME filter for nan value and set to 0 or --
 				self.latitude = self.data.fix.latitude
 				self.longitude = self.data.fix.longitude
-				self.utc = self.data.utc #Add to rp module
+				self.utc = self.data.utc
 				self.climb = self.data.fix.climb #Add to rp module
 				self.speed = self.data.fix.speed
 				self.altitude = self.data.fix.altitude
