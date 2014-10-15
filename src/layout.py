@@ -107,14 +107,17 @@ class layout():
 	def load_settings_page(self):
 		self.use_page("Settings")
 
+	def load_layout_by_name(self, name):
+		self.load_layout("layouts/" + name)
+
 	def load_default_layout(self):
-		self.load_layout("layouts/default.xml")
+		self.load_layout_by_name("default.xml")
 
 	def load_lcd_layout(self):
-		self.load_layout("layouts/lcd.xml")
+		self.load_layout_by_name("lcd.xml")
 
 	def load_lcd_white_layout(self):
-		self.load_layout("layouts/lcd_white.xml")
+		self.load_layout_by_name("lcd_white.xml")
 
 	def quit(self):
 		self.occ.running = 0
