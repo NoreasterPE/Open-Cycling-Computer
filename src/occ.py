@@ -89,39 +89,24 @@ class open_cycle_computer():
 						if (dx > 0):
 							#print "SWIPE X RIGHT to LEFT", time_now, pressed_t, pressed_pos, released_pos, dx, dy
 							self.layout.check_click(pressed_pos, 2)
-							pressed_t = 0
-							released_t = 0
-							pressed_pos = (0,0)
-							released_pos = (0,0)
 						else:
 							#print "SWIPE X LEFT to RIGTH", time_now, pressed_t, pressed_pos, released_pos, dx, dy
 							self.layout.check_click(pressed_pos, 3)
-							pressed_t = 0
-							released_t = 0
-							pressed_pos = (0,0)
-							released_pos = (0,0)
 					elif (abs(dy)) > SWIPE_LENGTH:
 						if (dy > 0):
 							#print "SWIPE X BOTTOM to TOP", time_now, pressed_t, pressed_pos, released_pos, dx, dy
 							self.layout.check_click(pressed_pos, 4)
-							pressed_t = 0
-							released_t = 0
-							pressed_pos = (0,0)
-							released_pos = (0,0)
 						else:
 							#print "SWIPE X TOP to BOTTOM", time_now, pressed_t, pressed_pos, released_pos, dx, dy
 							self.layout.check_click(pressed_pos, 5)
-							pressed_t = 0
-							released_t = 0
-							pressed_pos = (0,0)
-							released_pos = (0,0)
-					elif ((pressed_t - released_t) < LONG_CLICK):	
-						#print "SHORT CLICK", time_now, pressed_t, pressed_pos
+					#elif: ((pressed_t - released_t) < LONG_CLICK):	
+					else:
+						print "SHORT CLICK", time_now, pressed_t, pressed_pos
 						self.layout.check_click(pressed_pos, 0)
-						pressed_t = 0
-						released_t = 0
-						pressed_pos = (0,0)
-						released_pos = (0,0)
+					pressed_t = 0
+					released_t = 0
+					pressed_pos = (0,0)
+					released_pos = (0,0)
 
 			if self.rp.params_changed or self.layout.layout_changed:
 				self.rp.params_changed = 0
