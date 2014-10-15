@@ -4,16 +4,16 @@ from gps_mtk3339 import gps_mtk3339
 import math
 
 class ride_parameters():
-	def __init__(self):
+	def __init__(self, simulate = False):
 		#Init sensors
 		#Init gps
 		#FIXME Add clean gps stop and ride_params stop
 		#print "Initialising GPS"
-		self.gps = gps_mtk3339()
+		self.gps = gps_mtk3339(simulate)
 		#print "GPS thread starting"
 		self.gps.start()
 		#Init pressure sensor
-		self.bmp183_sensor = bmp183()
+		self.bmp183_sensor = bmp183(simulate)
 		self.params_changed = 0
 
 		self.altitude = 0.0

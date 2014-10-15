@@ -41,8 +41,8 @@ class layout():
 		#print "use_page:", page_name
 		self.layout_changed = 1
 		self.current_function_list = []
-		self.current_page_no = page_no
 		self.current_page_name = self.page_index[page_no]
+		self.current_page_no = page_no
 		self.current_page = self.page_list[self.current_page_name]
 		self.bg_image = pygame.image.load(self.current_page.get('background')).convert() 
 		self.font = self.current_page.get('font') 

@@ -16,10 +16,11 @@ import lxml.etree as eltree
 
 class open_cycle_computer():
 	'Class for PiTFT 2.8" 320x240 cycle computer'
-	def __init__(self, width = 240, height = 320):
+	def __init__(self, simulate = False, width = 240, height = 320):
 		self.config_path = "config/config.xml"
 		pygame.init()
-		pygame.mouse.set_visible(0)
+		if not simulate:
+			pygame.mouse.set_visible(0)
 		pygame.time.set_timer(USEREVENT + 1, 1000)
 		self.width = width
 		self.height = height
@@ -27,7 +28,7 @@ class open_cycle_computer():
 		self.clock = pygame.time.Clock()
 		self.read_config()
 		self.layout = layout(self, self.layout_path)
-		self.rp = ride_parameters()
+		self.rp = ride_parameters(simulate)
 		self.running = 1
 
 	def read_config(self):
@@ -134,6 +135,6 @@ if __name__ == "__main__":
 	os.environ["SDL_FBDEV"] = "/dev/fb1"
 	os.putenv('SDL_MOUSEDEV' , '/dev/input/touchscreen')
 
-	main_window = open_cycle_computer()
+	main_window = open_cycle_computer(True)
 	main_window.main_loop()
 	cleanup()

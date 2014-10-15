@@ -64,9 +64,10 @@ class bmp183(threading.Thread):
 		'OVERSAMPLE_3_WAIT' : 0.0255,
 	}
 
-	def __init__(self):
+	def __init__(self, simulate = False):
 		# Run init for super class
 		super(bmp183, self).__init__()
+		self.simulate = simulate
 		self.mock = True
 		# Set to 0 to stop measuring
 		self.measurement = 0
@@ -82,21 +83,24 @@ class bmp183(threading.Thread):
 
 		# SCK frequency 1 MHz
 		self.delay = 1/1000000.0
-		self.set_up_gpio()
-
-		# Check comunication / read ID
-		ret = self.read_byte(self.BMP183_REG['ID'])
-		if ret != self.BMP183_CMD['ID_VALUE']:
-			print "BMP183 returned ", ret, " instead of 0x55. Communication witn bmp183 failed, using mock values"
-			self.mock = True
+		if not self.simulate:
+			self.set_up_gpio()
+			# Check comunication / read ID
+			ret = self.read_byte(self.BMP183_REG['ID'])
+			if ret != self.BMP183_CMD['ID_VALUE']:
+				print "BMP183 returned ", ret, " instead of 0x55. Communication witn bmp183 failed, using mock values"
+				self.mock = True
+			else:
+				self.mock = False
+				self.read_calibration_data()
+				# Proceed with initial pressure/temperature measurement
+				self.measure_pressure()
 		else:
-			self.mock = False
-			self.read_calibration_data()
-			# Proceed with initial pressure/temperature measurement
-			self.measure_pressure()
+			self.mock = True
 
 	def stop(self):
-		self.cleanup_gpio()
+		if not self.simulate:
+			self.cleanup_gpio()
 
 	def __del__(self):
 		self.stop()
