@@ -60,6 +60,16 @@
 			<text_center x="120" y="60"></text_center>
 			<font_size>4</font_size>
 		</field>
+		<field name="altitude">
+			<function>altitude_gps</function>
+			<text_center x="120" y="90"></text_center>
+			<font_size>4</font_size>
+		</field>
+		<field name="altitude">
+			<function>altitude_units</function>
+			<text_center x="200" y="100"></text_center>
+			<font_size>2</font_size>
+		</field>
 		<field name="bottom_left">
 			<function>pressure</function>
 			<text_center x="50" y="280">0</text_center>
