@@ -99,7 +99,8 @@ class bmp183(threading.Thread):
 			self.mock = True
 
 	def stop(self):
-		self.cleanup_gpio()
+		if not self.simulate:
+			self.cleanup_gpio()
 
 	def __del__(self):
 		self.stop()
