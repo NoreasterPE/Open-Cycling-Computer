@@ -7,6 +7,7 @@ class layout():
 		self.occ = occ
 		self.screen = occ.screen
 		self.page_list = {}
+		self.page_index = {}
 		self.function_rect_list = {}
 		self.current_function_list = []
 		self.load_layout(xml_file)
@@ -26,18 +27,23 @@ class layout():
 		self.layout_path = layout_path 
 		layout_tree = eltree.parse(self.layout_path)
 		self.pages = layout_tree.getroot()
+		i = 0
 		for page in self.pages:
 			#print "page name : ", page.get('name')
 			self.page_list[page.get('name')] = page
+			#FIXME ther must be a better solution to order problem
+			self.page_index[i] = page.get('name')
+			i = i + 1
 			
 		self.use_page()
 
-	def use_page(self, page_name = "Main"):
+	def use_page(self, page_no = 0):
 		#print "use_page:", page_name
 		self.layout_changed = 1
 		self.current_function_list = []
-		self.current_page = self.page_list[page_name]
-		self.current_page_name = self.current_page.get('name')
+		self.current_page_no = page_no
+		self.current_page_name = self.page_index[page_no]
+		self.current_page = self.page_list[self.current_page_name]
 		self.bg_image = pygame.image.load(self.current_page.get('background')).convert() 
 		self.font = self.current_page.get('font') 
 		if (self.font == ""):
@@ -82,10 +88,9 @@ class layout():
 
 	def check_click(self, position, click):
 		#print "check_click: ", position, click
-		if click == 1:
-			#FIXME Currently long click always shows settings page
-			self.run_function("settings")
-		else:
+
+		if click == 0:
+			#Short click
 			for func in self.current_function_list:
 				try:
 					if self.function_rect_list[func].collidepoint(position):
@@ -94,18 +99,47 @@ class layout():
 				except KeyError:
 					#FIXME function name not knwon - write to log
 					break
+		elif click == 1:
+			#Long click
+			#FIXME Currently long click always shows settings page
+			self.run_function("settings")
+		elif click == 2:
+			#Swipe RIGHT to LEFT
+			self.run_function("next_page")
+		elif click == 3:
+			#Swipe LEFT to RIGHT
+			self.run_function("prev_page")
+		elif click == 4:
+			print "Swipe BOTTOM to TOP"
+		elif click == 5:
+			print "Swipe TOP to BOTTOM"
 
 	def run_function(self, name):
 		functions = {	"settings" : self.load_settings_page,
 				"load_default_layout" : self.load_default_layout,
 				"load_lcd_layout" : self.load_lcd_layout,
 				"load_white_lcd_layout" : self.load_lcd_white_layout,
+				"prev_page" : self.prev_page,
+				"next_page" : self.next_page,
 				"quit" : self.quit
 		}
 		functions[name]()
 		
+	def next_page(self):
+		try:
+			self.use_page(self.current_page_no + 1)
+		except KeyError:
+			self.use_page(self.current_page_no)
+
+	def prev_page(self):
+		try:
+			self.use_page(self.current_page_no - 1)
+		except KeyError:
+			self.use_page(self.current_page_no)
+
+
 	def load_settings_page(self):
-		self.use_page("Settings")
+		self.use_page(1)
 
 	def load_layout_by_name(self, name):
 		self.load_layout("layouts/" + name)
