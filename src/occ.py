@@ -93,14 +93,19 @@ class open_cycle_computer():
 			self.clock.tick(25)
 			pygame.display.flip()
 
-def quit_handler(signal, frame):
+def cleanup():
 	sleep(1)
 	#FIXME quit gps thread in an elegant way
 	main_window.rp.gps.stop()
 	#FIXME quit bmp183 thread in an elegant way
 	main_window.rp.bmp183_sensor.stop()
+	#write current config for future use
+	main_window.write_config()
 	pygame.quit()
 	quit()
+
+def quit_handler(signal, frame):
+	cleanup()
 
 if __name__ == "__main__":
 	signal.signal(signal.SIGTERM, quit_handler)
@@ -110,7 +115,4 @@ if __name__ == "__main__":
 
 	main_window = open_cycle_computer()
 	main_window.main_loop()
-	#write current config for future use
-	main_window.write_config()
-	pygame.quit()
-	quit()
+	cleanup()
