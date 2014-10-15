@@ -54,7 +54,6 @@ class layout():
 				w = int(b.get('w'))
 				h = int(b.get('h'))
 				self.function_rect_list[field.find('function').text] = pygame.Rect(x0, y0, w, h)
-				#print self.function_rect_list['speed']
 
 	def render_background(self, screen):
 		screen.blit(self.bg_image, [0, 0])
@@ -83,25 +82,28 @@ class layout():
 
 	def check_click(self, position, click):
 		#print "check_click: ", position, click
-		long_click = {	"settings" : self.load_settings_page,
-		}
-		short_click = {	"load_default_layout" : self.load_default_layout,
-				"load_lcd_layout" : self.load_lcd_layout,
-				"load_white_lcd_layout" : self.load_lcd_white_layout,
-				"quit" : self.quit
-		}
 		if click == 1:
-			#Currently long click always shows settings page
-			self.use_page("Settings")
+			#FIXME Currently long click always shows settings page
+			self.run_function("settings")
 		else:
 			for func in self.current_function_list:
 				try:
 					if self.function_rect_list[func].collidepoint(position):
-						short_click[func]()
+						self.run_function(func)
 						break
 				except KeyError:
+					#FIXME function name not knwon - write to log
 					break
 
+	def run_function(self, name):
+		functions = {	"settings" : self.load_settings_page,
+				"load_default_layout" : self.load_default_layout,
+				"load_lcd_layout" : self.load_lcd_layout,
+				"load_white_lcd_layout" : self.load_lcd_white_layout,
+				"quit" : self.quit
+		}
+		functions[name]()
+		
 	def load_settings_page(self):
 		self.use_page("Settings")
 
