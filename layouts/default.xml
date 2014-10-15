@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <layout>
-	<page name="Main" background="images/occ_dark_green.png" font="" fg_colour="FFFFFF">
+	<page name="Main" id="0" background="images/occ_dark_green.png" font="" fg_colour="FFFFFF">
 		<field name="top">
 			<function>speed</function>
 			<button x0="0" y0="0" w="240" h="80"></button>
@@ -49,7 +49,7 @@
 			<font_size>2</font_size>
 		</field>
 	</page>
-	<page name="Weather" background="images/occ_dark_green_frame.png" font="" fg_colour="FFFFFF">
+	<page name="Weather" id="1" background="images/occ_dark_green_frame.png" font="" fg_colour="FFFFFF">
 		<field name="latitude">
 			<function>latitude</function>
 			<text_center x="120" y="30"></text_center>
@@ -81,7 +81,7 @@
 			<font_size>2</font_size>
 		</field>
 	</page>
-	<page name="Settings" background="images/occ_dark_green_settings.png" font="" fg_colour="FFFFFF" >
+	<page name="Settings" id="2" background="images/occ_dark_green_settings.png" font="" fg_colour="FFFFFF" >
 		<field name="first">
 			<function>load_default_layout</function>
 			<button x0="0" y0="0" w="240" h="80"></button>

@@ -27,13 +27,11 @@ class layout():
 		self.layout_path = layout_path 
 		layout_tree = eltree.parse(self.layout_path)
 		self.pages = layout_tree.getroot()
-		i = 0
 		for page in self.pages:
 			#print "page name : ", page.get('name')
 			self.page_list[page.get('name')] = page
 			#FIXME ther must be a better solution to order problem
-			self.page_index[i] = page.get('name')
-			i = i + 1
+			self.page_index[int(page.get('id'))] = page.get('name')
 			
 		self.use_page()
 
