@@ -43,9 +43,12 @@ class open_cycle_computer():
 		eltree.ElementTree(config_tree).write(self.config_path, encoding="UTF-8", pretty_print=True)
 
 	def main_loop(self):
+		LONG_CLICK = 1000 #ms of long click
+		SWIPE_LENGTH = 30 #pixels of swipe
 		pressed_t = 0
+		pressed_pos = (0,0)
 		released_t = 0
-		LONG_CLICK = 1000
+		released_pos = (0,0)
 		while self.running:
 			time_now = pygame.time.get_ticks()
 			for event in pygame.event.get():
@@ -68,19 +71,57 @@ class open_cycle_computer():
 				elif event.type == pygame.MOUSEMOTION:
 					#print "MOTION... cleared"
 					pygame.event.clear(pygame.MOUSEMOTION)
-			#print "ticking...:", time_now, pressed_t, released_t
+			#print "ticking...:", time_now, pressed_t, pressed_pos, released_t, released_pos
 			if (pressed_t != 0):
 				if (time_now - pressed_t) > LONG_CLICK:
 					#print "LONG CLICK", time_now, pressed_t, pressed_pos
 					self.layout.check_click(pressed_pos, 1)
 					pressed_t = 0
 					released_t = 0
+					pressed_pos = (0,0)
+					released_pos = (0,0)
 				if (released_t != 0):
-					if ((pressed_t - released_t) < LONG_CLICK):	
+					dx = pressed_pos[0] - released_pos[0]
+					dy = pressed_pos[1] - released_pos[1]
+					#print time_now, pressed_t, pressed_pos, released_t, released_pos
+					#print dx, dy
+					if (abs(dx)) > SWIPE_LENGTH:
+						if (dx > 0):
+							#print "SWIPE X RIGHT to LEFT", time_now, pressed_t, pressed_pos, released_pos, dx, dy
+							self.layout.check_click(pressed_pos, 2)
+							pressed_t = 0
+							released_t = 0
+							pressed_pos = (0,0)
+							released_pos = (0,0)
+						else:
+							#print "SWIPE X LEFT to RIGTH", time_now, pressed_t, pressed_pos, released_pos, dx, dy
+							self.layout.check_click(pressed_pos, 3)
+							pressed_t = 0
+							released_t = 0
+							pressed_pos = (0,0)
+							released_pos = (0,0)
+					elif (abs(dy)) > SWIPE_LENGTH:
+						if (dy > 0):
+							#print "SWIPE X BOTTOM to TOP", time_now, pressed_t, pressed_pos, released_pos, dx, dy
+							self.layout.check_click(pressed_pos, 4)
+							pressed_t = 0
+							released_t = 0
+							pressed_pos = (0,0)
+							released_pos = (0,0)
+						else:
+							#print "SWIPE X TOP to BOTTOM", time_now, pressed_t, pressed_pos, released_pos, dx, dy
+							self.layout.check_click(pressed_pos, 5)
+							pressed_t = 0
+							released_t = 0
+							pressed_pos = (0,0)
+							released_pos = (0,0)
+					elif ((pressed_t - released_t) < LONG_CLICK):	
 						#print "SHORT CLICK", time_now, pressed_t, pressed_pos
 						self.layout.check_click(pressed_pos, 0)
 						pressed_t = 0
 						released_t = 0
+						pressed_pos = (0,0)
+						released_pos = (0,0)
 
 			if self.rp.params_changed or self.layout.layout_changed:
 				self.rp.params_changed = 0
