@@ -94,7 +94,7 @@ class ride_parameters():
 				"pressure_at_sea_level" : self.set_pressure_at_sea_level,
 				"pressure_units" : self.set_pressure_units,
 				"rtc" : self.set_rtc,
-				"speed" : self.set_speed,
+				"speed" : self.read_gps_data,
 				"speed_units" : self.set_speed_units,
 				"temperature" : self.read_bmp183_sensor,
 				"temperature_units" : self.set_temperature_units,
@@ -102,20 +102,6 @@ class ride_parameters():
 				"utc" : self.read_gps_data,
 		}
 		functions[func]()
-
-	def set_speed(self):
-		#Read speed from GPS
-		data = self.gps.get_data()
-		s = data[3]
-		if not math.isnan(s):
-			sf = math.floor(s)
-			self.speed = "%.0f" % sf
-			self.speed_tenths = "%.0f" % (math.floor (10 * (s - sf)))
-		else:
-			self.speed = "[]"
-			self.speed_tenths = "-"
-		#FIXME - read speed from wheel sensor
-		self.params_changed = 1
 
 	def clean_value(self, variable, empty_string = "-"):
 		if not math.isnan(variable):
@@ -128,10 +114,20 @@ class ride_parameters():
 		lat = data[0]
 		lon = data[1]
 		alt = data[2]
+		spd = data[3]
 		self.utc = data[4]
+
 		self.latitude = self.clean_value(lat);
 		self.longitude = self.clean_value(lon);
 		self.altitude_gps = self.clean_value(alt);
+		#FIXME optimise code to use clean_value for speed
+		if not math.isnan(spd):
+			sf = math.floor(spd)
+			self.speed = "%.0f" % sf
+			self.speed_tenths = "%.0f" % (math.floor (10 * (s - sf)))
+		else:
+			self.speed = "[]"
+			self.speed_tenths = "-"
 		self.params_changed = 1
 
 	def set_speed_units(self):
