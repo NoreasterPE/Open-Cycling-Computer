@@ -52,13 +52,13 @@
 	<page name="Weather" background="images/occ_dark_green_frame.png" font="" fg_colour="FFFFFF">
 		<field name="latitude">
 			<function>latitude</function>
-			<text_center x="20" y="20"></text_center>
-			<font_size>5</font_size>
+			<text_center x="120" y="30"></text_center>
+			<font_size>4</font_size>
 		</field>
 		<field name="longitude">
 			<function>longitude</function>
-			<text_center x="20" y="20"></text_center>
-			<font_size>5</font_size>
+			<text_center x="120" y="60"></text_center>
+			<font_size>4</font_size>
 		</field>
 		<field name="bottom_left">
 			<function>pressure</function>
