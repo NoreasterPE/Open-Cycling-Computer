@@ -114,7 +114,7 @@ class open_cycle_computer():
 				self.layout.render_page(self.rp)
 			#print self.clock.get_fps()
 			#Setting FPS too low causes some click-directly-after-click problems
-			self.clock.tick(25)
+			self.clock.tick(50)
 			pygame.display.flip()
 
 def cleanup():
