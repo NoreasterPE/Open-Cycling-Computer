@@ -138,7 +138,7 @@ class ride_parameters():
 			self.speed = "%.0f" % sf
 			self.speed_tenths = "%.0f" % (math.floor (10 * (spd - sf)))
 		else:
-			self.speed = "[]"
+			self.speed = "?"
 			self.speed_tenths = "-"
 		self.params_changed = 1
 
