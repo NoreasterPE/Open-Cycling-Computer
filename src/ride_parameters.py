@@ -50,6 +50,8 @@ class ride_parameters():
 		self.set_val("speed_units")
 		self.set_val("temperature")
 		self.set_val("temperature_units")
+		#Rider data
+		self.rider_weight = 80
 
 	def stop(self):
 		self.gps.stop()
@@ -79,6 +81,7 @@ class ride_parameters():
 				"pressure" : "%.0f" % self.pressure,
 				"pressure_at_sea_level" : self.pressure_at_sea_level,
 				"pressure_units" : self.pressure_units,
+				"rider_weight" : self.rider_weight,
 				"rtc" : self.rtc,
 				"speed" : self.speed,
 				"speed_tenths" : self.speed_tenths,
