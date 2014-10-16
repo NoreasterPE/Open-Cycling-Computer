@@ -104,7 +104,8 @@ class layout():
 						break
 				except KeyError:
 					#FIXME function name not knwon - write to log
-					break
+					#print "Function: \"" + func + "\" not clickable"
+					pass
 		elif click == 1:
 			print "LONG CLICK"
 		elif click == 2:
