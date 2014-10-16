@@ -24,6 +24,7 @@ class layout():
 		#	print "font size : " + field.find('font_size').text
 	def load_layout(self, layout_path):
 		#print "load_layout", layout_path
+		self.max_page_id = 0
 		self.layout_path = layout_path 
 		layout_tree = eltree.parse(self.layout_path)
 		self.pages = layout_tree.getroot()
@@ -31,7 +32,10 @@ class layout():
 			#print "page name : ", page.get('name')
 			self.page_list[page.get('name')] = page
 			#FIXME ther must be a better solution to order problem
-			self.page_index[int(page.get('id'))] = page.get('name')
+			page_id = int(page.get('id'))
+			self.page_index[page_id] = page.get('name')
+			if (self.max_page_id < page_id):
+				self.max_page_id = page_id
 			
 		self.use_page()
 
@@ -128,14 +132,18 @@ class layout():
 		try:
 			self.use_page(self.current_page_no + 1)
 		except KeyError:
-			self.use_page(cp)
+			self.use_page(0)
+			#FIXME Use cp to block circular page scrolling - it should be in options
+			#self.use_page(cp)
 
 	def prev_page(self):
 		cp = self.current_page_no
 		try:
 			self.use_page(self.current_page_no - 1)
 		except KeyError:
-			self.use_page(cp)
+			self.use_page(self.max_page_id)
+			#FIXME Use cp to block circular page scrolling - it should be in options
+			#self.use_page(cp)
 
 
 	def load_settings_page(self):
