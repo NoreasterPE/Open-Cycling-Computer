@@ -28,28 +28,34 @@
 			<text_center x="210" y="195">m</text_center>
 			<font_size>2</font_size>
 		</field>
-		<field name="bottom_left">
-			<function>pressure</function>
-			<text_center x="50" y="280">0</text_center>
-			<font_size>5</font_size>
-		</field>
-		<field name="bottom_left_auxiliary">
-			<function>pressure_units</function>
-			<text_center x="100" y="310"></text_center>
+	</page>
+	<page name="Settings" id="1" background="images/occ_dark_green_settings.png" font="" fg_colour="FFFFFF" >
+		<field name="first">
+			<function>load_default_layout</function>
+			<button x0="0" y0="0" w="240" h="80"></button>
+			<text_center x="120" y="40">Default</text_center>
 			<font_size>2</font_size>
 		</field>
-		<field name="bottom_right">
-			<function>temperature</function>
-			<text_center x="180" y="280">0</text_center>
-			<font_size>5</font_size>
+		<field name="second">
+			<function>load_lcd_layout</function>
+			<button x0="0" y0="79" w="240" h="80"></button>
+			<text_center x="120" y="120">LCD</text_center>
+			<font_size>2</font_size>
 		</field>
-		<field name="bottom_right_auxiliary">
-			<function>temperature_units</function>
-			<text_center x="220" y="310"></text_center>
+		<field name="third">
+			<function>load_white_lcd_layout</function>
+			<button x0="0" y0="159" w="240" h="80"></button>
+			<text_center x="120" y="200">White LCD</text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="fourth">
+			<function>quit</function>
+			<button x0="0" y0="239" w="240" h="80"></button>
+			<text_center x="120" y="280">Quit</text_center>
 			<font_size>2</font_size>
 		</field>
 	</page>
-	<page name="Weather" id="1" background="images/occ_dark_green_frame.png" font="" fg_colour="FFFFFF">
+	<page name="Weather" id="2" background="images/occ_dark_green_frame.png" font="" fg_colour="FFFFFF">
 		<field name="latitude">
 			<function>latitude</function>
 			<text_center x="120" y="30"></text_center>
@@ -88,32 +94,6 @@
 		<field name="bottom_right_auxiliary">
 			<function>temperature_units</function>
 			<text_center x="220" y="310"></text_center>
-			<font_size>2</font_size>
-		</field>
-	</page>
-	<page name="Settings" id="2" background="images/occ_dark_green_settings.png" font="" fg_colour="FFFFFF" >
-		<field name="first">
-			<function>load_default_layout</function>
-			<button x0="0" y0="0" w="240" h="80"></button>
-			<text_center x="120" y="40">Default</text_center>
-			<font_size>2</font_size>
-		</field>
-		<field name="second">
-			<function>load_lcd_layout</function>
-			<button x0="0" y0="79" w="240" h="80"></button>
-			<text_center x="120" y="120">LCD</text_center>
-			<font_size>2</font_size>
-		</field>
-		<field name="third">
-			<function>load_white_lcd_layout</function>
-			<button x0="0" y0="159" w="240" h="80"></button>
-			<text_center x="120" y="200">White LCD</text_center>
-			<font_size>2</font_size>
-		</field>
-		<field name="fourth">
-			<function>quit</function>
-			<button x0="0" y0="239" w="240" h="80"></button>
-			<text_center x="120" y="280">Quit</text_center>
 			<font_size>2</font_size>
 		</field>
 	</page>
