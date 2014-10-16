@@ -105,9 +105,7 @@ class layout():
 					#FIXME function name not knwon - write to log
 					break
 		elif click == 1:
-			#Long click
-			#FIXME Currently long click always shows settings page
-			self.run_function("settings")
+			print "LONG CLICK"
 		elif click == 2:
 			#Swipe RIGHT to LEFT
 			self.run_function("next_page")
@@ -115,9 +113,11 @@ class layout():
 			#Swipe LEFT to RIGHT
 			self.run_function("prev_page")
 		elif click == 4:
-			print "Swipe BOTTOM to TOP"
+			#print "Swipe BOTTOM to TOP"
+			self.run_function("main")
 		elif click == 5:
-			print "Swipe TOP to BOTTOM"
+			#print "Swipe TOP to BOTTOM"
+			self.run_function("settings")
 
 	def run_function(self, name):
 		functions = {	"settings" : self.load_settings_page,
@@ -126,10 +126,14 @@ class layout():
 				"load_white_lcd_layout" : self.load_lcd_white_layout,
 				"prev_page" : self.prev_page,
 				"next_page" : self.next_page,
+				"main" : self.main_page,
 				"quit" : self.quit
 		}
 		functions[name]()
 		
+	def main_page(self):
+		self.use_page(0)
+
 	def next_page(self):
 		cp = self.current_page_no
 		try:
