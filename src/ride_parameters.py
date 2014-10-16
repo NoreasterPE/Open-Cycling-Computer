@@ -32,6 +32,7 @@ class ride_parameters():
 		self.speed = 0
 		self.speed_tenths = 0
 		self.speed_units = ""
+		#FIXME Is set_val required at all?
 		self.set_val("altitude")
 		self.set_val("altitude_at_home")
 		self.set_val("altitude_gps")
