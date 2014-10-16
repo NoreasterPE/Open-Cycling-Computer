@@ -108,6 +108,15 @@ class layout():
 					pass
 		elif click == 1:
 			print "LONG CLICK"
+			print self.function_rect_list
+			print self.current_function_list
+			for func in self.current_function_list:
+				try:
+					if self.function_rect_list[func].collidepoint(position):
+						print "Long click on " + func
+						break
+				except KeyError:
+					pass
 		elif click == 2:
 			#Swipe RIGHT to LEFT
 			self.run_function("next_page")
