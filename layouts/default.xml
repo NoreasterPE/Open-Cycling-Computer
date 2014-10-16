@@ -30,6 +30,7 @@
 		</field>
 		<field name="bottom">
 			<function>rider_weight</function>
+			<button x0="121" y0="241" w="120" h="60"></button>
 			<text_center x="180" y="280">m</text_center>
 			<font_size>4</font_size>
 		</field>
