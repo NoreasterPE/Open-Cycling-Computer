@@ -122,19 +122,55 @@ class layout():
 			self.run_function("settings")
 
 	def run_function(self, name):
-		functions = {	"settings" : self.load_settings_page,
+		functions = {	"main" : self.load_main_page,
+				"settings" : self.load_settings_page,
+				"ed_accept" : self.ed_accept,
+				"ed_cancel" : self.ed_cancel,
+				"ed_decrease" : self.ed_decrease,
+				"ed_increase" : self.ed_increase,
+				"ed_next" : self.ed_next,
+				"ed_prev" : self.ed_prev,
+				"ed_value" : self.ed_value,
+				"ed_value_description" : self.ed_value_description,
 				"load_default_layout" : self.load_default_layout,
 				"load_lcd_layout" : self.load_lcd_layout,
 				"load_white_lcd_layout" : self.load_lcd_white_layout,
-				"prev_page" : self.prev_page,
 				"next_page" : self.next_page,
-				"main" : self.main_page,
+				"prev_page" : self.prev_page,
 				"quit" : self.quit
 		}
 		functions[name]()
 		
-	def main_page(self):
+	def load_main_page(self):
 		self.use_page(0)
+
+	def load_settings_page(self):
+		#FIXME Special Settings page required?
+		self.use_page(1)
+
+	def ed_accept(self):
+		print "ed_accept"
+
+	def ed_cancel(self):
+		print "ed_cancel"
+
+	def ed_decrease(self):
+		print "ed_decrease"
+
+	def ed_increase(self):
+		print "ed_increase"
+
+	def ed_next(self):
+		print "ed_next"
+
+	def ed_prev(self):
+		print "ed_prev"
+
+	def ed_value(self):
+		print "ed_value"
+
+	def ed_value_description(self):
+		print "ed_value_description"
 
 	def next_page(self):
 		cp = self.current_page_no
@@ -153,10 +189,6 @@ class layout():
 			self.use_page(self.max_page_id)
 			#FIXME Use cp to block circular page scrolling - it should be in options
 			#self.use_page(cp)
-
-
-	def load_settings_page(self):
-		self.use_page(1)
 
 	def load_layout_by_name(self, name):
 		self.load_layout("layouts/" + name)
