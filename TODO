@@ -1,3 +1,4 @@
 1. Saving setting (i.e. current layout) - DONE
 2. Split module tests from main part and use consistent naming
 3. When bmp183 is not connected Ctrl-C doesn't quit occ.py - DONE
+4. Add visualisation of clickable areas for easy debugging
