@@ -96,6 +96,7 @@ class layout():
 
 		if click == 0:
 			#Short click
+			#FIXME Search through function_rect_list directly? TBD
 			for func in self.current_function_list:
 				try:
 					if self.function_rect_list[func].collidepoint(position):
