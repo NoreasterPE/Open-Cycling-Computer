@@ -100,7 +100,6 @@ class open_cycle_computer():
 						else:
 							#print "SWIPE X TOP to BOTTOM", time_now, pressed_t, pressed_pos, released_pos, dx, dy
 							self.layout.check_click(pressed_pos, 5)
-					#elif: ((pressed_t - released_t) < LONG_CLICK):	
 					else:
 						print "SHORT CLICK", time_now, pressed_t, pressed_pos
 						self.layout.check_click(pressed_pos, 0)
