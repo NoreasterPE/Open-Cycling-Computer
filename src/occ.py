@@ -111,7 +111,7 @@ class open_cycle_computer():
 
 			if self.rp.params_changed or self.layout.layout_changed:
 				self.rp.params_changed = 0
-				self.layout_changed = 0
+				self.layout.layout_changed = 0
 				self.layout.render_page(self.rp)
 			#print self.clock.get_fps()
 			#Setting FPS too low causes some click-directly-after-click problems
