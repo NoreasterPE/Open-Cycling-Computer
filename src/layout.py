@@ -46,7 +46,10 @@ class layout():
 		self.current_page_name = self.page_index[page_no]
 		self.current_page_no = page_no
 		self.current_page = self.page_list[self.current_page_name]
-		self.bg_image = pygame.image.load(self.current_page.get('background')).convert() 
+		try:
+			self.bg_image = pygame.image.load(self.current_page.get('background')).convert() 
+		except pygame.error:
+			print "Cannot load background image " + self.current_page.get('background')  
 		self.font = self.current_page.get('font') 
 		if (self.font == ""):
 			self.font = None
