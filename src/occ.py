@@ -52,26 +52,22 @@ class open_cycle_computer():
 		released_pos = (0,0)
 		while self.running:
 			time_now = pygame.time.get_ticks()
-			for event in pygame.event.get():
-				if event.type == pygame.QUIT:
-					self.running = 0
-				elif event.type == USEREVENT + 1:
-					self.rp.update_values()
-				elif event.type == pygame.MOUSEBUTTONDOWN:
-					pressed_t = time_now
-					pressed_pos = pygame.mouse.get_pos()
-					#print "DOWN:", pressed_t, released_t, "x:", pressed_pos[0], "y:", pressed_pos[1]
-					pygame.event.clear(pygame.MOUSEBUTTONDOWN)
-				elif event.type == pygame.MOUSEBUTTONUP:
-					#That check prevents setting release_x after long click
-					if (pressed_t != 0):
-						released_t = time_now
-						released_pos = pygame.mouse.get_pos()
-					#print "UP:", pressed_t, released_t, "x:", pressed_pos[0], "y:", pressed_pos[1]
-					pygame.event.clear(pygame.MOUSEBUTTONUP)
-				elif event.type == pygame.MOUSEMOTION:
-					#print "MOTION... cleared"
-					pygame.event.clear(pygame.MOUSEMOTION)
+			event = pygame.event.poll()
+			if event.type == pygame.QUIT:
+				self.running = 0
+			elif event.type == USEREVENT + 1:
+				self.rp.update_values()
+			elif event.type == pygame.MOUSEBUTTONDOWN:
+				pressed_t = time_now
+				pressed_pos = pygame.mouse.get_pos()
+				#print "DOWN:", pressed_t, released_t, "x:", pressed_pos[0], "y:", pressed_pos[1]
+			elif event.type == pygame.MOUSEBUTTONUP:
+				#That check prevents setting release_x after long click
+				if (pressed_t != 0):
+					released_t = time_now
+					released_pos = pygame.mouse.get_pos()
+				#print "UP:", pressed_t, released_t, "x:", pressed_pos[0], "y:", pressed_pos[1]
+			pygame.event.clear(pygame.MOUSEMOTION)
 			#print "ticking...:", time_now, pressed_t, pressed_pos, released_t, released_pos
 			if (pressed_t != 0):
 				if (time_now - pressed_t) > LONG_CLICK:
