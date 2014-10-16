@@ -117,4 +117,46 @@
 			<font_size>2</font_size>
 		</field>
 	</page>
+	<page name="Editor" id="3" background="images/occ_dark_green_nb_editor.png" font="" fg_colour="FFFFFF">
+		<field name="top_left">
+			<function>cancel</function>
+			<text_center x="60" y="30">Cancel</text_center>
+			<font_size>4</font_size>
+		</field>
+		<field name="top_right">
+			<function>accept</function>
+			<text_center x="180" y="30">Accept</text_center>
+			<font_size>4</font_size>
+		</field>
+		<field name="center_header">
+			<function>value</function>
+			<text_center x="120" y="70"></text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="center">
+			<function>value</function>
+			<text_center x="120" y="130"></text_center>
+			<font_size>6</font_size>
+		</field>
+		<field name="bottom_upper_left">
+			<function>decrease</function>
+			<text_center x="60" y="230">-</text_center>
+			<font_size>5</font_size>
+		</field>
+		<field name="bottom_upper_right">
+			<function>increase</function>
+			<text_center x="180" y="230">+</text_center>
+			<font_size>5</font_size>
+		</field>
+		<field name="bottom_lower_left">
+			<function>previous</function>
+			<text_center x="60" y="290">&lt;</text_center>
+			<font_size>5</font_size>
+		</field>
+		<field name="bottom_lower_right">
+			<function>next</function>
+			<text_center x="180" y="290">&gt;</text_center>
+			<font_size>5</font_size>
+		</field>
+	</page>
 </layout>
