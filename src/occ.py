@@ -134,6 +134,7 @@ if __name__ == "__main__":
 	os.environ["SDL_FBDEV"] = "/dev/fb1"
 	os.putenv('SDL_MOUSEDEV' , '/dev/input/touchscreen')
 
-	main_window = open_cycle_computer(True)
+	#main_window = open_cycle_computer(True)
+	main_window = open_cycle_computer()
 	main_window.main_loop()
 	cleanup()
