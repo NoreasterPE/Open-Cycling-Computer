@@ -101,7 +101,7 @@ class open_cycle_computer():
 							#print "SWIPE X TOP to BOTTOM", time_now, pressed_t, pressed_pos, released_pos, dx, dy
 							self.layout.check_click(pressed_pos, 5)
 					else:
-						print "SHORT CLICK", time_now, pressed_t, pressed_pos
+						#print "SHORT CLICK", time_now, pressed_t, pressed_pos
 						self.layout.check_click(pressed_pos, 0)
 					pressed_t = 0
 					released_t = 0
