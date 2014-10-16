@@ -124,16 +124,18 @@ class layout():
 		functions[name]()
 		
 	def next_page(self):
+		cp = self.current_page_no
 		try:
 			self.use_page(self.current_page_no + 1)
 		except KeyError:
-			self.use_page(self.current_page_no)
+			self.use_page(cp)
 
 	def prev_page(self):
+		cp = self.current_page_no
 		try:
 			self.use_page(self.current_page_no - 1)
 		except KeyError:
-			self.use_page(self.current_page_no)
+			self.use_page(cp)
 
 
 	def load_settings_page(self):
