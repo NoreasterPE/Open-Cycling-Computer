@@ -38,6 +38,8 @@ class ride_parameters():
 		self.params["altitude_units"] = "m"
 		self.params["gradient_units"] = "%"
 		self.params["heart_rate_units"] = "BPM"
+		self.params["odometer"] = 0.0
+		self.params["odometer_units"] = "km"
 		self.params["pressure_units"] = "hPa"
 		self.params["temperature_units"] = u'\N{DEGREE SIGN}' + "C"
 		self.params["rider_weight"] = 80.0
@@ -45,6 +47,8 @@ class ride_parameters():
 
 		#Params description FIXME localisation
 		self.p_desc["altitude_at_home"] = "Home altitude"
+		self.p_desc["odometer"] = "Odometer" 
+		self.p_desc["odometer_units"] = "Odometer units" 
 		self.p_desc["rider_weight"] = "Rider weight"
 
 	def stop(self):

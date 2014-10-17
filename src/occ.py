@@ -43,14 +43,18 @@ class open_cycle_computer():
 		try:
 			self.rp.params["rider_weight"] = float(self.config.find("rider_weight").text)
 			self.rp.params["altitude_at_home"] = float(self.config.find("altitude_at_home").text)
+			self.rp.params["odometer"] = float(self.config.find("odometer").text)
+			self.rp.params["odometer_units"] = self.config.find("odometer_units").text
 		except AttributeError:
 			pass
 
 	def write_config(self):
 		config_tree = eltree.Element("config")
 		eltree.SubElement(config_tree, "layout_path").text = self.layout.layout_path
-		eltree.SubElement(config_tree, "rider_weight").text =  unicode(self.rp.params["rider_weight"])
-		eltree.SubElement(config_tree, "altitude_at_home").text =  unicode(self.rp.params["altitude_at_home"])
+		eltree.SubElement(config_tree, "rider_weight").text = unicode(self.rp.params["rider_weight"])
+		eltree.SubElement(config_tree, "altitude_at_home").text = unicode(self.rp.params["altitude_at_home"])
+		eltree.SubElement(config_tree, "odometer").text = unicode(self.rp.params["odometer"])
+		eltree.SubElement(config_tree, "odometer_units").text = self.rp.params["odometer_units"]
 		#FIXME error handling for file operation
 		eltree.ElementTree(config_tree).write(self.config_path, encoding="UTF-8", pretty_print=True)
 
