@@ -1,4 +1,5 @@
 <config>
   <layout_path>layouts/default.xml</layout_path>
   <rider_weight>79.0</rider_weight>
+  <altitude_at_home>89.0</altitude_at_home>
 </config>
