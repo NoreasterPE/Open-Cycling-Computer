@@ -11,11 +11,9 @@ class layout():
 		self.function_rect_list = {}
 		self.current_function_list = []
 		self.load_layout(xml_file)
-		self.name = None
 		self.layout_changed = 0
 
 		#Helpers for editing values
-		self.editor_mode = False
 		self.editor = {}
 		self.editor["value"] = None
 		self.editor["variable_description"] = None
@@ -132,7 +130,6 @@ class layout():
 						self.editor["variable_description"] = self.occ.rp.get_description(func)
 						#FIXME Call editor page - that's temporary
 						#Add call_editor function with params
-						self.editor_mode = True
 						self.use_page(3)
 						break
 				except KeyError:
@@ -184,7 +181,6 @@ class layout():
 
 	def ed_cancel(self):
 		#print "ed_cancel"
-		self.editor_mode = False
 		self.use_page(0)
 
 	def ed_decrease(self):
@@ -212,12 +208,11 @@ class layout():
 		pass
 
 	def accept_edit(self):
-		self.editor_mode = False
 		self.occ.rp.params[self.editor["variable"]] = self.editor["value"]
 		self.occ.rp.update_params()
 
 	def next_page(self):
-		cp = self.current_page_no
+		#cp = self.current_page_no
 		try:
 			self.use_page(self.current_page_no + 1)
 		except KeyError:
@@ -226,7 +221,7 @@ class layout():
 			#self.use_page(cp)
 
 	def prev_page(self):
-		cp = self.current_page_no
+		#cp = self.current_page_no
 		try:
 			self.use_page(self.current_page_no - 1)
 		except KeyError:

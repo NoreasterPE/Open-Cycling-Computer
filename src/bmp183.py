@@ -188,6 +188,7 @@ class bmp183(threading.Thread):
 		self.AC6 = numpy.uint16(self.read_word(self.BMP183_REG['CAL_AC6']))
 		self.B1 = numpy.int16(self.read_word(self.BMP183_REG['CAL_B1']))
 		self.B2 = numpy.int16(self.read_word(self.BMP183_REG['CAL_B2']))
+		#MB is not used
 		self.MB = numpy.int16(self.read_word(self.BMP183_REG['CAL_MB']))
 		self.MC = numpy.int16(self.read_word(self.BMP183_REG['CAL_MC']))
 		self.MD = numpy.int16(self.read_word(self.BMP183_REG['CAL_MD']))
@@ -254,4 +255,4 @@ class bmp183(threading.Thread):
 		self.measurement = 1
 		while (self.measurement == 1):
 			self.measure_pressure()
-			time.sleep(1)	
+			time.sleep(self.measurement_delay)

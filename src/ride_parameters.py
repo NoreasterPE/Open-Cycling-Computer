@@ -14,7 +14,6 @@ class ride_parameters():
 		self.gps.start()
 		#Init pressure sensor
 		self.bmp183_sensor = bmp183(simulate)
-		self.params_changed = 0
 
 		self.params = {}
 		self.p_desc = {}
@@ -96,14 +95,12 @@ class ride_parameters():
 		else:
 			self.params["speed"] = "?"
 			self.params["speed_tenths"] = "-"
-		self.params_changed = 1
 
 	def update_rtc(self):
 		#FIXME proper localisation would be nice....
 		self.params["date"] = strftime("%d-%m-%Y")
 		self.params["time"] = strftime("%H:%M:%S")
 		self.params["rtc"] = self.params["date"] + " " + self.params["time"]
-		self.params_changed = 1
 
 	def read_bmp183_sensor(self):
 		#Read pressure and temperature from BMP183
@@ -112,9 +109,7 @@ class ride_parameters():
 		self.params["temperature"] = "%.0f" % int(self.bmp183_sensor.temperature)
 		#Set current altitude based on current pressure and calculated pressure_at_sea_level, cut to meters
 		#self.params["altitude"] = int(44330*(1 - pow((self.params["pressure"]/self.params["pressure_at_sea_level"]), (1/5.255))))
-		self.params_changed = 1
 
-	def set_pressure_at_sea_level(self):
-		#Set pressure_at_sea_level based on given altitude
-		self.params["pressure_at_sea_level"] = round((self.pressure/pow((1 - self.altitude_at_home/44330), 5.255)), 0)
-		self.params_changed = 1
+	#def calculate_pressure_at_sea_level(self):
+	#	#Set pressure_at_sea_level based on given altitude
+	#	self.params["pressure_at_sea_level"] = round((self.params["pressure"]/pow((1 - self.params["altitude_at_home"]/44330), 5.255)), 0)
