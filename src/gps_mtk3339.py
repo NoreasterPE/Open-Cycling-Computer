@@ -11,6 +11,8 @@ class gps_mtk3339(threading.Thread):
 		threading.Thread.__init__(self)
 		self.simulate = simulate
 		self.present = False
+		self.latitude = float('nan')
+		self.longitude = float('nan')
 		self.speed = float('nan')
 		self.altitude = 50.0
 		self.utc = "UTC"
