@@ -17,13 +17,14 @@ class ride_parameters():
 		self.params_changed = 0
 
 		self.params = {}
+		self.p_desc = {}
 		#Params of the ride
 		self.params["altitude"] = 0.0
 		self.params["altitude_gps"] = 0.0
 		self.params["altitude_units"] = ""
 		self.params["cadence"] = 0
 		self.params["gradient"] = 0
-		self.params["heart_rate"] = 0
+		self.params["heart_rate"] = 165
 		self.params["pressure"] = 1013.0
 		self.params["pressure_at_sea_level"] = 1013.0
 		self.params["rtc"] = ""
@@ -36,18 +37,15 @@ class ride_parameters():
 		self.params["altitude_at_home"] = 89.0
 		self.params["altitude_units"] = "m"
 		self.params["gradient_units"] = "%"
-		self.params["heart_rate"] = 165
 		self.params["heart_rate_units"] = "BPM"
 		self.params["pressure_units"] = "hPa"
 		self.params["temperature_units"] = u'\N{DEGREE SIGN}' + "C"
 		self.params["rider_weight"] = 80.0
                 self.params["speed_units"] = "km/h"
 
-		#Helpers for editing values
-		self.params["ed_value"] = None
-		self.params["ed_original_value"] = None
-		self.params["ed_value_description"] = None
-		self.params["ed_variable"] = None
+		#Params description FIXME localisation
+		self.p_desc["altitude_at_home"] = "Home altitude"
+		self.p_desc["rider_weight"] = "Rider weight"
 
 	def stop(self):
 		self.gps.stop()
@@ -62,10 +60,16 @@ class ride_parameters():
 		self.read_gps_data()
 		#FIXME Add calculations of gradient, trip time, etc
 
+	def update_params(self):
+		self.params_changed = 1
+
 	def get_val(self, func):
 		#FIXME try/except for invalid func?
-		print func, ":", self.params[func]
 		return self.params[func]
+
+	def get_description(self, func):
+		#FIXME try/except for invalid func?
+		return self.p_desc[func]
 
 	def clean_value(self, variable, empty_string = "-"):
 		if not math.isnan(variable):
@@ -113,8 +117,4 @@ class ride_parameters():
 	def set_pressure_at_sea_level(self):
 		#Set pressure_at_sea_level based on given altitude
 		self.params["pressure_at_sea_level"] = round((self.pressure/pow((1 - self.altitude_at_home/44330), 5.255)), 0)
-		self.params_changed = 1
-
-	def accept_edit(self):
-		self.params[self.params["ed_variable"]] = self.params["ed_value"]
 		self.params_changed = 1

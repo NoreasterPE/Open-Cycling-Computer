@@ -14,6 +14,13 @@ class layout():
 		self.name = None
 		self.layout_changed = 0
 
+		#Helpers for editing values
+		self.editor_mode = False
+		self.editor = {}
+		self.editor["value"] = None
+		self.editor["variable_description"] = None
+		self.editor["variable"] = None
+
 		# Uncomment below to print layout tree
 		#print "page name : ", self.page.get('name')
 		#print "background : ", self.page.get('background')
@@ -72,8 +79,12 @@ class layout():
 	def render_page(self):
 		self.render_background(self.screen)
 		for func in self.current_function_list:
+			#FIXME Dirty hack - iron me out
 			try:
-				self.render(self.screen, func, self.occ.rp.get_val(func))
+				try:
+					self.render(self.screen, func, self.editor[func])
+				except KeyError:
+					self.render(self.screen, func, self.occ.rp.get_val(func))
 			except KeyError:
 				# if rp.get_val returns KeyError call render with empty value
 				self.render(self.screen, func)
@@ -114,15 +125,14 @@ class layout():
 				try:
 					if self.function_rect_list[func].collidepoint(position):
 						#print "Long click on " + func
-						self.occ.rp.params["ed_variable"] = func
+						self.editor["variable"] = func
 						#FIXME I's dirty way of getting value
-						self.occ.rp.params["ed_value"] = self.occ.rp.get_val(func)
-						self.occ.rp.params["ed_original_value"] = self.occ.rp.params["ed_value"]
+						self.editor["value"] = self.occ.rp.get_val(func)
 						#FIXME Make list of editable values + descriptions
-						self.occ.rp.params["ed_value_description"] = "Rider weight [kg]"
-						#print "Editing ", self.occ.rp.params["ed_value_description"], " ", self.occ.rp.params["ed_value"], " ", self.occ.rp.params["ed_variable"]
+						self.editor["variable_description"] = self.occ.rp.get_description(func)
 						#FIXME Call editor page - that's temporary
 						#Add call_editor function with params
+						self.editor_mode = True
 						self.use_page(3)
 						break
 				except KeyError:
@@ -169,32 +179,42 @@ class layout():
 
 	def ed_accept(self):
 		#print "ed_accept"
-		self.occ.rp.accept_edit()
+		self.accept_edit()
 		self.use_page(0)
 
 	def ed_cancel(self):
 		#print "ed_cancel"
+		self.editor_mode = False
 		self.use_page(0)
 
 	def ed_decrease(self):
 		#print "ed_decrease"
-		self.occ.rp.params["ed_value"] -= 1 
+		self.editor["value"] -= 1 
 
 	def ed_increase(self):
 		#print "ed_increase"
-		self.occ.rp.params["ed_value"] += 1
+		self.editor["value"] += 1
 
 	def ed_next(self):
 		#print "ed_next"
+		pass
 
 	def ed_prev(self):
 		#print "ed_prev"
+		pass
 
 	def ed_value(self):
 		#print "ed_value"
+		pass
 
 	def ed_value_description(self):
 		#print "ed_value_description"
+		pass
+
+	def accept_edit(self):
+		self.editor_mode = False
+		self.occ.rp.params[self.editor["variable"]] = self.editor["value"]
+		self.occ.rp.update_params()
 
 	def next_page(self):
 		cp = self.current_page_no

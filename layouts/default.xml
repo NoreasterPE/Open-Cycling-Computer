@@ -117,12 +117,12 @@
 			<font_size>4</font_size>
 		</field>
 		<field name="center_header">
-			<function>ed_value_description</function>
+			<function>variable_description</function>
 			<text_center x="120" y="70"></text_center>
 			<font_size>2</font_size>
 		</field>
 		<field name="center">
-			<function>ed_value</function>
+			<function>value</function>
 			<text_center x="120" y="130"></text_center>
 			<font_size>6</font_size>
 		</field>
