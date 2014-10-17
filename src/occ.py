@@ -28,8 +28,12 @@ class open_cycle_computer():
 		self.clock = pygame.time.Clock()
 		self.read_config()
 		self.layout = layout(self, self.layout_path)
-		self.rp = ride_parameters(simulate)
+		self.rp = ride_parameters(self, simulate)
 		self.running = 1
+		self.refresh = False
+
+	def force_refresh(self):
+		self.refresh = True
 
 	def read_config(self):
 		#FIXME error handling and emergency config read if main is corrupted
@@ -104,8 +108,8 @@ class open_cycle_computer():
 					pressed_pos = (0,0)
 					released_pos = (0,0)
 
-			if self.rp.params_changed or self.layout.layout_changed:
-				self.rp.params_changed = 0
+			if self.refresh or self.layout.layout_changed:
+				self.refresh = False
 				self.layout.layout_changed = 0
 				self.layout.render_page()
 			#print self.clock.get_fps()

@@ -166,6 +166,9 @@ class layout():
 				"quit" : self.quit
 		}
 		functions[name]()
+
+	def force_refresh(self):
+		self.occ.force_refresh()
 		
 	def load_main_page(self):
 		self.use_page(0)
@@ -186,10 +189,12 @@ class layout():
 	def ed_decrease(self):
 		#print "ed_decrease"
 		self.editor["value"] -= 1 
+		self.force_refresh()
 
 	def ed_increase(self):
 		#print "ed_increase"
 		self.editor["value"] += 1
+		self.force_refresh()
 
 	def ed_next(self):
 		#print "ed_next"
@@ -209,7 +214,7 @@ class layout():
 
 	def accept_edit(self):
 		self.occ.rp.params[self.editor["variable"]] = self.editor["value"]
-		self.occ.rp.update_params()
+		self.force_refresh()
 
 	def next_page(self):
 		#cp = self.current_page_no

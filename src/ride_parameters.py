@@ -4,7 +4,8 @@ from gps_mtk3339 import gps_mtk3339
 import math
 
 class ride_parameters():
-	def __init__(self, simulate = False):
+	def __init__(self, occ, simulate = False):
+		self.occ = occ
 		#Init sensors
 		#Init gps
 		#FIXME Add clean gps stop and ride_params stop
@@ -57,10 +58,14 @@ class ride_parameters():
 		self.update_rtc()
 		self.read_bmp183_sensor()
 		self.read_gps_data()
+		self.force_refresh()
+		#FIXME Calc pressure only when gps altitude is known or 
+		#when we're at home and the altitude is provided by user
+		#self.calculate_pressure_at_sea_level()
 		#FIXME Add calculations of gradient, trip time, etc
 
-	def update_params(self):
-		self.params_changed = 1
+	def force_refresh(self):
+		self.occ.force_refresh()
 
 	def get_val(self, func):
 		#FIXME try/except for invalid func?
