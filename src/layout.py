@@ -69,11 +69,11 @@ class layout():
 	def render_background(self, screen):
 		screen.blit(self.bg_image, [0, 0])
 
-	def render_page(self, rp):
+	def render_page(self):
 		self.render_background(self.screen)
 		for func in self.current_function_list:
 			try:
-				self.render(self.screen, func, rp.get_val(func))
+				self.render(self.screen, func, self.occ.rp.get_val(func))
 			except KeyError:
 				# if rp.get_val returns KeyError call render with empty value
 				self.render(self.screen, func)
