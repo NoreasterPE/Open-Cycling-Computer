@@ -17,7 +17,6 @@ import lxml.etree as eltree
 class open_cycle_computer():
 	'Class for PiTFT 2.8" 320x240 cycle computer'
 	def __init__(self, simulate = False, width = 240, height = 320):
-		self.config_path = "config/config.xml"
 		pygame.init()
 		if not simulate:
 			pygame.mouse.set_visible(0)
@@ -26,9 +25,10 @@ class open_cycle_computer():
 		self.height = height
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		self.clock = pygame.time.Clock()
+		self.rp = ride_parameters(self, simulate)
+		self.config_path = "config/config.xml"
 		self.read_config()
 		self.layout = layout(self, self.layout_path)
-		self.rp = ride_parameters(self, simulate)
 		self.running = 1
 		self.refresh = False
 
@@ -39,11 +39,13 @@ class open_cycle_computer():
 		#FIXME error handling and emergency config read if main is corrupted
 		config_tree = eltree.parse(self.config_path)
 		self.config = config_tree.getroot()
-		self.layout_path =  self.config.find("layout_path").text
+		self.layout_path = self.config.find("layout_path").text
+		self.rp.params["rider_weight"] = float(self.config.find("rider_weight").text)
 
 	def write_config(self):
 		config_tree = eltree.Element("config")
 		eltree.SubElement(config_tree, "layout_path").text = self.layout.layout_path
+		eltree.SubElement(config_tree, "rider_weight").text =  unicode(self.rp.params["rider_weight"])
 		#FIXME error handling for file operation
 		eltree.ElementTree(config_tree).write(self.config_path, encoding="UTF-8", pretty_print=True)
 
