@@ -18,6 +18,7 @@ class ride_parameters():
 
 		self.params = {}
 		self.p_desc = {}
+		self.units = {}
 		#Params of the ride
 		self.params["altitude"] = 0.0
 		self.params["altitude_gps"] = 0.0
@@ -35,15 +36,19 @@ class ride_parameters():
 		#Params that can be changed in Settings by user
 		#FIXME Write/Read to config
 		self.params["altitude_at_home"] = 89.0
-		self.params["altitude_units"] = "m"
-		self.params["gradient_units"] = "%"
-		self.params["heart_rate_units"] = "BPM"
 		self.params["odometer"] = 0.0
-		self.params["odometer_units"] = "km"
-		self.params["pressure_units"] = "hPa"
-		self.params["temperature_units"] = u'\N{DEGREE SIGN}' + "C"
 		self.params["rider_weight"] = 80.0
-                self.params["speed_units"] = "km/h"
+
+		#Units - name has to be identical as in params
+		self.units["altitude"] = "m"
+		self.units["altitude_at_home"] = "m"
+		self.units["gradient"] = "%"
+		self.units["heart_rate"] = "BPM"
+		self.units["odometer"] = "km"
+		self.units["pressure"] = "hPa"
+                self.units["speed"] = "km/h"
+		#FIXME python-quantities won't like those deg C
+		self.units["temperature"] = u'\N{DEGREE SIGN}' + "C"
 
 		#Params description FIXME localisation
 		self.p_desc["altitude_at_home"] = "Home altitude"
@@ -73,7 +78,10 @@ class ride_parameters():
 
 	def get_val(self, func):
 		#FIXME try/except for invalid func?
-		return self.params[func]
+		if func.endswith("_units"):
+			return self.units[func[:-6]]
+		else:
+			return self.params[func]
 
 	def get_description(self, func):
 		#FIXME try/except for invalid func?
