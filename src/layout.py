@@ -107,13 +107,23 @@ class layout():
 					#print "Function: \"" + func + "\" not clickable"
 					pass
 		elif click == 1:
-			print "LONG CLICK"
-			print self.function_rect_list
-			print self.current_function_list
+			#print "LONG CLICK"
+			#print self.function_rect_list
+			#print self.current_function_list
 			for func in self.current_function_list:
 				try:
 					if self.function_rect_list[func].collidepoint(position):
-						print "Long click on " + func
+						#print "Long click on " + func
+						self.occ.rp.params["ed_variable"] = func
+						#FIXME I's dirty way of getting value
+						self.occ.rp.params["ed_value"] = self.occ.rp.get_val(func)
+						self.occ.rp.params["ed_original_value"] = self.occ.rp.params["ed_value"]
+						#FIXME Make list of editable values + descriptions
+						self.occ.rp.params["ed_value_description"] = "Rider weight [kg]"
+						#print "Editing ", self.occ.rp.params["ed_value_description"], " ", self.occ.rp.params["ed_value"], " ", self.occ.rp.params["ed_variable"]
+						#FIXME Call editor page - that's temporary
+						#Add call_editor function with params
+						self.use_page(3)
 						break
 				except KeyError:
 					pass
@@ -158,28 +168,33 @@ class layout():
 		self.use_page(1)
 
 	def ed_accept(self):
-		print "ed_accept"
+		#print "ed_accept"
+		self.occ.rp.accept_edit()
+		self.use_page(0)
 
 	def ed_cancel(self):
-		print "ed_cancel"
+		#print "ed_cancel"
+		self.use_page(0)
 
 	def ed_decrease(self):
-		print "ed_decrease"
+		#print "ed_decrease"
+		self.occ.rp.params["ed_value"] -= 1 
 
 	def ed_increase(self):
-		print "ed_increase"
+		#print "ed_increase"
+		self.occ.rp.params["ed_value"] += 1
 
 	def ed_next(self):
-		print "ed_next"
+		#print "ed_next"
 
 	def ed_prev(self):
-		print "ed_prev"
+		#print "ed_prev"
 
 	def ed_value(self):
-		print "ed_value"
+		#print "ed_value"
 
 	def ed_value_description(self):
-		print "ed_value_description"
+		#print "ed_value_description"
 
 	def next_page(self):
 		cp = self.current_page_no
