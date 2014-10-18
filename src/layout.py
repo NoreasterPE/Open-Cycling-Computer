@@ -1,5 +1,6 @@
 import pygame
 import struct
+import quantities as q
 import lxml.etree as eltree
 
 class layout():
@@ -129,7 +130,7 @@ class layout():
 						#FIXME Make list of editable values + descriptions
 						self.editor["variable_description"] = self.occ.rp.get_description(func)
 						#FIXME Call editor page - that's temporary
-						#Add call_editor function with params
+						#Add call_editor function with p_raw params
 						self.use_page(3)
 						break
 				except KeyError:
@@ -213,7 +214,10 @@ class layout():
 		pass
 
 	def accept_edit(self):
-		self.occ.rp.params[self.editor["variable"]] = self.editor["value"]
+		u = self.occ.rp.get_unit(self.editor["variable"])
+		v = q.Quantity(self.editor["value"], u)
+		v = v.rescale(self.occ.rp.p_raw_units[self.editor["variable"]])
+		self.occ.rp.p_raw[self.editor["variable"]] = v.item()
 		self.force_refresh()
 
 	def next_page(self):

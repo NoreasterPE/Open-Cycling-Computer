@@ -34,13 +34,18 @@
 			<text_center x="180" y="280">m</text_center>
 			<font_size>4</font_size>
 		</field>
+		<field name="bottom_right_auxiliary">
+			<function>rider_weight_units</function>
+			<text_center x="220" y="310"></text_center>
+			<font_size>2</font_size>
+		</field>
 		<field name="bottom_left">
 			<function>odometer</function>
 			<button x0="0" y0="260" w="120" h="60"></button>
 			<text_center x="60" y="280"></text_center>
 			<font_size>5</font_size>
 		</field>
-		<field name="bottom_right_auxiliary">
+		<field name="bottom_left_auxiliary">
 			<function>odometer_units</function>
 			<text_center x="100" y="310"></text_center>
 			<font_size>2</font_size>
