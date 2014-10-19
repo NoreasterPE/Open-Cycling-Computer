@@ -31,10 +31,13 @@ class layout():
 		#	print "font size : " + field.find('font_size').text
 	def load_layout(self, layout_path):
 		self.max_page_id = 0
+		self.page_list = {}
+		self.page_index = {}
+		self.max_page_id = 0
 		#Do not change layout_path on loading new layout - TBD layter
 		#self.layout_path = layout_path
 		try:
-			self.layout_tree = eltree.parse(self.layout_path)
+			self.layout_tree = eltree.parse(layout_path)
 		except:
 			#Fallback to default layout
 			#FIXME - define const file with paths?
@@ -187,7 +190,7 @@ class layout():
 		self.use_main_page()
 
 	def load_settings_page(self):
-		self.use_page("settings")
+		self.use_page("settings_0")
 
 	def ed_accept(self):
 		#print "ed_accept"

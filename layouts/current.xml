@@ -1,15 +1,15 @@
 <layout>
-	<page name="Main" id="page_0" background="images/occ_dark_green_nb.png" font="" fg_colour="FFFFFF">
+	<page name="Main" id="page_0" background="images/occ_lcd_white.png" font="resources/fonts/Segment14.otf" fg_colour="000000">
 		<field name="top">
 			<function>speed</function>
-			<button x0="0" y0="0" w="240" h="150"/>
+			<button x0="0" y0="0" w="240" h="79"/>
 			<text_center x="95" y="75">0</text_center>
-			<font_size>19</font_size>
+			<font_size>11</font_size>
 		</field>
 		<field name="top_auxiliary">
 			<function>speed_tenths</function>
 			<text_center x="210" y="115">0</text_center>
-			<font_size>7</font_size>
+			<font_size>5</font_size>
 		</field>
 		<field name="top_units">
 			<function>speed_units</function>
@@ -17,55 +17,60 @@
 			<font_size>2</font_size>
 		</field>
 		<field name="middle">
-			<function>altitude_gps</function>
-			<button x0="0" y0="150" w="240" h="60"/>
+			<function>heart_rate</function>
+			<button x0="0" y0="80" w="240" h="160"/>
 			<text_center x="100" y="195">0</text_center>
-			<font_size>6</font_size>
+			<font_size>8</font_size>
 		</field>
 		<field name="middle_auxiliary">
-			<function>altitude_units</function>
-			<text_center x="210" y="195">m</text_center>
-			<font_size>2</font_size>
-		</field>
-		<field name="bottom_right">
-			<function>rider_weight</function>
-			<button x0="121" y0="241" w="120" h="60"/>
-			<text_center x="180" y="280">m</text_center>
-			<font_size>4</font_size>
-		</field>
-		<field name="bottom_right_auxiliary">
-			<function>rider_weight_units</function>
-			<text_center x="220" y="310"/>
+			<function>heart_rate_units</function>
+			<text_center x="210" y="195">BPM</text_center>
 			<font_size>2</font_size>
 		</field>
 		<field name="bottom_left">
-			<function>odometer</function>
-			<button x0="0" y0="260" w="120" h="60"/>
-			<text_center x="60" y="280"/>
+			<function>gradient</function>
+			<text_center x="50" y="280">0</text_center>
 			<font_size>5</font_size>
 		</field>
 		<field name="bottom_left_auxiliary">
-			<function>odometer_units</function>
-			<text_center x="100" y="310"/>
+			<function>gradient_units</function>
+			<text_center x="100" y="280">%</text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="bottom_right">
+			<function>cadence</function>
+			<text_center x="180" y="280">0</text_center>
+			<font_size>5</font_size>
+		</field>
+	</page>
+	<page name="Page2" id="page_1" background="images/occ_lcd_white.png" font="resources/fonts/Segment14.otf" fg_colour="000000">
+		<field name="top">
+			<function>speed</function>
+			<button x0="0" y0="0" w="240" h="79"/>
+			<text_center x="95" y="75">0</text_center>
+			<font_size>11</font_size>
+		</field>
+		<field name="top_auxiliary">
+			<function>speed_tenths</function>
+			<text_center x="210" y="115">0</text_center>
+			<font_size>5</font_size>
+		</field>
+		<field name="top_units">
+			<function>speed_units</function>
+			<text_center x="205" y="75">km/h</text_center>
 			<font_size>2</font_size>
 		</field>
 	</page>
-	<page name="Settings" id="settings" background="images/occ_dark_green_settings.png" font="" fg_colour="FFFFFF">
+	<page name="Settings" id="settings_0" background="images/occ_lcd_white_settings.png" font="resources/fonts/Segment14.otf" fg_colour="000000">
 		<field name="first">
 			<function>load_default_layout</function>
-			<button x0="0" y0="79" w="240" h="80"/>
-			<text_center x="120" y="120">Load default layout</text_center>
+			<button x0="0" y0="0" w="240" h="80"/>
+			<text_center x="120" y="40">Default</text_center>
 			<font_size>2</font_size>
 		</field>
 		<field name="second">
-			<function>load_current_layout</function>
-			<button x0="0" y0="0" w="240" h="80"/>
-			<text_center x="120" y="40">Load current layout</text_center>
-			<font_size>2</font_size>
-		</field>
-		<field name="third">
 			<function>load_white_lcd_layout</function>
-			<button x0="0" y0="159" w="240" h="80"/>
+			<button x0="0" y0="79" w="240" h="80"/>
 			<text_center x="120" y="200">White LCD</text_center>
 			<font_size>2</font_size>
 		</field>
@@ -73,50 +78,6 @@
 			<function>quit</function>
 			<button x0="0" y0="239" w="240" h="80"/>
 			<text_center x="120" y="280">Quit</text_center>
-			<font_size>2</font_size>
-		</field>
-	</page>
-	<page name="Weather" id="page_1" background="images/occ_dark_green_frame.png" font="" fg_colour="FFFFFF">
-		<field name="bottom_left">
-			<function>pressure</function>
-			<text_center x="50" y="280">0</text_center>
-			<font_size>5</font_size>
-		</field>
-		<field name="bottom_left_auxiliary">
-			<function>pressure_units</function>
-			<text_center x="100" y="310"/>
-			<font_size>2</font_size>
-		</field>
-		<field name="bottom_right">
-			<function>temperature</function>
-			<text_center x="180" y="280"/>
-			<font_size>5</font_size>
-		</field>
-		<field name="bottom_right_auxiliary">
-			<function>temperature_units</function>
-			<text_center x="220" y="310"/>
-			<font_size>2</font_size>
-		</field>
-	</page>
-	<page name="GPS" id="page_2" background="images/occ_dark_green_frame.png" font="" fg_colour="FFFFFF">
-		<field name="latitude">
-			<function>latitude</function>
-			<text_center x="120" y="30"/>
-			<font_size>4</font_size>
-		</field>
-		<field name="longitude">
-			<function>longitude</function>
-			<text_center x="120" y="60"/>
-			<font_size>4</font_size>
-		</field>
-		<field name="altitude">
-			<function>altitude_gps</function>
-			<text_center x="120" y="90"/>
-			<font_size>4</font_size>
-		</field>
-		<field name="altitude">
-			<function>altitude_units</function>
-			<text_center x="200" y="100"/>
 			<font_size>2</font_size>
 		</field>
 	</page>

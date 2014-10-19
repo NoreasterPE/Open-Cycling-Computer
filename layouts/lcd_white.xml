@@ -44,7 +44,25 @@
 			<font_size>5</font_size>
 		</field>
 	</page>
-	<page name="Settings" id="settings" background="images/occ_lcd_white_settings.png" font="resources/fonts/Segment14.otf" fg_colour="000000" >
+	<page name="Page2" id="page_1" background="images/occ_lcd_white.png" font="resources/fonts/Segment14.otf" fg_colour="000000" >
+		<field name="top">
+			<function>speed</function>
+			<button x0="0" y0="0" w="240" h="79"></button>
+			<text_center x="95" y="75">0</text_center>
+			<font_size>11</font_size>
+		</field>
+		<field name="top_auxiliary">
+			<function>speed_tenths</function>
+			<text_center x="210" y="115">0</text_center>
+			<font_size>5</font_size>
+		</field>
+		<field name="top_units">
+			<function>speed_units</function>
+			<text_center x="205" y="75">km/h</text_center>
+			<font_size>2</font_size>
+		</field>
+	</page>
+	<page name="Settings" id="settings_0" background="images/occ_lcd_white_settings.png" font="resources/fonts/Segment14.otf" fg_colour="000000" >
 		<field name="first">
 			<function>load_default_layout</function>
 			<button x0="0" y0="0" w="240" h="80"></button>
@@ -52,14 +70,8 @@
 			<font_size>2</font_size>
 		</field>
 		<field name="second">
-			<function>load_lcd_layout</function>
-			<button x0="0" y0="79" w="240" h="80"></button>
-			<text_center x="120" y="120">LCD</text_center>
-			<font_size>2</font_size>
-		</field>
-		<field name="third">
 			<function>load_white_lcd_layout</function>
-			<button x0="0" y0="159" w="240" h="80"></button>
+			<button x0="0" y0="79" w="240" h="80"></button>
 			<text_center x="120" y="200">White LCD</text_center>
 			<font_size>2</font_size>
 		</field>
@@ -68,6 +80,54 @@
 			<button x0="0" y0="239" w="240" h="80"></button>
 			<text_center x="120" y="280">Quit</text_center>
 			<font_size>2</font_size>
+		</field>
+	</page>
+	<page name="Editor" id="editor" background="images/occ_dark_green_nb_editor.png" font="" fg_colour="FFFFFF">
+		<field name="top_left">
+			<function>ed_cancel</function>
+			<button x0="0" y0="0" w="120" h="60"/>
+			<text_center x="60" y="30">Cancel</text_center>
+			<font_size>4</font_size>
+		</field>
+		<field name="top_right">
+			<function>ed_accept</function>
+			<button x0="121" y0="0" w="120" h="60"/>
+			<text_center x="180" y="30">Accept</text_center>
+			<font_size>4</font_size>
+		</field>
+		<field name="center_header">
+			<function>variable_description</function>
+			<text_center x="120" y="70"/>
+			<font_size>2</font_size>
+		</field>
+		<field name="center">
+			<function>value</function>
+			<text_center x="120" y="130"/>
+			<font_size>6</font_size>
+		</field>
+		<field name="bottom_upper_left">
+			<function>ed_decrease</function>
+			<button x0="0" y0="200" w="120" h="60"/>
+			<text_center x="60" y="230">-</text_center>
+			<font_size>5</font_size>
+		</field>
+		<field name="bottom_upper_right">
+			<function>ed_increase</function>
+			<button x0="120" y0="200" w="120" h="60"/>
+			<text_center x="180" y="230">+</text_center>
+			<font_size>5</font_size>
+		</field>
+		<field name="bottom_lower_left">
+			<function>ed_prev</function>
+			<button x0="0" y0="260" w="120" h="60"/>
+			<text_center x="60" y="290">&lt;</text_center>
+			<font_size>5</font_size>
+		</field>
+		<field name="bottom_lower_right">
+			<function>ed_next</function>
+			<button x0="120" y0="260" w="120" h="60"/>
+			<text_center x="180" y="290">&gt;</text_center>
+			<font_size>5</font_size>
 		</field>
 	</page>
 </layout>
