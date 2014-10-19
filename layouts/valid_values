@@ -26,5 +26,7 @@ speed_units - km/h, mph or m/s - not implemented yet (fixed value)
 time	-	current time
 utc	-	utc time as reported by gps unit
 
-
 To add a new value it needs to be added to get_val function in ride_parameters.py with corresponding handler.
+
+Functions:
+FIXME - add list of functions

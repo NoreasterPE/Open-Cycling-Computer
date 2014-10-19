@@ -137,6 +137,7 @@ def cleanup():
 	main_window.rp.stop()
 	#write current config for future use
 	main_window.write_config()
+	main_window.layout.write_layout()
 	pygame.quit()
 	quit()
 

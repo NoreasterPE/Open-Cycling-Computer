@@ -4,14 +4,15 @@ import quantities as q
 import lxml.etree as eltree
 
 class layout():
-	def __init__(self, occ, xml_file):
+	def __init__(self, occ, layout_file="layouts/current.xml"):
 		self.occ = occ
 		self.screen = occ.screen
 		self.page_list = {}
 		self.page_index = {}
 		self.function_rect_list = {}
 		self.current_function_list = []
-		self.load_layout(xml_file)
+		self.layout_path = layout_file
+		self.load_layout(layout_file)
 		self.layout_changed = 0
 
 		#Helpers for editing values
@@ -29,11 +30,17 @@ class layout():
 		#	print "y : " + field.find('y').text
 		#	print "font size : " + field.find('font_size').text
 	def load_layout(self, layout_path):
-		#print "load_layout", layout_path
 		self.max_page_id = 0
-		self.layout_path = layout_path 
-		layout_tree = eltree.parse(self.layout_path)
-		self.pages = layout_tree.getroot()
+		#Do not change layout_path on loading new layout - TBD layter
+		#self.layout_path = layout_path
+		try:
+			self.layout_tree = eltree.parse(self.layout_path)
+		except:
+			#Fallback to default layout
+			#FIXME - define const file with paths?
+			self.layout_tree = eltree.parse("layouts/default.xml")
+
+		self.pages = self.layout_tree.getroot()
 		for page in self.pages:
 			#print "page name : ", page.get('name')
 			self.page_list[page.get('name')] = page
@@ -42,8 +49,10 @@ class layout():
 			if page_id.startswith("page_"):
 				no = int(page_id[-1:])
 				self.max_page_id = max(self.max_page_id, no)
-			
 		self.use_page()
+
+	def write_layout(self, layout_path="layouts/current.xml"):
+		self.layout_tree.write(layout_path, encoding="UTF-8", pretty_print=True)
 
 	def use_page(self, page_id = "page_0"):
 		self.layout_changed = 1
@@ -162,10 +171,11 @@ class layout():
 				"ed_value" : self.ed_value,
 				"ed_value_description" : self.ed_value_description,
 				"load_default_layout" : self.load_default_layout,
-				"load_lcd_layout" : self.load_lcd_layout,
+				"load_current_layout" : self.load_current_layout,
 				"load_white_lcd_layout" : self.load_lcd_white_layout,
 				"next_page" : self.next_page,
 				"prev_page" : self.prev_page,
+				"write_layout" : self.write_layout,
 				"quit" : self.quit
 		}
 		functions[name]()
@@ -244,14 +254,14 @@ class layout():
 	def load_layout_by_name(self, name):
 		self.load_layout("layouts/" + name)
 
-	def load_default_layout(self):
-		self.load_layout_by_name("default.xml")
-
-	def load_lcd_layout(self):
-		self.load_layout_by_name("lcd.xml")
+	def load_current_layout(self):
+		self.load_layout_by_name("current.xml")
 
 	def load_lcd_white_layout(self):
 		self.load_layout_by_name("lcd_white.xml")
+
+	def load_default_layout(self):
+		self.load_layout_by_name("default.xml")
 
 	def quit(self):
 		self.occ.running = 0
