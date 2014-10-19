@@ -40,11 +40,9 @@ class layout():
 			#FIXME ther must be a better solution to order problem
 			page_id = page.get('id')
 			self.page_index[page_id] = page.get('name')
-			print page_id, ":", page.get('name') 
 			if page_id.startswith("page_"):
 				no = int(page_id[-1:])
 				self.max_page_id = max(self.max_page_id, no)
-				print "max_page_id : ", self.max_page_id
 			
 		self.use_page()
 
