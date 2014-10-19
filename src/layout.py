@@ -53,6 +53,7 @@ class layout():
 				no = int(page_id[-1:])
 				self.max_page_id = max(self.max_page_id, no)
 		self.use_page()
+		self.write_layout()
 
 	def write_layout(self, layout_path="layouts/current.xml"):
 		self.layout_tree.write(layout_path, encoding="UTF-8", pretty_print=True)
