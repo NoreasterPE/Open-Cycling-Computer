@@ -38,19 +38,21 @@ class layout():
 			#print "page name : ", page.get('name')
 			self.page_list[page.get('name')] = page
 			#FIXME ther must be a better solution to order problem
-			page_id = int(page.get('id'))
+			page_id = page.get('id')
 			self.page_index[page_id] = page.get('name')
-			if (self.max_page_id < page_id):
-				self.max_page_id = page_id
+			print page_id, ":", page.get('name') 
+			if page_id.startswith("page_"):
+				no = int(page_id[-1:])
+				self.max_page_id = max(self.max_page_id, no)
+				print "max_page_id : ", self.max_page_id
 			
 		self.use_page()
 
-	def use_page(self, page_no = 0):
-		#print "use_page:", page_name
+	def use_page(self, page_id = "page_0"):
 		self.layout_changed = 1
 		self.current_function_list = []
-		self.current_page_name = self.page_index[page_no]
-		self.current_page_no = page_no
+		self.current_page_name = self.page_index[page_id]
+		self.current_page_id = page_id
 		self.current_page = self.page_list[self.current_page_name]
 		try:
 			self.bg_image = pygame.image.load(self.current_page.get('background')).convert() 
@@ -71,6 +73,9 @@ class layout():
 				w = int(b.get('w'))
 				h = int(b.get('h'))
 				self.function_rect_list[field.find('function').text] = pygame.Rect(x0, y0, w, h)
+
+	def use_main_page(self):
+		self.use_page()
 
 	def render_background(self, screen):
 		screen.blit(self.bg_image, [0, 0])
@@ -131,7 +136,7 @@ class layout():
 						self.editor["variable_description"] = self.occ.rp.get_description(func)
 						#FIXME Call editor page - that's temporary
 						#Add call_editor function with p_raw params
-						self.use_page(3)
+						self.use_page("editor")
 						break
 				except KeyError:
 					pass
@@ -143,13 +148,13 @@ class layout():
 			self.run_function("prev_page")
 		elif click == 4:
 			#print "Swipe BOTTOM to TOP"
-			self.run_function("main")
+			self.run_function("page_0")
 		elif click == 5:
 			#print "Swipe TOP to BOTTOM"
 			self.run_function("settings")
 
 	def run_function(self, name):
-		functions = {	"main" : self.load_main_page,
+		functions = {	"page_0" : self.load_page_0,
 				"settings" : self.load_settings_page,
 				"ed_accept" : self.ed_accept,
 				"ed_cancel" : self.ed_cancel,
@@ -171,21 +176,21 @@ class layout():
 	def force_refresh(self):
 		self.occ.force_refresh()
 		
-	def load_main_page(self):
-		self.use_page(0)
+	def load_page_0(self):
+		self.use_main_page()
 
 	def load_settings_page(self):
 		#FIXME Special Settings page required?
-		self.use_page(1)
+		self.use_page("settings")
 
 	def ed_accept(self):
 		#print "ed_accept"
 		self.accept_edit()
-		self.use_page(0)
+		self.use_main_page()
 
 	def ed_cancel(self):
 		#print "ed_cancel"
-		self.use_page(0)
+		self.use_main_page()
 
 	def ed_decrease(self):
 		#print "ed_decrease"
@@ -221,20 +226,22 @@ class layout():
 		self.force_refresh()
 
 	def next_page(self):
-		#cp = self.current_page_no
+		#cp = self.current_page_id
 		try:
-			self.use_page(self.current_page_no + 1)
+			no = int(self.current_page_id[-1:])
+			self.use_page("page_" + unicode(no + 1))
 		except KeyError:
-			self.use_page(0)
+			self.use_main_page()
 			#FIXME Use cp to block circular page scrolling - it should be in options
 			#self.use_page(cp)
 
 	def prev_page(self):
-		#cp = self.current_page_no
+		#cp = self.current_page_id
 		try:
-			self.use_page(self.current_page_no - 1)
+			no = int(self.current_page_id[-1:])
+			self.use_page("page_" + unicode(no - 1))
 		except KeyError:
-			self.use_page(self.max_page_id)
+			self.use_page("page_" + unicode(self.max_page_id))
 			#FIXME Use cp to block circular page scrolling - it should be in options
 			#self.use_page(cp)
 

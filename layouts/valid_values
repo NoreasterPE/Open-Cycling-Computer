@@ -1,3 +1,5 @@
+Each layout has to contain at least 3 pages: page_0 (main page), editor and settings. Use default.xml as a template.
+
 Valid function names for use in layout files:
 
 altitude	- current altitude in meters, calculated from pressure
