@@ -37,7 +37,6 @@ class layout():
 		for page in self.pages:
 			#print "page name : ", page.get('name')
 			self.page_list[page.get('name')] = page
-			#FIXME ther must be a better solution to order problem
 			page_id = page.get('id')
 			self.page_index[page_id] = page.get('name')
 			if page_id.startswith("page_"):
@@ -178,7 +177,6 @@ class layout():
 		self.use_main_page()
 
 	def load_settings_page(self):
-		#FIXME Special Settings page required?
 		self.use_page("settings")
 
 	def ed_accept(self):
