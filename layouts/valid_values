@@ -17,6 +17,8 @@ longitude	- longitude as reported by gps unit
 pressure	- current atmospheric pressure measured by hardware (currently BMP1823)
 pressure_at_sea_level	- sea level pressure calculated from pressure on start and given altitude. It's a value fixed at start
 pressure_units	- pressure units
+rider_weight	- weight of rider
+rider_weight_units	- units of the weight of rider
 rtc	-	combined date + time 
 speed	-	speed, to be calculated using Kalman filter from gps + wheel sensor - not implemented yet (fixed value)
 speed_tenths - first decimal place of speed
