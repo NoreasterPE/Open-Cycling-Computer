@@ -89,6 +89,7 @@ class open_cycle_computer():
 			pygame.event.clear(pygame.MOUSEMOTION)
 			#print "ticking...:", time_now, pressed_t, pressed_pos, released_t, released_pos
 			if (pressed_t != 0):
+				self.layout.render_button = pressed_pos
 				if (time_now - pressed_t) > LONG_CLICK:
 					#print "LONG CLICK", time_now, pressed_t, pressed_pos
 					self.layout.check_click(pressed_pos, 1)
@@ -96,6 +97,7 @@ class open_cycle_computer():
 					released_t = 0
 					pressed_pos = (0,0)
 					released_pos = (0,0)
+					self.layout.render_button = None
 				if (released_t != 0):
 					dx = pressed_pos[0] - released_pos[0]
 					dy = pressed_pos[1] - released_pos[1]
@@ -122,6 +124,7 @@ class open_cycle_computer():
 					released_t = 0
 					pressed_pos = (0,0)
 					released_pos = (0,0)
+					self.layout.render_button = None
 
 			if self.refresh or self.layout.layout_changed:
 				self.refresh = False

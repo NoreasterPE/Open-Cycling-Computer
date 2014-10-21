@@ -11,9 +11,11 @@ class layout():
 		self.page_index = {}
 		self.function_rect_list = {}
 		self.current_function_list = []
+		self.buttons_surf_list = {}
 		self.layout_path = layout_file
 		self.load_layout(layout_file)
 		self.layout_changed = 0
+		self.render_button = None
 
 		#Helpers for editing values
 		self.editor = {}
@@ -65,9 +67,15 @@ class layout():
 		self.current_page_id = page_id
 		self.current_page = self.page_list[self.current_page_name]
 		try:
-			self.bg_image = pygame.image.load(self.current_page.get('background')).convert() 
+			self.bg_image = pygame.image.load(self.current_page.get('background')).convert()
 		except pygame.error:
-			print "Cannot load background image " + self.current_page.get('background')  
+			#print "Cannot load background image"
+			pass
+		try:
+			self.bt_image = pygame.image.load(self.current_page.get('buttons')).convert()
+		except pygame.error:
+			#print "Cannot load buttons image"
+			pass
 		self.font = self.current_page.get('font') 
 		if (self.font == ""):
 			self.font = None
@@ -82,7 +90,10 @@ class layout():
 				y0 = int(b.get('y0'))
 				w = int(b.get('w'))
 				h = int(b.get('h'))
-				self.function_rect_list[field.find('function').text] = pygame.Rect(x0, y0, w, h)
+				#FIXME optimise
+				n = field.find('function').text
+				r = pygame.Rect(x0, y0, w, h)
+				self.function_rect_list[n] = r
 
 	def use_main_page(self):
 		self.use_page()
@@ -90,8 +101,16 @@ class layout():
 	def render_background(self, screen):
 		screen.blit(self.bg_image, [0, 0])
 
+	def render_pressed_button(self, screen, function):
+		try:
+			r =  self.function_rect_list[function]
+			screen.blit(self.bt_image, r, r, 0)
+		except (TypeError, AttributeError):
+			pass
+
 	def render_page(self):
 		self.render_background(self.screen)
+		self.show_pressed_button()
 		for func in self.current_function_list:
 			#FIXME Dirty hack - iron me out
 			try:
@@ -115,6 +134,16 @@ class layout():
 				text_center_x = int(field.find('text_center').get('x'))
 				text_center_y = int(field.find('text_center').get('y'))
 				screen.blit(ren, (text_center_x - x, text_center_y - y))
+
+	def show_pressed_button(self):
+		if self.render_button:
+			for func in self.current_function_list:
+				try:
+					if self.function_rect_list[func].collidepoint(self.render_button):
+						self.render_pressed_button(self.screen, func)
+						break
+				except KeyError:
+					pass
 
 	def check_click(self, position, click):
 		#print "check_click: ", position, click
