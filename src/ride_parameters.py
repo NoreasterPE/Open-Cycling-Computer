@@ -22,6 +22,7 @@ class ride_parameters():
 		self.params = {}
 		self.p_desc = {}
 		self.units = {}
+		self.units_allowed = {}
 		#Internal params of the ride.
 		self.p_raw["altitude"] = 0.0
 		self.p_raw["altitude_gps"] = 0.0
@@ -71,6 +72,9 @@ class ride_parameters():
 		self.units["pressure"] = "hPa"
 		self.units["rider_weight"] = "kg"
 		self.units["speed"] = "km/h"
+
+		self.units_allowed["odometer"] = {"m", "km", "mi", "yd"}
+
 		#FIXME python-quantities won't like those deg C
 		self.units["temperature"] = u'\N{DEGREE SIGN}' + "C"
 

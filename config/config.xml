@@ -1,6 +1,6 @@
 <config>
   <layout_path>layouts/current.xml</layout_path>
-  <rider_weight>89.0</rider_weight>
+  <rider_weight>95.0</rider_weight>
   <rider_weight_units>kg</rider_weight_units>
   <altitude_at_home>89.0</altitude_at_home>
   <altitude_at_home_units>m</altitude_at_home_units>

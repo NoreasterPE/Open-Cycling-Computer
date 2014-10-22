@@ -171,7 +171,9 @@ class layout():
 				"ed_decrease" : self.ed_decrease,
 				"ed_increase" : self.ed_increase,
 				"ed_next" : self.ed_next,
+				"ed_next_unit" : self.ed_next_unit,
 				"ed_prev" : self.ed_prev,
+				"ed_prev_unit" : self.ed_prev_unit,
 				"ed_value" : self.ed_value,
 				"ed_value_description" : self.ed_value_description,
 				"load_default_layout" : self.load_default_layout,
@@ -218,6 +220,14 @@ class layout():
 
 	def ed_prev(self):
 		#print "ed_prev"
+		pass
+
+	def ed_next_unit(self):
+		print "ed_next_unit"
+		pass
+
+	def ed_prev_unit(self):
+		print "ed_prev_unit"
 		pass
 
 	def ed_value(self):
