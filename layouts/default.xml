@@ -125,13 +125,13 @@
 			<function>ed_cancel</function>
 			<button x0="0" y0="0" w="119" h="60"/>
 			<text_center x="60" y="30">Cancel</text_center>
-			<font_size>4</font_size>
+			<font_size>3</font_size>
 		</field>
 		<field name="top_right">
 			<function>ed_accept</function>
 			<button x0="120" y0="0" w="119" h="60"/>
 			<text_center x="180" y="30">Accept</text_center>
-			<font_size>4</font_size>
+			<font_size>3</font_size>
 		</field>
 		<field name="center_header">
 			<function>variable_description</function>
@@ -140,19 +140,19 @@
 		</field>
 		<field name="center">
 			<function>value</function>
-			<text_center x="120" y="130"/>
+			<text_center x="120" y="110"/>
 			<font_size>6</font_size>
 		</field>
 		<field name="center_left">
 			<function>ed_prev_unit</function>
-			<button x0="0" y0="60" w="80" h="60"/>
-			<text_center x="20" y="130">[]</text_center>
+			<button x0="0" y0="140" w="59" h="60"/>
+			<text_center x="40" y="130"> </text_center>
 			<font_size>3</font_size>
 		</field>
 		<field name="center_right">
 			<function>ed_next_unit</function>
-			<button x0="240" y0="60" w="80" h="60"/>
-			<text_center x="300" y="130">[]</text_center>
+			<button x0="180" y0="140" w="59" h="60"/>
+			<text_center x="200" y="130"> </text_center>
 			<font_size>3</font_size>
 		</field>
 		<field name="bottom_upper_left">

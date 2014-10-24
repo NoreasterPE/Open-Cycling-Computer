@@ -3,7 +3,7 @@
 	<page name="Main" id="page_0" background="images/wht_page_0_background.png" buttons="images/wht_page_0_buttons.png" font="resources/fonts/Segment14.otf" fg_colour="000000" >
 		<field name="top">
 			<function>speed</function>
-			<button x0="0" y0="0" w="240" h="79"></button>
+			<button x0="0" y0="0" w="240" h="150"></button>
 			<text_center x="95" y="75">0</text_center>
 			<font_size>11</font_size>
 		</field>
@@ -19,7 +19,7 @@
 		</field>
 		<field name="middle">
 			<function>heart_rate</function>
-			<button x0="0" y0="80" w="240" h="160"></button>
+			<button x0="0" y0="80" w="239" h="89"></button>
 			<text_center x="100" y="195">0</text_center>
 			<font_size>8</font_size>
 		</field>
