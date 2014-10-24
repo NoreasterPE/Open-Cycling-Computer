@@ -41,6 +41,9 @@ class ride_parameters():
 
 		#Internal units
 		self.p_raw_units["altitude_at_home"] = "m"
+		self.p_raw_units["altitude_gps"] = "m"
+		self.p_raw_units["latitude"] = ""
+		self.p_raw_units["longitude"] = ""
 		self.p_raw_units["odometer"] = "m"
 		self.p_raw_units["rider_weight"] = "kg"
 
@@ -50,6 +53,8 @@ class ride_parameters():
 		self.params["cadence"] = 0
 		self.params["gradient"] = 0
 		self.params["heart_rate"] = 165
+		self.params["latitude"] = "-"
+		self.params["longitude"] = "-"
 		self.params["pressure"] = 1013
 		self.params["pressure_at_sea_level"] = 1013
 		self.params["rtc"] = ""
@@ -69,6 +74,8 @@ class ride_parameters():
 		self.units["altitude_gps"] = "m"
 		self.units["gradient"] = "%"
 		self.units["heart_rate"] = "BPM"
+		self.units["latitude"] = ""
+		self.units["longitude"] = ""
 		self.units["odometer"] = "km"
 		self.units["pressure"] = "hPa"
 		self.units["rider_weight"] = "kg"
@@ -157,9 +164,9 @@ class ride_parameters():
 		self.p_raw["altitude_gps"] = self.clean_value(alt);
 
 	def update_params(self):
-		#self.params["latitude"] = "%.4f" % self.p_raw["latitude"]
-		#self.params["longitude"] = "%.4f" % self.p_raw["longitude"]
-		#self.params["altitude_gps"] = "%.0f" % self.p_raw["altitude_gps"]
+		self.update_param("latitude", "%.4f")
+		self.update_param("longitude", "%.4f")
+		self.update_param("altitude_gps", "%.0f")
 
 		#FIXME optimise code to use clean_value for speed
 		spd = self.p_raw["speed"]
@@ -177,9 +184,14 @@ class ride_parameters():
 		self.update_param("rider_weight", "%.1f")
 
 	def update_param(self, param_name, formatting):
-		v = q.Quantity(self.p_raw[param_name], self.get_internal_unit(param_name))
-		v.units = self.get_unit(param_name)
-		self.params[param_name] = float(formatting % v.item())
+		iu = self.get_internal_unit(param_name)
+		try:
+			v = q.Quantity(self.p_raw[param_name], iu)
+			v.units = self.get_unit(param_name)
+			self.params[param_name] = float(formatting % v.item())
+		except (ValueError, TypeError):
+			print "update_param exception: ", param_name, " value=", self.params[param_name]
+			
 
 	def update_rtc(self):
 		#FIXME proper localisation would be nice....
