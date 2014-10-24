@@ -33,18 +33,18 @@ class layout():
 		#	print "x : "  + field.find('x').text
 		#	print "y : " + field.find('y').text
 		#	print "font size : " + field.find('font_size').text
+
 	def load_layout(self, layout_path):
 		self.max_page_id = 0
 		self.page_list = {}
 		self.page_index = {}
 		self.max_page_id = 0
-		#Do not change layout_path on loading new layout - TBD layter
-		#self.layout_path = layout_path
-		#FIXME Be more verbal about failure in parsing layout
 		try:
 			self.layout_tree = eltree.parse(layout_path)
+			self.layout_path = layout_path
 		except:
 			print "Loading layout ", layout_path, " failed, falling back to default.xml"
+			print "Error details:", sys.exc_info()[0]
 			#Fallback to default layout
 			#FIXME - define const file with paths?
 			self.layout_tree = eltree.parse("layouts/default.xml")
@@ -72,16 +72,20 @@ class layout():
 		self.current_page_id = page_id
 		self.current_page = self.page_list[self.current_page_name]
 		try:
-			self.bg_image = pygame.image.load(self.current_page.get('background')).convert()
+			bg_path = self.current_page.get('background')
+			self.bg_image = pygame.image.load(bg_path).convert()
 		except pygame.error:
-			print "Cannot load background image! layout_path =", self.layout_path, " page_id =", page_id
+			print "Cannot load background image! layout_path =", self.layout_path, " background path:", bg_path, " page_id =", page_id
 			#That stops occ but not immediately - errors can occur
 			self.occ.running = False
+			self.occ.cleanup()
 		try:
-			self.bt_image = pygame.image.load(self.current_page.get('buttons')).convert()
+			bt_path = self.current_page.get('buttons')
+			self.bt_image = pygame.image.load(bt_path).convert()
 		except pygame.error:
-			print "Cannot load buttons image! layout_path =", self.layout_path, ", page_id =", page_id
+			print "Cannot load buttons image! layout_path =", self.layout_path, " buttons path:", bt_path, " page_id =", page_id
 			self.occ.running = False
+			self.occ.cleanup()
 			pass
 		self.font = self.current_page.get('font') 
 		if (self.font == ""):
