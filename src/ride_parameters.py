@@ -21,6 +21,7 @@ class ride_parameters():
 		self.p_raw_units = {}
 		self.params = {}
 		self.p_desc = {}
+		self.p_editable = {}
 		self.units = {}
 		self.units_allowed = {}
 		#Internal params of the ride.
@@ -84,6 +85,13 @@ class ride_parameters():
 		self.p_desc["odometer_units"] = "Odometer units" 
 		self.p_desc["rider_weight"] = "Rider weight"
 		self.p_desc["rider_weight_units"] = "Rider weight units"
+
+		#Define id a param is editable FIXME editor type - number, calendar, unit, etc.
+		self.p_editable["altitude_at_home"] = 1
+		self.p_editable["odometer"] = 1 
+		self.p_editable["odometer_units"] = 0
+		self.p_editable["rider_weight"] = 1
+		self.p_editable["rider_weight_units"] = 0
 
 	def stop(self):
 		self.gps.stop()

@@ -135,17 +135,17 @@ class open_cycle_computer():
 			self.clock.tick(50)
 			pygame.display.flip()
 
-def cleanup():
-	sleep(1)
-	main_window.rp.stop()
-	#write current config for future use
-	main_window.write_config()
-	main_window.layout.write_layout()
-	pygame.quit()
-	quit()
+	def cleanup(self):
+		sleep(1)
+		main_window.rp.stop()
+		#write current config for future use
+		main_window.write_config()
+		main_window.layout.write_layout()
+		pygame.quit()
+		quit()
 
 def quit_handler(signal, frame):
-	cleanup()
+	main_window.cleanup()
 
 if __name__ == "__main__":
 	signal.signal(signal.SIGTERM, quit_handler)
@@ -156,4 +156,4 @@ if __name__ == "__main__":
 	#main_window = open_cycle_computer(True)
 	main_window = open_cycle_computer()
 	main_window.main_loop()
-	cleanup()
+	main_window.cleanup()

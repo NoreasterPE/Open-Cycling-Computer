@@ -4,7 +4,9 @@ import quantities as q
 import lxml.etree as eltree
 
 class layout():
-	def __init__(self, occ, layout_file="layouts/current.xml"):
+	#def __init__(self, occ, layout_path="layouts/current.xml"):
+	#Temporary change
+	def __init__(self, occ, layout_path="layouts/default.xml"):
 		self.occ = occ
 		self.screen = occ.screen
 		self.page_list = {}
@@ -12,8 +14,8 @@ class layout():
 		self.function_rect_list = {}
 		self.current_function_list = []
 		self.buttons_surf_list = {}
-		self.layout_path = layout_file
-		self.load_layout(layout_file)
+		self.layout_path = layout_path
+		self.load_layout(layout_path)
 		self.layout_changed = 0
 		self.render_button = None
 
@@ -38,9 +40,11 @@ class layout():
 		self.max_page_id = 0
 		#Do not change layout_path on loading new layout - TBD layter
 		#self.layout_path = layout_path
+		#FIXME Be more verbal about failure in parsing layout
 		try:
 			self.layout_tree = eltree.parse(layout_path)
 		except:
+			print "Loading layout ", layout_path, " failed, falling back to default.xml"
 			#Fallback to default layout
 			#FIXME - define const file with paths?
 			self.layout_tree = eltree.parse("layouts/default.xml")
@@ -63,18 +67,21 @@ class layout():
 	def use_page(self, page_id = "page_0"):
 		self.layout_changed = 1
 		self.current_function_list = []
+		self.current_button_list = []
 		self.current_page_name = self.page_index[page_id]
 		self.current_page_id = page_id
 		self.current_page = self.page_list[self.current_page_name]
 		try:
 			self.bg_image = pygame.image.load(self.current_page.get('background')).convert()
 		except pygame.error:
-			#print "Cannot load background image"
-			pass
+			print "Cannot load background image! layout_path =", self.layout_path, " page_id =", page_id
+			#That stops occ but not immediately - errors can occur
+			self.occ.running = False
 		try:
 			self.bt_image = pygame.image.load(self.current_page.get('buttons')).convert()
 		except pygame.error:
-			#print "Cannot load buttons image"
+			print "Cannot load buttons image! layout_path =", self.layout_path, ", page_id =", page_id
+			self.occ.running = False
 			pass
 		self.font = self.current_page.get('font') 
 		if (self.font == ""):
@@ -94,6 +101,7 @@ class layout():
 				n = field.find('function').text
 				r = pygame.Rect(x0, y0, w, h)
 				self.function_rect_list[n] = r
+				self.current_button_list.append(field.find('function').text)
 
 	def use_main_page(self):
 		self.use_page()
@@ -102,6 +110,7 @@ class layout():
 		screen.blit(self.bg_image, [0, 0])
 
 	def render_pressed_button(self, screen, function):
+		#FIXME make sure it's OK to skip rendering here
 		try:
 			r =  self.function_rect_list[function]
 			screen.blit(self.bt_image, r, r, 0)
@@ -137,13 +146,14 @@ class layout():
 
 	def show_pressed_button(self):
 		if self.render_button:
-			for func in self.current_function_list:
+			for func in self.current_button_list:
 				try:
 					if self.function_rect_list[func].collidepoint(self.render_button):
 						self.render_pressed_button(self.screen, func)
 						break
 				except KeyError:
-					pass
+					print "show_pressed_button failed! func = ", func 
+					self.occ.running = False
 
 	def check_click(self, position, click):
 		#print "check_click: ", position, click
@@ -151,34 +161,40 @@ class layout():
 		if click == 0:
 			#Short click
 			#FIXME Search through function_rect_list directly? TBD
-			for func in self.current_function_list:
+			for func in self.current_button_list:
 				try:
 					if self.function_rect_list[func].collidepoint(position):
 						self.run_function(func)
 						break
 				except KeyError:
 					#FIXME function name not knwon - write to log
-					#print "Function: \"" + func + "\" not clickable"
-					pass
+					#It's not fatal  - user clicked on a non-clickable element
+					print "KeyError: non-fatal: check_click failed! func =", func, ", position =", position, ", click =", click 
 		elif click == 1:
 			#print "LONG CLICK"
 			#print self.function_rect_list
-			#print self.current_function_list
-			for func in self.current_function_list:
+			#print self.current_button_list
+			#print self.occ.rp.p_editable
+			for func in self.current_button_list:
 				try:
 					if self.function_rect_list[func].collidepoint(position):
 						#print "Long click on " + func
-						self.editor["variable"] = func
-						#FIXME I's dirty way of getting value
-						self.editor["value"] = self.occ.rp.get_val(func)
-						#FIXME Make list of editable values + descriptions
-						self.editor["variable_description"] = self.occ.rp.get_description(func)
-						#FIXME Call editor page - that's temporary
-						#Add call_editor function with p_raw params
-						self.use_page("editor")
-						break
+						#FIXME I's dirty way of getting value - add some helper function
+						if func in self.occ.rp.p_editable:
+							#print "func " + func + " is editable"
+							self.editor["variable"] = func
+							#FIXME I's dirty way of getting value
+							self.editor["value"] = self.occ.rp.get_val(func)
+							#FIXME Make list of editable values + descriptions
+							self.editor["variable_description"] = self.occ.rp.get_description(func)
+							#FIXME Call editor page - that's temporary
+							#Add call_editor function with p_raw params
+							self.use_page("editor")
+							break
 				except KeyError:
-					pass
+					#FIXME function name not knwon - write to log
+					#It's not fatal  - user clicked on a non-clickable element
+					print "KeyError: non-fatal: check_click failed on click = 1 [LONG CLICK] ! func =", func, ", position = ", position
 		elif click == 2:
 			#Swipe RIGHT to LEFT
 			self.run_function("next_page")
