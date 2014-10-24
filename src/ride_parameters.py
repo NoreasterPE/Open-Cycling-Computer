@@ -173,8 +173,8 @@ class ride_parameters():
 
 		self.params["utc"] = self.p_raw["utc"]
 
-		#Change units from internal [m] to user units
-		#FIXME internal units could be stored as well to avoid confusion and conversion should be a function
+		#Change units from internal to user units
+		#FIXME conversion should be a function
 		v = q.Quantity(self.p_raw["odometer"], self.get_internal_unit("odometer"))
 		v.units = self.get_unit("odometer")
 		self.params["odometer"] = float("%.1f" % v.item())
