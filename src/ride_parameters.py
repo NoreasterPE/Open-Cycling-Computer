@@ -190,7 +190,7 @@ class ride_parameters():
 			v.units = self.get_unit(param_name)
 			self.params[param_name] = float(formatting % v.item())
 		except (ValueError, TypeError):
-			print "update_param exception: ", param_name, " value=", self.params[param_name]
+			print "update_param exception: ", param_name, " params[] =", self.params[param_name], " p_raw[] =", self.p_raw[param_name]
 			
 
 	def update_rtc(self):
