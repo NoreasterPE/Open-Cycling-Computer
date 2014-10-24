@@ -296,23 +296,27 @@ class layout():
 
 	def next_page(self):
 		#cp = self.current_page_id
-		try:
-			no = int(self.current_page_id[-1:])
-			self.use_page("page_" + unicode(no + 1))
-		except KeyError:
-			self.use_main_page()
-			#FIXME Use cp to block circular page scrolling - it should be in options
-			#self.use_page(cp)
+		#Editor is a special page - it cannot be switched, only cancel or accept
+		if self.current_page_id is not "editor":
+			try:
+				no = int(self.current_page_id[-1:])
+				self.use_page("page_" + unicode(no + 1))
+			except KeyError:
+				self.use_main_page()
+				#FIXME Use cp to block circular page scrolling - it should be in options
+				#self.use_page(cp)
 
 	def prev_page(self):
 		#cp = self.current_page_id
-		try:
-			no = int(self.current_page_id[-1:])
-			self.use_page("page_" + unicode(no - 1))
-		except KeyError:
-			self.use_page("page_" + unicode(self.max_page_id))
-			#FIXME Use cp to block circular page scrolling - it should be in options
-			#self.use_page(cp)
+		#Editor is a special page - it cannot be switched, only cancel or accept
+		if self.current_page_id is not "editor":
+			try:
+				no = int(self.current_page_id[-1:])
+				self.use_page("page_" + unicode(no - 1))
+			except KeyError:
+				self.use_page("page_" + unicode(self.max_page_id))
+				#FIXME Use cp to block circular page scrolling - it should be in options
+				#self.use_page(cp)
 
 	def load_layout_by_name(self, name):
 		self.load_layout("layouts/" + name)
