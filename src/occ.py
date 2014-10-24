@@ -133,7 +133,7 @@ class open_cycle_computer():
 				self.layout.render_page()
 			#print self.clock.get_fps()
 			#Setting FPS too low causes some click-directly-after-click problems
-			self.clock.tick(50)
+			self.clock.tick(30)
 			#FIXME display.update might be faster, but require list of rectangles for he update
 			pygame.display.flip()
 
