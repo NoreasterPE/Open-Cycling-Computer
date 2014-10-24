@@ -137,10 +137,10 @@ class open_cycle_computer():
 
 	def cleanup(self):
 		sleep(1)
-		main_window.rp.stop()
+		self.rp.stop()
 		#write current config for future use
-		main_window.write_config()
-		main_window.layout.write_layout()
+		self.write_config()
+		self.layout.write_layout()
 		pygame.quit()
 		quit()
 
