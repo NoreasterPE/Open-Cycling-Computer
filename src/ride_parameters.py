@@ -173,15 +173,13 @@ class ride_parameters():
 
 		self.params["utc"] = self.p_raw["utc"]
 
-		#Change units from internal to user units
-		#FIXME conversion should be a function
-		v = q.Quantity(self.p_raw["odometer"], self.get_internal_unit("odometer"))
-		v.units = self.get_unit("odometer")
-		self.params["odometer"] = float("%.1f" % v.item())
+		self.update_param("odometer", "%.1f")
+		self.update_param("rider_weight", "%.1f")
 
-		v = q.Quantity(self.p_raw["rider_weight"], self.get_internal_unit("rider_weight"))
-		v.units = self.get_unit("rider_weight")
-		self.params["rider_weight"] = float("%.1f" % v.item())
+	def update_param(self, param_name, formatting):
+		v = q.Quantity(self.p_raw[param_name], self.get_internal_unit(param_name))
+		v.units = self.get_unit(param_name)
+		self.params[param_name] = float(formatting % v.item())
 
 	def update_rtc(self):
 		#FIXME proper localisation would be nice....
