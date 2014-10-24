@@ -139,8 +139,14 @@ class open_cycle_computer():
 		sleep(1)
 		self.rp.stop()
 		#write current config for future use
-		self.write_config()
-		self.layout.write_layout()
+		try:
+			self.write_config()
+		except AttributeError:
+			pass
+		try:
+			self.layout.write_layout()
+		except AttributeError:
+			pass
 		pygame.quit()
 		quit()
 
