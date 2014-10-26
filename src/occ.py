@@ -7,13 +7,12 @@ from layout import layout
 from rendering import rendering
 from time import *
 import locale
+import lxml.etree as eltree
 import math
 import os
 import pygame
 import signal
 import sys
-import lxml.etree as eltree
-
 
 class open_cycle_computer():
 	'Class for PiTFT 2.8" 320x240 cycle computer'
