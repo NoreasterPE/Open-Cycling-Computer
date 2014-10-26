@@ -10,6 +10,7 @@ import locale
 import lxml.etree as eltree
 import math
 import os
+import platform
 import pygame
 import signal
 import sys
@@ -157,8 +158,10 @@ if __name__ == "__main__":
 	signal.signal(signal.SIGINT, quit_handler)
 	os.environ["SDL_FBDEV"] = "/dev/fb1"
 	os.putenv('SDL_MOUSEDEV' , '/dev/input/touchscreen')
-
-	#main_window = open_cycle_computer(True)
-	main_window = open_cycle_computer()
+	#This is a simple check if we're running on Raspberry PI. Switch to simulation mode if we're not
+	if platform.processor() is "armv6l":
+		main_window = open_cycle_computer(False)
+	else:
+		main_window = open_cycle_computer(True)
 	main_window.main_loop()
 	main_window.cleanup()
