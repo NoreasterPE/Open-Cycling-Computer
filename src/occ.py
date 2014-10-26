@@ -139,7 +139,6 @@ class open_cycle_computer():
 		sleep(1)
 		self.rp.stop()
 		self.rendering.stop()
-		#write current config for future use
 		try:
 			self.write_config()
 		except AttributeError:
