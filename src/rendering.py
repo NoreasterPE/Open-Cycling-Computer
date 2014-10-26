@@ -7,7 +7,7 @@ import pygame
 class pitft_render(threading.Thread):
 	#Class for PiTFT rendering
 
-	def __init__(self, layout, simulate = False):
+	def __init__(self, layout):
 		# Run init for super class
 		super(pitft_render, self).__init__()
 		self.clock = pygame.time.Clock()
