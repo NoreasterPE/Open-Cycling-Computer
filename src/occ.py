@@ -72,6 +72,8 @@ class open_cycle_computer():
 		pressed_pos = (0,0)
 		released_t = 0
 		released_pos = (0,0)
+		self.add_rel_motion = False
+		self.rel_movement = (0,0)
 		while self.running:
 			time_now = pygame.time.get_ticks()
 			event = pygame.event.poll()
@@ -82,14 +84,26 @@ class open_cycle_computer():
 			elif event.type == pygame.MOUSEBUTTONDOWN:
 				pressed_t = time_now
 				pressed_pos = pygame.mouse.get_pos()
+				#Read rel to clean the value generated on click
+				pressed_rel =  pygame.mouse.get_rel()
+				self.add_rel_motion = True
 				#print "DOWN:", pressed_t, released_t, "x:", pressed_pos[0], "y:", pressed_pos[1]
 			elif event.type == pygame.MOUSEBUTTONUP:
 				#That check prevents setting release_x after long click
 				if (pressed_t != 0):
 					released_t = time_now
 					released_pos = pygame.mouse.get_pos()
+				self.add_rel_motion = False
 				#print "UP:", pressed_t, released_t, "x:", pressed_pos[0], "y:", pressed_pos[1]
-			pygame.event.clear(pygame.MOUSEMOTION)
+			elif event.type == pygame.MOUSEMOTION:
+				pressed_rel =  pygame.mouse.get_rel()
+				if self.add_rel_motion:
+					x = self.rel_movement[0]
+					y = self.rel_movement[1]
+					dx = pressed_rel[0]
+					dy = pressed_rel[1]
+					self.rel_movement = (x + dx, y + dy)
+					print self.rel_movement
 			#print "ticking...:", time_now, pressed_t, pressed_pos, released_t, released_pos
 			if (pressed_t != 0):
 				self.refresh = True
@@ -101,10 +115,13 @@ class open_cycle_computer():
 					released_t = 0
 					pressed_pos = (0,0)
 					released_pos = (0,0)
+					self.rel_movement = (0,0)
 					self.layout.render_button = None
 				if (released_t != 0):
-					dx = pressed_pos[0] - released_pos[0]
-					dy = pressed_pos[1] - released_pos[1]
+					#dx = pressed_pos[0] - released_pos[0]
+					#dy = pressed_pos[1] - released_pos[1]
+					dx = self.rel_movement[0]
+					dy = self.rel_movement[1]
 					#print time_now, pressed_t, pressed_pos, released_t, released_pos
 					#print dx, dy
 					if (abs(dx)) > SWIPE_LENGTH:
@@ -128,6 +145,7 @@ class open_cycle_computer():
 					released_t = 0
 					pressed_pos = (0,0)
 					released_pos = (0,0)
+					self.rel_movement = (0,0)
 					self.layout.render_button = None
 
 			if self.refresh or self.layout.layout_changed:
