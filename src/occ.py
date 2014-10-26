@@ -132,7 +132,7 @@ class open_cycle_computer():
 							#print "SWIPE X LEFT to RIGTH", time_now, pressed_t, pressed_pos, released_pos, dx, dy
 							self.layout.check_click(pressed_pos, 3)
 					elif (abs(dy)) > SWIPE_LENGTH:
-						if (dy > 0):
+						if (dy < 0):
 							#print "SWIPE X BOTTOM to TOP", time_now, pressed_t, pressed_pos, released_pos, dx, dy
 							self.layout.check_click(pressed_pos, 4)
 						else:
