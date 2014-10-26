@@ -4,12 +4,12 @@ import threading
 from layout import layout
 import pygame
  
-class pitft_render(threading.Thread):
+class rendering(threading.Thread):
 	#Class for PiTFT rendering
 
 	def __init__(self, layout):
 		# Run init for super class
-		super(pitft_render, self).__init__()
+		super(rendering, self).__init__()
 		self.clock = pygame.time.Clock()
 		self.layout = layout
 		self.refresh = True
