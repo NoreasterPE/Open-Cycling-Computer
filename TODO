@@ -6,5 +6,6 @@
 6. Conversion table for units, start with basic km <-> mph
 7. Editing single digits in numbers
 8. Avoid highlighting when sweeping (MOUSEMOTION should be OK for that)
+9. Find a solutin to black square under hidden cursor. pygame.mouse.set_pos() ?
 
 
