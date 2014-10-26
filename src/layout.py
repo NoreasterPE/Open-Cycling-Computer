@@ -118,6 +118,7 @@ class layout():
 		try:
 			r =  self.function_rect_list[function]
 			screen.blit(self.bt_image, r, r, 0)
+		#FIXME required to catch exception?
 		except (TypeError, AttributeError):
 			pass
 
