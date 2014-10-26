@@ -98,7 +98,6 @@ class open_cycle_computer():
 					dx = pressed_rel[0]
 					dy = pressed_rel[1]
 					self.rel_movement = (x + dx, y + dy)
-					print self.rel_movement
 			#print "ticking...:", time_now, self.pressed_t, self.pressed_pos, self.released_t, self.released_pos
 			if (self.pressed_t != 0):
 				self.refresh = True
@@ -108,12 +107,8 @@ class open_cycle_computer():
 					self.layout.check_click(self.pressed_pos, 1)
 					self.reset_motion()
 				if (self.released_t != 0):
-					#dx = self.pressed_pos[0] - self.released_pos[0]
-					#dy = self.pressed_pos[1] - self.released_pos[1]
 					dx = self.rel_movement[0]
 					dy = self.rel_movement[1]
-					#print time_now, self.pressed_t, self.pressed_pos, self.released_t, self.released_pos
-					#print dx, dy
 					if (abs(dx)) > SWIPE_LENGTH:
 						if (dx > 0):
 							#print "SWIPE X RIGHT to LEFT", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
