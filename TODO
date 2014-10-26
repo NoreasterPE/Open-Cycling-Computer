@@ -4,4 +4,7 @@
 4. Add visualisation of clickable areas for easy debugging - DONE
 5. Editing units (selection list)
 6. Conversion table for units, start with basic km <-> mph
+7. Editing single digits in numbers
+8. Avoid highlighting when sweeping (MOUSEMOTION should be OK for that)
+
 
