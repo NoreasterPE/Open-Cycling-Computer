@@ -174,7 +174,8 @@ class layout():
 				except KeyError:
 					#FIXME function name not knwon - write to log
 					#It's not fatal  - user clicked on a non-clickable element
-					print "KeyError: non-fatal: check_click failed! func =", func, ", position =", position, ", click =", click 
+					#print "KeyError: non-fatal: check_click failed! func =", func, ", position =", position, ", click =", click 
+					pass
 		elif click == 1:
 			#print "LONG CLICK"
 			#print self.function_rect_list
