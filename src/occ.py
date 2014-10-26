@@ -68,10 +68,10 @@ class open_cycle_computer():
 	def main_loop(self):
 		LONG_CLICK = 1000 #ms of long click
 		SWIPE_LENGTH = 30 #pixels of swipe
-		pressed_t = 0
-		pressed_pos = (0,0)
-		released_t = 0
-		released_pos = (0,0)
+		self.pressed_t = 0
+		self.pressed_pos = (0,0)
+		self.released_t = 0
+		self.released_pos = (0,0)
 		self.add_rel_motion = False
 		self.rel_movement = (0,0)
 		while self.running:
@@ -82,19 +82,19 @@ class open_cycle_computer():
 			elif event.type == USEREVENT + 1:
 				self.rp.update_values()
 			elif event.type == pygame.MOUSEBUTTONDOWN:
-				pressed_t = time_now
-				pressed_pos = pygame.mouse.get_pos()
+				self.pressed_t = time_now
+				self.pressed_pos = pygame.mouse.get_pos()
 				#Read rel to clean the value generated on click
 				pressed_rel =  pygame.mouse.get_rel()
 				self.add_rel_motion = True
-				#print "DOWN:", pressed_t, released_t, "x:", pressed_pos[0], "y:", pressed_pos[1]
+				#print "DOWN:", self.pressed_t, self.released_t, "x:", self.pressed_pos[0], "y:", self.pressed_pos[1]
 			elif event.type == pygame.MOUSEBUTTONUP:
 				#That check prevents setting release_x after long click
-				if (pressed_t != 0):
-					released_t = time_now
-					released_pos = pygame.mouse.get_pos()
+				if (self.pressed_t != 0):
+					self.released_t = time_now
+					self.released_pos = pygame.mouse.get_pos()
 				self.add_rel_motion = False
-				#print "UP:", pressed_t, released_t, "x:", pressed_pos[0], "y:", pressed_pos[1]
+				#print "UP:", self.pressed_t, self.released_t, "x:", self.pressed_pos[0], "y:", self.pressed_pos[1]
 			elif event.type == pygame.MOUSEMOTION:
 				pressed_rel =  pygame.mouse.get_rel()
 				if self.add_rel_motion:
@@ -104,47 +104,47 @@ class open_cycle_computer():
 					dy = pressed_rel[1]
 					self.rel_movement = (x + dx, y + dy)
 					print self.rel_movement
-			#print "ticking...:", time_now, pressed_t, pressed_pos, released_t, released_pos
-			if (pressed_t != 0):
+			#print "ticking...:", time_now, self.pressed_t, self.pressed_pos, self.released_t, self.released_pos
+			if (self.pressed_t != 0):
 				self.refresh = True
-				self.layout.render_button = pressed_pos
-				if (time_now - pressed_t) > LONG_CLICK:
-					#print "LONG CLICK", time_now, pressed_t, pressed_pos
-					self.layout.check_click(pressed_pos, 1)
-					pressed_t = 0
-					released_t = 0
-					pressed_pos = (0,0)
-					released_pos = (0,0)
+				self.layout.render_button = self.pressed_pos
+				if (time_now - self.pressed_t) > LONG_CLICK:
+					#print "LONG CLICK", time_now, self.pressed_t, self.pressed_pos
+					self.layout.check_click(self.pressed_pos, 1)
+					self.pressed_t = 0
+					self.released_t = 0
+					self.pressed_pos = (0,0)
+					self.released_pos = (0,0)
 					self.rel_movement = (0,0)
 					self.layout.render_button = None
-				if (released_t != 0):
-					#dx = pressed_pos[0] - released_pos[0]
-					#dy = pressed_pos[1] - released_pos[1]
+				if (self.released_t != 0):
+					#dx = self.pressed_pos[0] - self.released_pos[0]
+					#dy = self.pressed_pos[1] - self.released_pos[1]
 					dx = self.rel_movement[0]
 					dy = self.rel_movement[1]
-					#print time_now, pressed_t, pressed_pos, released_t, released_pos
+					#print time_now, self.pressed_t, self.pressed_pos, self.released_t, self.released_pos
 					#print dx, dy
 					if (abs(dx)) > SWIPE_LENGTH:
 						if (dx > 0):
-							#print "SWIPE X RIGHT to LEFT", time_now, pressed_t, pressed_pos, released_pos, dx, dy
-							self.layout.check_click(pressed_pos, 2)
+							#print "SWIPE X RIGHT to LEFT", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
+							self.layout.check_click(self.pressed_pos, 2)
 						else:
-							#print "SWIPE X LEFT to RIGTH", time_now, pressed_t, pressed_pos, released_pos, dx, dy
-							self.layout.check_click(pressed_pos, 3)
+							#print "SWIPE X LEFT to RIGTH", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
+							self.layout.check_click(self.pressed_pos, 3)
 					elif (abs(dy)) > SWIPE_LENGTH:
 						if (dy < 0):
-							#print "SWIPE X BOTTOM to TOP", time_now, pressed_t, pressed_pos, released_pos, dx, dy
-							self.layout.check_click(pressed_pos, 4)
+							#print "SWIPE X BOTTOM to TOP", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
+							self.layout.check_click(self.pressed_pos, 4)
 						else:
-							#print "SWIPE X TOP to BOTTOM", time_now, pressed_t, pressed_pos, released_pos, dx, dy
-							self.layout.check_click(pressed_pos, 5)
+							#print "SWIPE X TOP to BOTTOM", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
+							self.layout.check_click(self.pressed_pos, 5)
 					else:
-						#print "SHORT CLICK", time_now, pressed_t, pressed_pos
-						self.layout.check_click(pressed_pos, 0)
-					pressed_t = 0
-					released_t = 0
-					pressed_pos = (0,0)
-					released_pos = (0,0)
+						#print "SHORT CLICK", time_now, self.pressed_t, self.pressed_pos
+						self.layout.check_click(self.pressed_pos, 0)
+					self.pressed_t = 0
+					self.released_t = 0
+					self.pressed_pos = (0,0)
+					self.released_pos = (0,0)
 					self.rel_movement = (0,0)
 					self.layout.render_button = None
 
