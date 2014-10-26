@@ -4,6 +4,7 @@ from pygame.compat import unichr_, unicode_
 from pygame.locals import *
 from ride_parameters import ride_parameters
 from layout import layout
+from rendering import rendering
 from time import *
 import locale
 import math
@@ -29,6 +30,8 @@ class open_cycle_computer():
 		self.config_path = "config/config.xml"
 		self.read_config()
 		self.layout = layout(self, self.layout_path)
+		self.rendering = rendering(self.layout)
+		self.rendering.start()
 		self.running = 1
 		self.refresh = False
 
@@ -130,16 +133,12 @@ class open_cycle_computer():
 			if self.refresh or self.layout.layout_changed:
 				self.refresh = False
 				self.layout.layout_changed = 0
-				self.layout.render_page()
-			#print self.clock.get_fps()
-			#Setting FPS too low causes some click-directly-after-click problems
-			self.clock.tick(30)
-			#FIXME display.update might be faster, but require list of rectangles for he update
-			pygame.display.flip()
+				self.rendering.force_refresh()
 
 	def cleanup(self):
 		sleep(1)
 		self.rp.stop()
+		self.rendering.stop()
 		#write current config for future use
 		try:
 			self.write_config()
