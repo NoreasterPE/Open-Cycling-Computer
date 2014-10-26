@@ -68,12 +68,7 @@ class open_cycle_computer():
 	def main_loop(self):
 		LONG_CLICK = 1000 #ms of long click
 		SWIPE_LENGTH = 30 #pixels of swipe
-		self.pressed_t = 0
-		self.pressed_pos = (0,0)
-		self.released_t = 0
-		self.released_pos = (0,0)
-		self.add_rel_motion = False
-		self.rel_movement = (0,0)
+		self.reset_motion()
 		while self.running:
 			time_now = pygame.time.get_ticks()
 			event = pygame.event.poll()
@@ -111,12 +106,7 @@ class open_cycle_computer():
 				if (time_now - self.pressed_t) > LONG_CLICK:
 					#print "LONG CLICK", time_now, self.pressed_t, self.pressed_pos
 					self.layout.check_click(self.pressed_pos, 1)
-					self.pressed_t = 0
-					self.released_t = 0
-					self.pressed_pos = (0,0)
-					self.released_pos = (0,0)
-					self.rel_movement = (0,0)
-					self.layout.render_button = None
+					self.reset_motion()
 				if (self.released_t != 0):
 					#dx = self.pressed_pos[0] - self.released_pos[0]
 					#dy = self.pressed_pos[1] - self.released_pos[1]
@@ -141,17 +131,21 @@ class open_cycle_computer():
 					else:
 						#print "SHORT CLICK", time_now, self.pressed_t, self.pressed_pos
 						self.layout.check_click(self.pressed_pos, 0)
-					self.pressed_t = 0
-					self.released_t = 0
-					self.pressed_pos = (0,0)
-					self.released_pos = (0,0)
-					self.rel_movement = (0,0)
-					self.layout.render_button = None
+					self.reset_motion()
 
 			if self.refresh or self.layout.layout_changed:
 				self.refresh = False
 				self.layout.layout_changed = 0
 				self.rendering.force_refresh()
+
+	def reset_motion(self):
+		self.pressed_t = 0
+		self.released_t = 0
+		self.pressed_pos = (0,0)
+		self.released_pos = (0,0)
+		self.rel_movement = (0,0)
+		self.layout.render_button = None
+		self.add_rel_motion = False
 
 	def cleanup(self):
 		sleep(1)
