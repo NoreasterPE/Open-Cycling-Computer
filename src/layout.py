@@ -24,6 +24,7 @@ class layout():
 		self.editor["variable_unit"] = None
 		self.editor["variable_description"] = None
 		self.editor["variable"] = None
+		self.editor_index = 1
 
 		# Uncomment below to print layout tree
 		#print "page name : ", self.page.get('name')
@@ -141,12 +142,35 @@ class layout():
 				font = pygame.font.Font(self.font, 12 * int(field.find('font_size').text))
 				if value == None:
 					value = field.find('text_center').text
-				ren = font.render(unicode(value), 1, self.fg_colour)
-				x = ren.get_rect().centerx
-				y = ren.get_rect().centery
+				uv = unicode(value)
 				text_center_x = int(field.find('text_center').get('x'))
 				text_center_y = int(field.find('text_center').get('y'))
-				screen.blit(ren, (text_center_x - x, text_center_y - y))
+				if function != "variable_value":
+					ren = font.render(uv, 1, self.fg_colour)
+					x = ren.get_rect().centerx
+					y = ren.get_rect().centery
+					screen.blit(ren, (text_center_x - x, text_center_y - y))
+				else:
+					i = self.editor_index
+					font = pygame.font.Font(self.font, 12 * (int(field.find('font_size').text) - 1))
+					rv1 = uv[:i]
+					ren1 = font.render(rv1, 1, self.fg_colour)
+					w1 = ren1.get_rect().width
+					y1 = ren1.get_rect().centery
+					font = pygame.font.Font(self.font, 12 * (int(field.find('font_size').text) + 1))
+					rv2 = uv[i]
+					ren2 = font.render(rv2, 1, self.fg_colour)
+					w2 = ren2.get_rect().width
+					y2 = ren2.get_rect().centery
+					font = pygame.font.Font(self.font, 12 * (int(field.find('font_size').text) - 1))
+					rv3 = uv[i + 1:]
+					ren3 = font.render(rv3, 1, self.fg_colour)
+					w3 = ren3.get_rect().width
+					y3 = ren3.get_rect().centery
+					x = text_center_y - int((w1 + w2 + w3)/2)
+					screen.blit(ren1, (x, text_center_y - y1))
+					screen.blit(ren2, (x + w1, text_center_y - y2))
+					screen.blit(ren3, (x + w1 + w2, text_center_y - y3))
 
 	def show_pressed_button(self):
 		if self.render_button:
