@@ -16,7 +16,6 @@ class layout():
 		self.buttons_surf_list = {}
 		self.layout_path = layout_path
 		self.load_layout(layout_path)
-		self.layout_changed = 0
 		self.render_button = None
 
 		#Helpers for editing values
@@ -65,7 +64,7 @@ class layout():
 		self.layout_tree.write(layout_path, encoding="UTF-8", pretty_print=True)
 
 	def use_page(self, page_id = "page_0"):
-		self.layout_changed = 1
+		self.occ.force_refresh()
 		self.current_function_list = []
 		self.current_button_list = []
 		self.current_page_name = self.page_index[page_id]

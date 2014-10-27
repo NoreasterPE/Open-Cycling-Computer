@@ -128,7 +128,7 @@ class open_cycling_computer():
 						self.layout.check_click(self.pressed_pos, 5)
 						self.reset_motion()
 
-			if self.refresh or self.layout.layout_changed:
+			if self.refresh:
 				self.refresh = False
 				self.layout.layout_changed = 0
 				self.rendering.force_refresh()
