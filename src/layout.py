@@ -272,12 +272,28 @@ class layout():
 
 	def ed_decrease(self):
 		#print "ed_decrease"
-		self.editor["variable_value"] -= 1 
+		u = unicode(self.editor["variable_value"])
+		i = self.editor_index
+		ui = u[i]
+		if ui == "0":
+			ui = "9"
+		else:
+			ui = unicode(int(ui) - 1)
+		un = u[:i] + ui + u[i + 1:]
+		self.editor["variable_value"] = un
 		self.force_refresh()
 
 	def ed_increase(self):
 		#print "ed_increase"
-		self.editor["variable_value"] += 1
+		u = unicode(self.editor["variable_value"])
+		i = self.editor_index
+		ui = u[i]
+		if ui == "9":
+			ui = "0"
+		else:
+			ui = unicode(int(ui) + 1)
+		un = u[:i] + ui + u[i + 1:]
+		self.editor["variable_value"] = un
 		self.force_refresh()
 
 	def ed_next(self):
@@ -304,6 +320,8 @@ class layout():
 		i -= 1
 		if i < 0:
 			i = 0
+			uv = "0" + u	
+			self.editor["variable_value"] = uv
 		else:
 			ui = u[i]
 			#FIXME localisation points to be used here
@@ -316,7 +334,7 @@ class layout():
 		#direction to be 1 (next) or 0 (previous)
 		variable = self.editor["variable"]
 		variable_unit = self.editor["variable_unit"]
-		variable_value = self.editor["variable_value"]
+		variable_value = float(self.editor["variable_value"])
 		current_unit_index = self.occ.rp.units_allowed[variable].index(variable_unit)
 		if direction == 1:
 			try:
@@ -355,7 +373,7 @@ class layout():
 	def accept_edit(self):
 		variable = self.editor["variable"]
 		variable_unit = self.editor["variable_unit"]
-		variable_value = self.editor["variable_value"]
+		variable_value = float(self.editor["variable_value"])
 		v = q.Quantity(variable_value, variable_unit)
 		v = v.rescale(self.occ.rp.get_internal_unit(variable))
 		self.occ.rp.p_raw[variable] = v.item()
