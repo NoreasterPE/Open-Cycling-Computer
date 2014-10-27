@@ -25,18 +25,18 @@ class ride_parameters():
 		self.units = {}
 		self.units_allowed = {}
 		#Internal params of the ride.
-		self.p_raw["altitude"] = 0.0
-		self.p_raw["altitude_gps"] = 0.0
-		self.p_raw["altitude_at_home"] = 89.0
-		self.p_raw["cadence"] = 0
-		self.p_raw["gradient"] = 0
-		self.p_raw["heart_rate"] = 165.0
-		self.p_raw["odometer"] = 0.0
-		self.p_raw["pressure"] = 101300.0
-		self.p_raw["pressure_at_sea_level"] = 101300.0
-		self.p_raw["rider_weight"] = 80.0
+		self.p_raw["altitude"] = "-"
+		self.p_raw["altitude_gps"] = "-"
+		self.p_raw["altitude_at_home"] = "-"
+		self.p_raw["cadence"] = "-"
+		self.p_raw["gradient"] = "-"
+		self.p_raw["heart_rate"] = "-"
+		self.p_raw["odometer"] = "-"
+		self.p_raw["pressure"] = "-"
+		self.p_raw["pressure_at_sea_level"] = "-"
+		self.p_raw["rider_weight"] = "-"
 		self.p_raw["rtc"] = ""
-		self.p_raw["speed"] = 0.0
+		self.p_raw["speed"] = float("nan")
 		self.p_raw["utc"] = ""
 
 		#Internal units
@@ -48,18 +48,18 @@ class ride_parameters():
 		self.p_raw_units["rider_weight"] = "kg"
 
 		#Params of the ride ready for rendering.
-		self.params["altitude"] = 0
-		self.params["altitude_gps"] = 0
-		self.params["cadence"] = 0
-		self.params["gradient"] = 0
-		self.params["heart_rate"] = 165
+		self.params["altitude"] = "-"
+		self.params["altitude_gps"] = "-"
+		self.params["cadence"] = "-"
+		self.params["gradient"] = "-"
+		self.params["heart_rate"] = "-"
 		self.params["latitude"] = "-"
 		self.params["longitude"] = "-"
-		self.params["pressure"] = 1013
-		self.params["pressure_at_sea_level"] = 1013
+		self.params["pressure"] = "-"
+		self.params["pressure_at_sea_level"] = "-" 
 		self.params["rtc"] = ""
-		self.params["speed"] = 0
-		self.params["speed_tenths"] = 0
+		self.params["speed"] = "-"
+		self.params["speed_tenths"] = "-"
 		self.params["utc"] = ""
 
 		#Params that can be changed in Settings by user
@@ -175,7 +175,7 @@ class ride_parameters():
 			self.params["speed"] = "%.0f" % spd_f
 			self.params["speed_tenths"] = "%.0f" % (math.floor (10 * (spd - spd_f)))
 		else:
-			self.params["speed"] = "?"
+			self.params["speed"] = "-"
 			self.params["speed_tenths"] = "-"
 
 		self.params["utc"] = self.p_raw["utc"]
