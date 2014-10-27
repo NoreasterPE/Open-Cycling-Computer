@@ -94,10 +94,6 @@ class open_cycling_computer():
 			elif event.type == pygame.MOUSEMOTION:
 				pressed_rel =  pygame.mouse.get_rel()
 				if self.add_rel_motion:
-					x = self.rel_movement[0]
-					y = self.rel_movement[1]
-					dx = pressed_rel[0]
-					dy = pressed_rel[1]
 					self.rel_movement = tuple(map(add, self.rel_movement, pressed_rel))
 			#print "ticking...:", time_now, self.pressed_t, self.pressed_pos, self.released_t, self.released_pos
 			if (self.pressed_t != 0):
