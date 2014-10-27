@@ -1,10 +1,11 @@
 #!/usr/bin/python
 
+from layout import layout
+from operator import add
 from pygame.compat import unichr_, unicode_
 from pygame.locals import *
-from ride_parameters import ride_parameters
-from layout import layout
 from rendering import rendering
+from ride_parameters import ride_parameters
 from time import *
 import locale
 import lxml.etree as eltree
@@ -97,7 +98,7 @@ class open_cycling_computer():
 					y = self.rel_movement[1]
 					dx = pressed_rel[0]
 					dy = pressed_rel[1]
-					self.rel_movement = (x + dx, y + dy)
+					self.rel_movement = tuple(map(add, self.rel_movement, pressed_rel))
 			#print "ticking...:", time_now, self.pressed_t, self.pressed_pos, self.released_t, self.released_pos
 			if (self.pressed_t != 0):
 				self.refresh = True

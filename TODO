@@ -1,14 +1,14 @@
-1. Saving setting (i.e. current layout) - DONE
+1. [DONE] Saving setting (i.e. current layout)
 2. Split module tests from main part and use consistent naming
-3. When bmp183 is not connected Ctrl-C doesn't quit occ.py - DONE
-4. Add visualisation of clickable areas for easy debugging - DONE
+3. [DONE] When bmp183 is not connected Ctrl-C doesn't quit occ.py 
+4. [DONE] Add visualisation of clickable areas for easy debugging
 5. Editing units (selection list)
 6. Conversion table for units, start with basic km <-> mph
 7. Editing single digits in numbers
 8. Avoid highlighting when sweeping (MOUSEMOTION should be OK for that)
 9. Find a solutin to black square under hidden cursor. pygame.mouse.set_pos() ?
 10. Consider scroll-over-the-edge to switch pages
-11. Use this for rel_movement:
+11. [DONE] Use this for rel_movement:
 >>> from operator import add
 >>> map(add, list1, list2)
 
