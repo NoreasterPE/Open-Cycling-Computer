@@ -42,7 +42,7 @@
 			<function>odometer</function>
 			<button x0="0" y0="240" w="119" h="80"/>
 			<text_center x="60" y="280"/>
-			<font_size>5</font_size>
+			<font_size>4</font_size>
 		</field>
 		<field name="bottom_left_auxiliary">
 			<function>odometer_units</function>
