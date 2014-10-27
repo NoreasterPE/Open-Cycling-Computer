@@ -291,11 +291,12 @@ class layout():
 
 	def ed_next(self):
 		#print "ed_next"
-		pass
-
+		self.editor_index += 1
+		self.force_refresh()
 	def ed_prev(self):
 		#print "ed_prev"
-		pass
+		self.editor_index -= 1
+		self.force_refresh()
 
 	def ed_change_unit(self, direction):
 		#direction to be 1 (next) or 0 (previous)
