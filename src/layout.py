@@ -274,13 +274,37 @@ class layout():
 		#print "ed_prev"
 		pass
 
+	def ed_change_unit(self, direction):
+		#direction to be 1 (next) or 0 (previous)
+		variable = self.editor["variable"]
+		variable_unit = self.editor["variable_unit"]
+		variable_value = self.editor["variable_value"]
+		current_unit_index = self.occ.rp.units_allowed[variable].index(variable_unit)
+		if direction == 1:
+			try:
+				next_unit = self.occ.rp.units_allowed[variable][current_unit_index + 1]
+			except IndexError:
+				next_unit = self.occ.rp.units_allowed[variable][0]
+		else:
+			try:
+				next_unit = self.occ.rp.units_allowed[variable][current_unit_index - 1]
+			except IndexError:
+				next_unit = self.occ.rp.units_allowed[variable][-1]
+		v = q.Quantity(variable_value, variable_unit)
+		v = v.rescale(next_unit)
+		#FIXME - list with formatting. Also for use in RP, update_params
+		self.editor["variable_value"] = float("%.1f" % v.item())
+		self.editor["variable_unit"] = next_unit
+
 	def ed_next_unit(self):
-		print "ed_next_unit"
-		pass
+		#print "ed_next_unit"
+		self.ed_change_unit(1)
+		self.force_refresh()
 
 	def ed_prev_unit(self):
-		print "ed_prev_unit"
-		pass
+		#print "ed_prev_unit"
+		self.ed_change_unit(0)
+		self.force_refresh()
 
 	def ed_value(self):
 		#print "ed_value"
@@ -291,10 +315,14 @@ class layout():
 		pass
 
 	def accept_edit(self):
-		u = self.occ.rp.get_unit(self.editor["variable"])
-		v = q.Quantity(self.editor["variable_value"], u)
-		v = v.rescale(self.occ.rp.p_raw_units[self.editor["variable"]])
-		self.occ.rp.p_raw[self.editor["variable"]] = v.item()
+		variable = self.editor["variable"]
+		variable_unit = self.editor["variable_unit"]
+		variable_value = self.editor["variable_value"]
+		v = q.Quantity(variable_value, variable_unit)
+		v = v.rescale(self.occ.rp.get_internal_unit(variable))
+		self.occ.rp.p_raw[variable] = v.item()
+		self.occ.rp.params[variable] = self.editor["variable_value"]
+		self.occ.rp.units[variable] = self.editor["variable_unit"]
 		self.force_refresh()
 
 	def next_page(self):

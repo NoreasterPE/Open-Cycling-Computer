@@ -81,7 +81,9 @@ class ride_parameters():
 		self.units["rider_weight"] = "kg"
 		self.units["speed"] = "km/h"
 
-		self.units_allowed["odometer"] = {"m", "km", "mi", "yd"}
+		#Allowed units - user can switch between those when editing value 
+		self.units_allowed["odometer"] = ["km", "mi"]
+		self.units_allowed["rider_weight"] = ["kg", "st", "lb"]
 
 		#FIXME python-quantities won't like those deg C
 		self.units["temperature"] = u'\N{DEGREE SIGN}' + "C"
