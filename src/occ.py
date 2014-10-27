@@ -104,26 +104,29 @@ class open_cycling_computer():
 					self.layout.check_click(self.pressed_pos, 1)
 					self.reset_motion()
 				if (self.released_t != 0):
-					dx = self.rel_movement[0]
-					dy = self.rel_movement[1]
-					if (abs(dx)) > SWIPE_LENGTH:
-						if (dx > 0):
-							#print "SWIPE X RIGHT to LEFT", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
-							self.layout.check_click(self.pressed_pos, 2)
-						else:
-							#print "SWIPE X LEFT to RIGTH", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
-							self.layout.check_click(self.pressed_pos, 3)
-					elif (abs(dy)) > SWIPE_LENGTH:
-						if (dy < 0):
-							#print "SWIPE X BOTTOM to TOP", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
-							self.layout.check_click(self.pressed_pos, 4)
-						else:
-							#print "SWIPE X TOP to BOTTOM", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
-							self.layout.check_click(self.pressed_pos, 5)
-					else:
-						#print "SHORT CLICK", time_now, self.pressed_t, self.pressed_pos
-						self.layout.check_click(self.pressed_pos, 0)
+					#print "SHORT CLICK", time_now, self.pressed_t, self.pressed_pos
+					self.layout.check_click(self.pressed_pos, 0)
 					self.reset_motion()
+				dx = self.rel_movement[0]
+				dy = self.rel_movement[1]
+				if (abs(dx)) > SWIPE_LENGTH:
+					if (dx > 0):
+						#print "SWIPE X RIGHT to LEFT", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
+						self.layout.check_click(self.pressed_pos, 2)
+						self.reset_motion()
+					else:
+						#print "SWIPE X LEFT to RIGTH", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
+						self.layout.check_click(self.pressed_pos, 3)
+						self.reset_motion()
+				elif (abs(dy)) > SWIPE_LENGTH:
+					if (dy < 0):
+						#print "SWIPE X BOTTOM to TOP", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
+						self.layout.check_click(self.pressed_pos, 4)
+						self.reset_motion()
+					else:
+						#print "SWIPE X TOP to BOTTOM", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
+						self.layout.check_click(self.pressed_pos, 5)
+						self.reset_motion()
 
 			if self.refresh or self.layout.layout_changed:
 				self.refresh = False
