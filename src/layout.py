@@ -20,7 +20,8 @@ class layout():
 
 		#Helpers for editing values
 		self.editor = {}
-		self.editor["value"] = None
+		self.editor["variable_value"] = None
+		self.editor["variable_unit"] = None
 		self.editor["variable_description"] = None
 		self.editor["variable"] = None
 
@@ -189,7 +190,8 @@ class layout():
 							#print "func " + func + " is editable"
 							self.editor["variable"] = func
 							#FIXME I's dirty way of getting value
-							self.editor["value"] = self.occ.rp.get_val(func)
+							self.editor["variable_value"] = self.occ.rp.get_val(func)
+							self.editor["variable_unit"] = self.occ.rp.get_unit(func)
 							#FIXME Make list of editable values + descriptions
 							self.editor["variable_description"] = self.occ.rp.get_description(func)
 							#FIXME Call editor page - that's temporary
@@ -256,12 +258,12 @@ class layout():
 
 	def ed_decrease(self):
 		#print "ed_decrease"
-		self.editor["value"] -= 1 
+		self.editor["variable_value"] -= 1 
 		self.force_refresh()
 
 	def ed_increase(self):
 		#print "ed_increase"
-		self.editor["value"] += 1
+		self.editor["variable_value"] += 1
 		self.force_refresh()
 
 	def ed_next(self):
@@ -290,7 +292,7 @@ class layout():
 
 	def accept_edit(self):
 		u = self.occ.rp.get_unit(self.editor["variable"])
-		v = q.Quantity(self.editor["value"], u)
+		v = q.Quantity(self.editor["variable_value"], u)
 		v = v.rescale(self.occ.rp.p_raw_units[self.editor["variable"]])
 		self.occ.rp.p_raw[self.editor["variable"]] = v.item()
 		self.force_refresh()
