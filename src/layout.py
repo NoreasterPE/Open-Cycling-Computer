@@ -292,10 +292,19 @@ class layout():
 	def ed_next(self):
 		#print "ed_next"
 		self.editor_index += 1
+		u = unicode(self.editor["variable_value"])[self.editor_index]
+		#FIXME localisation points to be used here
+		if (u == ".") or (u == ","):
+			self.editor_index += 1
 		self.force_refresh()
+
 	def ed_prev(self):
 		#print "ed_prev"
 		self.editor_index -= 1
+		u = unicode(self.editor["variable_value"])[self.editor_index]
+		#FIXME localisation points to be used here
+		if (u == ".") or (u == ","):
+			self.editor_index -= 1
 		self.force_refresh()
 
 	def ed_change_unit(self, direction):
