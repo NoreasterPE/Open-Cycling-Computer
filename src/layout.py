@@ -101,11 +101,10 @@ class layout():
 				y0 = int(b.get('y0'))
 				w = int(b.get('w'))
 				h = int(b.get('h'))
-				#FIXME optimise
-				n = field.find('function').text
-				r = pygame.Rect(x0, y0, w, h)
-				self.function_rect_list[n] = r
-				self.current_button_list.append(field.find('function').text)
+				name = field.find('function').text
+				rect = pygame.Rect(x0, y0, w, h)
+				self.function_rect_list[name] = rect
+				self.current_button_list.append(name)
 
 	def use_main_page(self):
 		self.use_page()
