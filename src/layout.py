@@ -26,15 +26,6 @@ class layout():
 		self.editor["variable"] = None
 		self.editor_index = 1
 
-		# Uncomment below to print layout tree
-		#print "page name : ", self.page.get('name')
-		#print "background : ", self.page.get('background')
-		#for field in self.page:
-		#	print "function : "  + field.find('function').text
-		#	print "x : "  + field.find('x').text
-		#	print "y : " + field.find('y').text
-		#	print "font size : " + field.find('font_size').text
-
 	def load_layout(self, layout_path):
 		self.max_page_id = 0
 		self.page_list = {}
