@@ -68,6 +68,24 @@ class ride_parameters():
 		self.params["odometer"] = 0.0
 		self.params["rider_weight"] = 80.0
 
+		#Formatting strings for params.
+		self.p_format["altitude"] = "%.1f"
+		self.p_format["altitude_at_home"] = "%.0f"
+		self.p_format["altitude_gps"] = "%.1f"
+		self.p_format["cadence"] = "%.0f"
+		self.p_format["gradient"] = ""
+		self.p_format["heart_rate"] = "%.0f"
+		self.p_format["latitude"] = "%.4f"
+		self.p_format["longitude"] = "%.4f"
+		self.p_format["odometer"] = "%.0f"
+		self.p_format["pressure"] = "%.1f"
+		self.p_format["pressure_at_sea_level"] = "%.0f"
+		self.p_format["rider_weight"] = "%.1f"
+		self.p_format["rtc"] = ""
+		self.p_format["speed"] = "%.0f"
+		self.p_format["speed_tenths"] = "%.0f"
+		self.p_format["utc"] = ""
+
 		#Units - name has to be identical as in params
 		self.units["altitude"] = "m"
 		self.units["altitude_at_home"] = "m"
@@ -166,9 +184,9 @@ class ride_parameters():
 		self.p_raw["altitude_gps"] = self.clean_value(alt);
 
 	def update_params(self):
-		self.update_param("latitude", "%.4f")
-		self.update_param("longitude", "%.4f")
-		self.update_param("altitude_gps", "%.0f")
+		self.update_param("latitude")
+		self.update_param("longitude")
+		self.update_param("altitude_gps")
 
 		#FIXME optimise code to use clean_value for speed
 		spd = self.p_raw["speed"]
@@ -181,16 +199,21 @@ class ride_parameters():
 			self.params["speed_tenths"] = "-"
 
 		self.params["utc"] = self.p_raw["utc"]
+		self.update_param("odometer")
+		self.update_param("rider_weight")
 
-		self.update_param("odometer", "%.1f")
-		self.update_param("rider_weight", "%.1f")
+	def update_param(self, param_name):
+		try:
+			f = self.p_format[param_name]
+		except KeyError:
+			print "Formatting not available: param_name =", param_name
+			f = "%.1f"
 
-	def update_param(self, param_name, formatting):
 		iu = self.get_internal_unit(param_name)
 		try:
 			v = q.Quantity(self.p_raw[param_name], iu)
 			v.units = self.get_unit(param_name)
-			self.params[param_name] = float(formatting % v.item())
+			self.params[param_name] = f % float(v.item())
 		except TypeError:
 			#Value conversion failed, so don't change anything
 			#print "TypeError: update_param exception: ", param_name, " params[] =", self.params[param_name], " p_raw[] =", self.p_raw[param_name]

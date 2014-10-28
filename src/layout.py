@@ -350,7 +350,13 @@ class layout():
 		v = q.Quantity(variable_value, variable_unit)
 		v = v.rescale(next_unit)
 		#FIXME - list with formatting. Also for use in RP, update_params
-		self.editor["variable_value"] = float("%.1f" % v.item())
+		try:
+			f = self.occ.rp.p_format[variable]
+		except AttributeError:
+			print "Formatting not available: variable =", variable
+			f = "%.1f"
+	
+		self.editor["variable_value"] = float(f % v.item())
 		self.editor["variable_unit"] = next_unit
 
 	def ed_next_unit(self):
