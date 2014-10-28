@@ -184,6 +184,7 @@ class ride_parameters():
 		self.p_raw["latitude"] = self.clean_value(lat);
 		self.p_raw["longitude"] = self.clean_value(lon);
 		self.p_raw["altitude_gps"] = self.clean_value(alt);
+		self.p_raw["speed"] = self.clean_value(spd);
 
 	def update_params(self):
 		self.update_param("latitude")
