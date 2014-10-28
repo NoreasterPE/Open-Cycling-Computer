@@ -24,7 +24,7 @@ class layout():
 		self.editor["variable_unit"] = None
 		self.editor["variable_description"] = None
 		self.editor["variable"] = None
-		self.editor_index = 1
+		self.editor_index = 0
 
 	def load_layout(self, layout_path):
 		self.max_page_id = 0
@@ -371,6 +371,7 @@ class layout():
 		pass
 
 	def accept_edit(self):
+		self.editor_index = 0
 		variable = self.editor["variable"]
 		variable_unit = self.editor["variable_unit"]
 		variable_value = float(self.editor["variable_value"])
