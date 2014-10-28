@@ -1,5 +1,6 @@
 import pygame
 import struct
+import sys
 import quantities as q
 import lxml.etree as eltree
 
