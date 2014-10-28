@@ -2,6 +2,7 @@ from time import strftime
 from bmp183 import bmp183
 from gps_mtk3339 import gps_mtk3339
 import math
+import time
 import quantities as q
 
 class ride_parameters():
@@ -27,6 +28,10 @@ class ride_parameters():
 		self.units_allowed = {}
 
 		#Internal params of the ride.
+		self.p_raw["time_stamp"] = time.time()
+		#Time delta since last p_raw update
+		self.p_raw["dtime"] = 1
+
 		self.p_raw["altitude"] = "-"
 		self.p_raw["altitude_gps"] = "-"
 		self.p_raw["altitude_at_home"] = "-"
@@ -135,6 +140,9 @@ class ride_parameters():
 		self.stop()
 
 	def update_values(self):
+		t = time.time()
+		self.p_raw["dtime"] = t - self.p_raw["time_stamp"]
+		self.p_raw["time_stamp"] = t
 		self.update_rtc()
 		self.read_bmp183_sensor()
 		self.read_gps_data()
