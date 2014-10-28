@@ -2,9 +2,9 @@
 2. Split module tests from main part and use consistent naming
 3. [DONE] When bmp183 is not connected Ctrl-C doesn't quit occ.py 
 4. [DONE] Add visualisation of clickable areas for easy debugging
-5. Editing units (selection list)
-6. Conversion table for units, start with basic km <-> mph
-7. Editing single digits in numbers
+5. [DONE] Editing units (selection list)
+6. [DONE] Conversion table for units, start with basic km <-> mph
+7. [DONE] Editing single digits in numbers
 8. Avoid highlighting when sweeping (MOUSEMOTION should be OK for that)
 9. Find a solutin to black square under hidden cursor. pygame.mouse.set_pos() ?
 10. Consider scroll-over-the-edge to switch pages
@@ -14,5 +14,6 @@
 12. Control rounding errors when switching units in editor
 13. Fix inconsistent naming: func, function, param_name
 14. Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
+15. Allow for changing units of non-editable params like speed or temperature. Block edit in editor but leave unit switching?
 
 
