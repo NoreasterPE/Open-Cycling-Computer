@@ -210,6 +210,7 @@ class layout():
 							self.editor["variable_description"] = self.occ.rp.get_description(func)
 							#FIXME Call editor page - that's temporary
 							#Add call_editor function with p_raw params
+							self.editor_index = 0
 							self.use_page("editor")
 							break
 				except KeyError:
@@ -371,7 +372,6 @@ class layout():
 		pass
 
 	def accept_edit(self):
-		self.editor_index = 0
 		variable = self.editor["variable"]
 		variable_unit = self.editor["variable_unit"]
 		variable_value = float(self.editor["variable_value"])
