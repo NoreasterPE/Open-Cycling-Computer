@@ -17,35 +17,35 @@
 			<font_size>2</font_size>
 		</field>
 		<field name="middle">
-			<function>altitude_gps</function>
+			<function>odometer</function>
 			<button x0="0" y0="150" w="239" h="89"/>
 			<text_center x="100" y="195">0</text_center>
 			<font_size>6</font_size>
 		</field>
 		<field name="middle_auxiliary">
-			<function>altitude_units</function>
+			<function>odometer_units</function>
 			<text_center x="210" y="195">m</text_center>
 			<font_size>2</font_size>
 		</field>
 		<field name="bottom_right">
-			<function>rider_weight</function>
+			<function>pressure</function>
 			<button x0="120" y0="240" w="119" h="80"/>
 			<text_center x="180" y="280">m</text_center>
 			<font_size>4</font_size>
 		</field>
 		<field name="bottom_right_auxiliary">
-			<function>rider_weight_units</function>
+			<function>pressure_units</function>
 			<text_center x="220" y="310"/>
 			<font_size>2</font_size>
 		</field>
 		<field name="bottom_left">
-			<function>odometer</function>
+			<function>temperature</function>
 			<button x0="0" y0="240" w="119" h="80"/>
 			<text_center x="60" y="280"/>
 			<font_size>4</font_size>
 		</field>
 		<field name="bottom_left_auxiliary">
-			<function>odometer_units</function>
+			<function>temperature_units</function>
 			<text_center x="100" y="310"/>
 			<font_size>2</font_size>
 		</field>
