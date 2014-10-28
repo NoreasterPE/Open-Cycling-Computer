@@ -36,6 +36,7 @@ class ride_parameters():
 		self.p_raw["altitude_gps"] = "-"
 		self.p_raw["altitude_at_home"] = "-"
 		self.p_raw["cadence"] = "-"
+		self.p_raw["distance"] = 0
 		self.p_raw["gradient"] = "-"
 		self.p_raw["heart_rate"] = "-"
 		self.p_raw["odometer"] = "-"
@@ -51,6 +52,7 @@ class ride_parameters():
 		#Internal units
 		self.p_raw_units["altitude_at_home"] = "m"
 		self.p_raw_units["altitude_gps"] = "m"
+		self.p_raw_units["distance"] = "m"
 		self.p_raw_units["latitude"] = ""
 		self.p_raw_units["longitude"] = ""
 		self.p_raw_units["odometer"] = "m"
@@ -61,6 +63,7 @@ class ride_parameters():
 		self.params["altitude"] = "-"
 		self.params["altitude_gps"] = "-"
 		self.params["cadence"] = "-"
+		self.params["distance"] = 0
 		self.params["gradient"] = "-"
 		self.params["heart_rate"] = "-"
 		self.params["latitude"] = "-"
@@ -83,6 +86,7 @@ class ride_parameters():
 		self.p_format["altitude_at_home"] = "%.0f"
 		self.p_format["altitude_gps"] = "%.1f"
 		self.p_format["cadence"] = "%.0f"
+		self.p_format["distance"] = "%.1f"
 		self.p_format["gradient"] = ""
 		self.p_format["heart_rate"] = "%.0f"
 		self.p_format["latitude"] = "%.4f"
@@ -100,6 +104,7 @@ class ride_parameters():
 		self.units["altitude"] = "m"
 		self.units["altitude_at_home"] = "m"
 		self.units["altitude_gps"] = "m"
+		self.units["distance"] = "m"
 		self.units["gradient"] = "%"
 		self.units["heart_rate"] = "BPM"
 		self.units["latitude"] = ""
@@ -146,12 +151,26 @@ class ride_parameters():
 		self.update_rtc()
 		self.read_bmp183_sensor()
 		self.read_gps_data()
-		self.force_refresh()
 		self.update_params()
+		self.calculate_distance()
+		self.force_refresh()
 		#FIXME Calc pressure only when gps altitude is known or 
 		#when we're at home and the altitude is provided by user
 		#self.calculate_pressure_at_sea_level()
 		#FIXME Add calculations of gradient, trip time, etc
+
+	def calculate_distance(self):
+		dt = self.p_raw["dtime"]
+		#FIXME calculate with speed not speed_gps when bt sensors are set up
+		s = self.p_raw["speed_gps"]
+		d = 0
+		try:
+			d = dt * s
+			d = float(d)
+		except ValueError:
+			#Speed is not set yet - do nothing
+			pass
+		self.p_raw["distance"] += d
 
 	def force_refresh(self):
 		self.occ.force_refresh()
@@ -186,7 +205,7 @@ class ride_parameters():
 			return variable
 		else:
 			return empty_string
-		
+
 	def read_gps_data(self):
 		data = self.gps.get_data()
 		lat = data[0]
@@ -214,6 +233,7 @@ class ride_parameters():
 		self.update_param("latitude")
 		self.update_param("longitude")
 		self.update_param("altitude_gps")
+		self.update_param("distance")
 
 		self.update_param("speed")
 		self.update_param("speed_tenths")
