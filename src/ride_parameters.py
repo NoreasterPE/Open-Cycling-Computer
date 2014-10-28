@@ -211,17 +211,18 @@ class ride_parameters():
 			print "Formatting not available: param_name =", param_name
 			f = "%.1f"
 
-		iu = self.get_internal_unit(param_name)
-		try:
-			v = q.Quantity(self.p_raw[param_name], iu)
-			v.units = self.get_unit(param_name)
-			self.params[param_name] = f % float(v.item())
-		except TypeError:
-			#Value conversion failed, so don't change anything
-			#print "TypeError: update_param exception: ", param_name, " params[] =", self.params[param_name], " p_raw[] =", self.p_raw[param_name]
-			pass
-		except ValueError:
-			print "ValueError: update_param exception: ", param_name, " params[] =", self.params[param_name], " p_raw[] =", self.p_raw[param_name]
+		if self.params[param_name] != "-":
+			iu = self.get_internal_unit(param_name)
+			try:
+				v = q.Quantity(self.p_raw[param_name], iu)
+				v.units = self.get_unit(param_name)
+				self.params[param_name] = f % float(v.item())
+			except TypeError:
+				#Value conversion failed, so don't change anything
+				#print "TypeError: update_param exception: ", param_name, " params[] =", self.params[param_name], " p_raw[] =", self.p_raw[param_name]
+				pass
+			except ValueError:
+				print "ValueError: update_param exception: ", param_name, " params[] =", self.params[param_name], " p_raw[] =", self.p_raw[param_name], " p_format =", f
 			
 
 	def update_rtc(self):

@@ -353,11 +353,11 @@ class layout():
 		#FIXME - list with formatting. Also for use in RP, update_params
 		try:
 			f = self.occ.rp.p_format[variable]
-		except AttributeError:
-			print "Formatting not available: variable =", variable
+		except KeyError:
+			print "Formatting not available: param_name =", param_name
 			f = "%.1f"
 	
-		self.editor["variable_value"] = float(f % v.item())
+		self.editor["variable_value"] = f % float(v.item())
 		self.editor["variable_unit"] = next_unit
 
 	def ed_next_unit(self):
