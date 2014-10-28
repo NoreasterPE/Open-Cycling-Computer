@@ -38,7 +38,9 @@ class ride_parameters():
 		self.p_raw["pressure_at_sea_level"] = "-"
 		self.p_raw["rider_weight"] = "-"
 		self.p_raw["rtc"] = ""
-		self.p_raw["speed"] = float("nan")
+		self.p_raw["speed"] = "-"
+		self.p_raw["speed_gps"] = "-"
+		self.p_raw["speed_tenths"] =  "-"
 		self.p_raw["utc"] = ""
 
 		#Internal units
@@ -48,6 +50,7 @@ class ride_parameters():
 		self.p_raw_units["longitude"] = ""
 		self.p_raw_units["odometer"] = "m"
 		self.p_raw_units["rider_weight"] = "kg"
+		self.p_raw_units["speed_gps"] = "m/s"
 
 		#Params of the ride ready for rendering.
 		self.params["altitude"] = "-"
@@ -100,6 +103,8 @@ class ride_parameters():
 		self.units["pressure"] = "hPa"
 		self.units["rider_weight"] = "kg"
 		self.units["speed"] = "km/h"
+		#It's just to make handling of speed easier
+		self.units["speed_tenths"] = "km/h"
 
 		#Allowed units - user can switch between those when editing value 
 		self.units_allowed["odometer"] = ["km", "mi"]
@@ -184,23 +189,26 @@ class ride_parameters():
 		self.p_raw["latitude"] = self.clean_value(lat);
 		self.p_raw["longitude"] = self.clean_value(lon);
 		self.p_raw["altitude_gps"] = self.clean_value(alt);
-		self.p_raw["speed"] = self.clean_value(spd);
+		self.p_raw["speed_gps"] = self.clean_value(spd);
+
+		#FIXME optimise code to use clean_value for speed
+		
+		spd = self.p_raw["speed_gps"]
+		if  spd != "-":
+			spd_f = math.floor(spd)
+			self.p_raw["speed"] = spd_f
+			self.p_raw["speed_tenths"] = math.floor(10 * (spd - spd_f))
+		else:
+			self.p_raw["speed"] = "-"
+			self.p_raw["speed_tenths"] = "-"
 
 	def update_params(self):
 		self.update_param("latitude")
 		self.update_param("longitude")
 		self.update_param("altitude_gps")
 
-		#FIXME optimise code to use clean_value for speed
-		spd = self.p_raw["speed"]
-		if not math.isnan(spd):
-			spd_f = math.floor(spd)
-			self.params["speed"] = "%.0f" % spd_f
-			self.params["speed_tenths"] = "%.0f" % (math.floor (10 * (spd - spd_f)))
-		else:
-			self.params["speed"] = "-"
-			self.params["speed_tenths"] = "-"
-
+		self.update_param("speed")
+		self.update_param("speed_tenths")
 		self.params["utc"] = self.p_raw["utc"]
 		self.update_param("odometer")
 		self.update_param("rider_weight")
