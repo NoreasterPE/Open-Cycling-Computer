@@ -17,13 +17,15 @@ class ride_parameters():
 		#Init pressure sensor
 		self.bmp183_sensor = bmp183(simulate)
 
+		self.p_desc = {}
+		self.p_editable = {}
+		self.p_format = {}
 		self.p_raw = {}
 		self.p_raw_units = {}
 		self.params = {}
-		self.p_desc = {}
-		self.p_editable = {}
 		self.units = {}
 		self.units_allowed = {}
+
 		#Internal params of the ride.
 		self.p_raw["altitude"] = "-"
 		self.p_raw["altitude_gps"] = "-"
