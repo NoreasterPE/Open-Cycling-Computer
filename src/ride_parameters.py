@@ -167,7 +167,7 @@ class ride_parameters():
 		try:
 			d = dt * s
 			d = float(d)
-		except ValueError:
+		except (TypeError, ValueError):
 			#Speed is not set yet - do nothing
 			pass
 		self.p_raw["distance"] += d
