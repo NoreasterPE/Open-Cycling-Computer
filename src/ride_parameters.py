@@ -137,6 +137,9 @@ class ride_parameters():
 		self.p_editable["rider_weight"] = 1
 		self.p_editable["rider_weight_units"] = 0
 
+		#Do not record any speed below 3 m/s FIXME units TBC
+		self.speed_gps_low = 3
+
 	def stop(self):
 		self.gps.stop()
 		self.bmp183_sensor.stop()
@@ -163,14 +166,15 @@ class ride_parameters():
 		dt = self.p_raw["dtime"]
 		#FIXME calculate with speed not speed_gps when bt sensors are set up
 		s = self.p_raw["speed_gps"]
-		d = 0
-		try:
-			d = dt * s
-			d = float(d)
-		except (TypeError, ValueError):
-			#Speed is not set yet - do nothing
-			pass
-		self.p_raw["distance"] += d
+		if s > self.speed_gps_low:
+			d = 0
+			try:
+				d = dt * s
+				d = float(d)
+			except (TypeError, ValueError):
+				#Speed is not set yet - do nothing
+				pass
+			self.p_raw["distance"] += d
 
 	def force_refresh(self):
 		self.occ.force_refresh()
