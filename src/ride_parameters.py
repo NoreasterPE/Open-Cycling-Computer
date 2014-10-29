@@ -175,6 +175,7 @@ class ride_parameters():
 				#Speed is not set yet - do nothing
 				pass
 			self.p_raw["distance"] += d
+			self.p_raw["odometer"] += d
 
 	def force_refresh(self):
 		self.occ.force_refresh()
