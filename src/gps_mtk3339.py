@@ -3,7 +3,9 @@
 from gps import *
 import threading
 import time
- 
+
+NaN = float('nan')
+
 class gps_mtk3339(threading.Thread):
 	#Class for gps mtk3339 as sold by Adafruit
 
@@ -11,9 +13,9 @@ class gps_mtk3339(threading.Thread):
 		threading.Thread.__init__(self)
 		self.simulate = simulate
 		self.present = False
-		self.latitude = float('nan')
-		self.longitude = float('nan')
-		self.speed = float('nan')
+		self.latitude = NaN
+		self.longitude = NaN
+		self.speed = NaN
 		self.altitude = 50.0
 		self.utc = "UTC"
 		if not self.simulate:
