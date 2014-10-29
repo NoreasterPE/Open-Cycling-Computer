@@ -16,4 +16,4 @@
 14. Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
 15. Allow for changing units of non-editable params like speed or temperature. Block edit in editor but leave unit switching?
 16. Readin time since boot from gps?
-
+17. Logging to file to debug field test crashes
