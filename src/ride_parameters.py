@@ -270,6 +270,7 @@ class ride_parameters():
 
 	def read_bmp183_sensor(self):
 		#Read pressure and temperature from BMP183
+		#FIXME Read p_raw and use update_params
 		self.bmp183_sensor.measure_pressure()
 		self.params["pressure"] = "%.0f" % int(self.bmp183_sensor.pressure/100.0)
 		self.params["temperature"] = "%.0f" % int(self.bmp183_sensor.temperature)
