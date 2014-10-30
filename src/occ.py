@@ -161,7 +161,7 @@ class open_cycling_computer():
 		except AttributeError:
 			pass
 		pygame.quit()
-		log.debug("{} Log end").format(__name__)
+		log.debug("{} Log end".format(__name__))
 		quit()
 
 def quit_handler(signal, frame):
