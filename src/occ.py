@@ -27,16 +27,22 @@ class open_cycling_computer():
 		pygame.init()
 		if not simulate:
 			pygame.mouse.set_visible(0)
+			log.debug("{} simulate =".format(__name__, simulate))
 		pygame.time.set_timer(USEREVENT + 1, 1000)
 		self.width = width
 		self.height = height
+		log.debug("{} Screen size is {} x {}".format(__name__, self.width, self.height))
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		self.clock = pygame.time.Clock()
+		log.debug("{} Calling ride_parameters".format(__name__))
 		self.rp = ride_parameters(self, simulate)
 		self.config_path = "config/config.xml"
+		log.debug("{} Reading config. Path = {}".format(__name__, self.config_path))
 		self.read_config()
+		log.debug("{} Setting layout. Path = {}".format(__name__, self.layout_path))
 		self.layout = layout(self, self.layout_path)
 		self.rendering = rendering(self.layout)
+		log.debug("{} Starting rendering thread".format(__name__))
 		self.rendering.start()
 		self.running = 1
 		self.refresh = False
@@ -88,14 +94,14 @@ class open_cycling_computer():
 				#Read rel to clean the value generated on click
 				pressed_rel =  pygame.mouse.get_rel()
 				self.add_rel_motion = True
-				log.debug("DOWN:{} {} {} {} x:{} y:{}".format(self.pressed_t, self.released_t, self.pressed_pos[0], self.pressed_pos[1]))
+				log.debug("{0} DOWN:{1} {2} {3}".format(__name__, self.pressed_t, self.released_t, self.pressed_pos))
 			elif event.type == pygame.MOUSEBUTTONUP:
 				#That check prevents setting release_x after long click
 				if (self.pressed_t != 0):
 					self.released_t = time_now
 					self.released_pos = pygame.mouse.get_pos()
 				self.add_rel_motion = False
-				log.debug("{} UP: {} {} x:{} y:{}".format(self.pressed_t, self.released_t, self.pressed_pos[0], self.pressed_pos[1]))
+				log.debug("{0} UP: {1} {2} {3}".format(__name__, self.pressed_t, self.released_t, self.pressed_pos))
 			elif event.type == pygame.MOUSEMOTION:
 				pressed_rel =  pygame.mouse.get_rel()
 				if self.add_rel_motion:
@@ -106,31 +112,31 @@ class open_cycling_computer():
 				self.refresh = True
 				self.layout.render_button = self.pressed_pos
 				if (time_now - self.pressed_t) > LONG_CLICK:
-					log.debug("LONG CLICK :  {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
+					log.debug("{} LONG CLICK : {} {} {}".format(__name__, time_now, self.pressed_t, self.pressed_pos))
 					self.layout.check_click(self.pressed_pos, 1)
 					self.reset_motion()
 				if (self.released_t != 0):
-					log.debug("SHORT CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
+					log.debug("{} SHORT CLICK : {} {} {}".format(__name__, time_now, self.pressed_t, self.pressed_pos))
 					self.layout.check_click(self.pressed_pos, 0)
 					self.reset_motion()
 				dx = self.rel_movement[0]
 				dy = self.rel_movement[1]
 				if (abs(dx)) > SWIPE_LENGTH:
 					if (dx > 0):
-						log.debug("SWIPE X RIGHT to LEFT : {} {} {} {} {} {}".format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
+						log.debug("{} SWIPE X RIGHT to LEFT : {} {} {} {} {} {}".format(__name__, time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 						self.layout.check_click(self.pressed_pos, 2)
 						self.reset_motion()
 					else:
-						log.debug("SWIPE X LEFT to RIGTH : {} {} {} {} {} {}".format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
+						log.debug("{} SWIPE X LEFT to RIGHT : {} {} {} {} {} {}".format(__name__, time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 						self.layout.check_click(self.pressed_pos, 3)
 						self.reset_motion()
 				elif (abs(dy)) > SWIPE_LENGTH:
 					if (dy < 0):
-						log.debug("SWIPE X BOTTOM to TOP : {} {} {} {} {} {}".format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
+						log.debug("{} SWIPE X BOTTOM to TOP : {} {} {} {} {} {}".format(__name__, time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 						self.layout.check_click(self.pressed_pos, 4)
 						self.reset_motion()
 					else:
-						log.debug("SWIPE X TOP to BOTTOM : {} {} {} {} {} {}".format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
+						log.debug("{} SWIPE X TOP to BOTTOM : {} {} {} {} {} {}".format(__name__, time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 						self.layout.check_click(self.pressed_pos, 5)
 						self.reset_motion()
 
