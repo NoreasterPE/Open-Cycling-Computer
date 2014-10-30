@@ -21,7 +21,7 @@ class open_cycling_computer():
 	'Class for PiTFT 2.8" 320x240 cycling computer'
 	def __init__(self, simulate = False, width = 240, height = 320):
 		log_suffix = strftime("%H:%M:%S")
-		log.basicConfig(filename="/home/pi/OpenCyclingComputer/debug." + log_suffix + ".log",level=log.DEBUG)
+		log.basicConfig(filename="log/debug." + log_suffix + ".log",level=log.DEBUG)
 		self.log = log
 		log.debug("{} Log start".format(__name__))
 		pygame.init()
