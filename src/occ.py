@@ -22,7 +22,8 @@ class open_cycling_computer():
 	def __init__(self, simulate = False, width = 240, height = 320):
 		log_suffix = strftime("%H:%M:%S")
 		log.basicConfig(filename="/home/pi/OpenCyclingComputer/debug." + log_suffix + ".log",level=log.DEBUG)
-		log.debug("Log init")
+		self.log = log
+		log.debug("{} Log start".format(__name__))
 		pygame.init()
 		if not simulate:
 			pygame.mouse.set_visible(0)
@@ -160,6 +161,7 @@ class open_cycling_computer():
 		except AttributeError:
 			pass
 		pygame.quit()
+		log.debug("{} Log end").format(__name__)
 		quit()
 
 def quit_handler(signal, frame):
@@ -174,7 +176,7 @@ if __name__ == "__main__":
 	if (platform.machine() == "armv6l"):
 		main_window = open_cycling_computer(False)
 	else:
-		print "Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown."
+		log.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
 		main_window = open_cycling_computer(True)
 	main_window.main_loop()
 	main_window.cleanup()

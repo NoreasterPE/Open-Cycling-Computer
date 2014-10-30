@@ -36,8 +36,9 @@ class layout():
 			self.layout_tree = eltree.parse(layout_path)
 			self.layout_path = layout_path
 		except:
-			print "Loading layout ", layout_path, " failed, falling back to default.xml"
-			print "Error details:", sys.exc_info()[0]
+			self.occ.log.error("{} Loading layout {} failed, falling back to default.xml".format(__name__, layout_path))
+			sys_info = "Error details:" + sys.exc_info()[0]
+			self.occ.log.error(sys_info)
 			#Fallback to default layout
 			#FIXME - define const file with paths?
 			self.layout_tree = eltree.parse("layouts/default.xml")
@@ -68,7 +69,7 @@ class layout():
 			bg_path = self.current_page.get('background')
 			self.bg_image = pygame.image.load(bg_path).convert()
 		except pygame.error:
-			print "Cannot load background image! layout_path =", self.layout_path, " background path:", bg_path, " page_id =", page_id
+			self.occ.log.critical("{} Cannot load background image! layout_path ={} background path ={} page_id ={}".format(__name__, self.layout_path, bg_path, page_id))
 			#That stops occ but not immediately - errors can occur
 			self.occ.running = False
 			self.occ.cleanup()
@@ -76,7 +77,7 @@ class layout():
 			bt_path = self.current_page.get('buttons')
 			self.bt_image = pygame.image.load(bt_path).convert()
 		except pygame.error:
-			print "Cannot load buttons image! layout_path =", self.layout_path, " buttons path:", bt_path, " page_id =", page_id
+			self.occ.log.critical("{} Cannot load buttons image! layout_path ={} buttons path ={} page_id ={}".format(__name__, self.layout_path, bt_path, page_id))
 			self.occ.running = False
 			self.occ.cleanup()
 			pass
@@ -172,7 +173,7 @@ class layout():
 						self.render_pressed_button(self.screen, func)
 						break
 				except KeyError:
-					print "show_pressed_button failed! func = ", func 
+					self.occ.log.critical("{} show_pressed_button failed! func ={}".format, __name__, func)
 					self.occ.running = False
 
 	def check_click(self, position, click):
@@ -217,7 +218,8 @@ class layout():
 				except KeyError:
 					#FIXME function name not knwon - write to log
 					#It's not fatal  - user clicked on a non-clickable element
-					print "KeyError: non-fatal: check_click failed on click = 1 [LONG CLICK] ! func =", func, ", position = ", position
+					#print "KeyError: non-fatal: check_click failed on click = 1 [LONG CLICK] ! func =", func, ", position = ", position
+					pass
 		elif click == 2:
 			#Swipe RIGHT to LEFT
 			self.run_function("next_page")
@@ -354,7 +356,7 @@ class layout():
 		try:
 			f = self.occ.rp.p_format[variable]
 		except KeyError:
-			print "Formatting not available: param_name =", param_name
+			self.oss.log.warning("{} Formatting not available: param_name ={}".format(__name__, param_name))
 			f = "%.1f"
 	
 		self.editor["variable_value"] = f % float(v.item())
