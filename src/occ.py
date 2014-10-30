@@ -8,6 +8,7 @@ from rendering import rendering
 from ride_parameters import ride_parameters
 from time import *
 import locale
+import logging as log
 import lxml.etree as eltree
 import math
 import os
@@ -19,6 +20,9 @@ import sys
 class open_cycling_computer():
 	'Class for PiTFT 2.8" 320x240 cycling computer'
 	def __init__(self, simulate = False, width = 240, height = 320):
+		log_suffix = strftime("%H:%M:%S")
+		log.basicConfig(filename="/home/pi/OpenCyclingComputer/debug." + log_suffix + ".log",level=log.DEBUG)
+		log.debug("Log init")
 		pygame.init()
 		if not simulate:
 			pygame.mouse.set_visible(0)
@@ -83,48 +87,49 @@ class open_cycling_computer():
 				#Read rel to clean the value generated on click
 				pressed_rel =  pygame.mouse.get_rel()
 				self.add_rel_motion = True
-				#print "DOWN:", self.pressed_t, self.released_t, "x:", self.pressed_pos[0], "y:", self.pressed_pos[1]
+				log.debug("DOWN:{} {} {} {} {} {}".format(self.pressed_t, self.released_t, "x:", self.pressed_pos[0], "y:", self.pressed_pos[1]))
 			elif event.type == pygame.MOUSEBUTTONUP:
 				#That check prevents setting release_x after long click
 				if (self.pressed_t != 0):
 					self.released_t = time_now
 					self.released_pos = pygame.mouse.get_pos()
 				self.add_rel_motion = False
-				#print "UP:", self.pressed_t, self.released_t, "x:", self.pressed_pos[0], "y:", self.pressed_pos[1]
+				log.debug("UP:", self.pressed_t, self.released_t, "x:", self.pressed_pos[0], "y:", self.pressed_pos[1])
 			elif event.type == pygame.MOUSEMOTION:
 				pressed_rel =  pygame.mouse.get_rel()
 				if self.add_rel_motion:
 					self.rel_movement = tuple(map(add, self.rel_movement, pressed_rel))
-			#print "ticking...:", time_now, self.pressed_t, self.pressed_pos, self.released_t, self.released_pos
+			#log.debug("ticking:time_now:{} pressed_t:{} pressed_pos:{} released_t:{} released_pos:{}". \
+			#		format(time_now, self.pressed_t, self.pressed_pos, self.released_t, self.released_pos))
 			if (self.pressed_t != 0):
 				self.refresh = True
 				self.layout.render_button = self.pressed_pos
 				if (time_now - self.pressed_t) > LONG_CLICK:
-					#print "LONG CLICK", time_now, self.pressed_t, self.pressed_pos
+					log.debug("LONG CLICK :  {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
 					self.layout.check_click(self.pressed_pos, 1)
 					self.reset_motion()
 				if (self.released_t != 0):
-					#print "SHORT CLICK", time_now, self.pressed_t, self.pressed_pos
+					log.debug("SHORT CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
 					self.layout.check_click(self.pressed_pos, 0)
 					self.reset_motion()
 				dx = self.rel_movement[0]
 				dy = self.rel_movement[1]
 				if (abs(dx)) > SWIPE_LENGTH:
 					if (dx > 0):
-						#print "SWIPE X RIGHT to LEFT", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
+						log.debug("SWIPE X RIGHT to LEFT : {} {} {} {} {} {}".format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 						self.layout.check_click(self.pressed_pos, 2)
 						self.reset_motion()
 					else:
-						#print "SWIPE X LEFT to RIGTH", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
+						log.debug("SWIPE X LEFT to RIGTH : {} {} {} {} {} {}".format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 						self.layout.check_click(self.pressed_pos, 3)
 						self.reset_motion()
 				elif (abs(dy)) > SWIPE_LENGTH:
 					if (dy < 0):
-						#print "SWIPE X BOTTOM to TOP", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
+						log.debug("SWIPE X BOTTOM to TOP : {} {} {} {} {} {}".format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 						self.layout.check_click(self.pressed_pos, 4)
 						self.reset_motion()
 					else:
-						#print "SWIPE X TOP to BOTTOM", time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy
+						log.debug("SWIPE X TOP to BOTTOM : {} {} {} {} {} {}".format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 						self.layout.check_click(self.pressed_pos, 5)
 						self.reset_motion()
 
