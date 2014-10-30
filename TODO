@@ -17,3 +17,4 @@
 15. Allow for changing units of non-editable params like speed or temperature. Block edit in editor but leave unit switching?
 16. Readin time since boot from gps?
 17. Logging to file to debug field test crashes
+18. Setup formatting for logger as per https://docs.python.org/2/library/logging.html
