@@ -57,7 +57,48 @@ sudo insserv /etc/init.d/asplashscreen
     Stream #0:0(und): Video: h264 (High) (avc1 / 0x31637661), yuv420p, 240x320 [SAR 1:1 DAR 3:4], 11 kb/s, 19.98 fps, 19.98 tbr, 20k tbn, 39.96 tbc (default)
 
 5. Install mplayer
-6. Add fbcp and make /etc/init.s/asplashscreen use it. fbcp: https://github.com/tasanakorn/rpi-fbcp
+6. Add fbcp and make /etc/init.d/asplashscreen use it. fbcp: https://github.com/tasanakorn/rpi-fbcp
+
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          asplashscreen
+# Required-Start:
+# Required-Stop:
+# Should-Start:      
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Show custom splashscreen
+# Description:       Show custom splashscreen
+### END INIT INFO
+
+do_start () {
+	/usr/bin/occ_splashscreen &
+	exit 0
+}
+
+case "$1" in
+  start|"")
+    do_start
+    ;;
+  restart|reload|force-reload)
+    echo "Error: argument '$1' not supported" >&2
+    exit 3
+    ;;
+  stop)
+    # No-op
+    ;;
+  status)
+    exit 0
+    ;;
+  *)
+    echo "Usage: asplashscreen [start|stop]" >&2
+    exit 3
+    ;;
+esac
+
+:
+
+
 7. Add service to runlevel 2 
 cd /etc/rc2.d
 sudo ln -s ../init.d/asplashscreen S01asplashscreen
@@ -84,3 +125,51 @@ sudo TSLIB_FBDEVICE=/dev/fb1 TSLIB_TSDEVICE=/dev/input/touchscreen ts_test
 16. sudo apt-get install python3-tz
 17. Install tzwhere for python from https://github.com/pegler/pytzwhere
 18. sudo apt-get install python-quantities
+19. Add /usr/bin/occ:
+
+#!/bin/bash
+cd /home/pi/OpenCyclingComputer/
+sudo python src/occ.py
+20. Add service to runlevel 2
+cd /etc/rc2.d
+sudo ln -s ../init.d/occ S99occ
+21. Add /etc/init.d/occ:
+
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          OpenCyclingComputer
+# Required-Start:
+# Required-Stop:
+# Should-Start:      
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Open Cycling Computer
+# Description:       Open Cycling Computer
+### END INIT INFO
+
+do_start () {
+	/usr/bin/occ &
+	exit 0
+}
+
+case "$1" in
+  start|"")
+    do_start
+    ;;
+  restart|reload|force-reload)
+    echo "Error: argument '$1' not supported" >&2
+    exit 3
+    ;;
+  stop)
+    # No-op
+    ;;
+  status)
+    exit 0
+    ;;
+  *)
+    echo "Usage: occ [start|stop]" >&2
+    exit 3
+    ;;
+esac
+
+:
