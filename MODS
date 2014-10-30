@@ -141,7 +141,7 @@ sudo ln -s ../init.d/occ S99occ
 # Required-Start:
 # Required-Stop:
 # Should-Start:      
-# Default-Start:     S
+# Default-Start:     2
 # Default-Stop:
 # Short-Description: Open Cycling Computer
 # Description:       Open Cycling Computer
@@ -173,3 +173,5 @@ case "$1" in
 esac
 
 :
+22. Enable occ service (required?):
+sudo update-rc.d occ enable 2

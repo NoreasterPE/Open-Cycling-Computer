@@ -88,14 +88,14 @@ class open_cycling_computer():
 				#Read rel to clean the value generated on click
 				pressed_rel =  pygame.mouse.get_rel()
 				self.add_rel_motion = True
-				log.debug("DOWN:{} {} {} {} {} {}".format(self.pressed_t, self.released_t, "x:", self.pressed_pos[0], "y:", self.pressed_pos[1]))
+				log.debug("DOWN:{} {} {} {} x:{} y:{}".format(self.pressed_t, self.released_t, self.pressed_pos[0], self.pressed_pos[1]))
 			elif event.type == pygame.MOUSEBUTTONUP:
 				#That check prevents setting release_x after long click
 				if (self.pressed_t != 0):
 					self.released_t = time_now
 					self.released_pos = pygame.mouse.get_pos()
 				self.add_rel_motion = False
-				log.debug("UP:", self.pressed_t, self.released_t, "x:", self.pressed_pos[0], "y:", self.pressed_pos[1])
+				log.debug("{} UP: {} {} x:{} y:{}".format(self.pressed_t, self.released_t, self.pressed_pos[0], self.pressed_pos[1]))
 			elif event.type == pygame.MOUSEMOTION:
 				pressed_rel =  pygame.mouse.get_rel()
 				if self.add_rel_motion:
