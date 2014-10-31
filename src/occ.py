@@ -182,7 +182,7 @@ if __name__ == "__main__":
 	if (platform.machine() == "armv6l"):
 		main_window = open_cycling_computer(False)
 	else:
-		log.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
 		main_window = open_cycling_computer(True)
+		log.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
 	main_window.main_loop()
 	main_window.cleanup()
