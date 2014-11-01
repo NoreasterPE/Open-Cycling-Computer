@@ -24,11 +24,17 @@ if __name__ == '__main__':
 			print 'climb       ' , gps.data.fix.climb
 			print 'track       ' , gps.data.fix.track
 			print 'mode        ' , gps.data.fix.mode
+			print 
 			sat = gps.data.satellites
 			l = len(sat)
-			print "No of satellites: {}".format(l)
+			total_set_used = 0
 			for i in sat:
 				print i
+				if i.used:
+					total_set_used += 1
+
+			print 
+			print "No of satellites: {} / {}".format(total_set_used, l)
 
 			time.sleep(1)
  
