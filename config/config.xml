@@ -1,5 +1,5 @@
 <config>
-  <layout_path>layouts/default.xml</layout_path>
+  <layout_path>layouts/lcd_white.xml</layout_path>
   <rider_weight>80.4</rider_weight>
   <rider_weight_units>kg</rider_weight_units>
   <altitude_at_home>89.0</altitude_at_home>
