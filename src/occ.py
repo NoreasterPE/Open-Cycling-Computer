@@ -155,6 +155,7 @@ class open_cycling_computer():
 		self.rel_movement = (0,0)
 		self.layout.render_button = None
 		self.add_rel_motion = False
+		pygame.event.clear()
 
 	def cleanup(self):
 		sleep(1)
