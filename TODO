@@ -6,7 +6,7 @@
 6. [DONE] Conversion table for units, start with basic km <-> mph
 7. [DONE] Editing single digits in numbers
 8. Avoid highlighting when sweeping (MOUSEMOTION should be OK for that)
-9. Find a solutin to black square under hidden cursor. pygame.mouse.set_pos() ?
+9. [DONE] Find a solutin to black square under hidden cursor. pygame.mouse.set_pos() ? - Solved with 90dbdfc0eb8f1b7ce115eee0e0f942bcdadb1c97
 10. Consider scroll-over-the-edge to switch pages
 11. [DONE] Use this for rel_movement:
 >>> from operator import add
@@ -15,6 +15,7 @@
 13. Fix inconsistent naming: func, function, param_name
 14. Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
 15. Allow for changing units of non-editable params like speed or temperature. Block edit in editor but leave unit switching?
-16. Readin time since boot from gps?
-17. Logging to file to debug field test crashes
+16. [DISCARDED] Reading time since boot from gps? - there is no need fo this
+17. [DONE] Logging to file to debug field test crashes
 18. Setup formatting for logger as per https://docs.python.org/2/library/logging.html
+19. Add more logging, dump ride params to log?
