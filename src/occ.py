@@ -182,8 +182,10 @@ def quit_handler(signal, frame):
 if __name__ == "__main__":
 	signal.signal(signal.SIGTERM, quit_handler)
 	signal.signal(signal.SIGINT, quit_handler)
-	os.environ["SDL_FBDEV"] = "/dev/fb1"
-	os.putenv('SDL_MOUSEDEV' , '/dev/input/touchscreen')
+	os.putenv('SDL_VIDEODRIVER', 'fbcon')
+	os.putenv('SDL_FBDEV'      , '/dev/fb1')
+	os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
+	os.putenv('SDL_MOUSEDEV'   , '/dev/input/touchscreen')
 	#This is a simple check if we're running on Raspberry PI. Switch to simulation mode if we're not
 	if (platform.machine() == "armv6l"):
 		main_window = open_cycling_computer(False)
