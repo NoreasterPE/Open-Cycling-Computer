@@ -57,7 +57,9 @@ class ride_parameters():
 		self.p_raw_units["longitude"] = ""
 		self.p_raw_units["odometer"] = "m"
 		self.p_raw_units["rider_weight"] = "kg"
+		self.p_raw_units["speed"] = "m/s"
 		self.p_raw_units["speed_gps"] = "m/s"
+		self.p_raw_units["speed_tenths"] = "m/s"
 
 		#Params of the ride ready for rendering.
 		self.params["altitude"] = "-"
