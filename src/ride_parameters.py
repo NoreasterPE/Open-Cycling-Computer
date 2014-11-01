@@ -8,14 +8,11 @@ import quantities as q
 class ride_parameters():
 	def __init__(self, occ, simulate = False):
 		self.occ = occ
-		#Init sensors
-		#Init gps
-		#FIXME Add clean gps stop and ride_params stop
-		#print "Initialising GPS"
+		self.occ.log.info("{}: Initialising GPS".format(__name__))
 		self.gps = gps_mtk3339(simulate)
-		#print "GPS thread starting"
+		self.occ.log.info("{}: Starting GPS thread".format(__name__))
 		self.gps.start()
-		#Init pressure sensor
+		self.occ.log.info("{}: Initialising bmp183 sensor".format(__name__))
 		self.bmp183_sensor = bmp183(simulate)
 
 		self.p_desc = {}
