@@ -221,6 +221,7 @@ class ride_parameters():
 			return empty_string
 
 	def read_gps_data(self):
+		self.occ.log.debug("{}: [F] read_gps_data".format(__name__))
 		data = self.gps.get_data()
 		lat = data[0]
 		lon = data[1]
@@ -235,6 +236,7 @@ class ride_parameters():
 		#FIXME optimise code to use clean_value for speed
 		
 		spd = self.p_raw["speed_gps"]
+		self.occ.log.debug("{}: read_gps_data: p_raw: speed_gps: {}".format(__name__, spd))
 		if  spd != "-":
 			spd_f = math.floor(spd)
 			self.p_raw["speed"] = spd_f
@@ -242,6 +244,8 @@ class ride_parameters():
 		else:
 			self.p_raw["speed"] = "-"
 			self.p_raw["speed_tenths"] = "-"
+		self.occ.log.debug("{}: read_gps_data: p_raw: speed: {}".format(__name__, self.p_raw["speed"]))
+		self.occ.log.debug("{}: read_gps_data: p_raw: speed_tenths: {}".format(__name__, self.p_raw["speed_tenths"]))
 
 	def update_params(self):
 		self.update_param("latitude")
