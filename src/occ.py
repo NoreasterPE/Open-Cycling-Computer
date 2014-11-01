@@ -25,6 +25,7 @@ class open_cycling_computer():
 		self.log = log
 		log.debug("{} Log start".format(__name__))
 		pygame.init()
+		pygame.event.set_grab(True)
 		if not simulate:
 			pygame.mouse.set_visible(0)
 			log.debug("{} simulate =".format(__name__, simulate))
