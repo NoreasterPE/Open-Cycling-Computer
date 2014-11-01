@@ -139,6 +139,7 @@ class ride_parameters():
 
 		#Do not record any speed below 3 m/s FIXME units TBC
 		self.speed_gps_low = 3
+		self.occ.log.error("{}: speed_gps_low treshold set to {}".format(__name__, self.speed_gps_low))
 
 	def stop(self):
 		self.gps.stop()
