@@ -147,6 +147,7 @@ class open_cycling_computer():
 				self.rendering.force_refresh()
 
 	def reset_motion(self):
+		log.debug("{} [F] reset_motion".format(__name__))
 		self.pressed_t = 0
 		self.released_t = 0
 		self.pressed_pos = (0,0)
