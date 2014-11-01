@@ -1,10 +1,10 @@
+import lxml.etree as eltree
 import os
 import pygame
+import quantities as q
 import struct
 import sys
 import time
-import quantities as q
-import lxml.etree as eltree
 
 class layout():
 	#def __init__(self, occ, layout_path="layouts/current.xml"):
