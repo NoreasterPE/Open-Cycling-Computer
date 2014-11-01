@@ -64,6 +64,7 @@ class open_cycling_computer():
 			self.rp.p_raw["odometer"] = float(self.config.find("odometer").text)
 			self.rp.units["odometer"] = self.config.find("odometer_units").text
 		except AttributeError:
+			log.error("{} ArrtibuteError in read_config!".format(__name__))
 			pass
 
 	def write_config(self):
