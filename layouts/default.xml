@@ -119,6 +119,21 @@
 			<text_center x="200" y="100"/>
 			<font_size>2</font_size>
 		</field>
+		<field name="middle_upper_left">
+			<function>satellites_used</function>
+			<text_center x="50" y="165">0</text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="middle_upper_center">
+			<function>satellites_visible</function>
+			<text_center x="120" y="165">0</text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="middle_upper_right">
+			<function>satellites_used</function>
+			<text_center x="190" y="165">0</text_center>
+			<font_size>2</font_size>
+		</field>
 	</page>
 	<page name="Editor" id="editor" background="images/occ_editor_background.png" buttons="images/occ_editor_buttons.png" font="" fg_colour="FFFFFF">
 		<field name="top_left">
