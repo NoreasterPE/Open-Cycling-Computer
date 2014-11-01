@@ -56,10 +56,12 @@ class ride_parameters():
 		self.p_raw_units["latitude"] = ""
 		self.p_raw_units["longitude"] = ""
 		self.p_raw_units["odometer"] = "m"
+		self.p_raw_units["pressure"] = "hPa"
 		self.p_raw_units["rider_weight"] = "kg"
 		self.p_raw_units["speed"] = "m/s"
 		self.p_raw_units["speed_gps"] = "m/s"
 		self.p_raw_units["speed_tenths"] = "m/s"
+		self.p_raw_units["temperature"] = "C"
 
 		#Params of the ride ready for rendering.
 		self.params["altitude"] = "-"
@@ -96,7 +98,7 @@ class ride_parameters():
 		self.p_format["latitude"] = "%.4f"
 		self.p_format["longitude"] = "%.4f"
 		self.p_format["odometer"] = "%.0f"
-		self.p_format["pressure"] = "%.1f"
+		self.p_format["pressure"] = "%.0f"
 		self.p_format["pressure_at_sea_level"] = "%.0f"
 		self.p_format["rider_weight"] = "%.1f"
 		self.p_format["rtc"] = ""
@@ -105,6 +107,7 @@ class ride_parameters():
 		self.p_format["satellites_visible"] = ""
 		self.p_format["speed"] = "%.0f"
 		self.p_format["speed_tenths"] = "%.0f"
+		self.p_format["temperature"] = "%.0f"
 		self.p_format["utc"] = ""
 
 		#Units - name has to be identical as in params
@@ -131,7 +134,9 @@ class ride_parameters():
 		self.units_allowed["rider_weight"] = ["kg", "st", "lb"]
 
 		#FIXME python-quantities won't like those deg C
-		self.units["temperature"] = u'\N{DEGREE SIGN}' + "C"
+		self.units["temperature"] = "C"
+		#FIXME Make pretty units for temperature
+		#self.units["temperature"] = u'\N{DEGREE SIGN}' + "C"
 
 		#Params description FIXME localisation
 		self.p_desc["altitude_at_home"] = "Home altitude"
@@ -290,6 +295,8 @@ class ride_parameters():
 		self.params["utc"] = self.p_raw["utc"]
 		self.update_param("odometer")
 		self.update_param("rider_weight")
+		self.update_param("pressure")
+		self.update_param("temperature")
 
 	def update_param(self, param_name):
 		self.occ.log.debug("{}: [F] update_param".format(__name__))
@@ -322,11 +329,10 @@ class ride_parameters():
 		self.params["rtc"] = self.params["date"] + " " + self.params["time"]
 
 	def read_bmp183_sensor(self):
-		#Read pressure and temperature from BMP183
-		#FIXME Read p_raw and use update_params
+		self.occ.log.info("{}: Reading pressure and temperature from bmpBMP183".format(__name__))
 		self.bmp183_sensor.measure_pressure()
-		self.params["pressure"] = "%.0f" % int(self.bmp183_sensor.pressure/100.0)
-		self.params["temperature"] = "%.0f" % int(self.bmp183_sensor.temperature)
+		self.p_raw["pressure"] = self.bmp183_sensor.pressure/100.0
+		self.p_raw["temperature"] = self.bmp183_sensor.temperature
 		#Set current altitude based on current pressure and calculated pressure_at_sea_level, cut to meters
 		#self.params["altitude"] = int(44330*(1 - pow((self.params["pressure"]/self.params["pressure_at_sea_level"]), (1/5.255))))
 
