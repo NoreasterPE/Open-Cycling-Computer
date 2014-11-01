@@ -20,7 +20,7 @@ class gps_mtk3339(threading.Thread):
 		self.utc = "UTC"
 		if not self.simulate:
 			try:
-				#Add check for running gpsd. Restart if missing. Consider watchdog thread to start gpsd
+				#FIXME Add check for running gpsd. Restart if missing. Consider watchdog thread to start gpsd
 				self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
 				self.present = True
 			except:
