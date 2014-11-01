@@ -83,7 +83,8 @@ class open_cycling_computer():
 		self.reset_motion()
 		while self.running:
 			time_now = pygame.time.get_ticks()
-			event = pygame.event.poll()
+			#event = pygame.event.poll()
+			event = pygame.event.wait()
 			if event.type == pygame.QUIT:
 				self.running = 0
 			elif event.type == USEREVENT + 1:
