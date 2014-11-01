@@ -149,6 +149,7 @@ class ride_parameters():
 		self.stop()
 
 	def update_values(self):
+		self.occ.log.error("{}: [F] update_values".format(__name__))
 		t = time.time()
 		self.p_raw["dtime"] = t - self.p_raw["time_stamp"]
 		self.p_raw["time_stamp"] = t
