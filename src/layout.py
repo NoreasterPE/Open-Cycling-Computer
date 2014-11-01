@@ -436,5 +436,6 @@ class layout():
 	def reboot(self):
 		self.quit()
 		time.sleep(2)
-		os.system("reboot")
+		if not self.occ.simulate:
+			os.system("reboot")
 

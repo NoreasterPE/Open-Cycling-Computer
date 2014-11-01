@@ -22,11 +22,12 @@ class open_cycling_computer():
 	def __init__(self, simulate = False, width = 240, height = 320):
 		log_suffix = strftime("%H:%M:%S")
 		log.basicConfig(filename="log/debug." + log_suffix + ".log",level=log.DEBUG)
+		self.simulate = simulate
 		self.log = log
 		log.debug("{} Log start".format(__name__))
 		pygame.init()
-		pygame.event.set_grab(True)
-		if not simulate:
+		if not self.simulate:
+			pygame.event.set_grab(True)
 			pygame.mouse.set_visible(0)
 		pygame.time.set_timer(USEREVENT + 1, 1000)
 		self.width = width
@@ -182,12 +183,12 @@ def quit_handler(signal, frame):
 if __name__ == "__main__":
 	signal.signal(signal.SIGTERM, quit_handler)
 	signal.signal(signal.SIGINT, quit_handler)
-	os.putenv('SDL_VIDEODRIVER', 'fbcon')
-	os.putenv('SDL_FBDEV'      , '/dev/fb1')
-	os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
-	os.putenv('SDL_MOUSEDEV'   , '/dev/input/touchscreen')
+	os.environ["SDL_FBDEV"] = "/dev/fb1"
+	os.putenv('SDL_MOUSEDEV' , '/dev/input/touchscreen')
 	#This is a simple check if we're running on Raspberry PI. Switch to simulation mode if we're not
 	if (platform.machine() == "armv6l"):
+		os.putenv('SDL_VIDEODRIVER', 'fbcon')
+		os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
 		main_window = open_cycling_computer(False)
 		log.debug("{} simulate = False".format(__name__))
 	else:
