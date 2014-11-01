@@ -44,6 +44,9 @@ class ride_parameters():
 		self.p_raw["pressure_at_sea_level"] = "-"
 		self.p_raw["rider_weight"] = "-"
 		self.p_raw["rtc"] = ""
+		self.p_raw["satellites"] = "-"
+		self.p_raw["satellites_used"] = "-"
+		self.p_raw["satellites_visible"] = "-"
 		self.p_raw["speed"] = "-"
 		self.p_raw["speed_gps"] = "-"
 		self.p_raw["speed_tenths"] =  "-"
@@ -73,6 +76,9 @@ class ride_parameters():
 		self.params["pressure"] = "-"
 		self.params["pressure_at_sea_level"] = "-" 
 		self.params["rtc"] = ""
+		self.params["satellites"] = "-"
+		self.params["satellites_used"] = "-"
+		self.params["satellites_visible"] = "-"
 		self.params["speed"] = "-"
 		self.params["speed_tenths"] = "-"
 		self.params["utc"] = ""
@@ -98,6 +104,9 @@ class ride_parameters():
 		self.p_format["pressure_at_sea_level"] = "%.0f"
 		self.p_format["rider_weight"] = "%.1f"
 		self.p_format["rtc"] = ""
+		self.p_format["satellites"] = ""
+		self.p_format["satellites_used"] = ""
+		self.p_format["satellites_visible"] = ""
 		self.p_format["speed"] = "%.0f"
 		self.p_format["speed_tenths"] = "%.0f"
 		self.p_format["utc"] = ""
@@ -114,6 +123,9 @@ class ride_parameters():
 		self.units["odometer"] = "km"
 		self.units["pressure"] = "hPa"
 		self.units["rider_weight"] = "kg"
+		self.units["satellites"] = ""
+		self.units["satellites_used"] = ""
+		self.units["satellites_visible"] = ""
 		self.units["speed"] = "km/h"
 		#It's just to make handling of speed easier
 		self.units["speed_tenths"] = "km/h"
@@ -230,10 +242,16 @@ class ride_parameters():
 		alt = data[2]
 		spd = data[3]
 		self.p_raw["utc"] = data[4]
+		sud = data[5]
+		svi = data[6]
+		sat = data[7]
 		self.p_raw["latitude"] = self.clean_value(lat);
 		self.p_raw["longitude"] = self.clean_value(lon);
 		self.p_raw["altitude_gps"] = self.clean_value(alt);
 		self.p_raw["speed_gps"] = self.clean_value(spd);
+		self.p_raw["satellites_used"] = self.clean_value(sud);
+		self.p_raw["satellites_visible"] = self.clean_value(svi);
+		self.p_raw["satellites"] = self.clean_value(sat);
 
 		#FIXME optimise code to use clean_value for speed
 		

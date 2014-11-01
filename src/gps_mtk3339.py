@@ -18,6 +18,9 @@ class gps_mtk3339(threading.Thread):
 		self.speed = NaN
 		self.altitude = 50.0
 		self.utc = "UTC"
+		self.satellites = 0
+		self.satellites_used = 0
+		self.satellites_visible = 0
 		if not self.simulate:
 			try:
 				#FIXME Add check for running gpsd. Restart if missing. Consider watchdog thread to start gpsd
@@ -41,6 +44,18 @@ class gps_mtk3339(threading.Thread):
 						self.climb = self.data.fix.climb #Add to rp module
 						self.speed = self.data.fix.speed
 						self.altitude = self.data.fix.altitude
+						try:
+							sat = gps.data.satellites
+							self.satellites = len(sat)
+							self.satellites_used = 0
+							self.satellites_visible = 0
+							for i in sat:
+								if i.used:
+									self.satellites_used += 1
+								if i.ss > 0:
+									self.satellites_visible += 1
+						except AttributeError:
+							pass
 					except StopIteration:
 						pass
 			else:
@@ -50,12 +65,18 @@ class gps_mtk3339(threading.Thread):
 				self.climb = "0.2"
 				self.speed = 9.99
 				self.altitude = 50.0
+				self.satellites = 10
+				self.satellites_used = 4
+				self.satellites_visible = 5
 				time.sleep(1)
 
 	def get_data(self):
 		return (self.latitude, self.longitude, 	#0, 1
 			self.altitude, self.speed,	#2, 3
-			self.utc)			#4
+			self.utc, 			#4
+			self.satellites_used,		#5
+			self.satellites_visible,	#6
+			self.satellites)		#7
 
 	def __del__(self):
 		self.stop()
