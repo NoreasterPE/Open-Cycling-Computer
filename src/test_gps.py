@@ -24,7 +24,11 @@ if __name__ == '__main__':
 			print 'climb       ' , gps.data.fix.climb
 			print 'track       ' , gps.data.fix.track
 			print 'mode        ' , gps.data.fix.mode
-			print 'sats        ' , gps.data.satellites
+			sat = gps.data.satellites
+			l = len(sat)
+			print "No of satellites: {}".format(l)
+			for i in sat:
+				print i
 
 			time.sleep(1)
  
