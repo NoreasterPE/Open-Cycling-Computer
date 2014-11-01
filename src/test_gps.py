@@ -27,14 +27,17 @@ if __name__ == '__main__':
 			print 
 			sat = gps.data.satellites
 			l = len(sat)
-			total_set_used = 0
+			total_sat_used = 0
+			total_sat_visi = 0
 			for i in sat:
 				print i
 				if i.used:
-					total_set_used += 1
+					total_sat_used += 1
+				if i.ss > 0:
+					total_sat_visi += 1
 
 			print 
-			print "No of satellites: {} / {}".format(total_set_used, l)
+			print "No of satellites: {} / {} / {}".format(total_sat_used, total_sat_visi, l)
 
 			time.sleep(1)
  
