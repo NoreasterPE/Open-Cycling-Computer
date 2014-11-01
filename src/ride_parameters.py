@@ -278,6 +278,8 @@ class ride_parameters():
 		self.update_param("rider_weight")
 
 	def update_param(self, param_name):
+		self.occ.log.debug("{}: [F] update_param".format(__name__))
+		self.occ.log.debug("{}: update_param: param_name: {}".format(__name__, param_name))
 		try:
 			f = self.p_format[param_name]
 		except KeyError:
@@ -290,12 +292,13 @@ class ride_parameters():
 				v = q.Quantity(self.p_raw[param_name], iu)
 				v.units = self.get_unit(param_name)
 				self.params[param_name] = f % float(v.item())
+				self.occ.log.debug("{}: update_param: {} = {}".format(__name__, param_name, self.params[param_name]))
 			except TypeError:
 				#Value conversion failed, so don't change anything
-				#print "TypeError: update_param exception: ", param_name, " params[] =", self.params[param_name], " p_raw[] =", self.p_raw[param_name]
+				self.occ.log.debug("{}: TypeErroe: update_param exception: {} {} {}".format(__name__ ,param_name, self.params[param_name], self.p_raw[param_name]))
 				pass
 			except ValueError:
-				print "ValueError: update_param exception: ", param_name, " params[] =", self.params[param_name], " p_raw[] =", self.p_raw[param_name], " p_format =", f
+				self.occ.log.debug("{}: ValueError: update_param exception: {} {} {}".format(__name__ ,param_name, self.params[param_name], self.p_raw[param_name]))
 			
 
 	def update_rtc(self):
