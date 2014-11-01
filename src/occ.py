@@ -28,7 +28,6 @@ class open_cycling_computer():
 		pygame.event.set_grab(True)
 		if not simulate:
 			pygame.mouse.set_visible(0)
-			log.debug("{} simulate =".format(__name__, simulate))
 		pygame.time.set_timer(USEREVENT + 1, 1000)
 		self.width = width
 		self.height = height
@@ -184,8 +183,10 @@ if __name__ == "__main__":
 	#This is a simple check if we're running on Raspberry PI. Switch to simulation mode if we're not
 	if (platform.machine() == "armv6l"):
 		main_window = open_cycling_computer(False)
+		log.debug("{} simulate = False".format(__name__))
 	else:
 		main_window = open_cycling_computer(True)
 		log.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
+		log.debug("{} simulate = True".format(__name__))
 	main_window.main_loop()
 	main_window.cleanup()
