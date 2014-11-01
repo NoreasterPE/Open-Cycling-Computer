@@ -140,7 +140,7 @@ class ride_parameters():
 		self.p_editable["rider_weight_units"] = 0
 
 		#Do not record any speed below 3 m/s FIXME units TBC
-		self.speed_gps_low = 3
+		self.speed_gps_low = 0
 		self.occ.log.info("{}: speed_gps_low treshold set to {}".format(__name__, self.speed_gps_low))
 
 	def stop(self):
