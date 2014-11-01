@@ -125,53 +125,11 @@ sudo TSLIB_FBDEVICE=/dev/fb1 TSLIB_TSDEVICE=/dev/input/touchscreen ts_test
 16. sudo apt-get install python3-tz
 17. Install tzwhere for python from https://github.com/pegler/pytzwhere
 18. sudo apt-get install python-quantities
-19. Add /usr/bin/occ:
+19. add to etc/rc.local:
+fi
 
-#!/bin/bash
-cd /home/pi/OpenCyclingComputer/
-sudo python src/occ.py
-20. Add service to runlevel 2
-cd /etc/rc2.d
-sudo ln -s ../init.d/occ S99occ
-21. Add /etc/init.d/occ:
++cd /home/pi/OpenCyclingComputer
++python src/occ.py
 
-#! /bin/sh
-### BEGIN INIT INFO
-# Provides:          OpenCyclingComputer
-# Required-Start:
-# Required-Stop:
-# Should-Start:      
-# Default-Start:     2
-# Default-Stop:
-# Short-Description: Open Cycling Computer
-# Description:       Open Cycling Computer
-### END INIT INFO
+exit 0
 
-do_start () {
-	/usr/bin/occ &
-	exit 0
-}
-
-case "$1" in
-  start|"")
-    do_start
-    ;;
-  restart|reload|force-reload)
-    echo "Error: argument '$1' not supported" >&2
-    exit 3
-    ;;
-  stop)
-    # No-op
-    ;;
-  status)
-    exit 0
-    ;;
-  *)
-    echo "Usage: occ [start|stop]" >&2
-    exit 3
-    ;;
-esac
-
-:
-22. Enable occ service (required?):
-sudo update-rc.d occ enable 2
