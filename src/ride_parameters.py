@@ -81,7 +81,6 @@ class ride_parameters():
 		self.params["utc"] = ""
 
 		#Params that can be changed in Settings by user
-		#FIXME Write/Read to config
 		self.params["altitude_at_home"] = 89.0
 		self.params["odometer"] = 0.0
 		self.params["rider_weight"] = 80.0
