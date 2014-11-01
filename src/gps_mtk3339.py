@@ -33,13 +33,16 @@ class gps_mtk3339(threading.Thread):
 			self.running = True
 			if not self.simulate:
 				while self.running:
-					self.data.next()
-					self.latitude = self.data.fix.latitude
-					self.longitude = self.data.fix.longitude
-					self.utc = self.data.utc
-					self.climb = self.data.fix.climb #Add to rp module
-					self.speed = self.data.fix.speed
-					self.altitude = self.data.fix.altitude
+					try:
+						self.data.next()
+						self.latitude = self.data.fix.latitude
+						self.longitude = self.data.fix.longitude
+						self.utc = self.data.utc
+						self.climb = self.data.fix.climb #Add to rp module
+						self.speed = self.data.fix.speed
+						self.altitude = self.data.fix.altitude
+					except StopIteration:
+						pass
 			else:
 				self.latitude = 52.0001
 				self.longitude = -8.0001

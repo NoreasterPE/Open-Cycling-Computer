@@ -70,9 +70,9 @@
 			<font_size>2</font_size>
 		</field>
 		<field name="fourth">
-			<function>quit</function>
+			<function>reboot</function>
 			<button x0="0" y0="239" w="240" h="80"/>
-			<text_center x="120" y="280">Quit</text_center>
+			<text_center x="120" y="280">Reboot</text_center>
 			<font_size>2</font_size>
 		</field>
 	</page>

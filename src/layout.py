@@ -1,6 +1,8 @@
+import os
 import pygame
 import struct
 import sys
+import time
 import quantities as q
 import lxml.etree as eltree
 
@@ -251,6 +253,7 @@ class layout():
 				"load_white_lcd_layout" : self.load_lcd_white_layout,
 				"next_page" : self.next_page,
 				"prev_page" : self.prev_page,
+				"reboot" : self.reboot,
 				"write_layout" : self.write_layout,
 				"quit" : self.quit
 		}
@@ -429,3 +432,9 @@ class layout():
 
 	def quit(self):
 		self.occ.running = 0
+
+	def reboot(self):
+		self.quit()
+		time.sleep(2)
+		os.system("reboot")
+
