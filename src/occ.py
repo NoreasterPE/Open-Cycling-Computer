@@ -87,26 +87,29 @@ class open_cycling_computer():
 			event = pygame.event.wait()
 			if event.type == pygame.QUIT:
 				self.running = 0
+				log.debug("{} QUIT {}".format(__name__, time_now))
 			elif event.type == USEREVENT + 1:
 				self.rp.update_values()
+				log.debug("{} USEREVENT +1 {}".format(__name__, time_now))
 			elif event.type == pygame.MOUSEBUTTONDOWN:
 				self.pressed_t = time_now
 				self.pressed_pos = pygame.mouse.get_pos()
 				#Read rel to clean the value generated on click
 				pressed_rel =  pygame.mouse.get_rel()
 				self.add_rel_motion = True
-				log.debug("{0} DOWN:{1} {2} {3}".format(__name__, self.pressed_t, self.released_t, self.pressed_pos))
+				log.debug("{} DOWN:{} {} {}".format(__name__, self.pressed_t, self.released_t, self.pressed_pos))
 			elif event.type == pygame.MOUSEBUTTONUP:
 				#That check prevents setting release_x after long click
 				if (self.pressed_t != 0):
 					self.released_t = time_now
 					self.released_pos = pygame.mouse.get_pos()
 				self.add_rel_motion = False
-				log.debug("{0} UP: {1} {2} {3}".format(__name__, self.pressed_t, self.released_t, self.pressed_pos))
+				log.debug("{} UP: {} {} {}".format(__name__, self.pressed_t, self.released_t, self.pressed_pos))
 			elif event.type == pygame.MOUSEMOTION:
 				pressed_rel =  pygame.mouse.get_rel()
 				if self.add_rel_motion:
 					self.rel_movement = tuple(map(add, self.rel_movement, pressed_rel))
+				log.debug("{} MOTION: {}".format(__name__, self.rel_movement))
 			#log.debug("ticking:time_now:{} pressed_t:{} pressed_pos:{} released_t:{} released_pos:{}". \
 			#		format(time_now, self.pressed_t, self.pressed_pos, self.released_t, self.released_pos))
 			if (self.pressed_t != 0):
