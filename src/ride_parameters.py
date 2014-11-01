@@ -286,7 +286,7 @@ class ride_parameters():
 			print "Formatting not available: param_name =", param_name
 			f = "%.1f"
 
-		if self.params[param_name] != "-":
+		if self.p_raw[param_name] != "-":
 			iu = self.get_internal_unit(param_name)
 			try:
 				v = q.Quantity(self.p_raw[param_name], iu)
