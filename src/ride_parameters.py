@@ -249,14 +249,30 @@ class ride_parameters():
 		self.occ.log.debug("{}: read_gps_data: p_raw: speed: {}".format(__name__, self.p_raw["speed"]))
 		self.occ.log.debug("{}: read_gps_data: p_raw: speed_tenths: {}".format(__name__, self.p_raw["speed_tenths"]))
 
+	def update_speed(self):
+		self.occ.log.debug("{}: [F] update_speed".format(__name__))
+		#FIXME There has to be a cleaner way. Store _real_ speed without tenths?
+		if self.p_raw["speed"] != "-":
+			iu = self.get_internal_unit("speed")
+			spd_real = self.p_raw["speed"] + (self.p_raw["speed_tenths"] / 10)
+			v = q.Quantity(spd_real, iu)
+			v.units = self.get_unit("speed")
+			spd = float(v.item())
+			spd_f = math.floor(spd)
+			speed = spd_f
+			speed_tenths = math.floor(10 * (spd - spd_f))
+			f = self.p_format["speed"]
+			self.params["speed"] = f % float(speed)
+			self.params["speed_tenths"] = f % float(speed_tenths)
+		self.occ.log.debug("{}: update_speed: {} {}".format(__name__, self.params["speed"], self.params["speed_tenths"]))
+
 	def update_params(self):
 		self.update_param("latitude")
 		self.update_param("longitude")
 		self.update_param("altitude_gps")
 		self.update_param("distance")
-
-		self.update_param("speed")
-		self.update_param("speed_tenths")
+		self.update_speed()
+			
 		self.params["utc"] = self.p_raw["utc"]
 		self.update_param("odometer")
 		self.update_param("rider_weight")
