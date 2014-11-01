@@ -139,7 +139,7 @@ class ride_parameters():
 
 		#Do not record any speed below 3 m/s FIXME units TBC
 		self.speed_gps_low = 3
-		self.occ.log.error("{}: speed_gps_low treshold set to {}".format(__name__, self.speed_gps_low))
+		self.occ.log.info("{}: speed_gps_low treshold set to {}".format(__name__, self.speed_gps_low))
 
 	def stop(self):
 		self.gps.stop()
@@ -149,7 +149,7 @@ class ride_parameters():
 		self.stop()
 
 	def update_values(self):
-		self.occ.log.error("{}: [F] update_values".format(__name__))
+		self.occ.log.debug("{}: [F] update_values".format(__name__))
 		t = time.time()
 		self.p_raw["dtime"] = t - self.p_raw["time_stamp"]
 		self.p_raw["time_stamp"] = t
