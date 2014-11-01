@@ -153,6 +153,7 @@ class ride_parameters():
 		t = time.time()
 		self.p_raw["dtime"] = t - self.p_raw["time_stamp"]
 		self.p_raw["time_stamp"] = t
+		self.occ.log.debug("{}: update_values timestamp: {}".format(__name__, t))
 		self.update_rtc()
 		self.read_bmp183_sensor()
 		self.read_gps_data()
