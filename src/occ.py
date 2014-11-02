@@ -24,7 +24,7 @@ class open_cycling_computer():
 		log.basicConfig(filename="log/debug." + log_suffix + ".log",level=log.DEBUG)
 		self.simulate = simulate
 		self.log = log
-		log.debug("{} Log start".format(__name__))
+		log.debug("[OCC] Log start")
 		pygame.init()
 		if not self.simulate:
 			pygame.event.set_grab(True)
@@ -32,18 +32,18 @@ class open_cycling_computer():
 		pygame.time.set_timer(USEREVENT + 1, 1000)
 		self.width = width
 		self.height = height
-		log.debug("{} Screen size is {} x {}".format(__name__, self.width, self.height))
+		log.debug("[OCC] Screen size is {} x {}".format(self.width, self.height))
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		self.clock = pygame.time.Clock()
-		log.debug("{} Calling ride_parameters".format(__name__))
+		log.debug("[OCC] Calling ride_parameters")
 		self.rp = ride_parameters(self, simulate)
 		self.config_path = "config/config.xml"
-		log.debug("{} Reading config. Path = {}".format(__name__, self.config_path))
+		log.debug("[OCC] Reading config. Path = {}".format(self.config_path))
 		self.read_config()
-		log.debug("{} Setting layout. Path = {}".format(__name__, self.layout_path))
+		log.debug("[OCC] Setting layout. Path = {}".format(self.layout_path))
 		self.layout = layout(self, self.layout_path)
 		self.rendering = rendering(self.layout)
-		log.debug("{} Starting rendering thread".format(__name__))
+		log.debug("[OCC] Starting rendering thread")
 		self.rendering.start()
 		self.running = 1
 		self.refresh = False
@@ -64,7 +64,7 @@ class open_cycling_computer():
 			self.rp.p_raw["odometer"] = float(self.config.find("odometer").text)
 			self.rp.units["odometer"] = self.config.find("odometer_units").text
 		except AttributeError:
-			log.error("{} ArrtibuteError in read_config!".format(__name__))
+			log.error("[OCC] ArrtibuteError in read_config!")
 			pass
 
 	def write_config(self):
@@ -89,60 +89,64 @@ class open_cycling_computer():
 			event = pygame.event.wait()
 			if event.type == pygame.QUIT:
 				self.running = 0
-				log.debug("{} QUIT {}".format(__name__, time_now))
+				log.debug("[OCC] QUIT {}".format(time_now))
 			elif event.type == USEREVENT + 1:
 				self.rp.update_values()
-				log.debug("{} USEREVENT +1 {}".format(__name__, time_now))
+				log.debug("[OCC] USEREVENT +1 {}".format(time_now))
 			elif event.type == pygame.MOUSEBUTTONDOWN:
 				self.pressed_t = time_now
 				self.pressed_pos = pygame.mouse.get_pos()
 				#Read rel to clean the value generated on click
 				pressed_rel =  pygame.mouse.get_rel()
 				self.add_rel_motion = True
-				log.debug("{} DOWN:{} {} {}".format(__name__, self.pressed_t, self.released_t, self.pressed_pos))
+				log.debug("[OCC] DOWN:{} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
 			elif event.type == pygame.MOUSEBUTTONUP:
 				#That check prevents setting release_x after long click
 				if (self.pressed_t != 0):
 					self.released_t = time_now
 					self.released_pos = pygame.mouse.get_pos()
 				self.add_rel_motion = False
-				log.debug("{} UP: {} {} {}".format(__name__, self.pressed_t, self.released_t, self.pressed_pos))
+				log.debug("[OCC] UP: {} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
 			elif event.type == pygame.MOUSEMOTION:
 				pressed_rel =  pygame.mouse.get_rel()
 				if self.add_rel_motion:
 					self.rel_movement = tuple(map(add, self.rel_movement, pressed_rel))
-				log.debug("{} MOTION: {}".format(__name__, self.rel_movement))
-			#log.debug("ticking:time_now:{} pressed_t:{} pressed_pos:{} released_t:{} released_pos:{}". \
+				log.debug("[OCC] MOTION: {}".format(self.rel_movement))
+			#log.debug("[OCC] ticking:time_now:{} pressed_t:{} pressed_pos:{} released_t:{} released_pos:{}". \
 			#		format(time_now, self.pressed_t, self.pressed_pos, self.released_t, self.released_pos))
 			if (self.pressed_t != 0):
 				self.refresh = True
 				self.layout.render_button = self.pressed_pos
 				if (time_now - self.pressed_t) > LONG_CLICK:
-					log.debug("{} LONG CLICK : {} {} {}".format(__name__, time_now, self.pressed_t, self.pressed_pos))
+					log.debug("[OCC] LONG CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
 					self.layout.check_click(self.pressed_pos, 1)
 					self.reset_motion()
 				if (self.released_t != 0):
-					log.debug("{} SHORT CLICK : {} {} {}".format(__name__, time_now, self.pressed_t, self.pressed_pos))
+					log.debug("[OCC] SHORT CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
 					self.layout.check_click(self.pressed_pos, 0)
 					self.reset_motion()
 				dx = self.rel_movement[0]
 				dy = self.rel_movement[1]
 				if (abs(dx)) > SWIPE_LENGTH:
 					if (dx > 0):
-						log.debug("{} SWIPE X RIGHT to LEFT : {} {} {} {} {} {}".format(__name__, time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
+						log.debug("[OCC] SWIPE X RIGHT to LEFT : {} {} {} {} {} {}".\
+							format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 						self.layout.check_click(self.pressed_pos, 2)
 						self.reset_motion()
 					else:
-						log.debug("{} SWIPE X LEFT to RIGHT : {} {} {} {} {} {}".format(__name__, time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
+						log.debug("[OCC] SWIPE X LEFT to RIGHT : {} {} {} {} {} {}".\
+							format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 						self.layout.check_click(self.pressed_pos, 3)
 						self.reset_motion()
 				elif (abs(dy)) > SWIPE_LENGTH:
 					if (dy < 0):
-						log.debug("{} SWIPE X BOTTOM to TOP : {} {} {} {} {} {}".format(__name__, time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
+						log.debug("[OCC] SWIPE X BOTTOM to TOP : {} {} {} {} {} {}".\
+							format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 						self.layout.check_click(self.pressed_pos, 4)
 						self.reset_motion()
 					else:
-						log.debug("{} SWIPE X TOP to BOTTOM : {} {} {} {} {} {}".format(__name__, time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
+						log.debug("[OCC] SWIPE X TOP to BOTTOM : {} {} {} {} {} {}".\
+							format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 						self.layout.check_click(self.pressed_pos, 5)
 						self.reset_motion()
 
@@ -152,7 +156,7 @@ class open_cycling_computer():
 				self.rendering.force_refresh()
 
 	def reset_motion(self):
-		log.debug("{} [F] reset_motion".format(__name__))
+		log.debug("[OCC][F] reset_motion")
 		self.pressed_t = 0
 		self.released_t = 0
 		self.pressed_pos = (0,0)
@@ -175,7 +179,7 @@ class open_cycling_computer():
 		except AttributeError:
 			pass
 		pygame.quit()
-		log.debug("{} Log end".format(__name__))
+		log.debug("[OCC] Log end")
 		quit()
 
 def quit_handler(signal, frame):
@@ -191,10 +195,10 @@ if __name__ == "__main__":
 		os.putenv('SDL_VIDEODRIVER', 'fbcon')
 		os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
 		main_window = open_cycling_computer(False)
-		log.debug("{} simulate = False".format(__name__))
+		log.debug("[OCC] simulate = False")
 	else:
 		main_window = open_cycling_computer(True)
 		log.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
-		log.debug("{} simulate = True".format(__name__))
+		log.debug("[OCC] simulate = True")
 	main_window.main_loop()
 	main_window.cleanup()
