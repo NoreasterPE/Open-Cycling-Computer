@@ -169,6 +169,8 @@ class ride_parameters():
 		self.p_raw["dtime"] = t - self.p_raw["time_stamp"]
 		self.p_raw["time_stamp"] = t
 		self.occ.log.debug("{}: update_values timestamp: {}".format(__name__, t))
+		#FIXME That should be only run at home or if gps altitude is available
+		self.calculate_pressure_at_sea_level()
 		self.update_rtc()
 		self.read_bmp183_sensor()
 		self.read_gps_data()
@@ -338,11 +340,18 @@ class ride_parameters():
 		
 	def calculate_altitude(self):
 		self.occ.log.debug("{}: [F] calculate_altitude".format(__name__))
-		self.p_raw["altitude"] = int(44330*(1 - pow((self.p_raw["pressure"]/self.p_raw["pressure_at_sea_level"]), (1/5.255))))
-		self.occ.log.debug("{}: [F] calculate_altitude: altitude: {}".format(__name__, self.p_raw["altitude"]))
+		pressure = self.p_raw["pressure"]
+		pressure_at_sea_level = self.p_raw["pressure_at_sea_level"]
+		#FIXME make function to check non empty
+		if (pressure_at_sea_level != "-") and (pressure != "-"):
+			self.p_raw["altitude"] = float(44330*(1 - pow((pressure/pressure_at_sea_level), (1/5.255))))
+			self.occ.log.debug("{}: [F] calculate_altitude: altitude: {}".format(__name__, self.p_raw["altitude"]))
 
 	def calculate_pressure_at_sea_level(self):
 		self.occ.log.debug("{}: [F] calculate_pressure_at_sea_level".format(__name__))
 		#Set pressure_at_sea_level based on given altitude
-		self.p_raw["pressure_at_sea_level"] = round((self.p_raw["pressure"]/pow((1 - self.p_raw["altitude_at_home"]/44330), 5.255)), 0)
+		pressure = self.p_raw["pressure"]
+		altitude_at_home = self.p_raw["altitude_at_home"]
+		if (pressure != "-") and (altitude_at_home != "-"):
+			self.p_raw["pressure_at_sea_level"] = float(pressure/pow((1 - altitude_at_home/44330), 5.255))
 		self.occ.log.debug("{}: [F] calculate_pressure_at_sea_level: pressure_at_sea_level: {}".format(__name__, self.p_raw["pressure_at_sea_level"]))
