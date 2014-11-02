@@ -8,11 +8,11 @@ import quantities as q
 class ride_parameters():
 	def __init__(self, occ, simulate = False):
 		self.occ = occ
-		self.occ.log.info("{}: Initialising GPS".format(__name__))
+		self.occ.log.info("[RP] Initialising GPS")
 		self.gps = gps_mtk3339(occ, simulate)
-		self.occ.log.info("{}: Starting GPS thread".format(__name__))
+		self.occ.log.info("[RP] Starting GPS thread")
 		self.gps.start()
-		self.occ.log.info("{}: Initialising bmp183 sensor".format(__name__))
+		self.occ.log.info("[RP] Initialising bmp183 sensor")
 		self.bmp183_sensor = bmp183(simulate)
 
 		self.p_desc = {}
@@ -157,7 +157,7 @@ class ride_parameters():
 
 		#Do not record any speed below 3 m/s FIXME units TBC
 		self.speed_gps_low = 0
-		self.occ.log.info("{}: speed_gps_low treshold set to {}".format(__name__, self.speed_gps_low))
+		self.occ.log.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
 
 	def stop(self):
 		self.gps.stop()
@@ -167,11 +167,11 @@ class ride_parameters():
 		self.stop()
 
 	def update_values(self):
-		self.occ.log.debug("{}: [F] update_values".format(__name__))
+		self.occ.log.debug("[RP][F] update_values")
 		t = time.time()
 		self.p_raw["dtime"] = t - self.p_raw["time_stamp"]
 		self.p_raw["time_stamp"] = t
-		self.occ.log.debug("{}: update_values timestamp: {}".format(__name__, t))
+		self.occ.log.debug("[RP] update_values timestamp: {}".format(t))
 		#FIXME That should be only run at home or if gps altitude is available
 		self.calculate_pressure_at_sea_level()
 		self.update_rtc()
@@ -188,14 +188,14 @@ class ride_parameters():
 		#FIXME Add calculations of gradient, trip time, etc
 
 	def calculate_distance(self):
-		self.occ.log.debug("{}: [F] calculate_distance".format(__name__))
+		self.occ.log.debug("[RP][F] calculate_distance")
 		dt = self.p_raw["dtime"]
 		#FIXME calculate with speed not speed_gps when bt sensors are set up
 		s = self.p_raw["speed_gps"]
 		if s > self.speed_gps_low:
-			self.occ.log.debug("{}: calculate_distance: speed_gps: {}".format(__name__, s))
-			self.occ.log.debug("{}: calculate_distance: distance: {}".format(__name__, self.p_raw["distance"]))
-			self.occ.log.debug("{}: calculate_distance: odometer: {}".format(__name__, self.p_raw["odometer"]))
+			self.occ.log.debug("[RP] calculate_distance: speed_gps: {}".format(s))
+			self.occ.log.debug("[RP] calculate_distance: distance: {}".format(self.p_raw["distance"]))
+			self.occ.log.debug("[RP] calculate_distance: odometer: {}".format(self.p_raw["odometer"]))
 			d = 0
 			try:
 				d = dt * s
@@ -206,7 +206,7 @@ class ride_parameters():
 			self.p_raw["distance"] += d
 			self.p_raw["odometer"] += d
 		else:
-			self.occ.log.debug("{}: calculate_distance: speed_gps: below speed_gps_low treshold".format(__name__))
+			self.occ.log.debug("[RP] calculate_distance: speed_gps: below speed_gps_low treshold")
 
 	def force_refresh(self):
 		self.occ.force_refresh()
@@ -243,7 +243,7 @@ class ride_parameters():
 			return empty_string
 
 	def read_gps_data(self):
-		self.occ.log.debug("{}: [F] read_gps_data".format(__name__))
+		self.occ.log.debug("[RP][F] read_gps_data")
 		data = self.gps.get_data()
 		lat = data[0]
 		lon = data[1]
@@ -264,7 +264,7 @@ class ride_parameters():
 		#FIXME optimise code to use clean_value for speed
 		
 		spd = self.p_raw["speed_gps"]
-		self.occ.log.debug("{}: read_gps_data: p_raw: speed_gps: {}".format(__name__, spd))
+		self.occ.log.debug("[RP] read_gps_data: p_raw: speed_gps: {}".format(spd))
 		if  spd != "-":
 			spd_f = math.floor(spd)
 			self.p_raw["speed"] = spd_f
@@ -272,11 +272,11 @@ class ride_parameters():
 		else:
 			self.p_raw["speed"] = "-"
 			self.p_raw["speed_tenths"] = "-"
-		self.occ.log.debug("{}: read_gps_data: p_raw: speed: {}".format(__name__, self.p_raw["speed"]))
-		self.occ.log.debug("{}: read_gps_data: p_raw: speed_tenths: {}".format(__name__, self.p_raw["speed_tenths"]))
+		self.occ.log.debug("[RP] read_gps_data: p_raw: speed: {}".format(self.p_raw["speed"]))
+		self.occ.log.debug("[RP] read_gps_data: p_raw: speed_tenths: {}".format(self.p_raw["speed_tenths"]))
 
 	def update_speed(self):
-		self.occ.log.debug("{}: [F] update_speed".format(__name__))
+		self.occ.log.debug("[RP][F] update_speed")
 		#FIXME There has to be a cleaner way. Store _real_ speed without tenths?
 		if self.p_raw["speed"] != "-":
 			iu = self.get_internal_unit("speed")
@@ -290,7 +290,7 @@ class ride_parameters():
 			f = self.p_format["speed"]
 			self.params["speed"] = f % float(speed)
 			self.params["speed_tenths"] = f % float(speed_tenths)
-		self.occ.log.debug("{}: update_speed: {} {}".format(__name__, self.params["speed"], self.params["speed_tenths"]))
+		self.occ.log.debug("[RP] update_speed: {} {}".format(self.params["speed"], self.params["speed_tenths"]))
 
 	def update_params(self):
 		self.update_param("latitude")
@@ -309,8 +309,8 @@ class ride_parameters():
 		self.update_param("satellites")
 
 	def update_param(self, param_name):
-		self.occ.log.debug("{}: [F] update_param".format(__name__))
-		self.occ.log.debug("{}: update_param: param_name: {}".format(__name__, param_name))
+		self.occ.log.debug("[RP][F] update_param")
+		self.occ.log.debug("[RP] update_param: param_name: {}".format(param_name))
 		try:
 			f = self.p_format[param_name]
 		except KeyError:
@@ -323,13 +323,13 @@ class ride_parameters():
 				v = q.Quantity(self.p_raw[param_name], iu)
 				v.units = self.get_unit(param_name)
 				self.params[param_name] = f % float(v.item())
-				self.occ.log.debug("{}: update_param: {} = {}".format(__name__, param_name, self.params[param_name]))
+				self.occ.log.debug("[RP] update_param: {} = {}".format(param_name, self.params[param_name]))
 			except TypeError:
 				#Value conversion failed, so don't change anything
-				self.occ.log.debug("{}: TypeError: update_param exception: {} {} {}".format(__name__ ,param_name, self.params[param_name], self.p_raw[param_name]))
+				self.occ.log.debug("[RP] TypeError: update_param exception: {} {} {}".format(__name__ ,param_name, self.params[param_name], self.p_raw[param_name]))
 				pass
 			except ValueError:
-				self.occ.log.debug("{}: ValueError: update_param exception: {} {} {}".format(__name__ ,param_name, self.params[param_name], self.p_raw[param_name]))
+				self.occ.log.debug("[RP] ValueError: update_param exception: {} {} {}".format(__name__ ,param_name, self.params[param_name], self.p_raw[param_name]))
 			
 
 	def update_rtc(self):
@@ -339,25 +339,25 @@ class ride_parameters():
 		self.params["rtc"] = self.params["date"] + " " + self.params["time"]
 
 	def read_bmp183_sensor(self):
-		self.occ.log.info("{}: Reading pressure and temperature from bmpBMP183".format(__name__))
+		self.occ.log.info("[RP] Reading pressure and temperature from bmpBMP183")
 		self.bmp183_sensor.measure_pressure()
 		self.p_raw["pressure"] = self.bmp183_sensor.pressure/100.0
 		self.p_raw["temperature"] = self.bmp183_sensor.temperature
 		
 	def calculate_altitude(self):
-		self.occ.log.debug("{}: [F] calculate_altitude".format(__name__))
+		self.occ.log.debug("[RP][F] calculate_altitude")
 		pressure = self.p_raw["pressure"]
 		pressure_at_sea_level = self.p_raw["pressure_at_sea_level"]
 		#FIXME make function to check non empty
 		if (pressure_at_sea_level != "-") and (pressure != "-"):
 			self.p_raw["altitude"] = float(44330*(1 - pow((pressure/pressure_at_sea_level), (1/5.255))))
-			self.occ.log.debug("{}: [F] calculate_altitude: altitude: {}".format(__name__, self.p_raw["altitude"]))
+			self.occ.log.debug("[RP][F] calculate_altitude: altitude: {}".format(self.p_raw["altitude"]))
 
 	def calculate_pressure_at_sea_level(self):
-		self.occ.log.debug("{}: [F] calculate_pressure_at_sea_level".format(__name__))
+		self.occ.log.debug("[RP][F] calculate_pressure_at_sea_level")
 		#Set pressure_at_sea_level based on given altitude
 		pressure = self.p_raw["pressure"]
 		altitude_at_home = self.p_raw["altitude_at_home"]
 		if (pressure != "-") and (altitude_at_home != "-"):
 			self.p_raw["pressure_at_sea_level"] = float(pressure/pow((1 - altitude_at_home/44330), 5.255))
-		self.occ.log.debug("{}: [F] calculate_pressure_at_sea_level: pressure_at_sea_level: {}".format(__name__, self.p_raw["pressure_at_sea_level"]))
+		self.occ.log.debug("[RP][F] calculate_pressure_at_sea_level: pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]))
