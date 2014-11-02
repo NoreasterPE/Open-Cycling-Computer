@@ -58,6 +58,9 @@ class ride_parameters():
 		self.p_raw_units["odometer"] = "m"
 		self.p_raw_units["pressure"] = "hPa"
 		self.p_raw_units["rider_weight"] = "kg"
+		self.p_raw_units["satellites"] = ""
+		self.p_raw_units["satellites_used"] = ""
+		self.p_raw_units["satellites_visible"] = ""
 		self.p_raw_units["speed"] = "m/s"
 		self.p_raw_units["speed_gps"] = "m/s"
 		self.p_raw_units["speed_tenths"] = "m/s"
@@ -102,9 +105,9 @@ class ride_parameters():
 		self.p_format["pressure_at_sea_level"] = "%.0f"
 		self.p_format["rider_weight"] = "%.1f"
 		self.p_format["rtc"] = ""
-		self.p_format["satellites"] = ""
-		self.p_format["satellites_used"] = ""
-		self.p_format["satellites_visible"] = ""
+		self.p_format["satellites"] = "%.0f"
+		self.p_format["satellites_used"] = "%.0f"
+		self.p_format["satellites_visible"] = "%.0f"
 		self.p_format["speed"] = "%.0f"
 		self.p_format["speed_tenths"] = "%.0f"
 		self.p_format["temperature"] = "%.0f"
@@ -301,6 +304,9 @@ class ride_parameters():
 		self.update_param("rider_weight")
 		self.update_param("pressure")
 		self.update_param("temperature")
+		self.update_param("satellites_used")
+		self.update_param("satellites_visible")
+		self.update_param("satellites")
 
 	def update_param(self, param_name):
 		self.occ.log.debug("{}: [F] update_param".format(__name__))

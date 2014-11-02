@@ -5,6 +5,14 @@ import threading
 import time
 
 NaN = float('nan')
+status = { 0 : "No fix",
+	   1 : "Fix",
+	   2 : "DGPS fix" #Differential GPS fix
+}
+fix_mode = { 1 : "No fix",
+	     2 : "Fix 2D",
+	     3 : "Fix 3D"
+}
 
 class gps_mtk3339(threading.Thread):
 	#Class for gps mtk3339 as sold by Adafruit
@@ -54,15 +62,17 @@ class gps_mtk3339(threading.Thread):
 						self.altitude = self.data.fix.altitude
 						self.occ.log.debug("{}: Altitude: {}".format(__name__, self.altitude))
 						try:
-							sat = gps.data.satellites
+							sat = self.data.satellites
 							self.satellites = len(sat)
-							self.satellites_used = 0
+							self.satellites_used = self.data.satellites_used
 							self.satellites_visible = 0
 							for i in sat:
-								if i.used:
-									self.satellites_used += 1
 								if i.ss > 0:
 									self.satellites_visible += 1
+							self.occ.log.debug("{}: Satellites: {} Visible: {} Used: {}".format(\
+									__name__, self.satellites, self.satellites_visible, self.satellites_used))
+							self.occ.log.debug("{}: Status: {} Online: {} Mode: {}".format(\
+									__name__, status[self.data.status], self.data.online, fix_mode[self.data.fix.mode]))
 						except AttributeError:
 							self.occ.log.error("{}: AttributeError exception in GPS".format(__name__))
 							pass
