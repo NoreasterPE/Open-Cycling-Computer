@@ -320,7 +320,7 @@ class ride_parameters():
 				self.occ.log.debug("{}: update_param: {} = {}".format(__name__, param_name, self.params[param_name]))
 			except TypeError:
 				#Value conversion failed, so don't change anything
-				self.occ.log.debug("{}: TypeErroe: update_param exception: {} {} {}".format(__name__ ,param_name, self.params[param_name], self.p_raw[param_name]))
+				self.occ.log.debug("{}: TypeError: update_param exception: {} {} {}".format(__name__ ,param_name, self.params[param_name], self.p_raw[param_name]))
 				pass
 			except ValueError:
 				self.occ.log.debug("{}: ValueError: update_param exception: {} {} {}".format(__name__ ,param_name, self.params[param_name], self.p_raw[param_name]))
