@@ -39,6 +39,7 @@ class gps_mtk3339(threading.Thread):
 				while self.running:
 					self.occ.log.debug("{}: GPS running = {}".format(__name__, self.running))
 					try:
+						#FIXME Fails sometimes with ImportError form gps.py - see TODO 21
 						self.data.next()
 						self.occ.log.debug("{}: Received next GPS event. timestamp: {}".format(__name__, time.time()))
 						self.latitude = self.data.fix.latitude
