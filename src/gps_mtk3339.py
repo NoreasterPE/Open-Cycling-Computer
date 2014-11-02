@@ -40,7 +40,7 @@ class gps_mtk3339(threading.Thread):
 					self.occ.log.debug("{}: GPS running = {}".format(__name__, self.running))
 					try:
 						self.data.next()
-						self.occ.log.debug("{}: Received next GPS event".format(__name__))
+						self.occ.log.debug("{}: Received next GPS event. timestamp: {}".format(__name__, time.time()))
 						self.latitude = self.data.fix.latitude
 						self.longitude = self.data.fix.longitude
 						self.occ.log.debug("{}: Coordinates: {}, {}".format(__name__, self.latitude, self.longitude))
