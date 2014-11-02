@@ -174,6 +174,7 @@ class ride_parameters():
 		self.read_gps_data()
 		self.update_params()
 		self.calculate_distance()
+		self.calculate_altitude()
 		self.calculate_pressure_at_sea_level()
 		self.force_refresh()
 		#FIXME Calc pressure only when gps altitude is known or 
@@ -334,8 +335,11 @@ class ride_parameters():
 		self.bmp183_sensor.measure_pressure()
 		self.p_raw["pressure"] = self.bmp183_sensor.pressure/100.0
 		self.p_raw["temperature"] = self.bmp183_sensor.temperature
-		#Set current altitude based on current pressure and calculated pressure_at_sea_level, cut to meters
-		#self.params["altitude"] = int(44330*(1 - pow((self.params["pressure"]/self.params["pressure_at_sea_level"]), (1/5.255))))
+		
+	def calculate_altitude(self):
+		self.occ.log.debug("{}: [F] calculate_altitude".format(__name__))
+		self.p_raw["altitude"] = int(44330*(1 - pow((self.p_raw["pressure"]/self.p_raw["pressure_at_sea_level"]), (1/5.255))))
+		self.occ.log.debug("{}: [F] calculate_altitude: altitude: {}".format(__name__, self.p_raw["altitude"]))
 
 	def calculate_pressure_at_sea_level(self):
 		self.occ.log.debug("{}: [F] calculate_pressure_at_sea_level".format(__name__))
