@@ -130,7 +130,7 @@
 			<font_size>2</font_size>
 		</field>
 		<field name="middle_upper_right">
-			<function>satellites_used</function>
+			<function>satellites</function>
 			<text_center x="190" y="165">0</text_center>
 			<font_size>2</font_size>
 		</field>
