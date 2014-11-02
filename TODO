@@ -19,3 +19,4 @@
 17. [DONE] Logging to file to debug field test crashes
 18. Setup formatting for logger as per https://docs.python.org/2/library/logging.html
 19. Add more logging, dump ride params to log?
+20. Cut down logging without losing information
