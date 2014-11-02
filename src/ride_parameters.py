@@ -9,7 +9,7 @@ class ride_parameters():
 	def __init__(self, occ, simulate = False):
 		self.occ = occ
 		self.occ.log.info("{}: Initialising GPS".format(__name__))
-		self.gps = gps_mtk3339(simulate)
+		self.gps = gps_mtk3339(occ, simulate)
 		self.occ.log.info("{}: Starting GPS thread".format(__name__))
 		self.gps.start()
 		self.occ.log.info("{}: Initialising bmp183 sensor".format(__name__))

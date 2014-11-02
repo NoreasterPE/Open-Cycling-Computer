@@ -9,8 +9,9 @@ NaN = float('nan')
 class gps_mtk3339(threading.Thread):
 	#Class for gps mtk3339 as sold by Adafruit
 
-	def __init__(self, simulate = False):
+	def __init__(self, occ, simulate = False):
 		threading.Thread.__init__(self)
+		self.occ = occ
 		self.simulate = simulate
 		self.present = False
 		self.latitude = NaN
