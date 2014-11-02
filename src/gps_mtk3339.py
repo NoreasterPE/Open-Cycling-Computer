@@ -28,7 +28,7 @@ class gps_mtk3339(threading.Thread):
 				self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
 				self.present = True
 			except:
-				#can not talk to gps
+				self.occ.log.error("{}: Cannot talk to GPS".format(__name__))
 				self.present = False
 		else:
 			self.present = True
@@ -37,14 +37,21 @@ class gps_mtk3339(threading.Thread):
 			self.running = True
 			if not self.simulate:
 				while self.running:
+					self.occ.log.debug("{}: GPS running = {}".format(__name__, self.running))
 					try:
 						self.data.next()
+						self.occ.log.debug("{}: Received next GPS event".format(__name__))
 						self.latitude = self.data.fix.latitude
 						self.longitude = self.data.fix.longitude
+						self.occ.log.debug("{}: Coordinates: {}, {}".format(__name__, self.latitude, self.longitude))
 						self.utc = self.data.utc
+						self.occ.log.debug("{}: UTC: {}".format(__name__, self.utc))
 						self.climb = self.data.fix.climb #Add to rp module
+						self.occ.log.debug("{}: Climb: {}".format(__name__, self.climb))
 						self.speed = self.data.fix.speed
+						self.occ.log.debug("{}: Speed: {}".format(__name__, self.speed))
 						self.altitude = self.data.fix.altitude
+						self.occ.log.debug("{}: Altitude: {}".format(__name__, self.altitude))
 						try:
 							sat = gps.data.satellites
 							self.satellites = len(sat)
@@ -56,8 +63,10 @@ class gps_mtk3339(threading.Thread):
 								if i.ss > 0:
 									self.satellites_visible += 1
 						except AttributeError:
+							self.occ.log.error("{}: AttributeError exception in GPS".format(__name__))
 							pass
 					except StopIteration:
+						self.occ.log.error("{}: StopIteration exception in GPS".format(__name__))
 						pass
 			else:
 				self.latitude = 52.0001
