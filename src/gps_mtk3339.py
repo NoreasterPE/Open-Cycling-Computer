@@ -36,7 +36,7 @@ class gps_mtk3339(threading.Thread):
 				self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
 				self.present = True
 			except:
-				self.occ.log.error("{}: Cannot talk to GPS".format(__name__))
+				self.occ.log.error("[GPS] Cannot talk to GPS")
 				self.present = False
 		else:
 			self.present = True
@@ -45,22 +45,21 @@ class gps_mtk3339(threading.Thread):
 			self.running = True
 			if not self.simulate:
 				while self.running:
-					self.occ.log.debug("{}: GPS running = {}".format(__name__, self.running))
+					self.occ.log.debug("[GPS] GPS running = {}".format(self.running))
 					try:
 						#FIXME Fails sometimes with ImportError form gps.py - see TODO 21
 						self.data.next()
-						self.occ.log.debug("{}: Received next GPS event. timestamp: {}".format(__name__, time.time()))
+						self.occ.log.debug("[GPS] Received next GPS event. timestamp: {}".format(time.time()))
 						self.latitude = self.data.fix.latitude
 						self.longitude = self.data.fix.longitude
-						self.occ.log.debug("{}: Coordinates: {}, {}".format(__name__, self.latitude, self.longitude))
+						self.occ.log.debug("[GPS] Coordinates: {}, {}".format(self.latitude, self.longitude))
 						self.utc = self.data.utc
-						self.occ.log.debug("{}: UTC: {}".format(__name__, self.utc))
+						self.occ.log.debug("[GPS] UTC: {}".format(self.utc))
 						self.climb = self.data.fix.climb #Add to rp module
-						self.occ.log.debug("{}: Climb: {}".format(__name__, self.climb))
 						self.speed = self.data.fix.speed
-						self.occ.log.debug("{}: Speed: {}".format(__name__, self.speed))
+						self.occ.log.debug("[GPS] Speed: {} Altitude {} Climb: {}".\
+								format(self.speed, self.climb, self.altitude))
 						self.altitude = self.data.fix.altitude
-						self.occ.log.debug("{}: Altitude: {}".format(__name__, self.altitude))
 						try:
 							sat = self.data.satellites
 							self.satellites = len(sat)
@@ -69,15 +68,15 @@ class gps_mtk3339(threading.Thread):
 							for i in sat:
 								if i.ss > 0:
 									self.satellites_visible += 1
-							self.occ.log.debug("{}: Satellites: {} Visible: {} Used: {}".format(\
-									__name__, self.satellites, self.satellites_visible, self.satellites_used))
-							self.occ.log.debug("{}: Status: {} Online: {} Mode: {}".format(\
-									__name__, status[self.data.status], self.data.online, fix_mode[self.data.fix.mode]))
+							self.occ.log.debug("[GPS] Satellites: {} Visible: {} Used: {}".format(\
+									self.satellites, self.satellites_visible, self.satellites_used))
+							self.occ.log.debug("[GPS] Status: {} Online: {} Mode: {}".format(\
+									status[self.data.status], self.data.online, fix_mode[self.data.fix.mode]))
 						except AttributeError:
-							self.occ.log.error("{}: AttributeError exception in GPS".format(__name__))
+							self.occ.log.error("[GPS] AttributeError exception in GPS")
 							pass
 					except StopIteration:
-						self.occ.log.error("{}: StopIteration exception in GPS".format(__name__))
+						self.occ.log.error("[GPS] StopIteration exception in GPS")
 						pass
 			else:
 				self.latitude = 52.0001
