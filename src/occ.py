@@ -32,7 +32,9 @@ class open_cycling_computer():
 		if not self.simulate:
 			pygame.event.set_grab(True)
 			pygame.mouse.set_visible(0)
+		log.debug("[OCC] EV_UPDATE_VALUES to be generated every 1 s")
 		pygame.time.set_timer(EV_UPDATE_VALUES, 1000)
+		log.debug("[OCC] EV_SAVE_CONFIG to be generated every 15 s")
 		pygame.time.set_timer(EV_SAVE_CONFIG, 15000)
 		self.width = width
 		self.height = height
