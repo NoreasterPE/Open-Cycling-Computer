@@ -64,10 +64,11 @@ class bmp183(threading.Thread):
 		'OVERSAMPLE_3_WAIT' : 0.0255,
 	}
 
-	def __init__(self, simulate = False):
+	def __init__(self, occ = False, simulate = False):
 		# Run init for super class
 		super(bmp183, self).__init__()
 		self.simulate = simulate
+		self.occ = occ
 		self.mock = True
 		# Set to 0 to stop measuring
 		self.measurement = 0
@@ -106,6 +107,7 @@ class bmp183(threading.Thread):
 		self.stop()
 
 	def set_up_gpio(self):
+		self.occ.log.debug("[BMP][F] set_up_gpio")
 		# GPIO initialisation
 		GPIO.setmode(GPIO.BOARD)
 		GPIO.setup(self.SCK, GPIO.OUT, initial=GPIO.HIGH)

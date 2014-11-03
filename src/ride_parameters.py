@@ -13,7 +13,7 @@ class ride_parameters():
 		self.occ.log.info("[RP] Starting GPS thread")
 		self.gps.start()
 		self.occ.log.info("[RP] Initialising bmp183 sensor")
-		self.bmp183_sensor = bmp183(simulate)
+		self.bmp183_sensor = bmp183(occ, simulate)
 
 		self.p_desc = {}
 		self.p_editable = {}
