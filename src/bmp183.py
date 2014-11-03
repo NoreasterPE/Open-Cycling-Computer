@@ -64,11 +64,12 @@ class bmp183(threading.Thread):
 		'OVERSAMPLE_3_WAIT' : 0.0255,
 	}
 
-	def __init__(self, occ = False, simulate = False):
+	def __init__(self, occ = None, simulate = False):
 		# Run init for super class
 		super(bmp183, self).__init__()
-		self.simulate = simulate
 		self.occ = occ
+		self.occ.log.debug("[BMP][F] __init__")
+		self.simulate = simulate
 		self.mock = True
 		# Set to 0 to stop measuring
 		self.measurement = 0
@@ -100,10 +101,12 @@ class bmp183(threading.Thread):
 			self.mock = True
 
 	def stop(self):
+		self.occ.log.debug("[BMP][F] stop")
 		if not self.simulate:
 			self.cleanup_gpio()
 
 	def __del__(self):
+		self.occ.log.debug("[BMP][F] __del__")
 		self.stop()
 
 	def set_up_gpio(self):
@@ -116,7 +119,7 @@ class bmp183(threading.Thread):
 		GPIO.setup(self.SDO, GPIO.IN)
 
 	def cleanup_gpio(self):
-		# GPIO clean up
+		self.occ.log.debug("[BMP][F] cleanup_gpio")
 		GPIO.cleanup(self.SCK)
 		GPIO.cleanup(self.CS)
 		GPIO.cleanup(self.SDI)
@@ -181,6 +184,7 @@ class bmp183(threading.Thread):
 		return ret_value
 
 	def read_calibration_data(self):
+		self.occ.log.debug("[BMP][F] read_calibration_data")
 		# Read calibration data
 		self.AC1 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC1']))
 		self.AC2 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC2']))
@@ -196,6 +200,7 @@ class bmp183(threading.Thread):
 		self.MD = numpy.int16(self.read_word(self.BMP183_REG['CAL_MD']))
 
 	def measure_temperature(self):
+		self.occ.log.debug("[BMP][F] measure_temperature")
 		# Start temperature measurement
 		self.write_byte (self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['TEMP'])
 		# Wait
@@ -205,6 +210,7 @@ class bmp183(threading.Thread):
 		self.calculate_temperature()
 
 	def measure_pressure(self):
+		self.occ.log.debug("[BMP][F] measure_pressure")
 		if self.mock:
 			self.pressure = 101300
 			self.temperature = 20.0
@@ -225,6 +231,7 @@ class bmp183(threading.Thread):
 			self.calculate_pressure()
 
 	def calculate_pressure(self):
+		self.occ.log.debug("[BMP][F] calculate_pressure")
 		# Calculate atmospheric pressure in [Pa]
 		self.B6 = self.B5 - 4000
 		X1 = (self.B2 * (self.B6 * self.B6 / 2**12)) / 2**11
@@ -241,8 +248,10 @@ class bmp183(threading.Thread):
 		X1 = int (X1 * 3038) / 2**16
 		X2 = int (-7357 * p) / 2**16
 		self.pressure = p + (X1 + X2 +3791) / 2**4
+		self.occ.log.debug("[BMP][F] pressure = {} Pa".format(self.pressure))
 
 	def calculate_temperature(self):
+		self.occ.log.debug("[BMP][F] calculate_temperature")
 		#Calculate temperature in [degC]
 		X1 = (self.UT - self.AC6) * self.AC5 / 2**15
 		X2 = self.MC * 2**11 / (X1 + self.MD) 
@@ -251,9 +260,11 @@ class bmp183(threading.Thread):
 		self.temperature = self.T / 10.0
 
 	def stop_measurement(self):
+		self.occ.log.debug("[BMP][F] stop_measurement")
 		self.measurement = 0
 
 	def run(self):
+		self.occ.log.debug("[BMP][F] run")
 		self.measurement = 1
 		while (self.measurement == 1):
 			self.measure_pressure()
