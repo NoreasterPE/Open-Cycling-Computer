@@ -48,6 +48,7 @@ class open_cycling_computer():
 		self.read_config()
 		log.debug("[OCC] Setting layout. Path = {}".format(self.layout_path))
 		self.layout = layout(self, self.layout_path)
+		log.debug("[OCC] Setting up rendering")
 		self.rendering = rendering(self.layout)
 		log.debug("[OCC] Starting rendering thread")
 		self.rendering.start()
@@ -58,6 +59,7 @@ class open_cycling_computer():
 		self.refresh = True
 
 	def read_config(self):
+		log.debug("[OCC][F] read_config")
 		#FIXME error handling and emergency config read if main is corrupted
 		config_tree = eltree.parse(self.config_path)
 		self.config = config_tree.getroot()
@@ -74,6 +76,7 @@ class open_cycling_computer():
 			pass
 
 	def write_config(self):
+		log.debug("[OCC][F] write_config")
 		config_tree = eltree.Element("config")
 		eltree.SubElement(config_tree, "layout_path").text = self.layout.layout_path
 		eltree.SubElement(config_tree, "rider_weight").text = unicode(self.rp.p_raw["rider_weight"])
@@ -83,9 +86,11 @@ class open_cycling_computer():
 		eltree.SubElement(config_tree, "odometer").text = unicode(self.rp.p_raw["odometer"])
 		eltree.SubElement(config_tree, "odometer_units").text = unicode(self.rp.units["odometer"])
 		#FIXME error handling for file operation
+		log.debug("[OCC] writing config file")
 		eltree.ElementTree(config_tree).write(self.config_path, encoding="UTF-8", pretty_print=True)
 
 	def main_loop(self):
+		log.debug("[OCC][F] main_loop")
 		LONG_CLICK = 1000 #ms of long click
 		SWIPE_LENGTH = 30 #pixels of swipe
 		self.reset_motion()
