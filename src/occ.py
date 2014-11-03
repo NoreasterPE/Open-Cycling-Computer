@@ -18,6 +18,7 @@ import signal
 import sys
 
 EV_UPDATE_VALUES = USEREVENT + 1
+EV_SAVE_CONFIG = USEREVENT + 2
 
 class open_cycling_computer():
 	'Class for PiTFT 2.8" 320x240 cycling computer'
@@ -32,6 +33,7 @@ class open_cycling_computer():
 			pygame.event.set_grab(True)
 			pygame.mouse.set_visible(0)
 		pygame.time.set_timer(EV_UPDATE_VALUES, 1000)
+		pygame.time.set_timer(EV_SAVE_CONFIG, 15000)
 		self.width = width
 		self.height = height
 		log.debug("[OCC] Screen size is {} x {}".format(self.width, self.height))
@@ -95,6 +97,9 @@ class open_cycling_computer():
 			elif event.type == EV_UPDATE_VALUES:
 				self.rp.update_values()
 				log.debug("[OCC] EV_UPDATE_VALUES {}".format(time_now))
+			elif event.type == EV_SAVE_CONFIG:
+				self.write_config()
+				log.debug("[OCC] EV_SAVE_CONFIG {}".format(time_now))
 			elif event.type == pygame.MOUSEBUTTONDOWN:
 				self.pressed_t = time_now
 				self.pressed_pos = pygame.mouse.get_pos()
