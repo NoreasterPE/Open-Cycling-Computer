@@ -17,6 +17,12 @@ import pygame
 import signal
 import sys
 
+LOG_LEVEL = {   "DEBUG"    : log.DEBUG,
+		"INFO"     : log.INFO,
+		"WARNING"  : log.WARNING,
+		"ERROR"    : log.ERROR,
+		"CRITICAL" : log.CRITICAL
+}
 EV_UPDATE_VALUES = USEREVENT + 1
 EV_SAVE_CONFIG = USEREVENT + 2
 
@@ -26,6 +32,7 @@ class open_cycling_computer():
 		log_suffix = strftime("%H:%M:%S")
 		log.basicConfig(filename="log/debug." + log_suffix + ".log",level=log.ERROR)
 		self.simulate = simulate
+		self.logger = log.getLogger()
 		self.log = log
 		log.debug("[OCC] Log start")
 		pygame.init()
@@ -65,6 +72,12 @@ class open_cycling_computer():
 		self.config = config_tree.getroot()
 		self.layout_path = self.config.find("layout_path").text
 		try:
+			log_level= self.config.find("log_level").text
+			log.setLevel(LOG_LEVEL[log_level])
+			log.debug("[OCC] Switching to log_level {}".format(LOG_LEVEL[log_level]))
+		except:
+			pass
+		try:
 			self.rp.p_raw["rider_weight"] = float(self.config.find("rider_weight").text)
 			self.rp.units["rider_weight"] = self.config.find("rider_weight_units").text
 			self.rp.p_raw["altitude_at_home"] = float(self.config.find("altitude_at_home").text)
@@ -77,7 +90,9 @@ class open_cycling_computer():
 
 	def write_config(self):
 		log.debug("[OCC][F] write_config")
+		log_level =  log.getLevelName(self.logger.getEffectiveLevel())
 		config_tree = eltree.Element("config")
+		eltree.SubElement(config_tree, "log_level").text = log_level
 		eltree.SubElement(config_tree, "layout_path").text = self.layout.layout_path
 		eltree.SubElement(config_tree, "rider_weight").text = unicode(self.rp.p_raw["rider_weight"])
 		eltree.SubElement(config_tree, "rider_weight_units").text = unicode(self.rp.units["rider_weight"])
