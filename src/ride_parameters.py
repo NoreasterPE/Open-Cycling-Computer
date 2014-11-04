@@ -263,40 +263,23 @@ class ride_parameters():
 		self.p_raw["satellites_used"] = self.clean_value(sud);
 		self.p_raw["satellites_visible"] = self.clean_value(svi);
 		self.p_raw["satellites"] = self.clean_value(sat);
-
-		#FIXME optimise code to use clean_value for speed
-		
-		spd = self.p_raw["speed_gps"]
-		self.occ.log.debug("[RP] read_gps_data: p_raw: speed_gps: {}".format(spd))
-		if  spd != "-":
-			spd_f = math.floor(spd)
-			self.p_raw["speed"] = spd_f
-			self.p_raw["speed_tenths"] = math.floor(10 * (spd - spd_f))
-		else:
-			self.p_raw["speed"] = 0
-			self.p_raw["speed_tenths"] = 0
+		self.p_raw["speed"] = self.clean_value(spd);
+		self.p_raw["speed_gps"] = self.p_raw["speed"] 
 		self.occ.log.debug("[RP] read_gps_data: p_raw: speed: {}".format(self.p_raw["speed"]))
-		self.occ.log.debug("[RP] read_gps_data: p_raw: speed_tenths: {}".format(self.p_raw["speed_tenths"]))
 
 	def update_speed(self):
 		self.occ.log.debug("[RP][F] update_speed")
-		#FIXME There has to be a cleaner way. Store _real_ speed without tenths?
-		if self.p_raw["speed"] != "-":
-			iu = self.get_internal_unit("speed")
-			spd_real = self.p_raw["speed"] + (self.p_raw["speed_tenths"] / 10)
-			v = q.Quantity(spd_real, iu)
-			v.units = self.get_unit("speed")
-			spd = float(v.item())
-			spd_f = math.floor(spd)
-			speed = spd_f
-			speed_tenths = math.floor(10 * (spd - spd_f))
-			f = self.p_format["speed"]
-			self.params["speed"] = f % float(speed)
-			self.params["speed_tenths"] = f % float(speed_tenths)
-		else:
-			self.params["speed"] = 0
-			self.params["speed_tenths"] = 0
-		self.occ.log.debug("[RP] update_speed: {} {}".format(self.params["speed"], self.params["speed_tenths"]))
+		iu = self.get_internal_unit("speed")
+		spd_raw = self.p_raw["speed"]
+		v = q.Quantity(spd_raw, iu)
+		v.units = self.get_unit("speed")
+		spd = float(v.item())
+		spd_floor = math.floor(spd)
+		spd_tenths = math.floor(10 * (spd - spd_floor))
+		f = self.p_format["speed"]
+		self.params["speed"] = f % float(spd_floor)
+		self.params["speed_tenths"] = f % float(spd_tenths)
+		self.occ.log.debug("[RP] update_speed: {} {}".format(self.params["speed"], self.params["speed_tenths"], self.units["speed"]))
 
 	def update_params(self):
 		self.update_param("latitude")
