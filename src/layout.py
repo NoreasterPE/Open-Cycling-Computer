@@ -16,7 +16,6 @@ class layout():
 		self.page_index = {}
 		self.function_rect_list = {}
 		self.current_function_list = []
-		self.buttons_surf_list = {}
 		self.layout_path = layout_path
 		self.load_layout(layout_path)
 		self.render_button = None
