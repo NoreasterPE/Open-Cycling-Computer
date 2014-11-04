@@ -2,31 +2,33 @@ Each layout has to contain at least 3 pages: page_0 (main page), editor and sett
 
 Valid function names for use in layout files:
 
-altitude	- current altitude in meters, calculated from pressure
+altitude		- current altitude in meters, calculated from pressure
 altitude_at_home	- home altitude - not implemented yet (fixed value) 
-altitude_gps	- altitude as reported by gps unit
-altitude_units	- altitude units
-cadence	-	not implemented yet (fixed value)
-date	-	current date
-gradient	- gradient of the road - not implemented yet (fixed value)
-gradient_units	- units of the gradient, % or deg - not implemented yet (fixed value)
-heart_rate - not implemented yet (fixed value)
-heart_rate_units - not implemented yet (fixed value)
-latitude	- latitude as reported by gps unit
-longitude	- longitude as reported by gps unit
-pressure	- current atmospheric pressure measured by hardware (currently BMP1823)
+altitude_gps		- altitude as reported by gps unit
+cadence			- not implemented yet (fixed value)
+date			- current date
+distance
+gradient		- gradient of the road - not implemented yet (fixed value)
+heart_rate
+latitude		- latitude as reported by gps unit
+longitude
+odometer
+pressure		- current atmospheric pressure measured by hardware (currently BMP1823)
 pressure_at_sea_level	- sea level pressure calculated from pressure on start and given altitude. It's a value fixed at start
-pressure_units	- pressure units
-rider_weight	- weight of rider
-rider_weight_units	- units of the weight of rider
-rtc	-	combined date + time 
-speed	-	speed, to be calculated using Kalman filter from gps + wheel sensor - not implemented yet (fixed value)
-speed_tenths - first decimal place of speed
-speed_units - km/h, mph or m/s - not implemented yet (fixed value)
-time	-	current time
-utc	-	utc time as reported by gps unit
+rider_weight		- weight of rider
+rtc			- combined date + time 
+satellites
+satellites_used
+satellites_visible
+speed			- speed, to be calculated using Kalman filter from gps + wheel sensor - not implemented yet (fixed value)
+speed_gps
+speed_tenths 		- first decimal place of speed
+time			- current time
+utc			- utc time as reported by gps unit
 
-To add a new value it needs to be added to get_val function in ride_parameters.py with corresponding handler.
+Units:
+Each parameter from above list has to have an unit defined. The name has to be the same as parameter name + _unit
+i.e for speed is is speed_unit.
 
 Functions:
 FIXME - add list of functions
