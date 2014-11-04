@@ -291,6 +291,9 @@ class ride_parameters():
 			f = self.p_format["speed"]
 			self.params["speed"] = f % float(speed)
 			self.params["speed_tenths"] = f % float(speed_tenths)
+		else:
+			self.params["speed"] = 0
+			self.params["speed_tenths"] = 0
 		self.occ.log.debug("[RP] update_speed: {} {}".format(self.params["speed"], self.params["speed_tenths"]))
 
 	def update_params(self):
