@@ -60,6 +60,7 @@ class layout():
 		self.layout_tree.write(layout_path, encoding="UTF-8", pretty_print=True)
 
 	def use_page(self, page_id = "page_0"):
+		self.occ.log.error("[LY][F] use_page {}".format(page_id))
 		self.occ.force_refresh()
 		self.current_function_list = []
 		self.current_button_list = []
@@ -354,7 +355,6 @@ class layout():
 				next_unit = self.occ.rp.units_allowed[variable][-1]
 		v = q.Quantity(variable_value, variable_unit)
 		v = v.rescale(next_unit)
-		#FIXME - list with formatting. Also for use in RP, update_params
 		try:
 			f = self.occ.rp.p_format[variable]
 		except KeyError:
@@ -394,6 +394,7 @@ class layout():
 		self.force_refresh()
 
 	def next_page(self):
+		self.occ.log.error("[LY][F] next_page")
 		#cp = self.current_page_id
 		#Editor is a special page - it cannot be switched, only cancel or accept
 		if self.current_page_id is not "editor":
@@ -406,6 +407,7 @@ class layout():
 				#self.use_page(cp)
 
 	def prev_page(self):
+		self.occ.log.error("[LY][F] prev_page")
 		#cp = self.current_page_id
 		#Editor is a special page - it cannot be switched, only cancel or accept
 		if self.current_page_id is not "editor":

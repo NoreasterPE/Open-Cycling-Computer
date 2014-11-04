@@ -71,12 +71,9 @@ class open_cycling_computer():
 		config_tree = eltree.parse(self.config_path)
 		self.config = config_tree.getroot()
 		self.layout_path = self.config.find("layout_path").text
-		try:
-			log_level= self.config.find("log_level").text
-			log.setLevel(LOG_LEVEL[log_level])
-			log.debug("[OCC] Switching to log_level {}".format(LOG_LEVEL[log_level]))
-		except:
-			pass
+		log_level = self.config.find("log_level").text
+		self.logger.setLevel(LOG_LEVEL[log_level])
+		log.log(100, "[OCC] Switching to log_level {}".format(log_level))
 		try:
 			self.rp.p_raw["rider_weight"] = float(self.config.find("rider_weight").text)
 			self.rp.units["rider_weight"] = self.config.find("rider_weight_units").text
@@ -85,7 +82,7 @@ class open_cycling_computer():
 			self.rp.p_raw["odometer"] = float(self.config.find("odometer").text)
 			self.rp.units["odometer"] = self.config.find("odometer_units").text
 		except AttributeError:
-			log.error("[OCC] ArrtibuteError in read_config!")
+			log.exception("[OCC] ArrtibuteError in read_config!")
 			pass
 
 	def write_config(self):
