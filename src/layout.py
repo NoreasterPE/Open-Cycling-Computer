@@ -70,7 +70,7 @@ class layout():
 			bg_path = self.current_page.get('background')
 			self.bg_image = pygame.image.load(bg_path).convert()
 		except pygame.error:
-			self.occ.log.critical("{} Cannot load background image! layout_path ={} background path ={} page_id ={}".format(__name__, self.layout_path, bg_path, page_id))
+			self.occ.log.critical("{} Cannot load background image! layout_path = {} background path = {} page_id = {}".format(__name__, self.layout_path, bg_path, page_id))
 			#That stops occ but not immediately - errors can occur
 			self.occ.running = False
 			self.occ.cleanup()
@@ -78,7 +78,7 @@ class layout():
 			bt_path = self.current_page.get('buttons')
 			self.bt_image = pygame.image.load(bt_path).convert()
 		except pygame.error:
-			self.occ.log.critical("{} Cannot load buttons image! layout_path ={} buttons path ={} page_id ={}".format(__name__, self.layout_path, bt_path, page_id))
+			self.occ.log.critical("{} Cannot load buttons image! layout_path = {} buttons path = {} page_id = {}".format(__name__, self.layout_path, bt_path, page_id))
 			self.occ.running = False
 			self.occ.cleanup()
 			pass
