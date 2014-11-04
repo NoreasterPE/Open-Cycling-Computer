@@ -333,10 +333,9 @@ class ride_parameters():
 		self.occ.log.debug("[RP][F] calculate_altitude")
 		pressure = self.p_raw["pressure"]
 		pressure_at_sea_level = self.p_raw["pressure_at_sea_level"]
-		#FIXME make function to check non empty
-		try:
+		if pressure_at_sea_level > 0:
 			self.p_raw["altitude"] = float(44330*(1 - pow((pressure/pressure_at_sea_level), (1/5.255))))
-		except RuntimeWarning:
+		else:
 			self.p_raw["altitude"] = 0
 		self.occ.log.debug("[RP][F] calculate_altitude: altitude: {}".format(self.p_raw["altitude"]))
 
@@ -345,6 +344,6 @@ class ride_parameters():
 		#Set pressure_at_sea_level based on given altitude
 		pressure = self.p_raw["pressure"]
 		altitude_at_home = self.p_raw["altitude_at_home"]
-		if (pressure != "-") and (altitude_at_home != "-"):
-			self.p_raw["pressure_at_sea_level"] = float(pressure/pow((1 - altitude_at_home/44330), 5.255))
+		#Potential DIV/0 is altitude_at_home set to 44330
+		self.p_raw["pressure_at_sea_level"] = float(pressure/pow((1 - altitude_at_home/44330), 5.255))
 		self.occ.log.debug("[RP][F] calculate_pressure_at_sea_level: pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]))
