@@ -71,10 +71,10 @@
 		</field>
 	</page>
 	<page name="Settings 1" id="settings_1" background="images/occ_settings_1_background.png" buttons="images/occ_settings_1_buttons.png" font="" fg_colour="FFFFFF">
-		<field name="second">
+		<field name="first">
 			<function>halt</function>
-			<button x0="0" y0="79" w="240" h="80"/>
-			<text_center x="120" y="120">Halt</text_center>
+			<button x0="0" y0="0" w="240" h="80"/>
+			<text_center x="120" y="40">Halt</text_center>
 			<font_size>2</font_size>
 		</field>
 		<field name="second">
