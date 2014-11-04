@@ -36,3 +36,5 @@ Traceback (most recent call last):
   File "/usr/lib/python2.7/dist-packages/gps/misc.py", line 97, in isotime
     return calendar.timegm(time.strptime(date, "%Y-%m-%dT%H:%M:%S")) + float("0." + msec)
 ImportError: Failed to import _strptime because the import lockis held by another thread.
+22. Use for exceptions logging
+Logger.exception(msg, *args, **kwargs)
