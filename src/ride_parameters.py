@@ -183,11 +183,7 @@ class ride_parameters():
 		self.update_params()
 		self.calculate_distance()
 		self.calculate_altitude()
-		self.calculate_pressure_at_sea_level()
 		self.force_refresh()
-		#FIXME Calc pressure only when gps altitude is known or 
-		#when we're at home and the altitude is provided by user
-		#self.calculate_pressure_at_sea_level()
 		#FIXME Add calculations of gradient, trip time, etc
 
 	def calculate_distance(self):
@@ -338,9 +334,11 @@ class ride_parameters():
 		pressure = self.p_raw["pressure"]
 		pressure_at_sea_level = self.p_raw["pressure_at_sea_level"]
 		#FIXME make function to check non empty
-		if (pressure_at_sea_level != "-") and (pressure != "-"):
+		try:
 			self.p_raw["altitude"] = float(44330*(1 - pow((pressure/pressure_at_sea_level), (1/5.255))))
-			self.occ.log.debug("[RP][F] calculate_altitude: altitude: {}".format(self.p_raw["altitude"]))
+		except RuntimeWarning:
+			self.p_raw["altitude"] = 0
+		self.occ.log.debug("[RP][F] calculate_altitude: altitude: {}".format(self.p_raw["altitude"]))
 
 	def calculate_pressure_at_sea_level(self):
 		self.occ.log.debug("[RP][F] calculate_pressure_at_sea_level")
