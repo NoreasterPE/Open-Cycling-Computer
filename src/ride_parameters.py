@@ -48,8 +48,6 @@ class ride_parameters():
 		self.p_raw["satellites_visible"] = 0
 		self.p_raw["speed"] = 0
 		self.p_raw["speed_gps"] = 0
-		#FIXME switch to one raw speed, no nee for tenths
-		self.p_raw["speed_tenths"] =  "0"
 		self.p_raw["utc"] = ""
 
 		#Internal units
@@ -66,7 +64,6 @@ class ride_parameters():
 		self.p_raw_units["satellites_visible"] = ""
 		self.p_raw_units["speed"] = "m/s"
 		self.p_raw_units["speed_gps"] = "m/s"
-		self.p_raw_units["speed_tenths"] = "m/s"
 		self.p_raw_units["temperature"] = "C"
 
 		#Params of the ride ready for rendering.
