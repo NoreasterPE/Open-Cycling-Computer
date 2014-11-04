@@ -30,9 +30,9 @@ class layout():
 
 	def load_layout(self, layout_path):
 		self.max_page_id = 0
+		self.max_settings_id = 0
 		self.page_list = {}
 		self.page_index = {}
-		self.max_page_id = 0
 		try:
 			self.layout_tree = eltree.parse(layout_path)
 			self.layout_path = layout_path
@@ -46,13 +46,18 @@ class layout():
 
 		self.pages = self.layout_tree.getroot()
 		for page in self.pages:
-			#print "page name : ", page.get('name')
+			#FIXME Pages cannot have the same name
 			self.page_list[page.get('name')] = page
 			page_id = page.get('id')
 			self.page_index[page_id] = page.get('name')
+			#FIXME hardcoded page_ is bad
 			if page_id.startswith("page_"):
 				no = int(page_id[-1:])
 				self.max_page_id = max(self.max_page_id, no)
+			#FIXME hardcoded settings_ is bad
+			if page_id.startswith("settings_"):
+				no = int(page_id[-1:])
+				self.max_settings_id = max(self.max_settings_id, no)
 		self.use_page()
 		self.write_layout()
 
@@ -248,6 +253,7 @@ class layout():
 				"ed_prev_unit" : self.ed_prev_unit,
 				"ed_value" : self.ed_value,
 				"ed_value_description" : self.ed_value_description,
+				"halt" : self.halt,
 				"load_default_layout" : self.load_default_layout,
 				"load_current_layout" : self.load_current_layout,
 				"load_white_lcd_layout" : self.load_lcd_white_layout,
@@ -396,26 +402,34 @@ class layout():
 	def next_page(self):
 		self.occ.log.error("[LY][F] next_page")
 		#cp = self.current_page_id
+		no = int(self.current_page_id[-1:])
+		name = self.current_page_id[:-1]
 		#Editor is a special page - it cannot be switched, only cancel or accept
 		if self.current_page_id is not "editor":
 			try:
-				no = int(self.current_page_id[-1:])
-				self.use_page("page_" + unicode(no + 1))
+				next_page_name = name + unicode(no + 1)
+				self.use_page(next_page_name)
 			except KeyError:
-				self.use_main_page()
+				self.use_page(name + "0")
 				#FIXME Use cp to block circular page scrolling - it should be in options
 				#self.use_page(cp)
 
 	def prev_page(self):
 		self.occ.log.error("[LY][F] prev_page")
 		#cp = self.current_page_id
+		no = int(self.current_page_id[-1:])
+		name = self.current_page_id[:-1]
 		#Editor is a special page - it cannot be switched, only cancel or accept
 		if self.current_page_id is not "editor":
 			try:
-				no = int(self.current_page_id[-1:])
-				self.use_page("page_" + unicode(no - 1))
+				prev_page_name = name + unicode(no - 1)
+				self.use_page(prev_page_name)
 			except KeyError:
-				self.use_page("page_" + unicode(self.max_page_id))
+				#FIXME Hardcoded string again...
+				if name.startswith("page"):
+					self.use_page(name + unicode(self.max_page_id))
+				else:
+					self.use_page(name + unicode(self.max_settings_id))
 				#FIXME Use cp to block circular page scrolling - it should be in options
 				#self.use_page(cp)
 
@@ -440,3 +454,8 @@ class layout():
 		if not self.occ.simulate:
 			os.system("reboot")
 
+	def halt(self):
+		self.quit()
+		time.sleep(2)
+		if not self.occ.simulate:
+			os.system("halt")
