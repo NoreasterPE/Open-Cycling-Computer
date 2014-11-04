@@ -38,7 +38,7 @@ class layout():
 			self.layout_path = layout_path
 		except:
 			self.occ.log.error("{} Loading layout {} failed, falling back to default.xml".format(__name__, layout_path))
-			sys_info = "Error details:" + sys.exc_info()[0]
+			sys_info = "Error details: {}".format(sys.exc_info()[0])
 			self.occ.log.error(sys_info)
 			#Fallback to default layout
 			#FIXME - define const file with paths?
