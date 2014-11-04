@@ -29,23 +29,25 @@ class ride_parameters():
 		#Time delta since last p_raw update
 		self.p_raw["dtime"] = 1
 
-		self.p_raw["altitude"] = "-"
-		self.p_raw["altitude_gps"] = "-"
-		self.p_raw["altitude_at_home"] = "-"
-		self.p_raw["cadence"] = "0"
+		self.p_raw["altitude"] = 0
+		self.p_raw["altitude_at_home"] = 0
+		self.p_raw["altitude_gps"] = 0
+		self.p_raw["cadence"] = 0
 		self.p_raw["distance"] = 0
-		self.p_raw["gradient"] = "0"
-		self.p_raw["heart_rate"] = "0"
-		self.p_raw["odometer"] = "0"
-		self.p_raw["pressure"] = "0"
-		self.p_raw["pressure_at_sea_level"] = "0"
-		self.p_raw["rider_weight"] = "0"
+		self.p_raw["gradient"] = 0
+		self.p_raw["heart_rate"] = 0
+		self.p_raw["latitude"] = 0
+		self.p_raw["longitude"] = 0
+		self.p_raw["odometer"] = 0
+		self.p_raw["pressure"] = 0
+		self.p_raw["pressure_at_sea_level"] = 0
+		self.p_raw["rider_weight"] = 0
 		self.p_raw["rtc"] = ""
-		self.p_raw["satellites"] = "0"
-		self.p_raw["satellites_used"] = "0"
-		self.p_raw["satellites_visible"] = "0"
-		self.p_raw["speed"] = "0"
-		self.p_raw["speed_gps"] = "0"
+		self.p_raw["satellites"] = 0
+		self.p_raw["satellites_used"] = 0
+		self.p_raw["satellites_visible"] = 0
+		self.p_raw["speed"] = 0
+		self.p_raw["speed_gps"] = 0
 		#FIXME switch to one raw speed, no nee for tenths
 		self.p_raw["speed_tenths"] =  "0"
 		self.p_raw["utc"] = ""
@@ -237,11 +239,11 @@ class ride_parameters():
 		#FIXME try/except for invalid func?
 		return self.p_desc[func]
 
-	def clean_value(self, variable, empty_string = "-"):
+	def clean_value(self, variable, empty = 0):
 		if not math.isnan(variable):
 			return variable
 		else:
-			return empty_string
+			return empty
 
 	def read_gps_data(self):
 		self.occ.log.debug("[RP][F] read_gps_data")
@@ -271,8 +273,8 @@ class ride_parameters():
 			self.p_raw["speed"] = spd_f
 			self.p_raw["speed_tenths"] = math.floor(10 * (spd - spd_f))
 		else:
-			self.p_raw["speed"] = "-"
-			self.p_raw["speed_tenths"] = "-"
+			self.p_raw["speed"] = 0
+			self.p_raw["speed_tenths"] = 0
 		self.occ.log.debug("[RP] read_gps_data: p_raw: speed: {}".format(self.p_raw["speed"]))
 		self.occ.log.debug("[RP] read_gps_data: p_raw: speed_tenths: {}".format(self.p_raw["speed_tenths"]))
 
