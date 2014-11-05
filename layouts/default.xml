@@ -100,6 +100,22 @@
 		</field>
 	</page>
 	<page name="Weather" id="page_1" background="images/occ_page_1_background.png" buttons="images/occ_page_1_buttons.png" font="" fg_colour="FFFFFF">
+		<field name="top">
+			<function>speed_max</function>
+			<button x0="0" y0="0" w="240" h="150"/>
+			<text_center x="95" y="75"></text_center>
+			<font_size>19</font_size>
+		</field>
+		<field name="top_auxiliary">
+			<function>speed_max_tenths</function>
+			<text_center x="210" y="115"></text_center>
+			<font_size>7</font_size>
+		</field>
+		<field name="top_units">
+			<function>speed_units</function>
+			<text_center x="205" y="75">km/h</text_center>
+			<font_size>2</font_size>
+		</field>
 		<field name="bottom_left">
 			<function>pressure</function>
 			<text_center x="50" y="280">0</text_center>

@@ -83,6 +83,8 @@ class ride_parameters():
 		self.params["satellites_visible"] = "-"
 		self.params["speed"] = "-"
 		self.params["speed_tenths"] = "-"
+		self.params["speed_max"] = "-"
+		self.params["speed_max_tenths"] = "-"
 		self.params["utc"] = ""
 
 		#Params that can be changed in Settings by user
@@ -110,6 +112,8 @@ class ride_parameters():
 		self.p_format["satellites_visible"] = "%.0f"
 		self.p_format["speed"] = "%.0f"
 		self.p_format["speed_tenths"] = "%.0f"
+		self.p_format["speed_max"] = "%.0f"
+		self.p_format["speed_max_tenths"] = "%.0f"
 		self.p_format["temperature"] = "%.0f"
 		self.p_format["utc"] = ""
 
@@ -272,6 +276,13 @@ class ride_parameters():
 		f = self.p_format["speed"]
 		self.params["speed"] = f % float(spd_floor)
 		self.params["speed_tenths"] = f % float(spd_tenths)
+		spd_max = int(self.params["speed_max"]) + 0.1 * int(self.params["speed_max_tenths"])
+		spd = int(self.params["speed"]) + 0.1 * int(self.params["speed_tenths"])
+		if spd > spd_max:
+			self.params["speed_max"] = self.params["speed"]
+			self.params["speed_max_tenths"] = self.params["speed_tenths"]
+			self.occ.log.debug("[RP] new max speed: {} {} {}".\
+					format(self.params["speed_max"], self.params["speed_max_tenths"], self.units["speed"]))
 		self.occ.log.debug("[RP] update_speed: {} {}".format(self.params["speed"], self.params["speed_tenths"], self.units["speed"]))
 
 	def update_params(self):
