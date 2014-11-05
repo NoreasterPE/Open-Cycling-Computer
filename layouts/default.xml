@@ -16,6 +16,21 @@
 			<text_center x="205" y="75">km/h</text_center>
 			<font_size>2</font_size>
 		</field>
+		<field name="top_right_1">
+			<function>satellites_used</function>
+			<text_center x="175" y="15"></text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="top_right_2">
+			<function>satellites_visible</function>
+			<text_center x="200" y="15"></text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="top_right_3">
+			<function>satellites</function>
+			<text_center x="225" y="15"></text_center>
+			<font_size>2</font_size>
+		</field>
 		<field name="middle">
 			<function>distance</function>
 			<button x0="0" y0="150" w="239" h="89"/>
@@ -28,13 +43,13 @@
 			<font_size>2</font_size>
 		</field>
 		<field name="bottom_right">
-			<function>pressure</function>
+			<function>altitude</function>
 			<button x0="120" y0="240" w="119" h="80"/>
 			<text_center x="180" y="280">m</text_center>
 			<font_size>4</font_size>
 		</field>
 		<field name="bottom_right_auxiliary">
-			<function>pressure_units</function>
+			<function>altitude_units</function>
 			<text_center x="220" y="310"/>
 			<font_size>2</font_size>
 		</field>
