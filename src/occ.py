@@ -30,7 +30,7 @@ class open_cycling_computer():
 	'Class for PiTFT 2.8" 320x240 cycling computer'
 	def __init__(self, simulate = False, width = 240, height = 320):
 		log_suffix = strftime("%H:%M:%S")
-		log.basicConfig(filename="log/debug." + log_suffix + ".log",level=log.ERROR)
+		log.basicConfig(filename="log/debug." + log_suffix + ".log",level=log.DEBUG)
 		self.simulate = simulate
 		self.logger = log.getLogger()
 		self.log = log
