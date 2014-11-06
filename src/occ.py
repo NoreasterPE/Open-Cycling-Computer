@@ -26,6 +26,9 @@ LOG_LEVEL = {   "DEBUG"    : log.DEBUG,
 EV_UPDATE_VALUES = USEREVENT + 1
 EV_SAVE_CONFIG = USEREVENT + 2
 
+REFRESH_TIME = 600
+CONFIG_SAVE_TIME = 15000
+
 class open_cycling_computer():
 	'Class for PiTFT 2.8" 320x240 cycling computer'
 	def __init__(self, simulate = False, width = 240, height = 320):
@@ -39,10 +42,10 @@ class open_cycling_computer():
 		if not self.simulate:
 			pygame.event.set_grab(True)
 			pygame.mouse.set_visible(0)
-		log.debug("[OCC] EV_UPDATE_VALUES to be generated every 1 s")
-		pygame.time.set_timer(EV_UPDATE_VALUES, 1000)
-		log.debug("[OCC] EV_SAVE_CONFIG to be generated every 15 s")
-		pygame.time.set_timer(EV_SAVE_CONFIG, 15000)
+		log.debug("[OCC] EV_UPDATE_VALUES to be generated every {} s".format(REFRESH_TIME/1000))
+		pygame.time.set_timer(EV_UPDATE_VALUES, REFRESH_TIME)
+		log.debug("[OCC] EV_SAVE_CONFIG to be generated every {} s".format(CONFIG_SAVE_TIME/1000))
+		pygame.time.set_timer(EV_SAVE_CONFIG, CONFIG_SAVE_TIME)
 		self.width = width
 		self.height = height
 		log.debug("[OCC] Screen size is {} x {}".format(self.width, self.height))
