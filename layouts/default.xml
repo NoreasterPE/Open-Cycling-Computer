@@ -70,6 +70,16 @@
 			<text_center x="60" y="280"/>
 			<font_size>4</font_size>
 		</field>
+		<field name="bottom_left">
+			<function>temperature_min</function>
+			<text_center x="20" y="260"/>
+			<font_size>2</font_size>
+		</field>
+		<field name="bottom_left">
+			<function>temperature_max</function>
+			<text_center x="100" y="260"/>
+			<font_size>2</font_size>
+		</field>
 		<field name="bottom_left_auxiliary">
 			<function>temperature_units</function>
 			<text_center x="100" y="310"/>

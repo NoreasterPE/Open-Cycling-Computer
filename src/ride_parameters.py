@@ -51,6 +51,9 @@ class ride_parameters():
 		self.p_raw["speed_average"] = 0
 		self.p_raw["speed_gps"] = 0
 		self.p_raw["speed_max"] = 0
+		self.p_raw["temperature"] = 0
+		self.p_raw["temperature_min"] = float("inf")
+		self.p_raw["temperature_max"] = float("-inf")
 		self.p_raw["utc"] = ""
 
 		#Internal units
@@ -71,6 +74,8 @@ class ride_parameters():
 		self.p_raw_units["speed_gps"] = "m/s"
 		self.p_raw_units["speed_max"] = "m/s"
 		self.p_raw_units["temperature"] = "C"
+		self.p_raw_units["temperature_min"] = "C"
+		self.p_raw_units["temperature_max"] = "C"
 
 		#Params of the ride ready for rendering.
 		self.params["altitude"] = "-"
@@ -97,6 +102,9 @@ class ride_parameters():
 		self.params["speed_max"] = "-"
 		self.params["speed_max_digits"] = "-"
 		self.params["speed_max_tenths"] = "-"
+		self.params["temperature"] = ""
+		self.params["temperature_min"] = ""
+		self.params["temperature_max"] = ""
 		self.params["utc"] = ""
 
 		#Params that can be changed in Settings by user
@@ -133,6 +141,8 @@ class ride_parameters():
 		self.p_format["speed_max_digits"] = "%.0f"
 		self.p_format["speed_max_tenths"] = "%.0f"
 		self.p_format["temperature"] = "%.0f"
+		self.p_format["temperature_min"] = "%.0f"
+		self.p_format["temperature_max"] = "%.0f"
 		self.p_format["utc"] = ""
 
 		#Units - name has to be identical as in params #FIXME reduce number of units (i.e one for speed)
@@ -154,6 +164,9 @@ class ride_parameters():
 		self.units["speed"] = "km/h"
 		self.units["speed_average"] = "km/h"
 		self.units["speed_max"] = "km/h"
+		self.units["temperature"] = "C"
+		self.units["temperature_min"] = "C"
+		self.units["temperature_max"] = "C"
 
 		#Allowed units - user can switch between those when editing value 
 		self.units_allowed["odometer"] = ["km", "mi"]
@@ -312,6 +325,12 @@ class ride_parameters():
 		self.occ.log.debug("[RP] average speed: {} {}".\
 				format(self.params["speed_average"], self.units["speed_average"]))
 
+	def set_max(self, param):
+		self.p_raw[param + "_max"] = max(self.p_raw[param], self.p_raw[param + "_max"])
+
+	def set_min(self, param):
+		self.p_raw[param + "_min"] = min(self.p_raw[param], self.p_raw[param + "_min"])
+
 	def update_params(self):
 		self.update_param("latitude")
 		self.update_param("longitude")
@@ -324,7 +343,11 @@ class ride_parameters():
 		self.update_param("odometer")
 		self.update_param("rider_weight")
 		self.update_param("pressure")
+		self.set_max("temperature")
+		self.set_min("temperature")
 		self.update_param("temperature")
+		self.update_param("temperature_min")
+		self.update_param("temperature_max")
 		self.update_param("satellites_used")
 		self.update_param("satellites_visible")
 		self.update_param("satellites")
