@@ -18,12 +18,12 @@
 		</field>
 		<field name="top_right_1">
 			<function>satellites_used</function>
-			<text_center x="175" y="15"></text_center>
+			<text_center x="185" y="15"></text_center>
 			<font_size>2</font_size>
 		</field>
 		<field name="top_right_2">
 			<function>satellites_visible</function>
-			<text_center x="200" y="15"></text_center>
+			<text_center x="205" y="15"></text_center>
 			<font_size>2</font_size>
 		</field>
 		<field name="top_right_3">
