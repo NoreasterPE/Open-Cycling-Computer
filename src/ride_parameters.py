@@ -42,6 +42,7 @@ class ride_parameters():
 		self.p_raw["pressure"] = 0
 		self.p_raw["pressure_at_sea_level"] = 0
 		self.p_raw["rider_weight"] = 0
+		self.p_raw["ride_time"] = 0
 		self.p_raw["rtc"] = ""
 		self.p_raw["satellites"] = 0
 		self.p_raw["satellites_used"] = 0
@@ -60,6 +61,7 @@ class ride_parameters():
 		self.p_raw_units["odometer"] = "m"
 		self.p_raw_units["pressure"] = "hPa"
 		self.p_raw_units["rider_weight"] = "kg"
+		self.p_raw_units["ride_time"] = "s"
 		self.p_raw_units["satellites"] = ""
 		self.p_raw_units["satellites_used"] = ""
 		self.p_raw_units["satellites_visible"] = ""
@@ -80,6 +82,7 @@ class ride_parameters():
 		self.params["pressure"] = "-"
 		self.params["pressure_at_sea_level"] = "-" 
 		self.params["rtc"] = ""
+		self.params["ride_time"] = ""
 		self.params["satellites"] = "-"
 		self.params["satellites_used"] = "-"
 		self.params["satellites_visible"] = "-"
@@ -111,6 +114,7 @@ class ride_parameters():
 		self.p_format["pressure_at_sea_level"] = "%.0f"
 		self.p_format["rider_weight"] = "%.1f"
 		self.p_format["rtc"] = ""
+		self.p_format["ride_time"] = "%0.1f"
 		self.p_format["satellites"] = "%.0f"
 		self.p_format["satellites_used"] = "%.0f"
 		self.p_format["satellites_visible"] = "%.0f"
@@ -135,6 +139,7 @@ class ride_parameters():
 		self.units["odometer"] = "km"
 		self.units["pressure"] = "hPa"
 		self.units["rider_weight"] = "kg"
+		self.units["ride_time"] = "s"
 		self.units["satellites"] = ""
 		self.units["satellites_used"] = ""
 		self.units["satellites_visible"] = ""
@@ -211,6 +216,7 @@ class ride_parameters():
 				pass
 			self.p_raw["distance"] += d
 			self.p_raw["odometer"] += d
+			self.p_raw["ride_time"] += self.p_raw["dtime"]
 		else:
 			self.occ.log.debug("[RP] calculate_distance: speed_gps: below speed_gps_low treshold")
 
@@ -299,6 +305,7 @@ class ride_parameters():
 		self.params["utc"] = self.p_raw["utc"]
 		self.update_param("odometer")
 		self.update_param("rider_weight")
+		self.update_param("ride_time")
 		self.update_param("pressure")
 		self.update_param("temperature")
 		self.update_param("satellites_used")

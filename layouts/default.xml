@@ -34,12 +34,23 @@
 		<field name="middle">
 			<function>distance</function>
 			<button x0="0" y0="150" w="239" h="89"/>
-			<text_center x="100" y="195">0</text_center>
-			<font_size>6</font_size>
+			<text_center x="100" y="175">0</text_center>
+			<font_size>4</font_size>
 		</field>
 		<field name="middle_auxiliary">
 			<function>distance_units</function>
-			<text_center x="210" y="195">m</text_center>
+			<text_center x="210" y="175">m</text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="middle">
+			<function>ride_time</function>
+			<button x0="0" y0="150" w="239" h="89"/>
+			<text_center x="100" y="215"></text_center>
+			<font_size>4</font_size>
+		</field>
+		<field name="middle_auxiliary">
+			<function>ride_time_units</function>
+			<text_center x="210" y="215"></text_center>
 			<font_size>2</font_size>
 		</field>
 		<field name="bottom_right">
