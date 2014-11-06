@@ -7,7 +7,5 @@
   <altitude_at_home_units>m</altitude_at_home_units>
   <odometer>31583.8057597</odometer>
   <odometer_units>km</odometer_units>
-  <speed_max>40</speed_max>
-  <speed_max_tenths>7</speed_max_tenths>
-  <speed_units>km/h</speed_units>
+  <speed_max>14.21</speed_max>
 </config>
