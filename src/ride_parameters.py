@@ -207,6 +207,7 @@ class ride_parameters():
 		self.force_refresh()
 		#FIXME Add calculations of gradient, trip time, etc
 
+	#FIXME change name
 	def calculate_distance(self):
 		self.occ.log.debug("[RP][F] calculate_distance")
 		dt = self.p_raw["dtime"]
