@@ -127,6 +127,17 @@
 			<text_center x="205" y="75">km/h</text_center>
 			<font_size>2</font_size>
 		</field>
+		<field name="middle">
+			<function>speed_average</function>
+			<button x0="0" y0="150" w="239" h="89"/>
+			<text_center x="100" y="175">0</text_center>
+			<font_size>4</font_size>
+		</field>
+		<field name="middle_auxiliary">
+			<function>speed_average_units</function>
+			<text_center x="210" y="175">m</text_center>
+			<font_size>2</font_size>
+		</field>
 		<field name="bottom_left">
 			<function>pressure</function>
 			<text_center x="50" y="280">0</text_center>

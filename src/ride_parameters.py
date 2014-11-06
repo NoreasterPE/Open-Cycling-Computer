@@ -48,6 +48,7 @@ class ride_parameters():
 		self.p_raw["satellites_used"] = 0
 		self.p_raw["satellites_visible"] = 0
 		self.p_raw["speed"] = 0
+		self.p_raw["speed_average"] = 0
 		self.p_raw["speed_gps"] = 0
 		self.p_raw["speed_max"] = 0
 		self.p_raw["utc"] = ""
@@ -66,6 +67,7 @@ class ride_parameters():
 		self.p_raw_units["satellites_used"] = ""
 		self.p_raw_units["satellites_visible"] = ""
 		self.p_raw_units["speed"] = "m/s"
+		self.p_raw_units["speed_average"] = "m/s"
 		self.p_raw_units["speed_gps"] = "m/s"
 		self.p_raw_units["speed_max"] = "m/s"
 		self.p_raw_units["temperature"] = "C"
@@ -89,6 +91,9 @@ class ride_parameters():
 		self.params["speed"] = "-"
 		self.params["speed_digits"] = "-"
 		self.params["speed_tenths"] = "-"
+		self.params["speed_average"] = "-"
+		self.params["speed_average_digits"] = "-"
+		self.params["speed_average_tenths"] = "-"
 		self.params["speed_max"] = "-"
 		self.params["speed_max_digits"] = "-"
 		self.params["speed_max_tenths"] = "-"
@@ -121,6 +126,9 @@ class ride_parameters():
 		self.p_format["speed"] = "%.1f"
 		self.p_format["speed_digits"] = "%.0f"
 		self.p_format["speed_tenths"] = "%.0f"
+		self.p_format["speed_average"] = "%.1f"
+		self.p_format["speed_average_digits"] = "%.0f"
+		self.p_format["speed_average_tenths"] = "%.0f"
 		self.p_format["speed_max"] = "%.1f"
 		self.p_format["speed_max_digits"] = "%.0f"
 		self.p_format["speed_max_tenths"] = "%.0f"
@@ -144,6 +152,7 @@ class ride_parameters():
 		self.units["satellites_used"] = ""
 		self.units["satellites_visible"] = ""
 		self.units["speed"] = "km/h"
+		self.units["speed_average"] = "km/h"
 		self.units["speed_max"] = "km/h"
 
 		#Allowed units - user can switch between those when editing value 
@@ -217,6 +226,8 @@ class ride_parameters():
 			self.p_raw["distance"] += d
 			self.p_raw["odometer"] += d
 			self.p_raw["ride_time"] += self.p_raw["dtime"]
+			self.p_raw["speed_average"] = self.p_raw["distance"] / self.p_raw["ride_time"]
+			self.update_speed_average()
 		else:
 			self.occ.log.debug("[RP] calculate_distance: speed_gps: below speed_gps_low treshold")
 
@@ -275,37 +286,42 @@ class ride_parameters():
 		self.p_raw["speed"] = self.clean_value(spd);
 		self.p_raw["speed_gps"] = self.p_raw["speed"] 
 		self.occ.log.debug("[RP] read_gps_data: p_raw: speed: {}".format(self.p_raw["speed"]))
-
+	#FIXME use one function for all 3 speeds
 	def update_speed(self):
-		self.update_param("speed")
-		self.params["speed_digits"] = self.params["speed"][:-2]
-		self.params["speed_tenths"] = self.params["speed"][-1:]
 		if self.p_raw["speed"] > self.p_raw["speed_max"]:
 			self.p_raw["speed_max"] = self.p_raw["speed"]
 			self.update_speed_max()
-		self.occ.log.debug("[RP] update_speed: {} {}".\
-				format(self.params["speed"], self.params["speed_tenths"],\
-					self.units["speed"]))
+		self.update_param("speed")
+		self.params["speed_digits"] = self.params["speed"][:-2]
+		self.params["speed_tenths"] = self.params["speed"][-1:]
+		self.occ.log.debug("[RP] speed: {} {}".\
+				format(self.params["speed"], self.units["speed"]))
 
 	def update_speed_max(self):
 		self.update_param("speed_max")
 		self.params["speed_max_digits"] = self.params["speed_max"][:-2]
 		self.params["speed_max_tenths"] = self.params["speed_max"][-1:]
-		self.occ.log.debug("[RP] max speed: {} {} {}".\
-				format(self.params["speed_max"], self.params["speed_max_tenths"],\
-					self.units["speed"]))
+		self.occ.log.debug("[RP] max speed: {} {}".\
+				format(self.params["speed_max"], self.units["speed_max"]))
+
+	def update_speed_average(self):
+		self.update_param("speed_average")
+		self.params["speed_average_digits"] = self.params["speed_average"][:-2]
+		self.params["speed_average_tenths"] = self.params["speed_average"][-1:]
+		self.occ.log.debug("[RP] average speed: {} {}".\
+				format(self.params["speed_average"], self.units["speed_average"]))
 
 	def update_params(self):
 		self.update_param("latitude")
 		self.update_param("longitude")
 		self.update_param("altitude_gps")
 		self.update_param("distance")
+		self.update_param("ride_time")
 		self.update_speed()
 			
 		self.params["utc"] = self.p_raw["utc"]
 		self.update_param("odometer")
 		self.update_param("rider_weight")
-		self.update_param("ride_time")
 		self.update_param("pressure")
 		self.update_param("temperature")
 		self.update_param("satellites_used")
