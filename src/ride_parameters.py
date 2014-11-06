@@ -278,14 +278,16 @@ class ride_parameters():
 			self.p_raw["speed_max"] = self.p_raw["speed"]
 			self.update_speed_max()
 		self.occ.log.debug("[RP] update_speed: {} {}".\
-				format(self.params["speed"], self.params["speed_tenths"], self.units["speed"]))
+				format(self.params["speed"], self.params["speed_tenths"],\
+					self.units["speed"]))
 
 	def update_speed_max(self):
 		self.update_param("speed_max")
 		self.params["speed_max_digits"] = self.params["speed_max"][:-2]
 		self.params["speed_max_tenths"] = self.params["speed_max"][-1:]
 		self.occ.log.debug("[RP] max speed: {} {} {}".\
-				format(self.params["speed_max"], self.params["speed_max_tenths"], self.units["speed"]))
+				format(self.params["speed_max"], self.params["speed_max_tenths"],\
+					self.units["speed"]))
 
 	def update_params(self):
 		self.update_param("latitude")
@@ -318,13 +320,18 @@ class ride_parameters():
 				v = q.Quantity(self.p_raw[param_name], iu)
 				v.units = self.get_unit(param_name)
 				self.params[param_name] = f % float(v.item())
-				self.occ.log.debug("[RP] update_param: {} = {}".format(param_name, self.params[param_name]))
+				self.occ.log.debug("[RP] update_param: {} = {}".\
+						format(param_name, self.params[param_name]))
 			except TypeError:
 				#Value conversion failed, so don't change anything
-				self.occ.log.debug("[RP] TypeError: update_param exception: {} {} {}".format(__name__ ,param_name, self.params[param_name], self.p_raw[param_name]))
+				self.occ.log.debug("[RP] TypeError: update_param exception: {} {} {}".\
+						format(__name__ ,param_name, self.params[param_name],\
+							self.p_raw[param_name]))
 				pass
 			except ValueError:
-				self.occ.log.debug("[RP] ValueError: update_param exception: {} {} {}".format(__name__ ,param_name, self.params[param_name], self.p_raw[param_name]))
+				self.occ.log.debug("[RP] ValueError: update_param exception: {} {} {}".\
+						format(__name__ ,param_name, self.params[param_name],\
+							self.p_raw[param_name]))
 			
 
 	def update_rtc(self):
@@ -356,4 +363,5 @@ class ride_parameters():
 		altitude_at_home = self.p_raw["altitude_at_home"]
 		#Potential DIV/0 is altitude_at_home set to 44330
 		self.p_raw["pressure_at_sea_level"] = float(pressure/pow((1 - altitude_at_home/44330), 5.255))
-		self.occ.log.debug("[RP][F] calculate_pressure_at_sea_level: pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]))
+		self.occ.log.debug("[RP][F] calculate_pressure_at_sea_level: pressure_at_sea_level: {}".\
+				format(self.p_raw["pressure_at_sea_level"]))
