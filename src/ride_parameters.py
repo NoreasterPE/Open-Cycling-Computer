@@ -88,9 +88,11 @@ class ride_parameters():
 		self.params["heart_rate"] = "-"
 		self.params["latitude"] = "-"
 		self.params["longitude"] = "-"
+		self.params["odometer"] = 0.0
 		self.params["pressure"] = "-"
 		self.params["pressure_at_sea_level"] = "-" 
 		self.params["rtc"] = ""
+		self.params["rider_weight"] = 80.0
 		self.params["ride_time"] = ""
 		self.params["satellites"] = "-"
 		self.params["satellites_used"] = "-"
@@ -108,11 +110,6 @@ class ride_parameters():
 		self.params["temperature_min"] = ""
 		self.params["temperature_max"] = ""
 		self.params["utc"] = ""
-
-		#Params that can be changed in Settings by user
-		self.params["altitude_home"] = 89.0
-		self.params["odometer"] = 0.0
-		self.params["rider_weight"] = 80.0
 
 		#Formatting strings for params.
 		self.p_format["altitude"] = "%.1f"
