@@ -37,3 +37,6 @@ ImportError: Failed to import _strptime because the import lockis held by anothe
 22. Use for exceptions logging
 Logger.exception(msg, *args, **kwargs)
 23. Add option for easy rendering icons, like a small image that is overlapped on top of background.
+24. Units switching for non-editable parameters
+25. Saving preferred units to config file
+26. Database setup + full ride logging
