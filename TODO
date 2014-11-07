@@ -8,17 +8,15 @@
 8. Avoid highlighting when sweeping (MOUSEMOTION should be OK for that)
 9. [DONE] Find a solutin to black square under hidden cursor. pygame.mouse.set_pos() ? - Solved with 90dbdfc0eb8f1b7ce115eee0e0f942bcdadb1c97
 10. Consider scroll-over-the-edge to switch pages
-11. [DONE] Use this for rel_movement:
->>> from operator import add
->>> map(add, list1, list2)
+11. [DONE] Use this for rel_movement: >>> from operator import add >>> map(add, list1, list2)
 12. Control rounding errors when switching units in editor
 13. Fix inconsistent naming: func, function, param_name
 14. Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
 15. Allow for changing units of non-editable params like speed or temperature. Block edit in editor but leave unit switching?
 16. [DISCARDED] Reading time since boot from gps? - there is no need fo this
 17. [DONE] Logging to file to debug field test crashes
-18. Setup formatting for logger as per https://docs.python.org/2/library/logging.html
-19. Add more logging, dump ride params to log?
+18. [DONE] Setup formatting for logger as per https://docs.python.org/2/library/logging.html
+19. [DONE] Add more logging, dump ride params to log?
 20. Cut down logging without losing information
 21. Rare error on start
 Exception in thread Thread-1:
@@ -38,3 +36,4 @@ Traceback (most recent call last):
 ImportError: Failed to import _strptime because the import lockis held by another thread.
 22. Use for exceptions logging
 Logger.exception(msg, *args, **kwargs)
+23. Add option for easy rendering icons, like a small image that is overlapped on top of background.
