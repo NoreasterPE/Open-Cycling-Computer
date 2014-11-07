@@ -41,3 +41,4 @@ Logger.exception(msg, *args, **kwargs)
 25. Saving preferred units to config file
 26. Database setup + full ride logging
 27. Review & avoid try/catch. It's too expensive
+28. Speed filtering or max speed will be false sooner or later. Average from 2/3 samples?
