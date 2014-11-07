@@ -142,9 +142,9 @@ class layout():
 				if value == None:
 					value = field.find('text_center').text
 				uv = unicode(value)
-				font_size = 12 * int(field.find('font_size').text)
 				text_center_x = int(field.find('text_center').get('x'))
 				text_center_y = int(field.find('text_center').get('y'))
+				font_size = 12 * int(field.find('text_center').get('size'))
 				if function != "variable_value":
 					font = pygame.font.Font(self.font, font_size)
 					ren = font.render(uv, 1, self.fg_colour)
