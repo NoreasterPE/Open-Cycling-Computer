@@ -139,32 +139,32 @@ class layout():
 	def render(self, screen, function, value = None):
 		for field in self.current_page:
 			if (field.find('function').text == function):
-				font = pygame.font.Font(self.font, 12 * int(field.find('font_size').text))
 				if value == None:
 					value = field.find('text_center').text
 				uv = unicode(value)
+				font_size = 12 * int(field.find('font_size').text)
 				text_center_x = int(field.find('text_center').get('x'))
 				text_center_y = int(field.find('text_center').get('y'))
 				if function != "variable_value":
+					font = pygame.font.Font(self.font, font_size)
 					ren = font.render(uv, 1, self.fg_colour)
 					x = ren.get_rect().centerx
 					y = ren.get_rect().centery
 					screen.blit(ren, (text_center_x - x, text_center_y - y))
 				else:
+					font_small = pygame.font.Font(self.font, font_size - 1)
+					font_large = pygame.font.Font(self.font, font_size + 1)
 					i = self.editor_index
-					font = pygame.font.Font(self.font, 12 * (int(field.find('font_size').text) - 1))
 					rv1 = uv[:i]
-					ren1 = font.render(rv1, 1, self.fg_colour)
+					ren1 = font_small.render(rv1, 1, self.fg_colour)
 					w1 = ren1.get_rect().width
 					y1 = ren1.get_rect().centery
-					font = pygame.font.Font(self.font, 12 * (int(field.find('font_size').text) + 1))
 					rv2 = uv[i]
-					ren2 = font.render(rv2, 1, self.fg_colour)
+					ren2 = font_large.render(rv2, 1, self.fg_colour)
 					w2 = ren2.get_rect().width
 					y2 = ren2.get_rect().centery
-					font = pygame.font.Font(self.font, 12 * (int(field.find('font_size').text) - 1))
 					rv3 = uv[i + 1:]
-					ren3 = font.render(rv3, 1, self.fg_colour)
+					ren3 = font_small.render(rv3, 1, self.fg_colour)
 					w3 = ren3.get_rect().width
 					y3 = ren3.get_rect().centery
 					x = text_center_y - int((w1 + w2 + w3)/2)
