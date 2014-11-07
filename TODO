@@ -40,3 +40,4 @@ Logger.exception(msg, *args, **kwargs)
 24. Units switching for non-editable parameters
 25. Saving preferred units to config file
 26. Database setup + full ride logging
+27. Review & avoid try/catch. It's too expensive
