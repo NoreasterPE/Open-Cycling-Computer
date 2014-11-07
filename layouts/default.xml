@@ -220,7 +220,6 @@
 		</field>
 		<field name="rider_weight">
 			<function>rider_weight_units</function>
-			<button x0="0" y0="0" w="120" h="80"/>
 			<text_center x="100" y="50"></text_center>
 			<font_size>2</font_size>
 		</field>
