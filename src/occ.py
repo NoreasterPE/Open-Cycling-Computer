@@ -222,18 +222,15 @@ if __name__ == "__main__":
 	signal.signal(signal.SIGINT, quit_handler)
 	os.environ["SDL_FBDEV"] = "/dev/fb1"
 	os.putenv('SDL_MOUSEDEV' , '/dev/input/touchscreen')
-	try:
-		#This is a simple check if we're running on Raspberry PI. Switch to simulation mode if we're not
-		if (platform.machine() == "armv6l"):
-			os.putenv('SDL_VIDEODRIVER', 'fbcon')
-			os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
-			main_window = open_cycling_computer(False)
-			log.debug("[OCC] simulate = False")
-		else:
-			main_window = open_cycling_computer(True)
-			log.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
-			log.debug("[OCC] simulate = True")
-		main_window.main_loop()
-	except:
-		log.exception("[OCC] Main Error")
+	#This is a simple check if we're running on Raspberry PI. Switch to simulation mode if we're not
+	if (platform.machine() == "armv6l"):
+		os.putenv('SDL_VIDEODRIVER', 'fbcon')
+		os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
+		main_window = open_cycling_computer(False)
+		log.debug("[OCC] simulate = False")
+	else:
+		main_window = open_cycling_computer(True)
+		log.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
+		log.debug("[OCC] simulate = True")
+	main_window.main_loop()
 	main_window.cleanup()
