@@ -3,7 +3,7 @@ Each layout has to contain at least 3 pages: page_0 (main page), editor and sett
 Valid function names for use in layout files:
 
 altitude		- current altitude in meters, calculated from pressure
-altitude_at_home	- home altitude - not implemented yet (fixed value) 
+altitude_home	- home altitude - not implemented yet (fixed value) 
 altitude_gps		- altitude as reported by gps unit
 cadence			- not implemented yet (fixed value)
 date			- current date

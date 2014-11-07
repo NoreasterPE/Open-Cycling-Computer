@@ -30,7 +30,7 @@ class ride_parameters():
 		self.p_raw["dtime"] = 1
 
 		self.p_raw["altitude"] = 0
-		self.p_raw["altitude_at_home"] = 0
+		self.p_raw["altitude_home"] = 0
 		self.p_raw["altitude_gps"] = 0
 		self.p_raw["cadence"] = 0
 		self.p_raw["distance"] = 0
@@ -57,7 +57,7 @@ class ride_parameters():
 		self.p_raw["utc"] = ""
 
 		#Internal units
-		self.p_raw_units["altitude_at_home"] = "m"
+		self.p_raw_units["altitude_home"] = "m"
 		self.p_raw_units["altitude_gps"] = "m"
 		self.p_raw_units["distance"] = "m"
 		self.p_raw_units["latitude"] = ""
@@ -108,13 +108,13 @@ class ride_parameters():
 		self.params["utc"] = ""
 
 		#Params that can be changed in Settings by user
-		self.params["altitude_at_home"] = 89.0
+		self.params["altitude_home"] = 89.0
 		self.params["odometer"] = 0.0
 		self.params["rider_weight"] = 80.0
 
 		#Formatting strings for params.
 		self.p_format["altitude"] = "%.1f"
-		self.p_format["altitude_at_home"] = "%.0f"
+		self.p_format["altitude_home"] = "%.0f"
 		self.p_format["altitude_gps"] = "%.1f"
 		self.p_format["cadence"] = "%.0f"
 		self.p_format["distance"] = "%.1f"
@@ -147,7 +147,7 @@ class ride_parameters():
 
 		#Units - name has to be identical as in params #FIXME reduce number of units (i.e one for speed)
 		self.units["altitude"] = "m"
-		self.units["altitude_at_home"] = "m"
+		self.units["altitude_home"] = "m"
 		self.units["altitude_gps"] = "m"
 		self.units["distance"] = "m"
 		self.units["gradient"] = "%"
@@ -178,14 +178,14 @@ class ride_parameters():
 		#self.units["temperature"] = u'\N{DEGREE SIGN}' + "C"
 
 		#Params description FIXME localisation
-		self.p_desc["altitude_at_home"] = "Home altitude"
+		self.p_desc["altitude_home"] = "Home altitude"
 		self.p_desc["odometer"] = "Odometer" 
 		self.p_desc["odometer_units"] = "Odometer units" 
 		self.p_desc["rider_weight"] = "Rider weight"
 		self.p_desc["rider_weight_units"] = "Rider weight units"
 
 		#Define id a param is editable FIXME editor type - number, calendar, unit, etc.
-		self.p_editable["altitude_at_home"] = 1
+		self.p_editable["altitude_home"] = 1
 		self.p_editable["odometer"] = 1 
 		self.p_editable["odometer_units"] = 0
 		self.p_editable["rider_weight"] = 1
@@ -407,8 +407,8 @@ class ride_parameters():
 		self.occ.log.debug("[RP][F] calculate_pressure_at_sea_level")
 		#Set pressure_at_sea_level based on given altitude
 		pressure = self.p_raw["pressure"]
-		altitude_at_home = self.p_raw["altitude_at_home"]
-		#Potential DIV/0 is altitude_at_home set to 44330
-		self.p_raw["pressure_at_sea_level"] = float(pressure/pow((1 - altitude_at_home/44330), 5.255))
+		altitude_home = self.p_raw["altitude_home"]
+		#Potential DIV/0 is altitude_home set to 44330
+		self.p_raw["pressure_at_sea_level"] = float(pressure/pow((1 - altitude_home/44330), 5.255))
 		self.occ.log.debug("[RP][F] calculate_pressure_at_sea_level: pressure_at_sea_level: {}".\
 				format(self.p_raw["pressure_at_sea_level"]))

@@ -3,8 +3,8 @@
   <layout_path>layouts/default.xml</layout_path>
   <rider_weight>80.4</rider_weight>
   <rider_weight_units>kg</rider_weight_units>
-  <altitude_at_home>89.0</altitude_at_home>
-  <altitude_at_home_units>m</altitude_at_home_units>
+  <altitude_home>89.0</altitude_home>
+  <altitude_home_units>m</altitude_home_units>
   <odometer>31583.8057597</odometer>
   <odometer_units>km</odometer_units>
   <speed_max>14.21</speed_max>
