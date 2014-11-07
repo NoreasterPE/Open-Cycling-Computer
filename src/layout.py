@@ -152,19 +152,20 @@ class layout():
 					y = ren.get_rect().centery
 					screen.blit(ren, (text_center_x - x, text_center_y - y))
 				else:
-					font_small = pygame.font.Font(self.font, font_size - 1)
-					font_large = pygame.font.Font(self.font, font_size + 1)
+					font = pygame.font.Font(self.font, font_size - 1)
 					i = self.editor_index
 					rv1 = uv[:i]
-					ren1 = font_small.render(rv1, 1, self.fg_colour)
+					ren1 = font.render(rv1, 1, self.fg_colour)
 					w1 = ren1.get_rect().width
 					y1 = ren1.get_rect().centery
 					rv2 = uv[i]
+					font = pygame.font.Font(self.font, font_size + 1)
 					ren2 = font_large.render(rv2, 1, self.fg_colour)
 					w2 = ren2.get_rect().width
 					y2 = ren2.get_rect().centery
 					rv3 = uv[i + 1:]
-					ren3 = font_small.render(rv3, 1, self.fg_colour)
+					font = pygame.font.Font(self.font, font_size - 1)
+					ren3 = font.render(rv3, 1, self.fg_colour)
 					w3 = ren3.get_rect().width
 					y3 = ren3.get_rect().centery
 					x = text_center_y - int((w1 + w2 + w3)/2)
