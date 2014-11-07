@@ -86,40 +86,6 @@
 			<font_size>2</font_size>
 		</field>
 	</page>
-	<page name="Settings 0" id="settings_0" background="images/occ_settings_0_background.png" buttons="images/occ_settings_0_buttons.png" font="" fg_colour="FFFFFF">
-		<field name="first">
-			<function>load_current_layout</function>
-			<button x0="0" y0="0" w="240" h="80"/>
-			<text_center x="120" y="40">Load current layout</text_center>
-			<font_size>2</font_size>
-		</field>
-		<field name="second">
-			<function>load_default_layout</function>
-			<button x0="0" y0="79" w="240" h="80"/>
-			<text_center x="120" y="120">Load default layout</text_center>
-			<font_size>2</font_size>
-		</field>
-		<field name="third">
-			<function>load_white_lcd_layout</function>
-			<button x0="0" y0="159" w="240" h="80"/>
-			<text_center x="120" y="200">White LCD</text_center>
-			<font_size>2</font_size>
-		</field>
-	</page>
-	<page name="Settings 1" id="settings_1" background="images/occ_settings_1_background.png" buttons="images/occ_settings_1_buttons.png" font="" fg_colour="FFFFFF">
-		<field name="first">
-			<function>halt</function>
-			<button x0="0" y0="0" w="240" h="80"/>
-			<text_center x="120" y="40">Halt</text_center>
-			<font_size>2</font_size>
-		</field>
-		<field name="second">
-			<function>reboot</function>
-			<button x0="0" y0="79" w="240" h="80"/>
-			<text_center x="120" y="120">Reboot</text_center>
-			<font_size>2</font_size>
-		</field>
-	</page>
 	<page name="Weather" id="page_1" background="images/occ_page_1_background.png" buttons="images/occ_page_1_buttons.png" font="" fg_colour="FFFFFF">
 		<field name="top">
 			<function>speed_max_digits</function>
@@ -203,6 +169,59 @@
 		<field name="middle_upper_right">
 			<function>satellites</function>
 			<text_center x="225" y="165">0</text_center>
+			<font_size>2</font_size>
+		</field>
+	</page>
+	<page name="Settings 0" id="settings_0" background="images/occ_settings_0_background.png" buttons="images/occ_settings_0_buttons.png" font="" fg_colour="FFFFFF">
+		<field name="first">
+			<function>load_current_layout</function>
+			<button x0="0" y0="0" w="240" h="80"/>
+			<text_center x="120" y="40">Load current layout</text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="second">
+			<function>load_default_layout</function>
+			<button x0="0" y0="79" w="240" h="80"/>
+			<text_center x="120" y="120">Load default layout</text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="third">
+			<function>load_white_lcd_layout</function>
+			<button x0="0" y0="159" w="240" h="80"/>
+			<text_center x="120" y="200">White LCD</text_center>
+			<font_size>2</font_size>
+		</field>
+	</page>
+	<page name="Settings 1" id="settings_1" background="images/occ_settings_1_background.png" buttons="images/occ_settings_1_buttons.png" font="" fg_colour="FFFFFF">
+		<field name="first">
+			<function>halt</function>
+			<button x0="0" y0="0" w="240" h="80"/>
+			<text_center x="120" y="40">Halt</text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="second">
+			<function>reboot</function>
+			<button x0="0" y0="79" w="240" h="80"/>
+			<text_center x="120" y="120">Reboot</text_center>
+			<font_size>2</font_size>
+		</field>
+	</page>
+	<page name="Settings 2" id="settings_2" background="images/occ_settings_2_background.png" buttons="images/occ_settings_2_buttons.png" font="" fg_colour="FFFFFF">
+		<field name="rider_weight">
+			<function>text</function>
+			<text_center x="10" y="10"></text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="rider_weight">
+			<function>rider_weight</function>
+			<button x0="0" y0="0" w="120" h="80"/>
+			<text_center x="60" y="40"></text_center>
+			<font_size>2</font_size>
+		</field>
+		<field name="rider_weight">
+			<function>rider_weight_units</function>
+			<button x0="0" y0="0" w="120" h="80"/>
+			<text_center x="100" y="40"></text_center>
 			<font_size>2</font_size>
 		</field>
 	</page>
