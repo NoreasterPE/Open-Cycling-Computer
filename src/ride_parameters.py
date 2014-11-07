@@ -57,6 +57,7 @@ class ride_parameters():
 		self.p_raw["utc"] = ""
 
 		#Internal units
+		self.p_raw_units["altitude"] = "m"
 		self.p_raw_units["altitude_home"] = "m"
 		self.p_raw_units["altitude_gps"] = "m"
 		self.p_raw_units["distance"] = "m"
@@ -79,6 +80,7 @@ class ride_parameters():
 
 		#Params of the ride ready for rendering.
 		self.params["altitude"] = "-"
+		self.params["altitude_home"] = "-"
 		self.params["altitude_gps"] = "-"
 		self.params["cadence"] = "-"
 		self.params["distance"] = 0
@@ -185,6 +187,7 @@ class ride_parameters():
 		self.p_desc["rider_weight_units"] = "Rider weight units"
 
 		#Define id a param is editable FIXME editor type - number, calendar, unit, etc.
+		#Params that can be changed in Settings by user
 		self.p_editable["altitude_home"] = 1
 		self.p_editable["odometer"] = 1 
 		self.p_editable["odometer_units"] = 0
@@ -335,6 +338,7 @@ class ride_parameters():
 		self.update_param("latitude")
 		self.update_param("longitude")
 		self.update_param("altitude_gps")
+		self.update_param("altitude")
 		self.update_param("distance")
 		self.update_param("ride_time")
 		self.update_speed()
