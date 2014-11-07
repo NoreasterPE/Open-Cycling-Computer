@@ -141,6 +141,8 @@ class layout():
 			if (field.find('function').text == function):
 				if value == None:
 					value = field.find('text_center').text
+				if value == None:
+					value = ""
 				uv = unicode(value)
 				text_center_x = int(field.find('text_center').get('x'))
 				text_center_y = int(field.find('text_center').get('y'))
