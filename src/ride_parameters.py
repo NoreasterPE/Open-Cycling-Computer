@@ -210,7 +210,7 @@ class ride_parameters():
 		self.speed_gps_low = 2.5
 		self.occ.log.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
 		#Do not show speed below 1 m/s
-		self.speed_gps_noise = 1 m/s
+		self.speed_gps_noise = 1
 		self.occ.log.info("[RP] speed_gps_noise treshold set to {}".format(self.speed_gps_noise))
 		self.update_speed_max()
 		self.update_param("altitude_home")
