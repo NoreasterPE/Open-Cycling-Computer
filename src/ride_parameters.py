@@ -215,7 +215,7 @@ class ride_parameters():
 		self.update_speed_max()
 		self.update_param("altitude_home")
 		self.occ.log.info("[RP] altitude_home set to {}".format(self.params["altitude_home"]))
-		self.calculate_pressure_at_sea_level()
+		self.pressure_at_sea_level_calculated = False
 
 	def stop(self):
 		self.gps.stop()
@@ -230,10 +230,11 @@ class ride_parameters():
 		self.p_raw["dtime"] = t - self.p_raw["time_stamp"]
 		self.p_raw["time_stamp"] = t
 		self.occ.log.debug("[RP] update_values timestamp: {}".format(t))
-		#FIXME That should be only run at home or if gps altitude is available
-		#self.calculate_pressure_at_sea_level()
 		self.update_rtc()
 		self.read_bmp183_sensor()
+		if not self.pressure_at_sea_level_calculated:
+			print "self.calculate_pressure_at_sea_level()"
+			self.calculate_pressure_at_sea_level()
 		self.read_gps_data()
 		self.update_params()
 		self.calculate_distance()
@@ -470,4 +471,5 @@ class ride_parameters():
 		altitude_home = self.p_raw["altitude_home"]
 		#Potential DIV/0 is altitude_home set to 44330
 		self.p_raw["pressure_at_sea_level"] = float(pressure/pow((1 - altitude_home/44330), 5.255))
+		self.pressure_at_sea_level_calculated = True
 		self.occ.log.debug("[RP] pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]))
