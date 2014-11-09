@@ -135,6 +135,14 @@
 			<function>satellites</function>
 			<text_center x="225" y="165" size="2"/>
 		</field>
+		<field name="time">
+			<function>time</function>
+			<text_center x="100" y="175" size="4"/>
+		</field>
+		<field name="date">
+			<function>date</function>
+			<text_center x="120" y="215" size="4"/>
+		</field>
 	</page>
 	<page name="Settings 0" id="settings_0" background="images/occ_settings_0_background.png" buttons="images/occ_settings_0_buttons.png" font="" fg_colour="FFFFFF">
 		<field name="first">
