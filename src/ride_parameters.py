@@ -205,6 +205,9 @@ class ride_parameters():
 		#Do not record any speed below 2.5 m/s
 		self.speed_gps_low = 2.5
 		self.occ.log.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
+		#Do not show speed below 1 m/s
+		self.speed_gps_noise = 1 m/s
+		self.occ.log.info("[RP] speed_gps_noise treshold set to {}".format(self.speed_gps_noise))
 		self.update_speed_max()
 		self.update_param("altitude_home")
 		self.occ.log.info("[RP] altitude_home set to {}".format(self.params["altitude_home"]))
@@ -313,6 +316,9 @@ class ride_parameters():
 		self.p_raw["satellites_visible"] = self.clean_value(svi);
 		self.p_raw["satellites"] = self.clean_value(sat);
 		self.p_raw["speed"] = self.clean_value(spd);
+		if self.p_raw["speed"] < self.speed_gps_noise:
+			self.p_raw["speed"] = 0
+		#FIXME That will have to be changed with bluetoth speed sensor
 		self.p_raw["speed_gps"] = self.p_raw["speed"] 
 		self.occ.log.debug("[RP] read_gps_data: p_raw: speed: {}".format(self.p_raw["speed"]))
 	#FIXME use one function for all 3 speeds
