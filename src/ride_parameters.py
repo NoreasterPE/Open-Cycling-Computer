@@ -444,10 +444,13 @@ class ride_parameters():
 		self.params["rtc"] = self.params["date"] + " " + self.params["time"]
 
 	def read_bmp183_sensor(self):
-		self.occ.log.info("[RP] Reading pressure and temperature from bmpBMP183")
+		self.occ.log.debug("[RP][F] read_bmp183_sensor")
 		self.bmp183_sensor.measure_pressure()
 		self.p_raw["pressure"] = self.bmp183_sensor.pressure/100.0
 		self.p_raw["temperature"] = self.bmp183_sensor.temperature
+		self.occ.log.debug("[RP] {} {}, {} {}".format(\
+				self.p_raw["pressure"], self.p_raw_units["pressure"],\
+				 self.p_raw["temperature"], self.p_raw_units["temperature"]))
 		
 	def calculate_altitude(self):
 		self.occ.log.debug("[RP][F] calculate_altitude")
@@ -457,7 +460,7 @@ class ride_parameters():
 			self.p_raw["altitude"] = float(44330*(1 - pow((pressure/pressure_at_sea_level), (1/5.255))))
 		else:
 			self.p_raw["altitude"] = 0
-		self.occ.log.debug("[RP][F] calculate_altitude: altitude: {}".format(self.p_raw["altitude"]))
+		self.occ.log.debug("[RP] altitude: {}".format(self.p_raw["altitude"]))
 
 	def calculate_pressure_at_sea_level(self):
 		self.occ.log.debug("[RP][F] calculate_pressure_at_sea_level")
@@ -466,5 +469,4 @@ class ride_parameters():
 		altitude_home = self.p_raw["altitude_home"]
 		#Potential DIV/0 is altitude_home set to 44330
 		self.p_raw["pressure_at_sea_level"] = float(pressure/pow((1 - altitude_home/44330), 5.255))
-		self.occ.log.debug("[RP][F] calculate_pressure_at_sea_level: pressure_at_sea_level: {}".\
-				format(self.p_raw["pressure_at_sea_level"]))
+		self.occ.log.debug("[RP] pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]))
