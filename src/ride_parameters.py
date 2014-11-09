@@ -382,7 +382,6 @@ class ride_parameters():
 		self.update_param("satellites")
 
 	def update_param(self, param_name):
-		self.occ.log.debug("[RP][F] update_param: param_name: {}".format(param_name))
 		try:
 			f = self.p_format[param_name]
 		except KeyError:
@@ -407,6 +406,8 @@ class ride_parameters():
 				self.occ.log.debug("[RP] ValueError: update_param exception: {} {} {}".\
 						format(__name__ ,param_name, self.params[param_name],\
 							self.p_raw[param_name]))
+		else:
+			self.occ.log.debug("[RP] update_param, {} = \"-\"".format(param_name))
 			
 	def add_zero(self, value):
 		if value < 10:
