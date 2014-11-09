@@ -246,6 +246,7 @@ class layout():
 	def run_function(self, name):
 		functions = {	"page_0" : self.load_page_0,
 				"settings" : self.load_settings_page,
+				"debug_level" : self.debug_level,
 				"ed_accept" : self.ed_accept,
 				"ed_cancel" : self.ed_cancel,
 				"ed_decrease" : self.ed_decrease,
@@ -462,3 +463,19 @@ class layout():
 		time.sleep(2)
 		if not self.occ.simulate:
 			os.system("halt")
+
+	def debug_level(self):
+		#FIXME Merge with occ LOG_LEVEL
+		LOG_LEVEL = {   "DEBUG"    : self.occ.log.DEBUG,
+				"INFO"     : self.occ.log.INFO,
+				"WARNING"  : self.occ.log.WARNING,
+				"ERROR"    : self.occ.log.ERROR,
+				"CRITICAL" : self.occ.log.CRITICAL
+		}
+		log_level = self.occ.logger.getEffectiveLevel()
+		log_level -= 10
+		if log_level < 10:
+			log_level = 40
+		log_level_name = self.occ.log.getLevelName(log_level)
+		self.occ.switch_log_level(log_level_name)
+		self.occ.rp.params["debug_level"] = log_level_name

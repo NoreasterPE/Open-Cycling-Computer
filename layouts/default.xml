@@ -164,6 +164,11 @@
 			<button x0="0" y0="159" w="240" h="80"/>
 			<text_center x="120" y="200" size="2">White LCD</text_center>
 		</field>
+		<field name="forth">
+			<function>debug_level</function>
+			<button x0="0" y0="239" w="240" h="80"/>
+			<text_center x="120" y="280" size="2"></text_center>
+		</field>
 	</page>
 	<page name="Settings 1" id="settings_1" background="images/occ_settings_1_background.png" buttons="images/occ_settings_1_buttons.png" font="" fg_colour="FFFFFF">
 		<field name="first">
