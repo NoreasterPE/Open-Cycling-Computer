@@ -378,12 +378,11 @@ class ride_parameters():
 		self.update_param("satellites")
 
 	def update_param(self, param_name):
-		self.occ.log.debug("[RP][F] update_param")
-		self.occ.log.debug("[RP] update_param: param_name: {}".format(param_name))
+		self.occ.log.debug("[RP][F] update_param: param_name: {}".format(param_name))
 		try:
 			f = self.p_format[param_name]
 		except KeyError:
-			print "Formatting not available: param_name =", param_name
+			self.occ.log.error("[RP] Formatting not available: param_name = {}".format(param_name))
 			f = "%.1f"
 
 		if self.p_raw[param_name] != "-":
@@ -392,7 +391,7 @@ class ride_parameters():
 				v = q.Quantity(self.p_raw[param_name], iu)
 				v.units = self.get_unit(param_name)
 				self.params[param_name] = f % float(v.item())
-				self.occ.log.debug("[RP] update_param: {} = {}".\
+				self.occ.log.debug("[RP] {} = {}".\
 						format(param_name, self.params[param_name]))
 			except TypeError:
 				#Value conversion failed, so don't change anything
