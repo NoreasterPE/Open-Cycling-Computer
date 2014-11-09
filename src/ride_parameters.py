@@ -241,9 +241,6 @@ class ride_parameters():
 		#FIXME calculate with speed not speed_gps when bt sensors are set up
 		s = self.p_raw["speed_gps"]
 		if s > self.speed_gps_low:
-			self.occ.log.debug("[RP] calculate_distance: speed_gps: {}".format(s))
-			self.occ.log.debug("[RP] calculate_distance: distance: {}".format(self.p_raw["distance"]))
-			self.occ.log.debug("[RP] calculate_distance: odometer: {}".format(self.p_raw["odometer"]))
 			d = 0
 			try:
 				d = dt * s
@@ -257,6 +254,9 @@ class ride_parameters():
 			self.p_raw["ride_time_total"] += self.p_raw["dtime"]
 			self.p_raw["speed_average"] = self.p_raw["distance"] / self.p_raw["ride_time"]
 			self.update_speed_average()
+			self.occ.log.debug("[RP] calculate_distance: speed_gps: {}".format(s))
+			self.occ.log.debug("[RP] calculate_distance: distance: {}".format(self.p_raw["distance"]))
+			self.occ.log.debug("[RP] calculate_distance: odometer: {}".format(self.p_raw["odometer"]))
 		else:
 			self.occ.log.debug("[RP] calculate_distance: speed_gps: below speed_gps_low treshold")
 
