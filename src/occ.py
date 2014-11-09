@@ -84,6 +84,7 @@ class open_cycling_computer():
 			self.rp.units["altitude_home"] = self.config.find("altitude_home_units").text
 			self.rp.p_raw["odometer"] = float(self.config.find("odometer").text)
 			self.rp.units["odometer"] = self.config.find("odometer_units").text
+			self.rp.p_raw["ride_time_total"] = float(self.config.find("ride_time_total").text)
 			self.rp.p_raw["speed_max"] = float(self.config.find("speed_max").text)
 			self.rp.update_speed_max()
 		except AttributeError:
@@ -102,6 +103,7 @@ class open_cycling_computer():
 		eltree.SubElement(config_tree, "altitude_home_units").text = unicode(self.rp.units["altitude_home"])
 		eltree.SubElement(config_tree, "odometer").text = unicode(self.rp.p_raw["odometer"])
 		eltree.SubElement(config_tree, "odometer_units").text = unicode(self.rp.units["odometer"])
+		eltree.SubElement(config_tree, "ride_time_total").text = unicode(self.rp.p_raw["ride_time_total"])
 		eltree.SubElement(config_tree, "speed_max").text = unicode(self.rp.p_raw["speed_max"])
 		#FIXME error handling for file operation
 		log.debug("[OCC] writing config file")

@@ -105,6 +105,10 @@
 			<function>temperature_units</function>
 			<text_center x="220" y="310" size="2"/>
 		</field>
+		<field name="ride_time_total_hms">
+			<function>ride_time_total_hms</function>
+			<text_center x="120" y="215" size="4"/>
+		</field>
 	</page>
 	<page name="GPS" id="page_2" background="images/occ_page_2_background.png" buttons="images/occ_page_2_buttons.png" font="" fg_colour="FFFFFF">
 		<field name="latitude">

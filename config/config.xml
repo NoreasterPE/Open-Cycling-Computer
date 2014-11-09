@@ -7,5 +7,6 @@
   <altitude_home_units>m</altitude_home_units>
   <odometer>31583.8057597</odometer>
   <odometer_units>km</odometer_units>
+  <ride_time_total>64.4387638568</ride_time_total>
   <speed_max>14.21</speed_max>
 </config>

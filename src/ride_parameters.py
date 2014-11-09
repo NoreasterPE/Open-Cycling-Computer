@@ -43,6 +43,7 @@ class ride_parameters():
 		self.p_raw["pressure_at_sea_level"] = 0
 		self.p_raw["rider_weight"] = 0
 		self.p_raw["ride_time"] = 0
+		self.p_raw["ride_time_total"] = 0
 		self.p_raw["rtc"] = ""
 		self.p_raw["satellites"] = 0
 		self.p_raw["satellites_used"] = 0
@@ -67,6 +68,7 @@ class ride_parameters():
 		self.p_raw_units["pressure"] = "hPa"
 		self.p_raw_units["rider_weight"] = "kg"
 		self.p_raw_units["ride_time"] = "s"
+		self.p_raw_units["ride_time_total"] = "s"
 		self.p_raw_units["satellites"] = ""
 		self.p_raw_units["satellites_used"] = ""
 		self.p_raw_units["satellites_visible"] = ""
@@ -95,6 +97,8 @@ class ride_parameters():
 		self.params["rider_weight"] = 80.0
 		self.params["ride_time"] = ""
 		self.params["ride_time_hms"] = ""
+		self.params["ride_time_total"] = ""
+		self.params["ride_time_total_hms"] = ""
 		self.params["satellites"] = "-"
 		self.params["satellites_used"] = "-"
 		self.params["satellites_visible"] = "-"
@@ -129,6 +133,8 @@ class ride_parameters():
 		self.p_format["rtc"] = ""
 		self.p_format["ride_time"] = "%.0f"
 		self.p_format["ride_time_hms"] = ""
+		self.p_format["ride_time_total"] = ".0f"
+		self.p_format["ride_time_total_hms"] = ""
 		self.p_format["satellites"] = "%.0f"
 		self.p_format["satellites_used"] = "%.0f"
 		self.p_format["satellites_visible"] = "%.0f"
@@ -160,6 +166,8 @@ class ride_parameters():
 		self.units["rider_weight"] = "kg"
 		self.units["ride_time"] = "s"
 		self.units["ride_time_hms"] = ""
+		self.units["ride_time_total"] = "s"
+		self.units["ride_time_total_hms"] = ""
 		self.units["satellites"] = ""
 		self.units["satellites_used"] = ""
 		self.units["satellites_visible"] = ""
@@ -198,6 +206,8 @@ class ride_parameters():
 		self.speed_gps_low = 2.5
 		self.occ.log.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
 		self.update_speed_max()
+		self.update_param("altitude_home")
+		self.occ.log.info("[RP] altitude_home set to {}".format(self.params["altitude_home"]))
 		self.calculate_pressure_at_sea_level()
 
 	def stop(self):
@@ -244,6 +254,7 @@ class ride_parameters():
 			self.p_raw["distance"] += d
 			self.p_raw["odometer"] += d
 			self.p_raw["ride_time"] += self.p_raw["dtime"]
+			self.p_raw["ride_time_total"] += self.p_raw["dtime"]
 			self.p_raw["speed_average"] = self.p_raw["distance"] / self.p_raw["ride_time"]
 			self.update_speed_average()
 		else:
@@ -339,10 +350,12 @@ class ride_parameters():
 		self.update_param("latitude")
 		self.update_param("longitude")
 		self.update_param("altitude_gps")
+		self.update_param("altitude_home")
 		self.update_param("altitude")
 		self.update_param("distance")
 		self.update_param("ride_time")
 		self.update_ride_time_hms()
+		self.update_ride_time_total_hms()
 		self.update_speed()
 			
 		self.params["utc"] = self.p_raw["utc"]
@@ -390,7 +403,7 @@ class ride_parameters():
 		if value < 10:
 			value = "0" + unicode(value)
 		return value
-
+	#FIXME Merge update_ride_time*
 	def update_ride_time_hms(self):
 		t = divmod(int(self.p_raw["ride_time"]), 3600)
 		hrs = t[0]
@@ -402,6 +415,18 @@ class ride_parameters():
 		mins = self.add_zero(mins)
 		sec = self.add_zero(sec)
 		self.params["ride_time_hms"] = "{}:{}:{}".format(hrs, mins, sec)
+
+	def update_ride_time_total_hms(self):
+		t = divmod(int(self.p_raw["ride_time_total"]), 3600)
+		hrs = t[0]
+		sec = t[1]
+		t = divmod(t[1], 60)
+		mins = t[0]
+		sec = t[1]
+		hrs = self.add_zero(hrs)
+		mins = self.add_zero(mins)
+		sec = self.add_zero(sec)
+		self.params["ride_time_total_hms"] = "{}:{}:{}".format(hrs, mins, sec)
 
 	def update_rtc(self):
 		#FIXME proper localisation would be nice....
