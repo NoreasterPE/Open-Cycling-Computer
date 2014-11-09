@@ -195,6 +195,7 @@ class ride_parameters():
 		self.speed_gps_low = 2.5
 		self.occ.log.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
 		self.update_speed_max()
+		self.calculate_pressure_at_sea_level()
 
 	def stop(self):
 		self.gps.stop()
@@ -210,7 +211,7 @@ class ride_parameters():
 		self.p_raw["time_stamp"] = t
 		self.occ.log.debug("[RP] update_values timestamp: {}".format(t))
 		#FIXME That should be only run at home or if gps altitude is available
-		self.calculate_pressure_at_sea_level()
+		#self.calculate_pressure_at_sea_level()
 		self.update_rtc()
 		self.read_bmp183_sensor()
 		self.read_gps_data()
