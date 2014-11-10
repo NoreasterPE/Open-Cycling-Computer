@@ -225,7 +225,6 @@ class ride_parameters():
 		self.stop()
 
 	def update_values(self):
-		self.occ.log.debug("[RP][F] update_values")
 		t = time.time()
 		self.p_raw["dtime"] = t - self.p_raw["time_stamp"]
 		self.p_raw["time_stamp"] = t
@@ -233,7 +232,6 @@ class ride_parameters():
 		self.update_rtc()
 		self.read_bmp183_sensor()
 		if not self.pressure_at_sea_level_calculated:
-			print "self.calculate_pressure_at_sea_level()"
 			self.calculate_pressure_at_sea_level()
 		self.read_gps_data()
 		self.update_params()
@@ -244,7 +242,6 @@ class ride_parameters():
 
 	#FIXME change name
 	def calculate_distance(self):
-		self.occ.log.debug("[RP][F] calculate_distance")
 		dt = self.p_raw["dtime"]
 		#FIXME calculate with speed not speed_gps when bt sensors are set up
 		s = self.p_raw["speed_gps"]
@@ -262,11 +259,10 @@ class ride_parameters():
 			self.p_raw["ride_time_total"] += self.p_raw["dtime"]
 			self.p_raw["speed_average"] = self.p_raw["distance"] / self.p_raw["ride_time"]
 			self.update_speed_average()
-			self.occ.log.debug("[RP] calculate_distance: speed_gps: {}".format(s))
-			self.occ.log.debug("[RP] calculate_distance: distance: {}".format(self.p_raw["distance"]))
-			self.occ.log.debug("[RP] calculate_distance: odometer: {}".format(self.p_raw["odometer"]))
+			self.occ.log.debug("[RP] speed_gps: {}, distance: {}, odometer: {}".\
+					format(s, self.p_raw["distance"], self.p_raw["odometer"]))
 		else:
-			self.occ.log.debug("[RP] calculate_distance: speed_gps: below speed_gps_low treshold")
+			self.occ.log.debug("[RP] speed_gps: below speed_gps_low treshold")
 
 	def force_refresh(self):
 		self.occ.force_refresh()
@@ -303,7 +299,6 @@ class ride_parameters():
 			return empty
 
 	def read_gps_data(self):
-		self.occ.log.debug("[RP][F] read_gps_data")
 		data = self.gps.get_data()
 		lat = data[0]
 		lon = data[1]
@@ -325,7 +320,7 @@ class ride_parameters():
 			self.p_raw["speed"] = 0
 		#FIXME That will have to be changed with bluetoth speed sensor
 		self.p_raw["speed_gps"] = self.p_raw["speed"] 
-		self.occ.log.debug("[RP] read_gps_data: p_raw: speed: {}".format(self.p_raw["speed"]))
+		self.occ.log.debug("[RP] p_raw: speed: {}".format(self.p_raw["speed"]))
 	#FIXME use one function for all 3 speeds
 	def update_speed(self):
 		if self.p_raw["speed"] > self.p_raw["speed_max"]:
@@ -358,6 +353,7 @@ class ride_parameters():
 		self.p_raw[param + "_min"] = min(self.p_raw[param], self.p_raw[param + "_min"])
 
 	def update_params(self):
+		#FIXME Make a list of params and call from for loop
 		self.update_param("latitude")
 		self.update_param("longitude")
 		self.update_param("altitude_gps")
@@ -407,8 +403,6 @@ class ride_parameters():
 				self.occ.log.debug("[RP] ValueError: update_param exception: {} {} {}".\
 						format(__name__ ,param_name, self.params[param_name],\
 							self.p_raw[param_name]))
-		else:
-			self.occ.log.debug("[RP] update_param, {} = \"-\"".format(param_name))
 			
 	def add_zero(self, value):
 		if value < 10:
@@ -446,7 +440,6 @@ class ride_parameters():
 		self.params["rtc"] = self.params["date"] + " " + self.params["time"]
 
 	def read_bmp183_sensor(self):
-		self.occ.log.debug("[RP][F] read_bmp183_sensor")
 		self.bmp183_sensor.measure_pressure()
 		self.p_raw["pressure"] = self.bmp183_sensor.pressure/100.0
 		self.p_raw["temperature"] = self.bmp183_sensor.temperature
@@ -455,7 +448,6 @@ class ride_parameters():
 				 self.p_raw["temperature"], self.p_raw_units["temperature"]))
 		
 	def calculate_altitude(self):
-		self.occ.log.debug("[RP][F] calculate_altitude")
 		pressure = self.p_raw["pressure"]
 		pressure_at_sea_level = self.p_raw["pressure_at_sea_level"]
 		if pressure_at_sea_level > 0:
@@ -465,7 +457,6 @@ class ride_parameters():
 		self.occ.log.debug("[RP] altitude: {}".format(self.p_raw["altitude"]))
 
 	def calculate_pressure_at_sea_level(self):
-		self.occ.log.debug("[RP][F] calculate_pressure_at_sea_level")
 		#Set pressure_at_sea_level based on given altitude
 		pressure = self.p_raw["pressure"]
 		altitude_home = self.p_raw["altitude_home"]
