@@ -76,6 +76,7 @@ class open_cycling_computer():
 		self.layout_path = self.config.find("layout_path").text
 		log_level = self.config.find("log_level").text
 		self.switch_log_level(log_level)
+		self.rp.params["debug_level"] = log_level
 		try:
 			self.rp.p_raw["rider_weight"] = float(self.config.find("rider_weight").text)
 			self.rp.units["rider_weight"] = self.config.find("rider_weight_units").text

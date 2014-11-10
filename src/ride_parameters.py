@@ -117,8 +117,7 @@ class ride_parameters():
 		self.params["utc"] = ""
 
 		#System params
-		log_level = self.occ.logger.getEffectiveLevel()
-		self.params["debug_level"] = self.occ.log.getLevelName(log_level)
+		self.params["debug_level"] = ""
 
 		#Formatting strings for params.
 		self.p_format["altitude"] = "%.1f"
