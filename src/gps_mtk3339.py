@@ -49,35 +49,36 @@ class gps_mtk3339(threading.Thread):
 					try:
 						#FIXME Fails sometimes with ImportError form gps.py - see TODO 21
 						self.data.next()
-						self.occ.log.debug("[GPS] Received next GPS event. timestamp: {}".format(time.time()))
-						self.latitude = self.data.fix.latitude
-						self.longitude = self.data.fix.longitude
-						self.occ.log.debug("[GPS] Coordinates: {}, {}".format(self.latitude, self.longitude))
-						self.utc = self.data.utc
-						self.occ.log.debug("[GPS] UTC: {}".format(self.utc))
-						self.climb = self.data.fix.climb #Add to rp module
-						self.speed = self.data.fix.speed
-						self.occ.log.debug("[GPS] Speed: {} Altitude {} Climb: {}".\
-								format(self.speed, self.climb, self.altitude))
-						self.altitude = self.data.fix.altitude
-						try:
-							sat = self.data.satellites
-							self.satellites = len(sat)
-							self.satellites_used = self.data.satellites_used
-							self.satellites_visible = 0
-							for i in sat:
-								if i.ss > 0:
-									self.satellites_visible += 1
-							self.occ.log.debug("[GPS] Satellites: {} Visible: {} Used: {}".format(\
-									self.satellites, self.satellites_visible, self.satellites_used))
-							self.occ.log.debug("[GPS] Status: {} Online: {} Mode: {}".format(\
-									status[self.data.status], self.data.online, fix_mode[self.data.fix.mode]))
-						except AttributeError:
-							self.occ.log.error("[GPS] AttributeError exception in GPS")
-							pass
 					except StopIteration:
 						self.occ.log.error("[GPS] StopIteration exception in GPS")
 						pass
+					self.occ.log.debug("[GPS] Received next GPS event. timestamp: {}".format(time.time()))
+					self.latitude = self.data.fix.latitude
+					self.longitude = self.data.fix.longitude
+					self.occ.log.debug("[GPS] Coordinates: {}, {}".format(self.latitude, self.longitude))
+					self.utc = self.data.utc
+					self.occ.log.debug("[GPS] UTC: {}".format(self.utc))
+					self.climb = self.data.fix.climb #Add to rp module
+					self.speed = self.data.fix.speed
+					self.occ.log.debug("[GPS] Speed: {} Altitude {} Climb: {}".\
+							format(self.speed, self.climb, self.altitude))
+					self.altitude = self.data.fix.altitude
+					try:
+						sat = self.data.satellites
+						self.satellites = len(sat)
+						self.satellites_used = self.data.satellites_used
+						self.satellites_visible = 0
+						#FIXME there should be a value for that in gps module already
+						for i in sat:
+							if i.ss > 0:
+								self.satellites_visible += 1
+					except AttributeError:
+						self.occ.log.error("[GPS] AttributeError exception in GPS")
+						pass
+					self.occ.log.debug("[GPS] Satellites: {} Visible: {} Used: {}".format(\
+							self.satellites, self.satellites_visible, self.satellites_used))
+					self.occ.log.debug("[GPS] Status: {} Online: {} Mode: {}".format(\
+							status[self.data.status], self.data.online, fix_mode[self.data.fix.mode]))
 			else:
 				self.latitude = 52.0001
 				self.longitude = -8.0001
