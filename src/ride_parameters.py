@@ -353,6 +353,7 @@ class ride_parameters():
 
 	def update_params(self):
 		#FIXME Make a list of params and call from for loop
+		#FIXME Use the list to dump DEBUG data
 		self.update_param("latitude")
 		self.update_param("longitude")
 		self.update_param("altitude_gps")
