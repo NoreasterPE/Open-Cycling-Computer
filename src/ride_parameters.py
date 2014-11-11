@@ -14,6 +14,8 @@ class ride_parameters():
 		self.gps.start()
 		self.occ.log.info("[RP] Initialising bmp183 sensor")
 		self.bmp183_sensor = bmp183(occ, simulate)
+		self.occ.log.info("[RP] Starting BMP thread")
+		self.bmp183_sensor.start()
 
 		self.p_desc = {}
 		self.p_editable = {}
@@ -438,7 +440,6 @@ class ride_parameters():
 		self.params["rtc"] = self.params["date"] + " " + self.params["time"]
 
 	def read_bmp183_sensor(self):
-		self.bmp183_sensor.measure_pressure()
 		self.p_raw["pressure"] = self.bmp183_sensor.pressure/100.0
 		self.p_raw["temperature"] = self.bmp183_sensor.temperature
 		self.occ.log.debug("[RP] {} {}, {} {}".format(\
