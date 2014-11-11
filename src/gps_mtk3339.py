@@ -84,7 +84,7 @@ class gps_mtk3339(threading.Thread):
 				self.latitude = 52.0001
 				self.longitude = -8.0001
 				self.utc = "utc"
-				self.climb = "0.2"
+				self.climb = 0.2
 				self.speed = 9.99
 				self.altitude = 50.0
 				self.satellites = 10
