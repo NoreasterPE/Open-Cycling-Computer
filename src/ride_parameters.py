@@ -295,28 +295,24 @@ class ride_parameters():
 		self.occ.force_refresh()
 
 	def get_val(self, func):
-		#FIXME try/except for invalid func?
 		if func.endswith("_units"):
 			return self.units[func[:-6]]
 		else:
 			return self.params[func]
 
 	def get_unit(self, func):
-		#FIXME try/except for invalid func?
 		if func.endswith("_units"):
 			return None
 		else:
 			return self.units[func]
 
 	def get_internal_unit(self, func):
-		#FIXME try/except for invalid func?
 		if func.endswith("_units"):
 			return None
 		else:
 			return self.p_raw_units[func]
 
 	def get_description(self, func):
-		#FIXME try/except for invalid func?
 		return self.p_desc[func]
 
 	def clean_value(self, variable, empty = 0):
