@@ -35,7 +35,11 @@ class ride_parameters():
 		self.p_raw["altitude_home"] = 0
 		self.p_raw["altitude_gps"] = 0
 		self.p_raw["cadence"] = 0
+		self.p_raw["climb"] = 0
 		self.p_raw["distance"] = 0
+		self.p_raw["gps_fix"] = ""
+		self.p_raw["gps_online"] = ""
+		self.p_raw["gps_status"] = ""
 		self.p_raw["gradient"] = 0
 		self.p_raw["heart_rate"] = 0
 		self.p_raw["latitude"] = 0
@@ -64,6 +68,10 @@ class ride_parameters():
 		self.p_raw_units["altitude_home"] = "m"
 		self.p_raw_units["altitude_gps"] = "m"
 		self.p_raw_units["distance"] = "m"
+		self.p_raw_units["climb"] = "m/s"
+		self.p_raw_units["gps_fix"] = ""
+		self.p_raw_units["gps_online"] = ""
+		self.p_raw_units["gps_status"] = ""
 		self.p_raw_units["latitude"] = ""
 		self.p_raw_units["longitude"] = ""
 		self.p_raw_units["odometer"] = "m"
@@ -87,7 +95,11 @@ class ride_parameters():
 		self.params["altitude_home"] = "-"
 		self.params["altitude_gps"] = "-"
 		self.params["cadence"] = "-"
+		self.params["climb"] = "-"
 		self.params["distance"] = 0
+		self.params["gps_fix"] = "-"
+		self.params["gps_online"] = "-"
+		self.params["gps_status"] = "-"
 		self.params["gradient"] = "-"
 		self.params["heart_rate"] = "-"
 		self.params["latitude"] = "-"
@@ -126,7 +138,11 @@ class ride_parameters():
 		self.p_format["altitude_home"] = "%.0f"
 		self.p_format["altitude_gps"] = "%.1f"
 		self.p_format["cadence"] = "%.0f"
+		self.p_format["climb"] = "%.1f"
 		self.p_format["distance"] = "%.1f"
+		self.p_format["gps_fix"] = ""
+		self.p_format["gps_online"] = ""
+		self.p_format["gps_status"] = ""
 		self.p_format["gradient"] = ""
 		self.p_format["heart_rate"] = "%.0f"
 		self.p_format["latitude"] = "%.4f"
@@ -161,7 +177,11 @@ class ride_parameters():
 		self.units["altitude"] = "m"
 		self.units["altitude_home"] = "m"
 		self.units["altitude_gps"] = "m"
+		self.units["climb"] = "m/s"
 		self.units["distance"] = "km"
+		self.units["gps_fix"] = ""
+		self.units["gps_online"] = ""
+		self.units["gps_status"] = ""
 		self.units["gradient"] = "%"
 		self.units["heart_rate"] = "BPM"
 		self.units["latitude"] = ""
@@ -309,6 +329,10 @@ class ride_parameters():
 		sud = data[5]
 		svi = data[6]
 		sat = data[7]
+		self.p_raw["gps_status"] = data[8]
+		self.p_raw["gps_online"] = data[9]
+		self.p_raw["gps_fix"] = data[10]
+		cmb = data[11]
 		self.p_raw["latitude"] = self.clean_value(lat);
 		self.p_raw["longitude"] = self.clean_value(lon);
 		self.p_raw["altitude_gps"] = self.clean_value(alt);
@@ -321,6 +345,7 @@ class ride_parameters():
 			self.p_raw["speed"] = 0
 		#FIXME That will have to be changed with bluetooth speed sensor
 		self.p_raw["speed_gps"] = self.p_raw["speed"] 
+		self.p_raw["climb"] = self.clean_value(cmb);
 	#FIXME use one function for all 3 speeds
 	def update_speed(self):
 		if self.p_raw["speed"] > self.p_raw["speed_max"]:
@@ -346,6 +371,11 @@ class ride_parameters():
 		self.occ.log.debug("[RP] average speed: {} {}".\
 				format(self.params["speed_average"], self.units["speed_average"]))
 
+	def update_gps(self):
+		self.params["gps_status"] = self.p_raw["gps_status"]
+		self.params["gps_online"] = self.p_raw["gps_online"]
+		self.params["gps_fix"] = self.p_raw["gps_fix"]
+	
 	def set_max(self, param):
 		self.p_raw[param + "_max"] = max(self.p_raw[param], self.p_raw[param + "_max"])
 
@@ -355,11 +385,13 @@ class ride_parameters():
 	def update_params(self):
 		#FIXME Make a list of params and call from for loop
 		#FIXME Use the list to dump DEBUG data
+		self.update_gps()
 		self.update_param("latitude")
 		self.update_param("longitude")
 		self.update_param("altitude_gps")
 		self.update_param("altitude_home")
 		self.update_param("altitude")
+		self.update_param("climb")
 		self.update_param("distance")
 		self.update_param("ride_time")
 		self.update_ride_time_hms()

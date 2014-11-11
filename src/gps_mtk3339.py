@@ -56,9 +56,12 @@ class gps_mtk3339(threading.Thread):
 					self.latitude = self.data.fix.latitude
 					self.longitude = self.data.fix.longitude
 					self.utc = self.data.utc
-					self.climb = self.data.fix.climb #Add to rp module
+					self.climb = self.data.fix.climb
 					self.speed = self.data.fix.speed
 					self.altitude = self.data.fix.altitude
+					self.status = status[self.data.status]
+					self.online = self.data.online
+					self.fix_mode = fix_mode[self.data.fix.mode]
 					try:
 						sat = self.data.satellites
 						self.satellites = len(sat)
@@ -87,6 +90,9 @@ class gps_mtk3339(threading.Thread):
 				self.satellites = 10
 				self.satellites_used = 4
 				self.satellites_visible = 5
+				self.status = status[1]
+				self.online = 1
+				self.fix_mode = fix_mode[2]
 				time.sleep(1)
 
 	def get_data(self):
@@ -95,7 +101,9 @@ class gps_mtk3339(threading.Thread):
 			self.utc, 			#4
 			self.satellites_used,		#5
 			self.satellites_visible,	#6
-			self.satellites)		#7
+			self.satellites, self.status,	#7, 8
+			self.online, self.fix_mode,	#9, 10
+			self.climb)			#11
 
 	def __del__(self):
 		self.stop()
