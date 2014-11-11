@@ -390,8 +390,6 @@ class ride_parameters():
 				v = q.Quantity(self.p_raw[param_name], iu)
 				v.units = self.get_unit(param_name)
 				self.params[param_name] = f % float(v.item())
-				self.occ.log.debug("[RP] {} = {}".\
-						format(param_name, self.params[param_name]))
 			except TypeError:
 				#Value conversion failed, so don't change anything
 				self.occ.log.debug("[RP] TypeError: update_param exception: {} {} {}".\
@@ -402,6 +400,7 @@ class ride_parameters():
 				self.occ.log.debug("[RP] ValueError: update_param exception: {} {} {}".\
 						format(__name__ ,param_name, self.params[param_name],\
 							self.p_raw[param_name]))
+		self.occ.log.debug("[RP] {} = {}".format(param_name, self.params[param_name]))
 			
 	def add_zero(self, value):
 		if value < 10:
