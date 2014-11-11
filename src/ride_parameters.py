@@ -319,7 +319,7 @@ class ride_parameters():
 		self.p_raw["speed"] = self.clean_value(spd);
 		if self.p_raw["speed"] < self.speed_gps_noise:
 			self.p_raw["speed"] = 0
-		#FIXME That will have to be changed with bluetoth speed sensor
+		#FIXME That will have to be changed with bluetooth speed sensor
 		self.p_raw["speed_gps"] = self.p_raw["speed"] 
 		self.occ.log.debug("[RP] p_raw: speed: {}".format(self.p_raw["speed"]))
 	#FIXME use one function for all 3 speeds
