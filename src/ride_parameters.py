@@ -396,8 +396,8 @@ class ride_parameters():
 		self.update_param("climb")
 		self.update_param("distance")
 		self.update_param("ride_time")
-		self.update_ride_time_hms()
-		self.update_ride_time_total_hms()
+		self.update_hms("ride_time")
+		self.update_hms("ride_time_total")
 		self.update_speed()
 			
 		self.params["utc"] = self.p_raw["utc"]
@@ -441,21 +441,9 @@ class ride_parameters():
 		if value < 10:
 			value = "0" + unicode(value)
 		return value
-	#FIXME Merge update_ride_time*
-	def update_ride_time_hms(self):
-		t = divmod(int(self.p_raw["ride_time"]), 3600)
-		hrs = t[0]
-		sec = t[1]
-		t = divmod(t[1], 60)
-		mins = t[0]
-		sec = t[1]
-		hrs = self.add_zero(hrs)
-		mins = self.add_zero(mins)
-		sec = self.add_zero(sec)
-		self.params["ride_time_hms"] = "{}:{}:{}".format(hrs, mins, sec)
 
-	def update_ride_time_total_hms(self):
-		t = divmod(int(self.p_raw["ride_time_total"]), 3600)
+	def update_hms(self, param):
+		t = divmod(int(self.p_raw[param]), 3600)
 		hrs = t[0]
 		sec = t[1]
 		t = divmod(t[1], 60)
@@ -464,7 +452,7 @@ class ride_parameters():
 		hrs = self.add_zero(hrs)
 		mins = self.add_zero(mins)
 		sec = self.add_zero(sec)
-		self.params["ride_time_total_hms"] = "{}:{}:{}".format(hrs, mins, sec)
+		self.params[param + "_hms"] = "{}:{}:{}".format(hrs, mins, sec)
 
 	def update_rtc(self):
 		#FIXME proper localisation would be nice....
