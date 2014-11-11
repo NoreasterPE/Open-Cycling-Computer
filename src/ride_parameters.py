@@ -14,6 +14,7 @@ class ride_parameters():
 		self.gps.start()
 		self.occ.log.info("[RP] Initialising bmp183 sensor")
 		self.bmp183_sensor = bmp183(occ, simulate)
+		self.bmp183_first_run = True
 		self.occ.log.info("[RP] Starting BMP thread")
 		self.bmp183_sensor.start()
 
@@ -62,6 +63,11 @@ class ride_parameters():
 		self.p_raw["temperature_min"] = float("inf")
 		self.p_raw["temperature_max"] = float("-inf")
 		self.p_raw["utc"] = ""
+
+		#System params
+		#Maximum allowable temperature change between measurements. If measurement differ more than delta they are ignored.
+		self.p_raw["temperature_max_delta"] = 10 #degC
+		self.p_raw["pressure_max_delta"] = 1 #hPa
 
 		#Internal units
 		self.p_raw_units["altitude"] = "m"
@@ -471,8 +477,19 @@ class ride_parameters():
 		self.params["rtc"] = self.params["date"] + " " + self.params["time"]
 
 	def read_bmp183_sensor(self):
-		self.p_raw["pressure"] = self.bmp183_sensor.pressure/100.0
-		self.p_raw["temperature"] = self.bmp183_sensor.temperature
+		temperature = self.bmp183_sensor.temperature
+		pressure = self.bmp183_sensor.pressure/100.0
+		if not self.bmp183_first_run:
+			dtemperature = abs(temperature - self.p_raw["temperature"])
+			dpressure = abs(pressure - self.p_raw["pressure"])
+		else:
+			dtemperature = 0
+			dpressure = 0
+			self.bmp183_first_run = False
+		if dtemperature < self.p_raw["temperature_max_delta"]:
+			self.p_raw["temperature"] = temperature
+		if dpressure < self.p_raw["pressure_max_delta"]:
+			self.p_raw["pressure"] = pressure
 		
 	def calculate_altitude(self):
 		pressure = self.p_raw["pressure"]
