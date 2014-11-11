@@ -401,7 +401,6 @@ class ride_parameters():
 				self.occ.log.debug("[RP] ValueError: update_param exception: {} {} {}".\
 						format(__name__ ,param_name, self.params[param_name],\
 							self.p_raw[param_name]))
-		self.occ.log.debug("[RP] {} = {}".format(param_name, self.params[param_name]))
 			
 	def add_zero(self, value):
 		if value < 10:
