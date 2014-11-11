@@ -45,23 +45,19 @@ class gps_mtk3339(threading.Thread):
 			self.running = True
 			if not self.simulate:
 				while self.running:
-					self.occ.log.debug("[GPS] GPS running = {}".format(self.running))
+					self.occ.log.debug("[GPS] running = {}".format(self.running))
 					try:
 						#FIXME Fails sometimes with ImportError form gps.py - see TODO 21
 						self.data.next()
 					except StopIteration:
 						self.occ.log.error("[GPS] StopIteration exception in GPS")
 						pass
-					self.occ.log.debug("[GPS] Received next GPS event. timestamp: {}".format(time.time()))
+					timestamp = time.time()
 					self.latitude = self.data.fix.latitude
 					self.longitude = self.data.fix.longitude
-					self.occ.log.debug("[GPS] Coordinates: {}, {}".format(self.latitude, self.longitude))
 					self.utc = self.data.utc
-					self.occ.log.debug("[GPS] UTC: {}".format(self.utc))
 					self.climb = self.data.fix.climb #Add to rp module
 					self.speed = self.data.fix.speed
-					self.occ.log.debug("[GPS] Speed: {} Altitude {} Climb: {}".\
-							format(self.speed, self.climb, self.altitude))
 					self.altitude = self.data.fix.altitude
 					try:
 						sat = self.data.satellites
@@ -75,10 +71,15 @@ class gps_mtk3339(threading.Thread):
 					except AttributeError:
 						self.occ.log.error("[GPS] AttributeError exception in GPS")
 						pass
-					self.occ.log.debug("[GPS] Satellites: {} Visible: {} Used: {}".format(\
-							self.satellites, self.satellites_visible, self.satellites_used))
-					self.occ.log.debug("[GPS] Status: {} Online: {} Mode: {}".format(\
-							status[self.data.status], self.data.online, fix_mode[self.data.fix.mode]))
+					self.occ.log.debug("[GPS] Event: timestamp: {}, UTC: {}, Satellites: {},\
+								Visible: {}, Used: {}".format(time.time(),\
+								self.utc, self.satellites, self.satellites_visible,\
+								self.satellites_used))
+					self.occ.log.debug("[GPS] Status: {}, Online: {}, Mode: {}, Lat,Lon: {},{},\
+								Speed: {}, Altitude: {}, Climb: {}".format(\
+								status[self.data.status], self.data.online,\
+								fix_mode[self.data.fix.mode], self.latitude,\
+								self.longitude, self.speed, self.climb, self.altitude))
 			else:
 				self.latitude = 52.0001
 				self.longitude = -8.0001
