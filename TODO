@@ -17,7 +17,7 @@
 17. [DONE] Logging to file to debug field test crashes
 18. [DONE] Setup formatting for logger as per https://docs.python.org/2/library/logging.html
 19. [DONE] Add more logging, dump ride params to log?
-20. Cut down logging without losing information
+20. [DONE] Cut down logging without losing information
 21. Rare error on start
 Exception in thread Thread-1:
 Traceback (most recent call last):
@@ -43,3 +43,4 @@ Logger.exception(msg, *args, **kwargs)
 27. Review & avoid try/catch. It's too expensive
 28. Speed filtering or max speed will be false sooner or later. Average from 2/3 samples?
 29. Read time from GPS when it will be battery powered
+30. Read config_base if there is no config.xml file
