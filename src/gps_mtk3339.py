@@ -66,6 +66,7 @@ class gps_mtk3339(threading.Thread):
 					self.status = status[self.data.status]
 					self.online = self.data.online
 					self.fix_mode = fix_mode[self.data.fix.mode]
+					self.fix_time = self.data.fix.time
 					try:
 						sat = self.data.satellites
 						self.satellites = len(sat)
@@ -78,8 +79,8 @@ class gps_mtk3339(threading.Thread):
 					except AttributeError:
 						self.occ.log.error("[GPS] AttributeError exception in GPS")
 						pass
-					self.occ.log.debug("[GPS] timestamp: {}, UTC: {}, Satellites: {}, Visible: {}, Used: {}"\
-								.format(timestamp, self.utc, self.satellites,\
+					self.occ.log.debug("[GPS] timestamp: {}, fix time: {}, UTC: {}, Satellites: {}, Visible: {}, Used: {}"\
+								.format(timestamp, self.fix_time, self.utc, self.satellites,\
 								 self.satellites_visible, self.satellites_used))
 					self.occ.log.debug("[GPS] Status: {}, Online: {}, Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"\
 								.format(self.status, self.online, self.fix_mode, self.latitude, self.longitude,\
