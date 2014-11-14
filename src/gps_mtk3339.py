@@ -78,9 +78,9 @@ class gps_mtk3339(threading.Thread):
 					except AttributeError:
 						self.occ.log.error("[GPS] AttributeError exception in GPS")
 						pass
-					self.occ.log.debug("[GPS] Event: timestamp: {}, UTC: {}, Satellites: {}, Visible: {}, Used: {}"\
-								.format(time.time(), self.utc, self.satellites, self.satellites_visible,\
-								self.satellites_used))
+					self.occ.log.debug("[GPS] timestamp: {}, UTC: {}, Satellites: {}, Visible: {}, Used: {}"\
+								.format(timestamp, self.utc, self.satellites,\
+								 self.satellites_visible, self.satellites_used))
 					self.occ.log.debug("[GPS] Status: {}, Online: {}, Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"\
 								.format(self.status, self.online, self.fix_mode, self.latitude, self.longitude,\
 								self.speed, self.altitude, self.climb))
