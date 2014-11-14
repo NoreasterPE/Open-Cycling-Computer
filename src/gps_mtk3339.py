@@ -21,15 +21,19 @@ class gps_mtk3339(threading.Thread):
 		threading.Thread.__init__(self)
 		self.occ = occ
 		self.simulate = simulate
-		self.present = False
+		self.altitude = 0
+		self.climb = 0
+		self.fix_mode = ""
 		self.latitude = NaN
 		self.longitude = NaN
-		self.speed = NaN
-		self.altitude = 50.0
-		self.utc = "UTC"
+		self.online = 0
+		self.present = False
 		self.satellites = 0
 		self.satellites_used = 0
 		self.satellites_visible = 0
+		self.speed = NaN
+		self.status = ""
+		self.utc = ""
 		if not self.simulate:
 			try:
 				#FIXME Add check for running gpsd. Restart if missing. Consider watchdog thread to start gpsd
