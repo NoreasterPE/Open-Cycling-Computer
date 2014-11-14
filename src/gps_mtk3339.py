@@ -5,10 +5,6 @@ import threading
 import time
 
 NaN = float('nan')
-status = { 0 : "No fix",
-	   1 : "Fix",
-	   2 : "DGPS fix" #Differential GPS fix
-}
 fix_mode = { 1 : "No fix",
 	     2 : "Fix 2D",
 	     3 : "Fix 3D"
@@ -26,12 +22,10 @@ class gps_mtk3339(threading.Thread):
 		self.fix_mode = ""
 		self.latitude = NaN
 		self.longitude = NaN
-		self.online = 0
 		self.present = False
 		self.satellites = 0
 		self.satellites_used = 0
 		self.speed = NaN
-		self.status = ""
 		self.utc = ""
 		if not self.simulate:
 			try:
@@ -62,8 +56,6 @@ class gps_mtk3339(threading.Thread):
 					self.climb = self.data.fix.climb
 					self.speed = self.data.fix.speed
 					self.altitude = self.data.fix.altitude
-					self.status = status[self.data.status]
-					self.online = self.data.online
 					self.fix_mode = fix_mode[self.data.fix.mode]
 					self.fix_time = self.data.fix.time
 					try:
@@ -76,8 +68,8 @@ class gps_mtk3339(threading.Thread):
 					self.occ.log.debug("[GPS] timestamp: {}, fix time: {}, UTC: {}, Satellites: {}, Used: {}"\
 								.format(timestamp, self.fix_time, self.utc, self.satellites,\
 								 self.satellites_used))
-					self.occ.log.debug("[GPS] Status: {}, Online: {}, Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"\
-								.format(self.status, self.online, self.fix_mode, self.latitude, self.longitude,\
+					self.occ.log.debug("[GPS] Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"\
+								.format(self.fix_mode, self.latitude, self.longitude,\
 								self.speed, self.altitude, self.climb))
 			else:
 				self.latitude = 52.0001
@@ -88,8 +80,6 @@ class gps_mtk3339(threading.Thread):
 				self.altitude = 50.0
 				self.satellites = 10
 				self.satellites_used = 4
-				self.status = status[1]
-				self.online = 1
 				self.fix_mode = fix_mode[2]
 				time.sleep(1)
 
@@ -98,9 +88,8 @@ class gps_mtk3339(threading.Thread):
 			self.altitude, self.speed,	#2, 3
 			self.utc, 			#4
 			self.satellites_used,		#5
-			self.satellites, self.status,	#6, 7
-			self.online, self.fix_mode,	#8, 9
-			self.climb)			#10
+			self.satellites, self.fix_mode,	#6, 7
+			self.climb)			#8
 
 	def __del__(self):
 		self.stop()

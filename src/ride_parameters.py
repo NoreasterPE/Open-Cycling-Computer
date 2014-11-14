@@ -39,8 +39,6 @@ class ride_parameters():
 		self.p_raw["climb"] = 0
 		self.p_raw["distance"] = 0
 		self.p_raw["gps_fix"] = ""
-		self.p_raw["gps_online"] = ""
-		self.p_raw["gps_status"] = ""
 		self.p_raw["gradient"] = 0
 		self.p_raw["heart_rate"] = 0
 		self.p_raw["latitude"] = 0
@@ -75,8 +73,6 @@ class ride_parameters():
 		self.p_raw_units["distance"] = "m"
 		self.p_raw_units["climb"] = "m/s"
 		self.p_raw_units["gps_fix"] = ""
-		self.p_raw_units["gps_online"] = ""
-		self.p_raw_units["gps_status"] = ""
 		self.p_raw_units["latitude"] = ""
 		self.p_raw_units["longitude"] = ""
 		self.p_raw_units["odometer"] = "m"
@@ -102,8 +98,6 @@ class ride_parameters():
 		self.params["climb"] = "-"
 		self.params["distance"] = 0
 		self.params["gps_fix"] = "-"
-		self.params["gps_online"] = "-"
-		self.params["gps_status"] = "-"
 		self.params["gradient"] = "-"
 		self.params["heart_rate"] = "-"
 		self.params["latitude"] = "-"
@@ -144,8 +138,6 @@ class ride_parameters():
 		self.p_format["climb"] = "%.1f"
 		self.p_format["distance"] = "%.1f"
 		self.p_format["gps_fix"] = ""
-		self.p_format["gps_online"] = ""
-		self.p_format["gps_status"] = ""
 		self.p_format["gradient"] = ""
 		self.p_format["heart_rate"] = "%.0f"
 		self.p_format["latitude"] = "%.4f"
@@ -182,8 +174,6 @@ class ride_parameters():
 		self.units["climb"] = "m/s"
 		self.units["distance"] = "km"
 		self.units["gps_fix"] = ""
-		self.units["gps_online"] = ""
-		self.units["gps_status"] = ""
 		self.units["gradient"] = "%"
 		self.units["heart_rate"] = "BPM"
 		self.units["latitude"] = ""
@@ -325,10 +315,8 @@ class ride_parameters():
 		self.p_raw["utc"] = data[4]
 		sud = data[5]
 		sat = data[6]
-		self.p_raw["gps_status"] = data[7]
-		self.p_raw["gps_online"] = data[8]
-		self.p_raw["gps_fix"] = data[9]
-		cmb = data[10]
+		self.p_raw["gps_fix"] = data[7]
+		cmb = data[8]
 		self.p_raw["latitude"] = self.clean_value(lat);
 		self.p_raw["longitude"] = self.clean_value(lon);
 		self.p_raw["altitude_gps"] = self.clean_value(alt);
@@ -367,8 +355,6 @@ class ride_parameters():
 				format(self.params["speed_average"], self.units["speed_average"]))
 
 	def update_gps(self):
-		self.params["gps_status"] = self.p_raw["gps_status"]
-		self.params["gps_online"] = self.p_raw["gps_online"]
 		self.params["gps_fix"] = self.p_raw["gps_fix"]
 	
 	def set_max(self, param):

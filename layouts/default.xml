@@ -119,14 +119,6 @@
 			<function>altitude_gps</function>
 			<text_center x="120" y="60" size="4"/>
 		</field>
-		<field name="gps_status">
-			<function>gps_status</function>
-			<text_center x="60" y="90" size="2"/>
-		</field>
-		<field name="gps_online">
-			<function>gps_online</function>
-			<text_center x="120" y="90" size="2"/>
-		</field>
 		<field name="gps_fix">
 			<function>gps_fix</function>
 			<text_center x="180" y="90" size="2"/>
