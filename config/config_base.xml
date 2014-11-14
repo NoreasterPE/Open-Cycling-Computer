@@ -1,0 +1,12 @@
+<config>
+  <log_level>DEBUG</log_level>
+  <layout_path>layouts/default.xml</layout_path>
+  <rider_weight>80.4</rider_weight>
+  <rider_weight_units>kg</rider_weight_units>
+  <altitude_home>79.0</altitude_home>
+  <altitude_home_units>m</altitude_home_units>
+  <odometer>160739.757084</odometer>
+  <odometer_units>km</odometer_units>
+  <ride_time_total>8143.60324479</ride_time_total>
+  <speed_max>34.478</speed_max>
+</config>
