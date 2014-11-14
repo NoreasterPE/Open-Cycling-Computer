@@ -54,7 +54,6 @@ class ride_parameters():
 		self.p_raw["rtc"] = ""
 		self.p_raw["satellites"] = 0
 		self.p_raw["satellites_used"] = 0
-		self.p_raw["satellites_visible"] = 0
 		self.p_raw["speed"] = 0
 		self.p_raw["speed_average"] = 0
 		self.p_raw["speed_gps"] = 0
@@ -87,7 +86,6 @@ class ride_parameters():
 		self.p_raw_units["ride_time_total"] = "s"
 		self.p_raw_units["satellites"] = ""
 		self.p_raw_units["satellites_used"] = ""
-		self.p_raw_units["satellites_visible"] = ""
 		self.p_raw_units["speed"] = "m/s"
 		self.p_raw_units["speed_average"] = "m/s"
 		self.p_raw_units["speed_gps"] = "m/s"
@@ -121,7 +119,6 @@ class ride_parameters():
 		self.params["ride_time_total_hms"] = ""
 		self.params["satellites"] = "-"
 		self.params["satellites_used"] = "-"
-		self.params["satellites_visible"] = "-"
 		self.params["speed"] = "-"
 		self.params["speed_digits"] = "-"
 		self.params["speed_tenths"] = "-"
@@ -164,7 +161,6 @@ class ride_parameters():
 		self.p_format["ride_time_total_hms"] = ""
 		self.p_format["satellites"] = "%.0f"
 		self.p_format["satellites_used"] = "%.0f"
-		self.p_format["satellites_visible"] = "%.0f"
 		self.p_format["speed"] = "%.1f"
 		self.p_format["speed_digits"] = "%.0f"
 		self.p_format["speed_tenths"] = "%.0f"
@@ -201,7 +197,6 @@ class ride_parameters():
 		self.units["ride_time_total_hms"] = ""
 		self.units["satellites"] = ""
 		self.units["satellites_used"] = ""
-		self.units["satellites_visible"] = ""
 		self.units["speed"] = "km/h"
 		self.units["speed_average"] = "km/h"
 		self.units["speed_max"] = "km/h"
@@ -329,18 +324,16 @@ class ride_parameters():
 		spd = data[3]
 		self.p_raw["utc"] = data[4]
 		sud = data[5]
-		svi = data[6]
-		sat = data[7]
-		self.p_raw["gps_status"] = data[8]
-		self.p_raw["gps_online"] = data[9]
-		self.p_raw["gps_fix"] = data[10]
-		cmb = data[11]
+		sat = data[6]
+		self.p_raw["gps_status"] = data[7]
+		self.p_raw["gps_online"] = data[8]
+		self.p_raw["gps_fix"] = data[9]
+		cmb = data[10]
 		self.p_raw["latitude"] = self.clean_value(lat);
 		self.p_raw["longitude"] = self.clean_value(lon);
 		self.p_raw["altitude_gps"] = self.clean_value(alt);
 		self.p_raw["speed_gps"] = self.clean_value(spd);
 		self.p_raw["satellites_used"] = self.clean_value(sud);
-		self.p_raw["satellites_visible"] = self.clean_value(svi);
 		self.p_raw["satellites"] = self.clean_value(sat);
 		self.p_raw["speed"] = self.clean_value(spd);
 		if self.p_raw["speed"] < self.speed_gps_noise:
@@ -410,7 +403,6 @@ class ride_parameters():
 		self.update_param("temperature_min")
 		self.update_param("temperature_max")
 		self.update_param("satellites_used")
-		self.update_param("satellites_visible")
 		self.update_param("satellites")
 
 	def update_param(self, param_name):

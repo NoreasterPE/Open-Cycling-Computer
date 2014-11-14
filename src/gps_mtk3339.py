@@ -30,7 +30,6 @@ class gps_mtk3339(threading.Thread):
 		self.present = False
 		self.satellites = 0
 		self.satellites_used = 0
-		self.satellites_visible = 0
 		self.speed = NaN
 		self.status = ""
 		self.utc = ""
@@ -71,17 +70,12 @@ class gps_mtk3339(threading.Thread):
 						sat = self.data.satellites
 						self.satellites = len(sat)
 						self.satellites_used = self.data.satellites_used
-						self.satellites_visible = 0
-						#FIXME there should be a value for that in gps module already
-						for i in sat:
-							if i.ss > 0:
-								self.satellites_visible += 1
 					except AttributeError:
 						self.occ.log.error("[GPS] AttributeError exception in GPS")
 						pass
-					self.occ.log.debug("[GPS] timestamp: {}, fix time: {}, UTC: {}, Satellites: {}, Visible: {}, Used: {}"\
+					self.occ.log.debug("[GPS] timestamp: {}, fix time: {}, UTC: {}, Satellites: {}, Used: {}"\
 								.format(timestamp, self.fix_time, self.utc, self.satellites,\
-								 self.satellites_visible, self.satellites_used))
+								 self.satellites_used))
 					self.occ.log.debug("[GPS] Status: {}, Online: {}, Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"\
 								.format(self.status, self.online, self.fix_mode, self.latitude, self.longitude,\
 								self.speed, self.altitude, self.climb))
@@ -94,7 +88,6 @@ class gps_mtk3339(threading.Thread):
 				self.altitude = 50.0
 				self.satellites = 10
 				self.satellites_used = 4
-				self.satellites_visible = 5
 				self.status = status[1]
 				self.online = 1
 				self.fix_mode = fix_mode[2]
@@ -105,10 +98,9 @@ class gps_mtk3339(threading.Thread):
 			self.altitude, self.speed,	#2, 3
 			self.utc, 			#4
 			self.satellites_used,		#5
-			self.satellites_visible,	#6
-			self.satellites, self.status,	#7, 8
-			self.online, self.fix_mode,	#9, 10
-			self.climb)			#11
+			self.satellites, self.status,	#6, 7
+			self.online, self.fix_mode,	#8, 9
+			self.climb)			#10
 
 	def __del__(self):
 		self.stop()

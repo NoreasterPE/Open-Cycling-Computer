@@ -17,10 +17,6 @@
 			<function>satellites_used</function>
 			<text_center x="185" y="15" size="2"/>
 		</field>
-		<field name="top_right_2">
-			<function>satellites_visible</function>
-			<text_center x="205" y="15" size="2"/>
-		</field>
 		<field name="top_right_3">
 			<function>satellites</function>
 			<text_center x="225" y="15" size="2"/>
@@ -138,10 +134,6 @@
 		<field name="middle_upper_left">
 			<function>satellites_used</function>
 			<text_center x="185" y="165" size="2"/>
-		</field>
-		<field name="middle_upper_center">
-			<function>satellites_visible</function>
-			<text_center x="205" y="165" size="2"/>
 		</field>
 		<field name="middle_upper_right">
 			<function>satellites</function>
