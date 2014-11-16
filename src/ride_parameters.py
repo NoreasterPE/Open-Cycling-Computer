@@ -268,13 +268,13 @@ class ride_parameters():
 			self.p_raw["distance"] += d
 			self.p_raw["odometer"] += d
 			self.p_raw["ride_time"] += self.p_raw["dtime"]
+			self.p_raw["ride_time_total"] += self.p_raw["dtime"]
 			self.p_raw["speed_average"] = self.p_raw["distance"] / self.p_raw["ride_time"]
 			self.update_speed_average()
 			self.occ.log.debug("[RP] speed_gps: {}, distance: {}, odometer: {}".\
 					format(s, self.p_raw["distance"], self.p_raw["odometer"]))
 		else:
 			self.occ.log.debug("[RP] speed_gps: below speed_gps_low treshold")
-		self.p_raw["ride_time_total"] += self.p_raw["dtime"]
 
 	def force_refresh(self):
 		self.occ.force_refresh()
