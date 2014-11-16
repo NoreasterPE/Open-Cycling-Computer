@@ -353,22 +353,16 @@ class ride_parameters():
 		self.update_param("speed")
 		self.params["speed_digits"] = self.params["speed"][:-2]
 		self.params["speed_tenths"] = self.params["speed"][-1:]
-		self.occ.log.debug("[RP] speed: {} {}".\
-				format(self.params["speed"], self.units["speed"]))
 
 	def update_speed_max(self):
 		self.update_param("speed_max")
 		self.params["speed_max_digits"] = self.params["speed_max"][:-2]
 		self.params["speed_max_tenths"] = self.params["speed_max"][-1:]
-		self.occ.log.debug("[RP] max speed: {} {}".\
-				format(self.params["speed_max"], self.units["speed_max"]))
 
 	def update_speed_average(self):
 		self.update_param("speed_average")
 		self.params["speed_average_digits"] = self.params["speed_average"][:-2]
 		self.params["speed_average_tenths"] = self.params["speed_average"][-1:]
-		self.occ.log.debug("[RP] average speed: {} {}".\
-				format(self.params["speed_average"], self.units["speed_average"]))
 
 	def update_gps(self):
 		self.params["gps_fix"] = self.p_raw["gps_fix"]
@@ -403,6 +397,9 @@ class ride_parameters():
 		self.update_hms("ride_time_total")
 		self.update_hms("time_on")
 		self.update_speed()
+		self.occ.log.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}".\
+				format(self.params["speed"], self.params["speed_max"],\
+				self.params["speed_average"], self.units["speed_average"]))
 			
 		self.params["utc"] = self.p_raw["utc"]
 		self.update_param("odometer")
