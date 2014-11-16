@@ -86,7 +86,7 @@ class open_cycling_computer():
 			self.rp.units["odometer"] = self.config.find("odometer_units").text
 			self.rp.p_raw["ride_time_total"] = float(self.config.find("ride_time_total").text)
 			self.rp.p_raw["speed_max"] = float(self.config.find("speed_max").text)
-			self.rp.update_speed_max()
+			self.rp.update_and_split_speed("speed_max")
 		except AttributeError:
 			log.exception("[OCC] ArrtibuteError in read_config!")
 			pass

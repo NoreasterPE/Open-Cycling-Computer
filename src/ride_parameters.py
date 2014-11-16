@@ -237,7 +237,7 @@ class ride_parameters():
 		#Do not show speed below 1 m/s
 		self.speed_gps_noise = 1
 		self.occ.log.info("[RP] speed_gps_noise treshold set to {}".format(self.speed_gps_noise))
-		self.update_speed_max()
+		self.update_and_split_speed("speed_max")
 		self.update_param("altitude_home")
 		self.occ.log.info("[RP] altitude_home set to {}".format(self.params["altitude_home"]))
 		self.pressure_at_sea_level_calculated = False
@@ -284,7 +284,7 @@ class ride_parameters():
 			self.p_raw["ride_time"] += self.p_raw["dtime"]
 			self.p_raw["ride_time_total"] += self.p_raw["dtime"]
 			self.p_raw["speed_average"] = self.p_raw["distance"] / self.p_raw["ride_time"]
-			self.update_speed_average()
+			self.update_and_split_speed("speed_average")
 			self.occ.log.debug("[RP] speed_gps: {}, distance: {}, odometer: {}".\
 					format(s, self.p_raw["distance"], self.p_raw["odometer"]))
 		else:
@@ -345,24 +345,16 @@ class ride_parameters():
 		#FIXME That will have to be changed with bluetooth speed sensor
 		self.p_raw["speed_gps"] = self.p_raw["speed"] 
 		self.p_raw["climb"] = self.clean_value(cmb);
-	#FIXME use one function for all 3 speeds
-	def update_speed(self):
+
+	def update_and_split_speed(self, speed_name):
+		self.update_param(speed_name)
+		self.params[speed_name + "_digits"] = self.params[speed_name][:-2]
+		self.params[speed_name + "_tenths"] = self.params[speed_name][-1:]
+
+	def update_max_speed(self):
 		if self.p_raw["speed"] > self.p_raw["speed_max"]:
 			self.p_raw["speed_max"] = self.p_raw["speed"]
-			self.update_speed_max()
-		self.update_param("speed")
-		self.params["speed_digits"] = self.params["speed"][:-2]
-		self.params["speed_tenths"] = self.params["speed"][-1:]
-
-	def update_speed_max(self):
-		self.update_param("speed_max")
-		self.params["speed_max_digits"] = self.params["speed_max"][:-2]
-		self.params["speed_max_tenths"] = self.params["speed_max"][-1:]
-
-	def update_speed_average(self):
-		self.update_param("speed_average")
-		self.params["speed_average_digits"] = self.params["speed_average"][:-2]
-		self.params["speed_average_tenths"] = self.params["speed_average"][-1:]
+			self.update_and_split_speed("speed_max")
 
 	def update_gps(self):
 		self.params["gps_fix"] = self.p_raw["gps_fix"]
@@ -396,7 +388,8 @@ class ride_parameters():
 		self.update_hms("ride_time")
 		self.update_hms("ride_time_total")
 		self.update_hms("time_on")
-		self.update_speed()
+		self.update_max_speed()
+		self.update_and_split_speed("speed")
 		self.occ.log.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}".\
 				format(self.params["speed"], self.params["speed_max"],\
 				self.params["speed_average"], self.units["speed_average"]))
