@@ -211,6 +211,7 @@ class ride_parameters():
 		self.units_allowed["rider_weight"] = ["kg", "st", "lb"]
 
 		#FIXME python-quantities won't like those deg C
+		#FXIME double defined
 		self.units["temperature"] = "C"
 		#FIXME Make pretty units for temperature
 		#self.units["temperature"] = u'\N{DEGREE SIGN}' + "C"
