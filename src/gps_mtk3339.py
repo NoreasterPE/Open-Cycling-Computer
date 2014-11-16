@@ -20,6 +20,7 @@ class gps_mtk3339(threading.Thread):
 		self.altitude = 0
 		self.climb = 0
 		self.fix_mode = ""
+		self.lag = 0
 		self.latitude = NaN
 		self.longitude = NaN
 		self.present = False
@@ -58,6 +59,12 @@ class gps_mtk3339(threading.Thread):
 					self.altitude = self.data.fix.altitude
 					self.fix_mode = fix_mode[self.data.fix.mode]
 					self.fix_time = self.data.fix.time
+					#fix_time is not always in seconds - make sure it is 
+					if type(self.fix_time) != type(0.0):
+						ts = time.strptime(self.fix_time, "%Y-%m-%dT%H:%M:%S.000Z")
+						self.fix_time = calendar.timegm(ts)
+					#self.occ.log.debug("[GPS] timestamp to fix time delta: {}".format(timestamp - self.fix_time))
+					self.lag = timestamp - self.fix_time
 					try:
 						sat = self.data.satellites
 						self.satellites = len(sat)
@@ -89,7 +96,7 @@ class gps_mtk3339(threading.Thread):
 			self.utc, 			#4
 			self.satellites_used,		#5
 			self.satellites, self.fix_mode,	#6, 7
-			self.climb)			#8
+			self.climb, self.lag)		#8, 9
 
 	def __del__(self):
 		self.stop()

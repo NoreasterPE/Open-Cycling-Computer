@@ -331,6 +331,8 @@ class ride_parameters():
 		sat = data[6]
 		self.p_raw["gps_fix"] = data[7]
 		cmb = data[8]
+		lag = data[9]
+		self.params["lag"] = "%.2f" % lag
 		self.p_raw["latitude"] = self.clean_value(lat);
 		self.p_raw["longitude"] = self.clean_value(lon);
 		self.p_raw["altitude_gps"] = self.clean_value(alt);
