@@ -46,7 +46,7 @@ Logger.exception(msg, *args, **kwargs)
 30. Read config_base if there is no config.xml file
 31. New editor layout
 32. Resetting records
-33. Add total_time (no speed trigger)
+33. [DONE] Add total_time (no speed trigger)
 34. Speed gets stuck when loosing fix at speed != 0
 35. Kalman for altitude
 36. Unit editor for non-editabl parameters like speed. Long click to trigger. Or units in Settings?
