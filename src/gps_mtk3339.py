@@ -1,6 +1,7 @@
 #! /usr/bin/python
  
 from gps import *
+import os
 import threading
 import time
 
@@ -28,6 +29,7 @@ class gps_mtk3339(threading.Thread):
 		self.satellites_used = 0
 		self.speed = NaN
 		self.utc = ""
+		self.set_time = True
 		if not self.simulate:
 			try:
 				#FIXME Add check for running gpsd. Restart if missing. Consider watchdog thread to start gpsd
@@ -65,6 +67,9 @@ class gps_mtk3339(threading.Thread):
 						self.fix_time = calendar.timegm(ts)
 					self.occ.log.debug("[GPS] timestamp to fix time delta: {}".format(timestamp - self.fix_time))
 					self.lag = timestamp - self.fix_time
+					if self.set_time:
+						if (len(self.utc) > 5):
+							self.set_system_time()
 					try:
 						sat = self.data.satellites
 						self.satellites = len(sat)
@@ -103,3 +108,11 @@ class gps_mtk3339(threading.Thread):
 
 	def stop(self):
 		self.running = False
+
+	#FIXME temporary location
+	def set_system_time(self):
+		self.occ.log.debug("[GPS] Setting UTC system time to {}".format(self.utc))
+		command = 'date -u --set={} "+%Y-%m-%dT%H:%M:%S.000Z" 2>&1 > /dev/null'.format(self.utc)
+		ret = os.system(command)
+		if ret == 0:
+			self.set_time = False
