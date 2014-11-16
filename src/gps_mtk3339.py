@@ -65,8 +65,8 @@ class gps_mtk3339(threading.Thread):
 					if type(self.fix_time) != type(0.0):
 						ts = time.strptime(self.fix_time, "%Y-%m-%dT%H:%M:%S.000Z")
 						self.fix_time = calendar.timegm(ts)
-					self.occ.log.debug("[GPS] timestamp to fix time delta: {}".format(timestamp - self.fix_time))
 					self.lag = timestamp - self.fix_time
+					self.occ.log.debug("[GPS] timestamp to fix time delta: {}".format(self.lag))
 					if self.set_time:
 						if (len(self.utc) > 5):
 							self.set_system_time()
