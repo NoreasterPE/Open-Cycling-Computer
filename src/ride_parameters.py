@@ -260,13 +260,12 @@ class ride_parameters():
 			self.calculate_pressure_at_sea_level()
 		self.read_gps_data()
 		self.update_params()
-		self.calculate_distance()
+		self.calculate_time_related_parameters()
 		self.calculate_altitude()
 		self.force_refresh()
 		#FIXME Add calculations of gradient, trip time, etc
 
-	#FIXME change name
-	def calculate_distance(self):
+	def calculate_time_related_parameters(self):
 		dt = self.p_raw["dtime"]
 		self.p_raw["time_on"] += dt
 		#FIXME calculate with speed not speed_gps when bt sensors are set up
