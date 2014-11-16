@@ -47,7 +47,7 @@ class gps_mtk3339(threading.Thread):
 				while self.running:
 					self.occ.log.debug("[GPS] running = {}".format(self.running))
 					try:
-						#FIXME Fails sometimes with ImportError form gps.py - see TODO 21
+						#FIXME Fails sometimes with ImportError from gps.py - see TODO 21 [IN TESTING]
 						self.data.next()
 					except StopIteration:
 						self.occ.log.error("[GPS] StopIteration exception in GPS")
