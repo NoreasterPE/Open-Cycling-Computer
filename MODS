@@ -133,3 +133,21 @@ fi
 
 exit 0
 
+20. Modify file /usr/lib/python2.7/dist-packages/gps/misc.py as fix to TODO[21]
+        # Note: no leap-second correction! 
+	return calendar.timegm(time.strptime(date, "%Y-%m-%dT%H:%M:%S")) + float("0." + msec)
+
+changed to:
+
+        # Note: no leap-second correction! 
+        #WORKAROUND FOR IMPORTERROR
+        running = True
+        i = 0
+        while running
+        try:
+                return calendar.timegm(time.strptime(date, "%Y-%m-%dT%H:%M:%S")) + float("0." + msec)
+        except ImportError:
+                print "ImportError on calendar.timegm. Will try again {} in 1s".format(i)
+                time.sleep(1)
+                i += 1
+
