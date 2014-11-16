@@ -64,7 +64,7 @@ class open_cycling_computer():
 		self.rendering.start()
 		self.running = 1
 		self.refresh = False
-
+	#FIXME not used?
 	def force_refresh(self):
 		self.refresh = True
 
