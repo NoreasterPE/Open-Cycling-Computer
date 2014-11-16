@@ -382,7 +382,7 @@ class ride_parameters():
 		t = self.p_raw["temperature"]
 		ta = self.p_raw["temperature_average"]
 		tt = self.p_raw["time_on"]
-		ta_new = ((t * dt) + (ta * tt)) / (tt + dt)
+		ta_new = (t * dt + ta * tt) / (tt + dt)
 		self.p_raw["temperature_average"] = ta_new
 
 	def update_params(self):
