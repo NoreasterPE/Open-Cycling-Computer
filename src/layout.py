@@ -163,7 +163,7 @@ class layout():
 					w1 = ren1.get_rect().width
 					y1 = ren1.get_rect().centery
 					rv2 = uv[i]
-					font = pygame.font.Font(self.font, font_size + 1)
+					font = pygame.font.Font(self.font, font_size + 2)
 					ren2 = font.render(rv2, 1, self.fg_colour)
 					w2 = ren2.get_rect().width
 					y2 = ren2.get_rect().centery
