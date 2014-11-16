@@ -137,6 +137,7 @@ class open_cycling_computer():
 				#Read rel to clean the value generated on click
 				pressed_rel =  pygame.mouse.get_rel()
 				self.add_rel_motion = True
+				self.layout.render_button = self.pressed_pos
 				log.debug("[OCC] DOWN:{} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
 			elif event.type == pygame.MOUSEBUTTONUP:
 				#That check prevents setting release_x after long click
@@ -144,6 +145,7 @@ class open_cycling_computer():
 					self.released_t = time_now
 					self.released_pos = pygame.mouse.get_pos()
 				self.add_rel_motion = False
+				self.layout.render_button = None
 				log.debug("[OCC] UP: {} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
 			elif event.type == pygame.MOUSEMOTION:
 				pressed_rel =  pygame.mouse.get_rel()
@@ -154,7 +156,6 @@ class open_cycling_computer():
 			#		format(time_now, self.pressed_t, self.pressed_pos, self.released_t, self.released_pos))
 			if (self.pressed_t != 0):
 				self.refresh = True
-				self.layout.render_button = self.pressed_pos
 				if (time_now - self.pressed_t) > LONG_CLICK:
 					log.debug("[OCC] LONG CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
 					self.layout.check_click(self.pressed_pos, 1)
