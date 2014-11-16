@@ -72,7 +72,7 @@ class bmp183(threading.Thread):
 		self.simulate = simulate
 		self.mock = True
 		# Set to 0 to stop measuring
-		self.measurement = 0
+		self.running = False
 		# Delay between measurements = 1s
 		self.measurement_delay = 1
 		self.temperature = 0
@@ -257,13 +257,12 @@ class bmp183(threading.Thread):
 
 	def stop_measurement(self):
 		self.occ.log.debug("[BMP] stop_measurement")
-		self.measurement = 0
+		self.running = False
 
 	def run(self):
 		self.occ.log.debug("[BMP] run")
-		#FIXME Use boolean here
-		self.measurement = 1
-		while (self.measurement == 1):
+		self.running = True
+		while (self.running == True):
 			self.measure_pressure()
 			self.occ.log.debug("[BMP] pressure = {} Pa, temperature = {} degC".format(self.pressure, self.temperature))
 			time.sleep(self.measurement_delay)
