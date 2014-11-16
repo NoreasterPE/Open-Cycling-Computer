@@ -35,7 +35,7 @@
                         <text_center x="120" y="200" size="3"/>
                 </field>
                 <field name="middle_2">
-                        <function>ride_time_total_hms</function>
+                        <function>time_on_hms</function>
                         <text_center x="120" y="225" size="3"/>
                 </field>
 		<field name="bottom_right">
@@ -54,11 +54,15 @@
 		</field>
 		<field name="bottom_left">
 			<function>temperature_min</function>
-			<text_center x="20" y="260" size="2"/>
+			<text_center x="20" y="255" size="2"/>
+		</field>
+		<field name="bottom_left">
+			<function>temperature_average</function>
+			<text_center x="60" y="255" size="2"/>
 		</field>
 		<field name="bottom_left">
 			<function>temperature_max</function>
-			<text_center x="100" y="260" size="2"/>
+			<text_center x="100" y="255" size="2"/>
 		</field>
 		<field name="bottom_left_auxiliary">
 			<function>temperature_units</function>

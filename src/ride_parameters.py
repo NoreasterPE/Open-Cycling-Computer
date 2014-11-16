@@ -57,8 +57,10 @@ class ride_parameters():
 		self.p_raw["speed_gps"] = 0
 		self.p_raw["speed_max"] = 0
 		self.p_raw["temperature"] = 0
+		self.p_raw["temperature_average"] = 0
 		self.p_raw["temperature_min"] = float("inf")
 		self.p_raw["temperature_max"] = float("-inf")
+		self.p_raw["time_on"] = 0.0001 #Avoid DIV/0
 		self.p_raw["utc"] = ""
 
 		#System params
@@ -87,8 +89,10 @@ class ride_parameters():
 		self.p_raw_units["speed_gps"] = "m/s"
 		self.p_raw_units["speed_max"] = "m/s"
 		self.p_raw_units["temperature"] = "C"
+		self.p_raw_units["temperature_average"] = "C"
 		self.p_raw_units["temperature_min"] = "C"
 		self.p_raw_units["temperature_max"] = "C"
+		self.p_raw_units["time_on"] = "s"
 
 		#Params of the ride ready for rendering.
 		self.params["altitude"] = "-"
@@ -123,8 +127,10 @@ class ride_parameters():
 		self.params["speed_max_digits"] = "-"
 		self.params["speed_max_tenths"] = "-"
 		self.params["temperature"] = ""
+		self.params["temperature_average"] = ""
 		self.params["temperature_min"] = ""
 		self.params["temperature_max"] = ""
+		self.params["time_on"] = ""
 		self.params["utc"] = ""
 
 		#System params
@@ -163,8 +169,11 @@ class ride_parameters():
 		self.p_format["speed_max_digits"] = "%.0f"
 		self.p_format["speed_max_tenths"] = "%.0f"
 		self.p_format["temperature"] = "%.0f"
+		self.p_format["temperature_average"] = "%.1f"
 		self.p_format["temperature_min"] = "%.0f"
 		self.p_format["temperature_max"] = "%.0f"
+		self.p_format["time_on"] = "%.0f"
+		self.p_format["time_on_hms"] = ""
 		self.p_format["utc"] = ""
 
 		#Units - name has to be identical as in params #FIXME reduce number of units (i.e one for speed)
@@ -191,8 +200,11 @@ class ride_parameters():
 		self.units["speed_average"] = "km/h"
 		self.units["speed_max"] = "km/h"
 		self.units["temperature"] = "C"
+		self.units["temperature_average"] = "C"
 		self.units["temperature_min"] = "C"
 		self.units["temperature_max"] = "C"
+		self.units["time_on"] = "s"
+		self.units["time_on_hms"] = "s"
 
 		#Allowed units - user can switch between those when editing value 
 		self.units_allowed["odometer"] = ["km", "mi"]
@@ -255,6 +267,7 @@ class ride_parameters():
 	#FIXME change name
 	def calculate_distance(self):
 		dt = self.p_raw["dtime"]
+		self.p_raw["time_on"] += dt
 		#FIXME calculate with speed not speed_gps when bt sensors are set up
 		s = self.p_raw["speed_gps"]
 		if s > self.speed_gps_low:
@@ -363,6 +376,14 @@ class ride_parameters():
 	def set_min(self, param):
 		self.p_raw[param + "_min"] = min(self.p_raw[param], self.p_raw[param + "_min"])
 
+	def calculate_average_temperature(self):
+		dt = self.p_raw["dtime"]
+		t = self.p_raw["temperature"]
+		ta = self.p_raw["temperature_average"]
+		tt = self.p_raw["time_on"]
+		ta_new = ((t * dt) + (ta * tt)) / (tt + dt)
+		self.p_raw["temperature_average"] = ta_new
+
 	def update_params(self):
 		#FIXME Make a list of params and call from for loop
 		#FIXME Use the list to dump DEBUG data
@@ -377,6 +398,7 @@ class ride_parameters():
 		self.update_param("ride_time")
 		self.update_hms("ride_time")
 		self.update_hms("ride_time_total")
+		self.update_hms("time_on")
 		self.update_speed()
 			
 		self.params["utc"] = self.p_raw["utc"]
@@ -385,7 +407,9 @@ class ride_parameters():
 		self.update_param("pressure")
 		self.set_max("temperature")
 		self.set_min("temperature")
+		self.calculate_average_temperature()
 		self.update_param("temperature")
+		self.update_param("temperature_average")
 		self.update_param("temperature_min")
 		self.update_param("temperature_max")
 		self.update_param("satellites_used")
