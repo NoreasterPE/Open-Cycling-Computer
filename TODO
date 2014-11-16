@@ -44,3 +44,9 @@ Logger.exception(msg, *args, **kwargs)
 28. Speed filtering or max speed will be false sooner or later. Average from 2/3 samples?
 29. Read time from GPS when it will be battery powered
 30. Read config_base if there is no config.xml file
+31. New editor layout
+32. Resetting records
+33. Add total_time (no speed trigger)
+34. Speed gets stuck when loosing fix at speed != 0
+35. Kalman for altitude
+36. Unit editor for non-editabl parameters like speed. Long click to trigger. Or units in Settings?
