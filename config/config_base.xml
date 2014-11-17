@@ -5,8 +5,8 @@
   <rider_weight_units>kg</rider_weight_units>
   <altitude_home>0.0</altitude_home>
   <altitude_home_units>m</altitude_home_units>
-  <odometer>0.000000</odometer>
+  <odometer>0.0</odometer>
   <odometer_units>km</odometer_units>
-  <ride_time_total>0.00000000</ride_time_total>
-  <speed_max>0.000</speed_max>
+  <ride_time_total>0.0</ride_time_total>
+  <speed_max>0.0</speed_max>
 </config>
