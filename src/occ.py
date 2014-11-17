@@ -71,7 +71,16 @@ class open_cycling_computer():
 	def read_config(self):
 		log.debug("[OCC][F] read_config")
 		#FIXME error handling and emergency config read if main is corrupted
-		config_tree = eltree.parse(self.config_path)
+		try:
+			config_tree = eltree.parse(self.config_path)
+		except IOError:
+			log.exception("[OCC] I/O Error when trying to parse config file. Falling back to default config")
+			self.config_path = "config/config_base.xml"
+			try:
+				config_tree = eltree.parse(self.config_path)
+			except IOError:
+				log.exception("[OCC] I/O Error when trying to parse to default config. Quitting!!")
+				self.cleanup()
 		self.config = config_tree.getroot()
 		self.layout_path = self.config.find("layout_path").text
 		log_level = self.config.find("log_level").text
@@ -208,7 +217,10 @@ class open_cycling_computer():
 	def cleanup(self):
 		sleep(1)
 		self.rp.stop()
-		self.rendering.stop()
+		try:
+			self.rendering.stop()
+		except AttributeError:
+			pass
 		try:
 			self.write_config()
 		except AttributeError:
