@@ -50,3 +50,4 @@ ImportError: Failed to import _strptime because the import lockis held by anothe
 35. Kalman for altitude
 36. Unit editor for non-editabl parameters like speed. Long click to trigger. Or units in Settings?
 37: [DONE] Mousemove turn off highlight
+38. Threads write to log aftred log end
