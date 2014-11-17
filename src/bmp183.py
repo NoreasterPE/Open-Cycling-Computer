@@ -71,7 +71,6 @@ class bmp183(threading.Thread):
 		self.occ.log.debug("[BMP] __init__")
 		self.simulate = simulate
 		self.mock = True
-		# Set to 0 to stop measuring
 		self.running = False
 		# Delay between measurements = 1s
 		self.measurement_delay = 1
@@ -103,6 +102,8 @@ class bmp183(threading.Thread):
 
 	def stop(self):
 		self.occ.log.debug("[BMP] stop")
+		self.running = False
+		time.sleep(1)
 		if not self.simulate:
 			self.cleanup_gpio()
 
