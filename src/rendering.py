@@ -24,7 +24,7 @@ class rendering(threading.Thread):
 				#FIXME display.update might be faster, but require list of rectangles for he update
 				pygame.display.flip()
 			#Setting FPS too low causes some click-directly-after-click problems
-			self.clock.tick(25)
+			self.clock.tick(20)
 
 	def stop(self):
 		self.running = False
