@@ -227,6 +227,13 @@ class layout():
 							self.editor_index = 0
 							self.use_page("editor")
 							break
+						fi = func.find("_")
+						if fi > -1:
+							f = func[:fi]
+						else:
+							f = func
+						if f in self.occ.rp.p_resettable:
+							self.occ.rp.reset_param(f)
 				except KeyError:
 					#FIXME function name not knwon - write to log
 					#It's not fatal  - user clicked on a non-clickable element

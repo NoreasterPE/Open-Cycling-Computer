@@ -24,6 +24,7 @@ class ride_parameters():
 		self.p_raw = {}
 		self.p_raw_units = {}
 		self.params = {}
+		self.p_resettable = {}
 		self.units = {}
 		self.units_allowed = {}
 
@@ -231,6 +232,9 @@ class ride_parameters():
 		self.p_editable["rider_weight"] = 1
 		self.p_editable["rider_weight_units"] = 0
 
+		self.p_resettable["distance"] = 1
+		self.p_resettable["odometer"] = 1
+		self.p_resettable["speedmax"] = 1
 		#Do not record any speed below 2.5 m/s
 		self.speed_gps_low = 2.5
 		self.occ.log.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
@@ -406,6 +410,11 @@ class ride_parameters():
 		self.update_param("temperature_max")
 		self.update_param("satellites_used")
 		self.update_param("satellites")
+
+	def reset_param(self, param_name):
+		self.occ.log.debug("[LY] Resetting {}".format(param_name))
+		self.p_raw[param_name] = 0
+		self.update_param(param_name)
 
 	def update_param(self, param_name):
 		try:
