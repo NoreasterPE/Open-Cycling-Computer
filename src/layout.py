@@ -370,7 +370,7 @@ class layout():
 		try:
 			f = self.occ.rp.p_format[variable]
 		except KeyError:
-			self.oss.log.warning("{} Formatting not available: param_name ={}".format(__name__, param_name))
+			self.occ.log.warning("{} Formatting not available: param_name ={}".format(__name__, param_name))
 			f = "%.1f"
 	
 		self.editor["variable_value"] = f % float(v.item())
