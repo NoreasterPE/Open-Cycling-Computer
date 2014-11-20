@@ -28,7 +28,7 @@ class gps_mtk3339(threading.Thread):
 		self.satellites = 0
 		self.satellites_used = 0
 		self.speed = NaN
-		self.utc = ""
+		self.utc = None
 		self.set_time = True
 		if not self.simulate:
 			try:
@@ -68,8 +68,9 @@ class gps_mtk3339(threading.Thread):
 					self.lag = timestamp - self.fix_time
 					self.occ.log.debug("[GPS] timestamp to fix time delta: {}".format(self.lag))
 					if self.set_time:
-						if (len(self.utc) > 5):
-							self.set_system_time()
+						if (self.utc is not None):
+							if (len(self.utc) > 5):
+								self.set_system_time()
 					try:
 						sat = self.data.satellites
 						self.satellites = len(sat)
