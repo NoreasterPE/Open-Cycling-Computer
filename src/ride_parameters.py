@@ -47,8 +47,8 @@ class ride_parameters():
 		self.p_raw["pressure"] = 0
 		self.p_raw["pressure_at_sea_level"] = 0
 		self.p_raw["rider_weight"] = 0
-		self.p_raw["ride_time"] = 0
-		self.p_raw["ride_time_total"] = 0
+		self.p_raw["ridetime"] = 0
+		self.p_raw["ridetime_total"] = 0
 		self.p_raw["rtc"] = ""
 		self.p_raw["satellites"] = 0
 		self.p_raw["satellites_used"] = 0
@@ -80,8 +80,8 @@ class ride_parameters():
 		self.p_raw_units["odometer"] = "m"
 		self.p_raw_units["pressure"] = "hPa"
 		self.p_raw_units["rider_weight"] = "kg"
-		self.p_raw_units["ride_time"] = "s"
-		self.p_raw_units["ride_time_total"] = "s"
+		self.p_raw_units["ridetime"] = "s"
+		self.p_raw_units["ridetime_total"] = "s"
 		self.p_raw_units["satellites"] = ""
 		self.p_raw_units["satellites_used"] = ""
 		self.p_raw_units["speed"] = "m/s"
@@ -111,10 +111,10 @@ class ride_parameters():
 		self.params["pressure_at_sea_level"] = "-" 
 		self.params["rtc"] = ""
 		self.params["rider_weight"] = 80.0
-		self.params["ride_time"] = ""
-		self.params["ride_time_hms"] = ""
-		self.params["ride_time_total"] = ""
-		self.params["ride_time_total_hms"] = ""
+		self.params["ridetime"] = ""
+		self.params["ridetime_hms"] = ""
+		self.params["ridetime_total"] = ""
+		self.params["ridetime_total_hms"] = ""
 		self.params["satellites"] = "-"
 		self.params["satellites_used"] = "-"
 		self.params["speed"] = "-"
@@ -153,10 +153,10 @@ class ride_parameters():
 		self.p_format["pressure_at_sea_level"] = "%.0f"
 		self.p_format["rider_weight"] = "%.1f"
 		self.p_format["rtc"] = ""
-		self.p_format["ride_time"] = "%.0f"
-		self.p_format["ride_time_hms"] = ""
-		self.p_format["ride_time_total"] = ".0f"
-		self.p_format["ride_time_total_hms"] = ""
+		self.p_format["ridetime"] = "%.0f"
+		self.p_format["ridetime_hms"] = ""
+		self.p_format["ridetime_total"] = ".0f"
+		self.p_format["ridetime_total_hms"] = ""
 		self.p_format["satellites"] = "%.0f"
 		self.p_format["satellites_used"] = "%.0f"
 		self.p_format["speed"] = "%.1f"
@@ -190,10 +190,10 @@ class ride_parameters():
 		self.units["odometer"] = "km"
 		self.units["pressure"] = "hPa"
 		self.units["rider_weight"] = "kg"
-		self.units["ride_time"] = "s"
-		self.units["ride_time_hms"] = ""
-		self.units["ride_time_total"] = "s"
-		self.units["ride_time_total_hms"] = ""
+		self.units["ridetime"] = "s"
+		self.units["ridetime_hms"] = ""
+		self.units["ridetime_total"] = "s"
+		self.units["ridetime_total_hms"] = ""
 		self.units["satellites"] = ""
 		self.units["satellites_used"] = ""
 		self.units["speed"] = "km/h"
@@ -280,9 +280,9 @@ class ride_parameters():
 				pass
 			self.p_raw["distance"] += d
 			self.p_raw["odometer"] += d
-			self.p_raw["ride_time"] += self.p_raw["dtime"]
-			self.p_raw["ride_time_total"] += self.p_raw["dtime"]
-			self.p_raw["speed_average"] = self.p_raw["distance"] / self.p_raw["ride_time"]
+			self.p_raw["ridetime"] += self.p_raw["dtime"]
+			self.p_raw["ridetime_total"] += self.p_raw["dtime"]
+			self.p_raw["speed_average"] = self.p_raw["distance"] / self.p_raw["ridetime"]
 			self.update_and_split_speed("speed_average")
 			self.occ.log.debug("[RP] speed_gps: {}, distance: {}, odometer: {}".\
 					format(s, self.p_raw["distance"], self.p_raw["odometer"]))
@@ -383,9 +383,9 @@ class ride_parameters():
 		self.update_param("altitude")
 		self.update_param("climb")
 		self.update_param("distance")
-		self.update_param("ride_time")
-		self.update_hms("ride_time")
-		self.update_hms("ride_time_total")
+		self.update_param("ridetime")
+		self.update_hms("ridetime")
+		self.update_hms("ridetime_total")
 		self.update_hms("time_on")
 		self.update_max_speed()
 		self.update_and_split_speed("speed")
