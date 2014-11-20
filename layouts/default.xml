@@ -75,12 +75,12 @@
 	</page>
 	<page name="Weather" id="page_1" background="images/occ_page_1_background.png" buttons="images/occ_page_1_buttons.png" font="" fg_colour="FFFFFF">
 		<field name="top">
-			<function>speed_max_digits</function>
+			<function>speedmax_digits</function>
 			<button x0="0" y0="0" w="240" h="150"/>
 			<text_center x="95" y="75" size="19"/>
 		</field>
 		<field name="top_auxiliary">
-			<function>speed_max_tenths</function>
+			<function>speedmax_tenths</function>
 			<text_center x="210" y="115" size="7"/>
 		</field>
 		<field name="top_units">

@@ -8,5 +8,5 @@
   <odometer>0.0</odometer>
   <odometer_units>km</odometer_units>
   <ride_time_total>0.0</ride_time_total>
-  <speed_max>0.0</speed_max>
+  <speedmax>0.0</speedmax>
 </config>
