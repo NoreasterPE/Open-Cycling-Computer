@@ -11,6 +11,12 @@ fix_mode = { 1 : "No fix",
 	     3 : "Fix 3D"
 }
 
+NMEA_UPDATE_5HZ = "$PMTK220,200*2C"
+NMEA_UPDATE_10HZ = "$PMTK220,100*2F"
+#FIX_CTL_1HZ = "$PMTK300,1000,0,0,0,0*1C"
+FIX_CTL_5HZ = "$PMTK300,200,0,0,0,0*2F"
+SET_BAUD_57600 = "$PMTK251,57600*2C"
+
 class gps_mtk3339(threading.Thread):
 	#Class for gps mtk3339 as sold by Adafruit
 
