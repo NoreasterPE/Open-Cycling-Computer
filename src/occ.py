@@ -62,7 +62,7 @@ class open_cycling_computer():
 		self.rendering = rendering(self.layout)
 		log.debug("[OCC] Starting rendering thread")
 		self.rendering.start()
-		self.running = 1
+		self.running = True
 		self.refresh = False
 
 	def force_refresh(self):
@@ -132,7 +132,7 @@ class open_cycling_computer():
 			#event = pygame.event.poll()
 			event = pygame.event.wait()
 			if event.type == pygame.QUIT:
-				self.running = 0
+				self.running = False
 				log.debug("[OCC] QUIT {}".format(time_now))
 			elif event.type == EV_UPDATE_VALUES:
 				self.rp.update_values()

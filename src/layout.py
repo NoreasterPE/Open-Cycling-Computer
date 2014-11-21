@@ -431,7 +431,7 @@ class layout():
 		self.load_layout_by_name("default.xml")
 
 	def quit(self):
-		self.occ.running = 0
+		self.occ.running = False
 
 	def reboot(self):
 		self.quit()
