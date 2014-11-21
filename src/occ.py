@@ -95,6 +95,7 @@ class open_cycling_computer():
 			self.rp.units["odometer"] = self.config.find("odometer_units").text
 			self.rp.p_raw["ridetime_total"] = float(self.config.find("ridetime_total").text)
 			self.rp.p_raw["speedmax"] = float(self.config.find("speedmax").text)
+			self.rp.units["speed"] = self.config.find("speed_units").text
 			self.rp.update_and_split_speed("speedmax")
 		except AttributeError:
 			log.exception("[OCC] ArrtibuteError in read_config!")
@@ -118,6 +119,7 @@ class open_cycling_computer():
 		eltree.SubElement(config_tree, "odometer_units").text = unicode(self.rp.units["odometer"])
 		eltree.SubElement(config_tree, "ridetime_total").text = unicode(self.rp.p_raw["ridetime_total"])
 		eltree.SubElement(config_tree, "speedmax").text = unicode(self.rp.p_raw["speedmax"])
+		eltree.SubElement(config_tree, "speed_units").text = unicode(self.rp.units["speed"])
 		#FIXME error handling for file operation
 		log.debug("[OCC] writing config file")
 		eltree.ElementTree(config_tree).write(self.config_path, encoding="UTF-8", pretty_print=True)

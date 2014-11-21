@@ -9,4 +9,5 @@
   <odometer_units>km</odometer_units>
   <ridetime_total>0.0</ridetime_total>
   <speedmax>0.0</speedmax>
+  <speed_units>km/h</speed_units>
 </config>
