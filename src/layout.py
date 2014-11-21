@@ -197,10 +197,10 @@ class layout():
 		if click == 0:
 			#Short click
 			#FIXME Search through function_rect_list directly? TBD
-			for func in self.current_button_list:
+			for param_name in self.current_button_list:
 				try:
-					if self.function_rect_list[func].collidepoint(position):
-						self.run_function(func)
+					if self.function_rect_list[param_name].collidepoint(position):
+						self.run_function(param_name)
 						break
 				except KeyError:
 					self.occ.log.debug("[LY] CLICK on non-clickable {}".format(param_name))
@@ -359,7 +359,7 @@ class layout():
 		try:
 			f = self.occ.rp.p_format[variable]
 		except KeyError:
-			self.occ.log.warning("{} Formatting not available: param_name ={}".format(__name__, param_name))
+			self.occ.log.warning("[LY] Formatting not available: param_name ={}".format(variable))
 			f = "%.1f"
 	
 		self.editor["variable_value"] = f % float(v.item())
