@@ -263,8 +263,6 @@ class layout():
 				"ed_next_unit" : self.ed_next_unit,
 				"ed_prev" : self.ed_prev,
 				"ed_prev_unit" : self.ed_prev_unit,
-				"ed_value" : self.ed_value,
-				"ed_value_description" : self.ed_value_description,
 				"halt" : self.halt,
 				"load_default_layout" : self.load_default_layout,
 				"load_current_layout" : self.load_current_layout,
@@ -287,16 +285,13 @@ class layout():
 		self.use_page("settings_0")
 
 	def ed_accept(self):
-		#print "ed_accept"
 		self.accept_edit()
 		self.use_main_page()
 
 	def ed_cancel(self):
-		#print "ed_cancel"
 		self.use_main_page()
 
 	def ed_decrease(self):
-		#print "ed_decrease"
 		u = unicode(self.editor["variable_value"])
 		i = self.editor_index
 		ui = u[i]
@@ -309,7 +304,6 @@ class layout():
 		self.force_refresh()
 
 	def ed_increase(self):
-		#print "ed_increase"
 		u = unicode(self.editor["variable_value"])
 		i = self.editor_index
 		ui = u[i]
@@ -322,7 +316,6 @@ class layout():
 		self.force_refresh()
 
 	def ed_next(self):
-		#print "ed_next"
 		u = unicode(self.editor["variable_value"])
 		l = len(u) - 1
 		i = self.editor_index
@@ -338,7 +331,6 @@ class layout():
 		self.force_refresh()
 
 	def ed_prev(self):
-		#print "ed_prev"
 		u = unicode(self.editor["variable_value"])
 		l = len(u) 
 		i = self.editor_index
@@ -383,22 +375,12 @@ class layout():
 		self.editor["variable_unit"] = next_unit
 
 	def ed_next_unit(self):
-		#print "ed_next_unit"
 		self.ed_change_unit(1)
 		self.force_refresh()
 
 	def ed_prev_unit(self):
-		#print "ed_prev_unit"
 		self.ed_change_unit(0)
 		self.force_refresh()
-
-	def ed_value(self):
-		#print "ed_value"
-		pass
-
-	def ed_value_description(self):
-		#print "ed_value_description"
-		pass
 
 	def accept_edit(self):
 		variable = self.editor["variable"]
