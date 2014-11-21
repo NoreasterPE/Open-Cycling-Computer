@@ -44,7 +44,7 @@ ImportError: Failed to import _strptime because the import lockis held by anothe
 29. [DONE] Read time from GPS when it will be battery powered
 30. Read config_base if there is no config.xml file
 31. New editor layout. Current is confusing.
-32. Resetting records
+32. [DONE] Resetting records
 33. [DONE] Add total_time (no speed trigger)
 34. Speed gets stuck when loosing fix at speed != 0
 35. Kalman for altitude
