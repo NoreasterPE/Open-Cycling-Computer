@@ -210,6 +210,7 @@ class ride_parameters():
 		#Allowed units - user can switch between those when editing value 
 		self.units_allowed["odometer"] = ["km", "mi"]
 		self.units_allowed["rider_weight"] = ["kg", "st", "lb"]
+		self.units_allowed["speed_units"] = ["km/h", "m/s", "mi/h", "ft/s"]
 
 		#FIXME python-quantities won't like those deg C
 		#FXIME double defined
@@ -223,6 +224,7 @@ class ride_parameters():
 		self.p_desc["odometer_units"] = "Odometer units" 
 		self.p_desc["rider_weight"] = "Rider weight"
 		self.p_desc["rider_weight_units"] = "Rider weight units"
+		self.p_desc["speed_units"] = "Speed units"
 
 		#Define id a param is editable FIXME editor type - number, calendar, unit, etc.
 		# 0 - unit editor
@@ -233,6 +235,7 @@ class ride_parameters():
 		self.p_editable["odometer_units"] = 0
 		self.p_editable["rider_weight"] = 1
 		self.p_editable["rider_weight_units"] = 0
+		self.p_editable["speed_units"] = 0
 
 		self.p_resettable["distance"] = 1
 		self.p_resettable["odometer"] = 1
