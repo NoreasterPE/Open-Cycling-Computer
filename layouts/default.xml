@@ -212,8 +212,47 @@
 			<function>altitude_home_units</function>
 			<text_center x="220" y="50" size="2"/>
 		</field>
+		<field name="speed_units_1">
+			<function>text3</function>
+			<text_center x="60" y="95" size="2">Speed units</text_center>
+		</field>
+		<field name="speed_units_2">
+			<function>speed_units</function>
+			<button x0="0" y0="80" w="120" h="80"/>
+			<text_center x="60" y="130" size="4"/>
+		</field>
 	</page>
-	<page name="Editor" id="editor" background="images/occ_editor_background.png" buttons="images/occ_editor_buttons.png" font="" fg_colour="FFFFFF">
+	<page name="Editor Units" id="editor_units" background="images/occ_editor_background.png" buttons="images/occ_editor_buttons.png" font="" fg_colour="FFFFFF">
+		<field name="top_left">
+			<function>ed_cancel</function>
+			<button x0="0" y0="0" w="119" h="60"/>
+			<text_center x="60" y="30" size="3">Cancel</text_center>
+		</field>
+		<field name="top_right">
+			<function>ed_accept</function>
+			<button x0="120" y0="0" w="119" h="60"/>
+			<text_center x="180" y="30" size="3">Accept</text_center>
+		</field>
+		<field name="center_header">
+			<function>variable_description</function>
+			<text_center x="120" y="70" size="2"/>
+		</field>
+		<field name="center">
+			<function>variable_unit</function>
+			<text_center x="120" y="110" size="6"/>
+		</field>
+		<field name="center_left">
+			<function>ed_prev_unit</function>
+			<button x0="0" y0="140" w="59" h="60"/>
+			<text_center x="40" y="130" size="3"/>
+		</field>
+		<field name="center_right">
+			<function>ed_next_unit</function>
+			<button x0="180" y0="140" w="59" h="60"/>
+			<text_center x="200" y="130" size="3"/>
+		</field>
+	</page>
+	<page name="Editor Numbers" id="editor_numbers" background="images/occ_editor_background.png" buttons="images/occ_editor_buttons.png" font="" fg_colour="FFFFFF">
 		<field name="top_left">
 			<function>ed_cancel</function>
 			<button x0="0" y0="0" w="119" h="60"/>

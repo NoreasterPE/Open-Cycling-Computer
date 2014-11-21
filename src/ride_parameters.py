@@ -225,6 +225,8 @@ class ride_parameters():
 		self.p_desc["rider_weight_units"] = "Rider weight units"
 
 		#Define id a param is editable FIXME editor type - number, calendar, unit, etc.
+		# 0 - unit editor
+		# 1 - number editor
 		#Params that can be changed in Settings by user
 		self.p_editable["altitude_home"] = 1
 		self.p_editable["odometer"] = 1 

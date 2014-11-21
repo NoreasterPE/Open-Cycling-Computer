@@ -27,6 +27,7 @@ class layout():
 		self.editor["variable_description"] = None
 		self.editor["variable"] = None
 		self.editor_index = 0
+		self.editor_type = 0
 
 	def load_layout(self, layout_path):
 		self.max_page_id = 0
@@ -213,6 +214,7 @@ class layout():
 						#FIXME I's dirty way of getting value - add some helper function
 						if param_name in self.occ.rp.p_editable:
 							self.occ.log.debug("[LY] LONG CLICK on {}".format(param_name))
+							self.editor_type = self.occ.rp.p_editable[param_name]
 							self.open_editor_page(param_name)
 							break
 						pi = param_name.find("_")
@@ -240,7 +242,17 @@ class layout():
 		self.editor["variable_unit"] = self.occ.rp.get_unit(param_name)
 		self.editor["variable_description"] = self.occ.rp.get_description(param_name)
 		self.editor_index = 0
-		self.use_page("editor")
+		#FIXME Make it mory pythonic
+		if self.editor_type == 0: 
+			self.editor["variable_unit"] = self.editor["variable_value"]
+			self.editor["variable_value"] = 0
+			print "variable {}".format(self.editor["variable"])
+			print "variable_value {}".format(self.editor["variable_value"])
+			print "variable_unit {}".format(self.editor["variable_unit"])
+			print "variable_description {}".format(self.editor["variable_description"])
+			self.use_page("editor_units")
+		if self.editor_type == 1: 
+			self.use_page("editor_numbers")
 
 	def run_function(self, name):
 		functions = {	"page_0" : self.load_page_0,
@@ -377,11 +389,21 @@ class layout():
 		variable = self.editor["variable"]
 		variable_unit = self.editor["variable_unit"]
 		variable_value = float(self.editor["variable_value"])
-		v = q.Quantity(variable_value, variable_unit)
-		v = v.rescale(self.occ.rp.get_internal_unit(variable))
-		self.occ.rp.p_raw[variable] = v.item()
-		self.occ.rp.params[variable] = self.editor["variable_value"]
-		self.occ.rp.units[variable] = self.editor["variable_unit"]
+		if self.editor_type == 0:
+			#FIXME make a stripping function
+			vi = variable.find("_")
+			if vi > -1:
+				v = variable[:vi]
+			else:
+				v = variable
+			self.occ.rp.units[v] = variable_unit
+			#FIXME Change all units for i.e. speed together?
+		if self.editor_type == 1:
+			v = q.Quantity(variable_value, variable_unit)
+			v = v.rescale(self.occ.rp.get_internal_unit(variable))
+			self.occ.rp.p_raw[variable] = v.item()
+			self.occ.rp.params[variable] = self.editor["variable_value"]
+			self.occ.rp.units[variable] = self.editor["variable_unit"]
 		self.force_refresh()
 
 	def next_page(self):
