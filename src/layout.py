@@ -209,31 +209,21 @@ class layout():
 			#print self.function_rect_list
 			#print self.current_button_list
 			#print self.occ.rp.p_editable
-			for func in self.current_button_list:
+			for param_name in self.current_button_list:
 				try:
-					if self.function_rect_list[func].collidepoint(position):
+					if self.function_rect_list[param_name].collidepoint(position):
 						#print "Long click on " + func
 						#FIXME I's dirty way of getting value - add some helper function
-						if func in self.occ.rp.p_editable:
-							#print "func " + func + " is editable"
-							self.editor["variable"] = func
-							#FIXME I's dirty way of getting value
-							self.editor["variable_value"] = self.occ.rp.get_val(func)
-							self.editor["variable_unit"] = self.occ.rp.get_unit(func)
-							#FIXME Make list of editable values + descriptions
-							self.editor["variable_description"] = self.occ.rp.get_description(func)
-							#FIXME Call editor page - that's temporary
-							#Add call_editor function with p_raw params
-							self.editor_index = 0
-							self.use_page("editor")
+						if param_name in self.occ.rp.p_editable:
+							self.open_editor_page(param_name)
 							break
-						fi = func.find("_")
-						if fi > -1:
-							f = func[:fi]
+						pi = param_name.find("_")
+						if pi > -1:
+							p = param_name[:pi]
 						else:
-							f = func
-						if f in self.occ.rp.p_resettable:
-							self.occ.rp.reset_param(f)
+							p = param_name
+						if p in self.occ.rp.p_resettable:
+							self.occ.rp.reset_param(p)
 				except KeyError:
 					#FIXME function name not knwon - write to log
 					#It's not fatal  - user clicked on a non-clickable element
@@ -251,6 +241,15 @@ class layout():
 		elif click == 5:
 			#print "Swipe TOP to BOTTOM"
 			self.run_function("settings")
+
+	def open_editor_page(self, param_name):
+		#FIXME add different editors
+		self.editor["variable"] = param_name
+		self.editor["variable_value"] = self.occ.rp.get_val(param_name)
+		self.editor["variable_unit"] = self.occ.rp.get_unit(param_name)
+		self.editor["variable_description"] = self.occ.rp.get_description(param_name)
+		self.editor_index = 0
+		self.use_page("editor")
 
 	def run_function(self, name):
 		functions = {	"page_0" : self.load_page_0,
