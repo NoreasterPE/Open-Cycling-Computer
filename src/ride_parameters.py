@@ -314,8 +314,12 @@ class ride_parameters():
 		else:
 			return self.p_raw_units[func]
 
-	def get_description(self, func):
-		return self.p_desc[func]
+	def get_description(self, param_name):
+		if param_name in self.p_desc:
+			return self.p_desc[param_name]
+		else:
+			self.occ.log.error("[RP] {} has no description defined".format(param_name))
+			return "No description"
 
 	def clean_value(self, variable, empty = 0):
 		if not math.isnan(variable):
