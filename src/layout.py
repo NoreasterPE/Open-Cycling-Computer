@@ -205,16 +205,14 @@ class layout():
 					#print "KeyError: non-fatal: check_click failed! func =", func, ", position =", position, ", click =", click 
 					pass
 		elif click == 1:
-			#print "LONG CLICK"
 			#print self.function_rect_list
 			#print self.current_button_list
-			#print self.occ.rp.p_editable
 			for param_name in self.current_button_list:
 				try:
 					if self.function_rect_list[param_name].collidepoint(position):
-						#print "Long click on " + func
 						#FIXME I's dirty way of getting value - add some helper function
 						if param_name in self.occ.rp.p_editable:
+							self.occ.log.debug("[LY] LONG CLICK on {}".format(param_name))
 							self.open_editor_page(param_name)
 							break
 						pi = param_name.find("_")
@@ -225,21 +223,15 @@ class layout():
 						if p in self.occ.rp.p_resettable:
 							self.occ.rp.reset_param(p)
 				except KeyError:
-					#FIXME function name not knwon - write to log
-					#It's not fatal  - user clicked on a non-clickable element
-					#print "KeyError: non-fatal: check_click failed on click = 1 [LONG CLICK] ! func =", func, ", position = ", position
+					self.occ.log.debug("[LY] LONG CLICK on non-clickable {}".format(param_name))
 					pass
-		elif click == 2:
-			#Swipe RIGHT to LEFT
+		elif click == 2: #Swipe RIGHT to LEFT
 			self.run_function("next_page")
-		elif click == 3:
-			#Swipe LEFT to RIGHT
+		elif click == 3: #Swipe LEFT to RIGHT
 			self.run_function("prev_page")
-		elif click == 4:
-			#print "Swipe BOTTOM to TOP"
+		elif click == 4: #print "Swipe BOTTOM to TOP"
 			self.run_function("page_0")
-		elif click == 5:
-			#print "Swipe TOP to BOTTOM"
+		elif click == 5: #print "Swipe TOP to BOTTOM"
 			self.run_function("settings")
 
 	def open_editor_page(self, param_name):
