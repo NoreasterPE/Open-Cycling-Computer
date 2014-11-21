@@ -274,7 +274,7 @@ class ride_parameters():
 		self.p_raw["time_on"] += dt
 		#FIXME calculate with speed not speed_gps when bt sensors are set up
 		s = self.p_raw["speed_gps"]
-		if s > self.speed_gps_low:
+		if (s == 0.0) or (s > self.speed_gps_low):
 			d = 0
 			try:
 				d = dt * s
