@@ -203,10 +203,7 @@ class layout():
 						self.run_function(func)
 						break
 				except KeyError:
-					#FIXME function name not knwon - write to log
-					#It's not fatal  - user clicked on a non-clickable element
-					#print "KeyError: non-fatal: check_click failed! func =", func, ", position =", position, ", click =", click 
-					pass
+					self.occ.log.debug("[LY] CLICK on non-clickable {}".format(param_name))
 		elif click == 1:
 			#print self.function_rect_list
 			#print self.current_button_list
@@ -227,7 +224,6 @@ class layout():
 							self.occ.rp.reset_param(p)
 				except KeyError:
 					self.occ.log.debug("[LY] LONG CLICK on non-clickable {}".format(param_name))
-					pass
 		elif click == 2: #Swipe RIGHT to LEFT
 			self.run_function("next_page")
 		elif click == 3: #Swipe LEFT to RIGHT
