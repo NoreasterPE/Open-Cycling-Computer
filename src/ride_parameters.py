@@ -279,14 +279,17 @@ class ride_parameters():
 		self.p_raw["time_on"] += dt
 		#FIXME calculate with speed not speed_gps when bt sensors are set up
 		s = self.p_raw["speed_gps"]
-		if (s == 0.0) or (s > self.speed_gps_low):
+		if (s > self.speed_gps_low):
 			d = 0
 			try:
 				d = dt * s
 				d = float(d)
-			except (TypeError, ValueError):
+			except ValueError:
 				#Speed is not set yet - do nothing
+				self.occ.log.error("[RP] calculate_time_related_parameters ValueError")
 				pass
+			except TypeError:
+				self.occ.log.error("[RP] calculate_time_related_parameters TypeError")
 			self.p_raw["distance"] += d
 			self.p_raw["odometer"] += d
 			self.p_raw["ridetime"] += self.p_raw["dtime"]
@@ -356,6 +359,7 @@ class ride_parameters():
 			self.p_raw["speed"] = 0
 		#FIXME That will have to be changed with bluetooth speed sensor
 		self.p_raw["speed_gps"] = self.p_raw["speed"] 
+		self.occ.log.error("[RP] raw speed_gps {}".format(self.p_raw["speed_gps"]))
 		self.p_raw["climb"] = self.clean_value(cmb);
 
 	def update_and_split_speed(self, speed_name):
@@ -448,6 +452,8 @@ class ride_parameters():
 				self.occ.log.debug("[RP] ValueError: update_param exception: {} {} {}".\
 						format(__name__ ,param_name, self.params[param_name],\
 							self.p_raw[param_name]))
+		else:
+			self.occ.log.debug("[RP] param_name {} = -".format(param_name))
 			
 	def add_zero(self, value):
 		if value < 10:
