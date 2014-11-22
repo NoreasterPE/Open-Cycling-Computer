@@ -444,12 +444,11 @@ class ride_parameters():
 				self.params[param_name] = f % float(v.item())
 			except TypeError:
 				#Value conversion failed, so don't change anything
-				self.occ.log.debug("[RP] TypeError: update_param exception: {} {} {}".\
+				self.occ.log.error("[RP] TypeError: update_param exception: {} {} {}".\
 						format(__name__ ,param_name, self.params[param_name],\
 							self.p_raw[param_name]))
-				pass
 			except ValueError:
-				self.occ.log.debug("[RP] ValueError: update_param exception: {} {} {}".\
+				self.occ.log.error("[RP] ValueError: update_param exception: {} {} {}".\
 						format(__name__ ,param_name, self.params[param_name],\
 							self.p_raw[param_name]))
 		else:
