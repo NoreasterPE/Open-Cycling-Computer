@@ -15,7 +15,7 @@ longitude
 odometer
 pressure		- current atmospheric pressure measured by hardware (currently BMP1823)
 pressure_at_sea_level	- sea level pressure calculated from pressure on start and given altitude. It's a value fixed at start
-rider_weight		- weight of rider
+riderweight		- weight of rider
 rtc			- combined date + time 
 satellites
 satellites_used

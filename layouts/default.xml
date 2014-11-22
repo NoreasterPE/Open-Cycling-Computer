@@ -186,17 +186,17 @@
 		</field>
 	</page>
 	<page name="Settings 2" id="settings_2" background="images/occ_settings_2_background.png" buttons="images/occ_settings_2_buttons.png" font="" fg_colour="FFFFFF">
-		<field name="rider_weight_1">
+		<field name="riderweight_1">
 			<function>text1</function>
 			<text_center x="60" y="15" size="2">Rider weight</text_center>
 		</field>
-		<field name="rider_weight_2">
-			<function>rider_weight</function>
+		<field name="riderweight_2">
+			<function>riderweight</function>
 			<button x0="0" y0="0" w="120" h="80"/>
 			<text_center x="45" y="50" size="4"/>
 		</field>
-		<field name="rider_weight_3">
-			<function>rider_weight_units</function>
+		<field name="riderweight_3">
+			<function>riderweight_units</function>
 			<text_center x="100" y="50" size="2"/>
 		</field>
 		<field name="altitude_home_1">

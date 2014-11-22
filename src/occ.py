@@ -87,8 +87,8 @@ class open_cycling_computer():
 		self.switch_log_level(log_level)
 		self.rp.params["debug_level"] = log_level
 		try:
-			self.rp.p_raw["rider_weight"] = float(self.config.find("rider_weight").text)
-			self.rp.units["rider_weight"] = self.config.find("rider_weight_units").text
+			self.rp.p_raw["riderweight"] = float(self.config.find("riderweight").text)
+			self.rp.units["riderweight"] = self.config.find("riderweight_units").text
 			self.rp.p_raw["altitude_home"] = float(self.config.find("altitude_home").text)
 			self.rp.units["altitude_home"] = self.config.find("altitude_home_units").text
 			self.rp.p_raw["odometer"] = float(self.config.find("odometer").text)
@@ -111,8 +111,8 @@ class open_cycling_computer():
 		config_tree = eltree.Element("config")
 		eltree.SubElement(config_tree, "log_level").text = log_level
 		eltree.SubElement(config_tree, "layout_path").text = self.layout.layout_path
-		eltree.SubElement(config_tree, "rider_weight").text = unicode(self.rp.p_raw["rider_weight"])
-		eltree.SubElement(config_tree, "rider_weight_units").text = unicode(self.rp.units["rider_weight"])
+		eltree.SubElement(config_tree, "riderweight").text = unicode(self.rp.p_raw["riderweight"])
+		eltree.SubElement(config_tree, "riderweight_units").text = unicode(self.rp.units["riderweight"])
 		eltree.SubElement(config_tree, "altitude_home").text = unicode(self.rp.p_raw["altitude_home"])
 		eltree.SubElement(config_tree, "altitude_home_units").text = unicode(self.rp.units["altitude_home"])
 		eltree.SubElement(config_tree, "odometer").text = unicode(self.rp.p_raw["odometer"])

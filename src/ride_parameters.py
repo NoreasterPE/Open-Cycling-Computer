@@ -47,7 +47,7 @@ class ride_parameters():
 		self.p_raw["odometer"] = 0
 		self.p_raw["pressure"] = 0
 		self.p_raw["pressure_at_sea_level"] = 0
-		self.p_raw["rider_weight"] = 0
+		self.p_raw["riderweight"] = 0
 		self.p_raw["ridetime"] = 0
 		self.p_raw["ridetime_total"] = 0
 		self.p_raw["rtc"] = ""
@@ -80,7 +80,7 @@ class ride_parameters():
 		self.p_raw_units["longitude"] = ""
 		self.p_raw_units["odometer"] = "m"
 		self.p_raw_units["pressure"] = "hPa"
-		self.p_raw_units["rider_weight"] = "kg"
+		self.p_raw_units["riderweight"] = "kg"
 		self.p_raw_units["ridetime"] = "s"
 		self.p_raw_units["ridetime_total"] = "s"
 		self.p_raw_units["satellites"] = ""
@@ -111,7 +111,7 @@ class ride_parameters():
 		self.params["pressure"] = "-"
 		self.params["pressure_at_sea_level"] = "-" 
 		self.params["rtc"] = ""
-		self.params["rider_weight"] = 80.0
+		self.params["riderweight"] = 80.0
 		self.params["ridetime"] = ""
 		self.params["ridetime_hms"] = ""
 		self.params["ridetime_total"] = ""
@@ -152,7 +152,7 @@ class ride_parameters():
 		self.p_format["odometer"] = "%.0f"
 		self.p_format["pressure"] = "%.0f"
 		self.p_format["pressure_at_sea_level"] = "%.0f"
-		self.p_format["rider_weight"] = "%.1f"
+		self.p_format["riderweight"] = "%.1f"
 		self.p_format["rtc"] = ""
 		self.p_format["ridetime"] = "%.0f"
 		self.p_format["ridetime_hms"] = ""
@@ -190,7 +190,7 @@ class ride_parameters():
 		self.units["longitude"] = ""
 		self.units["odometer"] = "km"
 		self.units["pressure"] = "hPa"
-		self.units["rider_weight"] = "kg"
+		self.units["riderweight"] = "kg"
 		self.units["ridetime"] = "s"
 		self.units["ridetime_hms"] = ""
 		self.units["ridetime_total"] = "s"
@@ -209,7 +209,7 @@ class ride_parameters():
 
 		#Allowed units - user can switch between those when editing value 
 		self.units_allowed["odometer"] = ["km", "mi"]
-		self.units_allowed["rider_weight"] = ["kg", "st", "lb"]
+		self.units_allowed["riderweight"] = ["kg", "st", "lb"]
 		self.units_allowed["speed_units"] = ["km/h", "m/s", "mi/h", "ft/s"]
 
 		#FIXME python-quantities won't like those deg C
@@ -222,8 +222,8 @@ class ride_parameters():
 		self.p_desc["altitude_home"] = "Home altitude"
 		self.p_desc["odometer"] = "Odometer" 
 		self.p_desc["odometer_units"] = "Odometer units" 
-		self.p_desc["rider_weight"] = "Rider weight"
-		self.p_desc["rider_weight_units"] = "Rider weight units"
+		self.p_desc["riderweight"] = "Rider weight"
+		self.p_desc["riderweight_units"] = "Rider weight units"
 		self.p_desc["speed_units"] = "Speed units"
 
 		#Define id a param is editable FIXME editor type - number, calendar, unit, etc.
@@ -233,8 +233,8 @@ class ride_parameters():
 		self.p_editable["altitude_home"] = 1
 		self.p_editable["odometer"] = 1 
 		self.p_editable["odometer_units"] = 0
-		self.p_editable["rider_weight"] = 1
-		self.p_editable["rider_weight_units"] = 0
+		self.p_editable["riderweight"] = 1
+		self.p_editable["riderweight_units"] = 0
 		self.p_editable["speed_units"] = 0
 
 		self.p_resettable["distance"] = 1
@@ -408,7 +408,7 @@ class ride_parameters():
 			
 		self.params["utc"] = self.p_raw["utc"]
 		self.update_param("odometer")
-		self.update_param("rider_weight")
+		self.update_param("riderweight")
 		self.update_param("pressure")
 		self.set_max("temperature")
 		self.set_min("temperature")
