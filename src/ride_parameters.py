@@ -430,9 +430,9 @@ class ride_parameters():
 		self.update_param(param_name)
 
 	def update_param(self, param_name):
-		try:
+		if param_name in self.p_format:
 			f = self.p_format[param_name]
-		except KeyError:
+		else:
 			self.occ.log.error("[RP] Formatting not available: param_name = {}".format(param_name))
 			f = "%.1f"
 
