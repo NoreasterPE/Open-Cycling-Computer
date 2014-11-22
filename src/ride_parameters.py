@@ -111,7 +111,7 @@ class ride_parameters():
 		self.params["pressure"] = "-"
 		self.params["pressure_at_sea_level"] = "-" 
 		self.params["rtc"] = ""
-		self.params["riderweight"] = 80.0
+		self.params["riderweight"] = 0.0
 		self.params["ridetime"] = ""
 		self.params["ridetime_hms"] = ""
 		self.params["ridetime_total"] = ""
