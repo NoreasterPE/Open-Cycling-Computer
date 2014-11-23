@@ -400,6 +400,9 @@ class layout():
 			self.occ.rp.p_raw[variable] = v.item()
 			self.occ.rp.params[variable] = self.editor["variable_value"]
 			self.occ.rp.units[variable] = self.editor["variable_unit"]
+			if variable == "altitude_home":
+				#Force recalculation
+				self.occ.rp.self.pressure_at_sea_level_calculated = False
 		self.force_refresh()
 
 	def next_page(self):
