@@ -246,10 +246,6 @@ class layout():
 		if self.editor_type == 0: 
 			self.editor["variable_unit"] = self.editor["variable_value"]
 			self.editor["variable_value"] = 0
-			print "variable {}".format(self.editor["variable"])
-			print "variable_value {}".format(self.editor["variable_value"])
-			print "variable_unit {}".format(self.editor["variable_unit"])
-			print "variable_description {}".format(self.editor["variable_description"])
 			self.use_page("editor_units")
 		if self.editor_type == 1: 
 			self.use_page("editor_numbers")
