@@ -48,49 +48,53 @@ class gps_mtk3339(threading.Thread):
 		else:
 			self.present = True
 	def run(self):
+		#FIXME split it into functions - lines are too long
 		if self.present:
 			self.running = True
 			if not self.simulate:
 				while self.running:
 					timestamp = time.time()
 					self.occ.log.debug("[GPS] timestamp: {}, running: {},".format(timestamp, self.running))
+					gps_data_available = False
 					try:
 						#FIXME Fails sometimes with ImportError from gps.py - see TODO 21 [IN TESTING]
 						self.data.next()
+						gps_data_available = True
 					except StopIteration:
 						self.occ.log.error("[GPS] StopIteration exception in GPS")
 						pass
-					self.latitude = self.data.fix.latitude
-					self.longitude = self.data.fix.longitude
-					self.utc = self.data.utc
-					self.climb = self.data.fix.climb
-					self.speed = self.data.fix.speed
-					self.altitude = self.data.fix.altitude
-					self.fix_mode = fix_mode[self.data.fix.mode]
-					self.fix_time = self.data.fix.time
-					# Convert string time value to float if necessary. Snipped by Adafruit
-					if not isinstance(self.fix_time, float):
-						# self.data.fix.time is a string, so parse it to get the float time value.
-						self.fix_time = time.mktime(time.strptime(self.data.fix.time, '%Y-%m-%dT%H:%M:%S.%fZ'))
-					self.lag = timestamp - self.fix_time
-					self.occ.log.debug("[GPS] timestamp to fix time delta: {}".format(self.lag))
-					if self.set_time:
-						if (self.utc is not None):
-							if (len(self.utc) > 5):
-								self.set_system_time()
-					try:
-						sat = self.data.satellites
-						self.satellites = len(sat)
-						self.satellites_used = self.data.satellites_used
-					except AttributeError:
-						self.occ.log.error("[GPS] AttributeError exception in GPS")
-						pass
-					self.occ.log.debug("[GPS] timestamp: {}, fix time: {}, UTC: {}, Satellites: {}, Used: {}"\
-								.format(timestamp, self.fix_time, self.utc, self.satellites,\
-								 self.satellites_used))
-					self.occ.log.debug("[GPS] Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"\
-								.format(self.fix_mode, self.latitude, self.longitude,\
-								self.speed, self.altitude, self.climb))
+					if gps_data_available:
+						self.latitude = self.data.fix.latitude
+						self.longitude = self.data.fix.longitude
+						self.utc = self.data.utc
+						self.climb = self.data.fix.climb
+						self.speed = self.data.fix.speed
+						self.altitude = self.data.fix.altitude
+						self.fix_mode = fix_mode[self.data.fix.mode]
+						self.fix_time = self.data.fix.time
+						# Convert string time value to float if necessary. Snipped by Adafruit
+						if not isinstance(self.fix_time, float):
+							# self.data.fix.time is a string, so parse it to get the float time value.
+							self.fix_time = time.mktime(time.strptime(self.data.fix.time, '%Y-%m-%dT%H:%M:%S.%fZ'))
+						self.lag = timestamp - self.fix_time
+						self.occ.log.debug("[GPS] timestamp to fix time delta: {}".format(self.lag))
+						if self.set_time:
+							if (self.utc is not None):
+								if (len(self.utc) > 5):
+									self.set_system_time()
+						try:
+							sat = self.data.satellites
+							self.satellites = len(sat)
+							self.satellites_used = self.data.satellites_used
+						except AttributeError:
+							self.occ.log.error("[GPS] AttributeError exception in GPS")
+							pass
+						self.occ.log.debug("[GPS] timestamp: {}, fix time: {}, UTC: {}, Satellites: {}, Used: {}"\
+									.format(timestamp, self.fix_time, self.utc, self.satellites,\
+									 self.satellites_used))
+						self.occ.log.debug("[GPS] Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"\
+									.format(self.fix_mode, self.latitude, self.longitude,\
+									self.speed, self.altitude, self.climb))
 			else:
 				self.latitude = 52.0001
 				self.longitude = -8.0001
