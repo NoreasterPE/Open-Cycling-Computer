@@ -51,3 +51,5 @@ ImportError: Failed to import _strptime because the import lockis held by anothe
 36. Unit editor for non-editabl parameters like speed. Long click to trigger. Or units in Settings?
 37: [DONE] Mousemove turn off highlight
 38. Threads write to log aftred log end
+39. Resetng speedmax doesn't wrk
+40. Setting home altitude has to trigger sea level pressure recalculation
