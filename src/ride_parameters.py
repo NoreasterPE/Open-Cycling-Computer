@@ -428,6 +428,9 @@ class ride_parameters():
 		self.occ.log.debug("[LY] Resetting {}".format(param_name))
 		self.p_raw[param_name] = 0
 		self.update_param(param_name)
+		#Speed needs special handling due to digit/tenth split
+		if param_name.startswith("speed"):
+			self.update_and_split_speed(param_name)
 
 	def update_param(self, param_name):
 		if param_name in self.p_format:
