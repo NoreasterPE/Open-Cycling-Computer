@@ -13,13 +13,17 @@
 			<function>speed_units</function>
 			<text_center x="205" y="75" size="2"/>
 		</field>
+		<field name="gps_icon">
+			<function>gps_icon</function>
+			<text_center x="205" y="5" file="images/gps_icon_32x32.png"/>
+		</field>
 		<field name="top_right_1">
 			<function>satellites_used</function>
-			<text_center x="185" y="15" size="2"/>
+			<text_center x="205" y="47" size="2"/>
 		</field>
 		<field name="top_right_3">
 			<function>satellites</function>
-			<text_center x="225" y="15" size="2"/>
+			<text_center x="225" y="47" size="2"/>
 		</field>
 		<field name="middle">
 			<function>distance</function>

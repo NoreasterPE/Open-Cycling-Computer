@@ -149,7 +149,16 @@ class layout():
 				uv = unicode(value)
 				text_center_x = int(field.find('text_center').get('x'))
 				text_center_y = int(field.find('text_center').get('y'))
-				fs = int(field.find('text_center').get('size'))
+				try:
+					image_path = field.find('text_center').get('file')
+					image = pygame.image.load(image_path).convert()
+					screen.blit(image, [text_center_x, text_center_y])
+				except:
+					pass
+				try:
+					fs = int(field.find('text_center').get('size'))
+				except:
+					fs = 0
 				font_size = 12 * fs
 				font_size_small = 12 * (fs - 1)
 				font_size_large = 12 * (fs + 1)
