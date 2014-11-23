@@ -74,6 +74,10 @@
 		</field>
 	</page>
 	<page name="Weather" id="page_1" background="images/occ_page_1_background.png" buttons="images/occ_page_1_buttons.png" font="" fg_colour="FFFFFF">
+		<field name="speedmax_label">
+			<function>speedmax_label</function>
+			<text_center x="20" y="12" size="2">Max</text_center>
+		</field>
 		<field name="top">
 			<function>speedmax_digits</function>
 			<button x0="0" y0="0" w="240" h="150"/>
