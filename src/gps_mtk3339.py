@@ -52,14 +52,14 @@ class gps_mtk3339(threading.Thread):
 			self.running = True
 			if not self.simulate:
 				while self.running:
-					self.occ.log.debug("[GPS] running = {}".format(self.running))
+					timestamp = time.time()
+					self.occ.log.debug("[GPS] timestamp: {}, running: {},".format(timestamp, self.running))
 					try:
 						#FIXME Fails sometimes with ImportError from gps.py - see TODO 21 [IN TESTING]
 						self.data.next()
 					except StopIteration:
 						self.occ.log.error("[GPS] StopIteration exception in GPS")
 						pass
-					timestamp = time.time()
 					self.latitude = self.data.fix.latitude
 					self.longitude = self.data.fix.longitude
 					self.utc = self.data.utc
