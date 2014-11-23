@@ -42,7 +42,7 @@ ImportError: Failed to import _strptime because the import lockis held by anothe
 27. Review & avoid try/catch. It's too expensive
 28. Speed filtering or max speed will be false sooner or later. Average from 2/3 samples?
 29. [DONE] Read time from GPS when it will be battery powered
-30. Read config_base if there is no config.xml file
+30. [DONE] Read config_base if there is no config.xml file
 31. New editor layout. Current is confusing.
 32. [DONE] Resetting records
 33. [DONE] Add total_time (no speed trigger)
@@ -51,5 +51,5 @@ ImportError: Failed to import _strptime because the import lockis held by anothe
 36. Unit editor for non-editabl parameters like speed. Long click to trigger. Or units in Settings?
 37: [DONE] Mousemove turn off highlight
 38. Threads write to log aftred log end
-39. Resetng speedmax doesn't wrk
-40. Setting home altitude has to trigger sea level pressure recalculation
+39. [DONE] Resetng speedmax doesn't wrk
+40. [DONE] Setting home altitude has to trigger sea level pressure recalculation
