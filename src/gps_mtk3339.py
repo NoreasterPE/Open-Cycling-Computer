@@ -24,8 +24,8 @@ class gps_mtk3339(threading.Thread):
 		threading.Thread.__init__(self)
 		self.occ = occ
 		self.simulate = simulate
-		self.altitude = 0
-		self.climb = 0
+		self.altitude = NaN
+		self.climb = NaN
 		self.fix_mode = ""
 		self.lag = 0
 		self.latitude = NaN
@@ -95,6 +95,18 @@ class gps_mtk3339(threading.Thread):
 						self.occ.log.debug("[GPS] Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"\
 									.format(self.fix_mode, self.latitude, self.longitude,\
 									self.speed, self.altitude, self.climb))
+					else:
+						self.occ.log.debug("[GPS] Setting null values to GPS params")
+						self.latitude = NaN
+						self.longitude = NaN
+						self.utc = None
+						self.climb = NaN
+						self.speed = NaN
+						self.altitude = NaN
+						self.fix_mode = fix_mode[0]
+						self.fix_time = NaN
+						self.satellites = 0
+						self.satellites_used = 0
 			else:
 				self.latitude = 52.0001
 				self.longitude = -8.0001
