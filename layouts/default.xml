@@ -97,7 +97,7 @@
 		</field>
 		<field name="speedaverage_label">
 			<function>speedaverage_label</function>
-			<text_center x="20" y="132" size="2">Ave</text_center>
+			<text_center x="20" y="172" size="2">Ave</text_center>
 		</field>
 		<field name="middle">
 			<function>speedaverage</function>
