@@ -39,6 +39,7 @@ class gps_mtk3339(threading.Thread):
 		if not self.simulate:
 			try:
 				#FIXME Add check for running gpsd. Restart if missing. Consider watchdog thread to start gpsd
+				#FIXME Check how that reacts for missing gps hardware
 				self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
 				self.present = True
 			except:
