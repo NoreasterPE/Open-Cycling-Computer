@@ -3,6 +3,8 @@ import time
 import numpy
 import threading
 
+NaN = float('nan')
+
 class bmp183(threading.Thread):
 	'Class for Bosch BMP183 pressure and temperature sensor with SPI interface as sold by Adafruit'
 	# BMP183 registers
@@ -89,8 +91,7 @@ class bmp183(threading.Thread):
 			# Check comunication / read ID
 			ret = self.read_byte(self.BMP183_REG['ID'])
 			if ret != self.BMP183_CMD['ID_VALUE']:
-				#FIXME That should be critical in real device?
-				self.occ.log.error("[BMP] Communication witn bmp183 failed, using mock values")
+				self.occ.log.error("[BMP] Communication witn bmp183 failed")
 				self.mock = True
 			else:
 				self.mock = False
@@ -212,8 +213,8 @@ class bmp183(threading.Thread):
 
 	def measure_pressure(self):
 		if self.mock:
-			self.pressure = 101300
-			self.temperature = 20.0
+			self.pressure = NaN
+			self.temperature = NaN
 		else:
 			# Measure temperature - required for calculations
 			self.measure_temperature()
