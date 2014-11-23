@@ -96,12 +96,12 @@
 			<text_center x="20" y="132" size="2">Ave</text_center>
 		</field>
 		<field name="middle">
-			<function>speed_average</function>
+			<function>speedaverage</function>
 			<button x0="0" y0="150" w="239" h="89"/>
 			<text_center x="100" y="175" size="4"/>
 		</field>
 		<field name="middle_auxiliary">
-			<function>speed_average_units</function>
+			<function>speedaverage_units</function>
 			<text_center x="210" y="175" size="2"/>
 		</field>
 		<field name="bottom_left">

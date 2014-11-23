@@ -54,7 +54,7 @@ class ride_parameters():
 		self.p_raw["satellites"] = 0
 		self.p_raw["satellites_used"] = 0
 		self.p_raw["speed"] = 0
-		self.p_raw["speed_average"] = 0
+		self.p_raw["speedaverage"] = 0
 		self.p_raw["speed_gps"] = 0
 		self.p_raw["speedmax"] = 0
 		self.p_raw["temperature"] = 0
@@ -86,7 +86,7 @@ class ride_parameters():
 		self.p_raw_units["satellites"] = ""
 		self.p_raw_units["satellites_used"] = ""
 		self.p_raw_units["speed"] = "m/s"
-		self.p_raw_units["speed_average"] = "m/s"
+		self.p_raw_units["speedaverage"] = "m/s"
 		self.p_raw_units["speed_gps"] = "m/s"
 		self.p_raw_units["speedmax"] = "m/s"
 		self.p_raw_units["temperature"] = "C"
@@ -121,9 +121,9 @@ class ride_parameters():
 		self.params["speed"] = "-"
 		self.params["speed_digits"] = "-"
 		self.params["speed_tenths"] = "-"
-		self.params["speed_average"] = "-"
-		self.params["speed_average_digits"] = "-"
-		self.params["speed_average_tenths"] = "-"
+		self.params["speedaverage"] = "-"
+		self.params["speedaverage_digits"] = "-"
+		self.params["speedaverage_tenths"] = "-"
 		self.params["speedmax"] = "-"
 		self.params["speedmax_digits"] = "-"
 		self.params["speedmax_tenths"] = "-"
@@ -163,9 +163,9 @@ class ride_parameters():
 		self.p_format["speed"] = "%.1f"
 		self.p_format["speed_digits"] = "%.0f"
 		self.p_format["speed_tenths"] = "%.0f"
-		self.p_format["speed_average"] = "%.1f"
-		self.p_format["speed_average_digits"] = "%.0f"
-		self.p_format["speed_average_tenths"] = "%.0f"
+		self.p_format["speedaverage"] = "%.1f"
+		self.p_format["speedaverage_digits"] = "%.0f"
+		self.p_format["speedaverage_tenths"] = "%.0f"
 		self.p_format["speedmax"] = "%.1f"
 		self.p_format["speedmax_digits"] = "%.0f"
 		self.p_format["speedmax_tenths"] = "%.0f"
@@ -198,7 +198,7 @@ class ride_parameters():
 		self.units["satellites"] = ""
 		self.units["satellites_used"] = ""
 		self.units["speed"] = "km/h"
-		self.units["speed_average"] = "km/h"
+		self.units["speedaverage"] = "km/h"
 		self.units["speedmax"] = "km/h"
 		self.units["temperature"] = "C"
 		self.units["temperature_average"] = "C"
@@ -294,8 +294,8 @@ class ride_parameters():
 			self.p_raw["odometer"] += d
 			self.p_raw["ridetime"] += self.p_raw["dtime"]
 			self.p_raw["ridetime_total"] += self.p_raw["dtime"]
-			self.p_raw["speed_average"] = self.p_raw["distance"] / self.p_raw["ridetime"]
-			self.update_and_split_speed("speed_average")
+			self.p_raw["speedaverage"] = self.p_raw["distance"] / self.p_raw["ridetime"]
+			self.update_and_split_speed("speedaverage")
 			self.occ.log.debug("[RP] speed_gps: {}, distance: {}, odometer: {}".\
 					format(s, self.p_raw["distance"], self.p_raw["odometer"]))
 		else:
@@ -408,7 +408,7 @@ class ride_parameters():
 		self.update_and_split_speed("speed")
 		self.occ.log.debug("[RP] speed: {}, speedmax: {}, average speed: {} {}".\
 				format(self.params["speed"], self.params["speedmax"],\
-				self.params["speed_average"], self.units["speed_average"]))
+				self.params["speedaverage"], self.units["speedaverage"]))
 			
 		self.params["utc"] = self.p_raw["utc"]
 		self.update_param("odometer")
