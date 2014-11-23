@@ -91,6 +91,10 @@
 			<function>speed_units</function>
 			<text_center x="205" y="75" size="2"/>
 		</field>
+		<field name="speedaverage_label">
+			<function>speedaverage_label</function>
+			<text_center x="20" y="132" size="2">Ave</text_center>
+		</field>
 		<field name="middle">
 			<function>speed_average</function>
 			<button x0="0" y0="150" w="239" h="89"/>
