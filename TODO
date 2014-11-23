@@ -12,7 +12,7 @@
 12. Control rounding errors when switching units in editor
 13. Fix inconsistent naming: func, function, param_name
 14. Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
-15. Allow for changing units of non-editable params like speed or temperature. Block edit in editor but leave unit switching?
+15. [DONE] Allow for changing units of non-editable params like speed or temperature. Block edit in editor but leave unit switching?
 16. [DISCARDED] Reading time since boot from gps? - there is no need fo this
 17. [DONE] Logging to file to debug field test crashes
 18. [DONE] Setup formatting for logger as per https://docs.python.org/2/library/logging.html
@@ -34,10 +34,11 @@ Traceback (most recent call last):
   File "/usr/lib/python2.7/dist-packages/gps/misc.py", line 97, in isotime
     return calendar.timegm(time.strptime(date, "%Y-%m-%dT%H:%M:%S")) + float("0." + msec)
 ImportError: Failed to import _strptime because the import lockis held by another thread.
+Update: once same error showed up in my code
 22. [DONE] Use for exceptions logging: Logger.exception(msg, *args, **kwargs)
 23. [DONE] Add option for easy rendering icons, like a small image that is overlapped on top of background.
-24. Units switching for non-editable parameters
-25. Saving preferred units to config file
+24. [DONE] Units switching for non-editable parameters
+25. [DONE] Saving preferred units to config file
 26. Database setup + full ride logging. Or just text file and normal logging? http://bytes.com/topic/python/answers/44055-logging-two-files
 27. Review & avoid try/catch. It's too expensive
 28. Speed filtering or max speed will be false sooner or later. Average from 2/3 samples?
