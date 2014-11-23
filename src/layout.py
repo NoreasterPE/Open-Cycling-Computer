@@ -142,6 +142,7 @@ class layout():
 	def render(self, screen, function, value = None):
 		for field in self.current_page:
 			if (field.find('function').text == function):
+				#FIXME Move parsing to a separate function? Make list of icons to improve speed
 				if value == None:
 					value = field.find('text_center').text
 				if value == None:
