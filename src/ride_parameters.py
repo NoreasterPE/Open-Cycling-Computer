@@ -39,6 +39,8 @@ class ride_parameters():
 		self.p_raw["altitude"] = 0
 		self.p_raw["altitude_home"] = 0
 		self.p_raw["altitude_gps"] = 0
+		self.p_raw["altitude_min"] = INF
+		self.p_raw["altitude_max"] = INF_MIN
 		self.p_raw["cadence"] = 0
 		self.p_raw["climb"] = 0
 		self.p_raw["distance"] = 0
@@ -76,6 +78,8 @@ class ride_parameters():
 		self.p_raw_units["altitude"] = "m"
 		self.p_raw_units["altitude_home"] = "m"
 		self.p_raw_units["altitude_gps"] = "m"
+		self.p_raw_units["altitude_min"] = "m"
+		self.p_raw_units["altitude_max"] = "m"
 		self.p_raw_units["distance"] = "m"
 		self.p_raw_units["climb"] = "m/s"
 		self.p_raw_units["gps_fix"] = ""
@@ -102,6 +106,8 @@ class ride_parameters():
 		self.params["altitude"] = "-"
 		self.params["altitude_home"] = "-"
 		self.params["altitude_gps"] = "-"
+		self.params["altitude_min"] = "-"
+		self.params["altitude_max"] = "-"
 		self.params["cadence"] = "-"
 		self.params["climb"] = "-"
 		self.params["distance"] = 0
@@ -141,9 +147,11 @@ class ride_parameters():
 		self.params["debug_level"] = ""
 
 		#Formatting strings for params.
-		self.p_format["altitude"] = "%.1f"
+		self.p_format["altitude"] = "%.0f"
 		self.p_format["altitude_home"] = "%.0f"
-		self.p_format["altitude_gps"] = "%.1f"
+		self.p_format["altitude_gps"] = "%.0f"
+		self.p_format["altitude_min"] = "%.0f"
+		self.p_format["altitude_max"] = "%.0f"
 		self.p_format["cadence"] = "%.0f"
 		self.p_format["climb"] = "%.1f"
 		self.p_format["distance"] = "%.1f"
@@ -184,6 +192,8 @@ class ride_parameters():
 		self.units["altitude"] = "m"
 		self.units["altitude_home"] = "m"
 		self.units["altitude_gps"] = "m"
+		self.units["altitude_min"] = "m"
+		self.units["altitude_max"] = "m"
 		self.units["climb"] = "m/s"
 		self.units["distance"] = "km"
 		self.units["gps_fix"] = ""
@@ -269,9 +279,9 @@ class ride_parameters():
 		if not self.pressure_at_sea_level_calculated:
 			self.calculate_pressure_at_sea_level()
 		self.read_gps_data()
+		self.calculate_altitude()
 		self.update_params()
 		self.calculate_time_related_parameters()
-		self.calculate_altitude()
 		self.force_refresh()
 		#FIXME Add calculations of gradient, etc
 
@@ -398,6 +408,10 @@ class ride_parameters():
 		self.update_param("altitude_gps")
 		self.update_param("altitude_home")
 		self.update_param("altitude")
+		self.set_max("altitude")
+		self.set_min("altitude")
+		self.update_param("altitude_min")
+		self.update_param("altitude_max")
 		self.update_param("climb")
 		self.update_param("distance")
 		self.update_param("ridetime")
