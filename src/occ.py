@@ -107,7 +107,7 @@ class open_cycling_computer():
 		log.log(100, "[OCC] Switching to log_level {}".format(log_level))
 
 	def write_config(self):
-		log.debug("[OCC][F] write_config")
+		log.debug("[OCC] Writing config file")
 		log_level =  log.getLevelName(self.logger.getEffectiveLevel())
 		config_tree = eltree.Element("config")
 		eltree.SubElement(config_tree, "log_level").text = log_level
@@ -123,7 +123,6 @@ class open_cycling_computer():
 		eltree.SubElement(config_tree, "speed_units").text = unicode(self.rp.units["speed"])
 		eltree.SubElement(config_tree, "temperature_units").text = unicode(self.rp.units["temperature"])
 		#FIXME error handling for file operation
-		log.debug("[OCC] writing config file")
 		eltree.ElementTree(config_tree).write(self.config_path, encoding="UTF-8", pretty_print=True)
 
 	def main_loop(self):
