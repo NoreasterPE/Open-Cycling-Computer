@@ -72,7 +72,7 @@ class bmp183(threading.Thread):
 		self.occ = occ
 		self.occ.log.debug("[BMP] __init__")
 		self.simulate = simulate
-		self.mock = True
+		self.sensor_ready = False
 		self.running = False
 		# Delay between measurements = 1s
 		self.measurement_delay = 1
@@ -92,14 +92,12 @@ class bmp183(threading.Thread):
 			ret = self.read_byte(self.BMP183_REG['ID'])
 			if ret != self.BMP183_CMD['ID_VALUE']:
 				self.occ.log.error("[BMP] Communication witn bmp183 failed")
-				self.mock = True
+				self.sensor_ready = False
 			else:
-				self.mock = False
+				self.sensor_ready = True
 				self.read_calibration_data()
 				# Proceed with initial pressure/temperature measurement
 				self.measure_pressure()
-		else:
-			self.mock = True
 
 	def stop(self):
 		self.occ.log.debug("[BMP] stop")
@@ -212,10 +210,10 @@ class bmp183(threading.Thread):
 		self.calculate_temperature()
 
 	def measure_pressure(self):
-		if self.mock:
-			self.pressure = NaN
-			self.temperature = NaN
-		else:
+		if self.simulate:
+			self.pressure = 101300
+			self.temperature = 19.8
+		elif self.sensor_ready:
 			# Measure temperature - required for calculations
 			self.measure_temperature()
 			# Read 3 samples of uncompensated pressure
