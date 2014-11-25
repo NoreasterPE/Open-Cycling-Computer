@@ -211,8 +211,6 @@ class ride_parameters():
 		self.units_allowed["temperature_units"] = ["C", "F", "K"]
 
 		#FIXME python-quantities won't like those deg C
-		#FXIME double defined
-		self.units["temperature"] = "C"
 		#FIXME Make pretty units for temperature
 		#self.units["temperature"] = u'\N{DEGREE SIGN}' + "C"
 
@@ -223,6 +221,7 @@ class ride_parameters():
 		self.p_desc["riderweight"] = "Rider weight"
 		self.p_desc["riderweight_units"] = "Rider weight units"
 		self.p_desc["speed_units"] = "Speed units"
+		self.p_desc["temperature_units"] = "Temp. unit"
 
 		#Define id a param is editable FIXME editor type - number, calendar, unit, etc.
 		# 0 - unit editor
@@ -271,7 +270,7 @@ class ride_parameters():
 		self.calculate_time_related_parameters()
 		self.calculate_altitude()
 		self.force_refresh()
-		#FIXME Add calculations of gradient, trip time, etc
+		#FIXME Add calculations of gradient, etc
 
 	def calculate_time_related_parameters(self):
 		dt = self.p_raw["dtime"]
@@ -284,7 +283,6 @@ class ride_parameters():
 				d = dt * s
 				d = float(d)
 			except ValueError:
-				#Speed is not set yet - do nothing
 				self.occ.log.error("[RP] calculate_time_related_parameters ValueError")
 				pass
 			except TypeError:
