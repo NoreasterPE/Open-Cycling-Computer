@@ -211,6 +211,7 @@ class ride_parameters():
 		self.units_allowed["odometer"] = ["km", "mi"]
 		self.units_allowed["riderweight"] = ["kg", "st", "lb"]
 		self.units_allowed["speed_units"] = ["km/h", "m/s", "mi/h", "ft/s"]
+		self.units_allowed["temperature_units"] = ["C", "F", "K"]
 
 		#FIXME python-quantities won't like those deg C
 		#FXIME double defined
@@ -236,6 +237,7 @@ class ride_parameters():
 		self.p_editable["riderweight"] = 1
 		self.p_editable["riderweight_units"] = 0
 		self.p_editable["speed_units"] = 0
+		self.p_editable["temperature_units"] = 0
 
 		self.p_resettable["distance"] = 1
 		self.p_resettable["odometer"] = 1
@@ -414,13 +416,7 @@ class ride_parameters():
 		self.update_param("odometer")
 		self.update_param("riderweight")
 		self.update_param("pressure")
-		self.set_max("temperature")
-		self.set_min("temperature")
-		self.calculate_average_temperature()
-		self.update_param("temperature")
-		self.update_param("temperature_average")
-		self.update_param("temperature_min")
-		self.update_param("temperature_max")
+		self.temperature_update()
 		self.update_param("satellites_used")
 		self.update_param("satellites")
 
@@ -512,3 +508,20 @@ class ride_parameters():
 		self.p_raw["pressure_at_sea_level"] = float(pressure/pow((1 - altitude_home/44330), 5.255))
 		self.pressure_at_sea_level_calculated = True
 		self.occ.log.debug("[RP] pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]))
+
+	def temperature_update(self):
+		temp = self.occ.rp.p_raw["temperature"]
+		unit = self.units["temperature"]
+		if unit == "F":
+			self.p_raw["temperature"] = 2 * temp
+			self.units["temperature"] = "F"
+		if unit == "K":
+			self.p_raw["temperature"] = 273.15 + temp
+			self.units["temperature"] = "K"
+		self.set_max("temperature")
+		self.set_min("temperature")
+		self.calculate_average_temperature()
+		self.update_param("temperature")
+		self.update_param("temperature_average")
+		self.update_param("temperature_min")
+		self.update_param("temperature_max")
