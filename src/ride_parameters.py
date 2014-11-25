@@ -5,6 +5,9 @@ import math
 import time
 import quantities as q
 
+INF_MIN = float("-inf")
+INF = float("inf")
+
 class ride_parameters():
 	def __init__(self, occ, simulate = False):
 		self.occ = occ
@@ -59,8 +62,8 @@ class ride_parameters():
 		self.p_raw["speed_max"] = 0
 		self.p_raw["temperature"] = 0
 		self.p_raw["temperature_average"] = 0
-		self.p_raw["temperature_min"] = float("inf")
-		self.p_raw["temperature_max"] = float("-inf")
+		self.p_raw["temperature_min"] = INF
+		self.p_raw["temperature_max"] = INF_MIN
 		self.p_raw["time_on"] = 0.0001 #Avoid DIV/0
 		self.p_raw["utc"] = ""
 
