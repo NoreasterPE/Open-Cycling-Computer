@@ -52,5 +52,5 @@ Update: twice same error showed up in my code
 36. Unit editor for non-editabl parameters like speed. Long click to trigger. Or units in Settings?
 37: [DONE] Mousemove turn off highlight
 38. Threads write to log aftred log end
-39. [DONE] Resetng speedmax doesn't wrk
+39. [DONE] Resetng speed_max doesn't wrk
 40. [DONE] Setting home altitude has to trigger sea level pressure recalculation
