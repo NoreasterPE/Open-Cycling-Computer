@@ -201,9 +201,6 @@ class ride_parameters():
 		self.units["speedaverage"] = "km/h"
 		self.units["speedmax"] = "km/h"
 		self.units["temperature"] = "C"
-		self.units["temperature_average"] = "C"
-		self.units["temperature_min"] = "C"
-		self.units["temperature_max"] = "C"
 		self.units["time_on"] = "s"
 		self.units["time_on_hms"] = "s"
 
@@ -416,7 +413,7 @@ class ride_parameters():
 		self.update_param("odometer")
 		self.update_param("riderweight")
 		self.update_param("pressure")
-		self.temperature_update()
+		self.update_temperatures()
 		self.update_param("satellites_used")
 		self.update_param("satellites")
 
@@ -509,19 +506,27 @@ class ride_parameters():
 		self.pressure_at_sea_level_calculated = True
 		self.occ.log.debug("[RP] pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]))
 
-	def temperature_update(self):
-		temp = self.occ.rp.p_raw["temperature"]
-		unit = self.units["temperature"]
+	def update_temperature(self, name):
+		temp = self.occ.rp.p_raw[name]
+		#FIXME make a stripping function
+		na = name.find("_")
+		if na > -1:
+			n = name[:na]
+		else:
+			n = name
+		unit = self.units[n]
 		if unit == "F":
-			self.p_raw["temperature"] = 2 * temp
-			self.units["temperature"] = "F"
+			temp = (1.8 * temp) + 32
 		if unit == "K":
-			self.p_raw["temperature"] = 273.15 + temp
-			self.units["temperature"] = "K"
-		self.set_max("temperature")
+			temp = 273.15 + temp
+		formatting = self.p_format[name]
+		self.params[name] = formatting % temp
+
+	def update_temperatures(self):
 		self.set_min("temperature")
+		self.set_max("temperature")
 		self.calculate_average_temperature()
-		self.update_param("temperature")
-		self.update_param("temperature_average")
-		self.update_param("temperature_min")
-		self.update_param("temperature_max")
+		self.update_temperature("temperature")
+		self.update_temperature("temperature_average")
+		self.update_temperature("temperature_min")
+		self.update_temperature("temperature_max")

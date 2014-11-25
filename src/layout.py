@@ -373,15 +373,8 @@ class layout():
 			except IndexError:
 				next_unit = self.occ.rp.units_allowed[variable][-1]
 		v = q.Quantity(variable_value, variable_unit)
-		if (variable == "temperature_units"):
-			print self.occ.rp.units["temperature"]
-			print "TO"
-			print variable_unit
-			print "FIXME Handle C <-> F conversion here"
-			self.occ.rp.temperature_update()
-			#if unit is c - > do nothing p_raw is in C -> go for normal flow
-			#if unit is f - > convert c to f and set param value
-		else:
+		#Temperature units require special handling due to some quirks in python-quantities module
+		if (variable != "temperature_units"):
 			v = v.rescale(next_unit)
 		try:
 			f = self.occ.rp.p_format[variable]
@@ -405,7 +398,7 @@ class layout():
 		variable_unit = self.editor["variable_unit"]
 		variable_value = float(self.editor["variable_value"])
 		if self.editor_type == 0:
-			#FIXME make a stripping function
+			#FIXME make a stripping function and move to a separate unit for use in [LY]
 			vi = variable.find("_")
 			if vi > -1:
 				v = variable[:vi]
