@@ -82,25 +82,63 @@ class open_cycling_computer():
 				log.exception("[OCC] I/O Error when trying to parse to default config. Quitting!!")
 				self.cleanup()
 		self.config = config_tree.getroot()
-		self.layout_path = self.config.find("layout_path").text
-		log_level = self.config.find("log_level").text
-		self.switch_log_level(log_level)
-		self.rp.params["debug_level"] = log_level
+		try:
+			log_level = self.config.find("log_level").text
+			self.switch_log_level(log_level)
+			self.rp.params["debug_level"] = log_level
+		except AttributeError:
+			pass
+		try:
+			self.layout_path = self.config.find("layout_path").text
+		except AttributeError:
+			self.layout_path = "layouts/default.xml"
+			log.error("[OCC] Missing layout path, falling back to default.xml")
+		error_list = []
 		try:
 			self.rp.p_raw["riderweight"] = float(self.config.find("riderweight").text)
-			self.rp.units["riderweight"] = self.config.find("riderweight_units").text
-			self.rp.p_raw["altitude_home"] = float(self.config.find("altitude_home").text)
-			self.rp.units["altitude_home"] = self.config.find("altitude_home_units").text
-			self.rp.p_raw["odometer"] = float(self.config.find("odometer").text)
-			self.rp.units["odometer"] = self.config.find("odometer_units").text
-			self.rp.p_raw["ridetime_total"] = float(self.config.find("ridetime_total").text)
-			self.rp.p_raw["speed_max"] = float(self.config.find("speed_max").text)
-			self.rp.units["speed"] = self.config.find("speed_units").text
-			self.rp.units["temperature"] = self.config.find("temperature_units").text
-			self.rp.update_and_split_speed("speed_max")
 		except AttributeError:
-			log.exception("[OCC] ArrtibuteError in read_config!")
-			pass
+			error_list.append("riderweight") 
+		try:
+			self.rp.units["riderweight"] = self.config.find("riderweight_units").text
+		except AttributeError:
+			error_list.append("riderweight_units") 
+		try:
+			self.rp.p_raw["altitude_home"] = float(self.config.find("altitude_home").text)
+		except AttributeError:
+			error_list.append("") 
+		try:
+			self.rp.units["altitude_home"] = self.config.find("altitude_home_units").text
+		except AttributeError:
+			error_list.append("altitude_home") 
+		try:
+			self.rp.p_raw["odometer"] = float(self.config.find("odometer").text)
+		except AttributeError:
+			error_list.append("odometer") 
+		try:
+			self.rp.units["odometer"] = self.config.find("odometer_units").text
+		except AttributeError:
+			error_list.append("odometer") 
+		try:
+			self.rp.p_raw["ridetime_total"] = float(self.config.find("ridetime_total").text)
+		except AttributeError:
+			error_list.append("ridetime_total") 
+		try:
+			self.rp.p_raw["speed_max"] = float(self.config.find("speed_max").text)
+		except AttributeError:
+			error_list.append("speed_max") 
+		try:
+			self.rp.units["speed"] = self.config.find("speed_units").text
+		except AttributeError:
+			error_list.append("speed") 
+		try:
+			self.rp.units["temperature"] = self.config.find("temperature_units").text
+		except AttributeError:
+			error_list.append("temperature") 
+		self.rp.update_and_split_speed("speed_max")
+		if len(error_list) > 0:
+			for item in error_list:
+				log.error("[OCC] Missing: {} in config file".format(item))
+			error_list = []
 
 	def switch_log_level(self, log_level):
 		self.logger.setLevel(LOG_LEVEL[log_level])
