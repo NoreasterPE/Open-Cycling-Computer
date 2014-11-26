@@ -3,7 +3,7 @@ from bmp183 import bmp183
 from gps_mtk3339 import gps_mtk3339
 import math
 import time
-import quantities as q
+from units import units
 
 INF_MIN = float("-inf")
 INF = float("inf")
@@ -11,6 +11,7 @@ INF = float("inf")
 class ride_parameters():
 	def __init__(self, occ, simulate = False):
 		self.occ = occ
+		self.uc = units()
 		self.occ.log.info("[RP] Initialising GPS")
 		self.gps = gps_mtk3339(occ, simulate)
 		self.occ.log.info("[RP] Starting GPS thread")
@@ -223,7 +224,6 @@ class ride_parameters():
 		self.units_allowed["speed_units"] = ["km/h", "m/s", "mi/h", "ft/s"]
 		self.units_allowed["temperature_units"] = ["C", "F", "K"]
 
-		#FIXME python-quantities won't like those deg C
 		#FIXME Make pretty units for temperature
 		#self.units["temperature"] = u'\N{DEGREE SIGN}' + "C"
 
@@ -448,11 +448,13 @@ class ride_parameters():
 			f = "%.1f"
 
 		if self.p_raw[param_name] != "-":
-			iu = self.get_internal_unit(param_name)
+			unit_raw = self.get_internal_unit(param_name)
 			try:
-				v = q.Quantity(self.p_raw[param_name], iu)
-				v.units = self.get_unit(param_name)
-				self.params[param_name] = f % float(v.item())
+				unit = self.get_unit(param_name)
+				value = self.p_raw[param_name]
+				if unit_raw != unit:
+					value = self.uc.convert(value, unit)
+				self.params[param_name] = f % float(value)
 			except TypeError:
 				#Value conversion failed, so don't change anything
 				self.occ.log.error("[RP] TypeError: update_param exception: {} {} {}".\
