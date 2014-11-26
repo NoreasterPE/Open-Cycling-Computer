@@ -456,10 +456,12 @@ class ride_parameters():
 					value = self.uc.convert(value, unit)
 				self.params[param_name] = f % float(value)
 			except TypeError:
+			#FIXME Required?
 				#Value conversion failed, so don't change anything
 				self.occ.log.error("[RP] TypeError: update_param exception: {} {} {}".\
 						format(__name__ ,param_name, self.params[param_name],\
 							self.p_raw[param_name]))
+			#FIXME Required?
 			except ValueError:
 				self.occ.log.error("[RP] ValueError: update_param exception: {} {} {}".\
 						format(__name__ ,param_name, self.params[param_name],\
