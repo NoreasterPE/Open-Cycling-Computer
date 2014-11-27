@@ -221,8 +221,8 @@ class ride_parameters():
 		#Allowed units - user can switch between those when editing value 
 		self.units_allowed["odometer"] = ["km", "mi"]
 		self.units_allowed["riderweight"] = ["kg", "st", "lb"]
-		self.units_allowed["speed_units"] = ["km/h", "m/s", "mi/h", "ft/s"]
-		self.units_allowed["temperature_units"] = ["C", "F", "K"]
+		self.units_allowed["speed"] = ["km/h", "m/s", "mi/h"]
+		self.units_allowed["temperature"] = ["C", "F", "K"]
 
 		#FIXME Make pretty units for temperature
 		#self.units["temperature"] = u'\N{DEGREE SIGN}' + "C"
@@ -313,6 +313,12 @@ class ride_parameters():
 
 	def force_refresh(self):
 		self.occ.force_refresh()
+
+	def get_raw_val(self, func):
+		if func.endswith("_units"):
+			return 0
+		else:
+			return self.p_raw[func]
 
 	def get_val(self, func):
 		if func.endswith("_units"):

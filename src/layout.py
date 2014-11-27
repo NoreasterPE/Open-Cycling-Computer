@@ -1,7 +1,7 @@
+from units import units
 import lxml.etree as eltree
 import os
 import pygame
-import quantities as q
 import struct
 import sys
 import time
@@ -11,6 +11,7 @@ class layout():
 	#Temporary change
 	def __init__(self, occ, layout_path="layouts/default.xml"):
 		self.occ = occ
+		self.uc = units()
 		self.screen = occ.screen
 		self.page_list = {}
 		self.page_index = {}
@@ -23,6 +24,7 @@ class layout():
 		#Helpers for editing values
 		self.editor = {}
 		self.editor["variable_value"] = None
+		self.editor["variable_raw_value"] = None
 		self.editor["variable_unit"] = None
 		self.editor["variable_description"] = None
 		self.editor["variable"] = None
@@ -248,13 +250,23 @@ class layout():
 	def open_editor_page(self, param_name):
 		#FIXME add different editors
 		self.editor["variable"] = param_name
+		self.editor["variable_raw_value"] = self.occ.rp.get_raw_val(param_name)
 		self.editor["variable_value"] = self.occ.rp.get_val(param_name)
 		self.editor["variable_unit"] = self.occ.rp.get_unit(param_name)
 		self.editor["variable_description"] = self.occ.rp.get_description(param_name)
 		self.editor_index = 0
 		#FIXME Make it mory pythonic
 		if self.editor_type == 0: 
-			self.editor["variable_unit"] = self.editor["variable_value"]
+			name = self.editor["variable"]
+			#FIXME make a stripping function
+			na = name.find("_")
+			if na > -1:
+				n = name[:na]
+			else:
+				n = name
+			unit = self.occ.rp.get_unit(n)
+			self.editor["variable"] = n
+			self.editor["variable_unit"] = unit
 			self.editor["variable_value"] = 0
 			self.use_page("editor_units")
 		if self.editor_type == 1: 
@@ -360,7 +372,7 @@ class layout():
 		#direction to be 1 (next) or 0 (previous)
 		variable = self.editor["variable"]
 		variable_unit = self.editor["variable_unit"]
-		variable_value = float(self.editor["variable_value"])
+		variable_value = self.editor["variable_raw_value"]
 		current_unit_index = self.occ.rp.units_allowed[variable].index(variable_unit)
 		if direction == 1:
 			try:
@@ -372,17 +384,14 @@ class layout():
 				next_unit = self.occ.rp.units_allowed[variable][current_unit_index - 1]
 			except IndexError:
 				next_unit = self.occ.rp.units_allowed[variable][-1]
-		v = q.Quantity(variable_value, variable_unit)
-		#Temperature units require special handling due to some quirks in python-quantities module
-		if (variable != "temperature_units"):
-			v = v.rescale(next_unit)
+		if next_unit != variable_unit:
+			variable_value = self.uc.convert(variable_value, next_unit)
 		try:
 			f = self.occ.rp.p_format[variable]
 		except KeyError:
 			self.occ.log.warning("[LY] Formatting not available: param_name ={}".format(variable))
 			f = "%.1f"
-	
-		self.editor["variable_value"] = f % float(v.item())
+		self.editor["variable_value"] = float(f % float(variable_value))
 		self.editor["variable_unit"] = next_unit
 
 	def ed_next_unit(self):
@@ -396,21 +405,16 @@ class layout():
 	def accept_edit(self):
 		variable = self.editor["variable"]
 		variable_unit = self.editor["variable_unit"]
-		variable_value = float(self.editor["variable_value"])
+		variable_raw_value = self.editor["variable_raw_value"]
+		variable_value = self.editor["variable_value"]
 		if self.editor_type == 0:
-			#FIXME make a stripping function and move to a separate unit for use in [LY]
-			vi = variable.find("_")
-			if vi > -1:
-				v = variable[:vi]
-			else:
-				v = variable
-			self.occ.rp.units[v] = variable_unit
-			#FIXME Change all units for i.e. speed together?
+			self.occ.rp.units[variable] = variable_unit
 		if self.editor_type == 1:
-			v = q.Quantity(variable_value, variable_unit)
-			v = v.rescale(self.occ.rp.get_internal_unit(variable))
-			self.occ.rp.p_raw[variable] = v.item()
-			self.occ.rp.params[variable] = self.editor["variable_value"]
+			unit_raw = self.occ.rp.get_internal_unit(variable)
+			value = variable_value
+			if unit_raw != variable_unit:
+				value = self.uc.convert(variable_raw_value, variable_unit)
+			self.occ.rp.p_raw[variable] = float(value)
 			self.occ.rp.units[variable] = self.editor["variable_unit"]
 			if variable == "altitude_home":
 				#Force recalculation

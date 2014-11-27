@@ -10,10 +10,12 @@ class units():
 		                "km/h" : self.speed_ms_to_kmh(value),
 		                "mi/h" : self.speed_ms_to_mph(value),
 		                "pd" : self.mass_kg_to_pd(value),
-		                "st_lb" : self.mass_kg_to_st_lb(value),
+		                "st" : self.mass_kg_to_st(value),
+		                "lb" : self.mass_kg_to_lb(value),
 		                "km" : self.dist_m_to_km(value),
 		                "mi" : self.dist_m_to_mi(value),
 		                "yd" : self.dist_m_to_yd(value),
+		                "C" : value,
 		                "hPa" : value,
 		                "kg" : value,
 		                "s" : value,
@@ -43,10 +45,15 @@ class units():
 		m_pd = mass / 0.45359237
 		return m_pd
 
-	def mass_kg_to_st_lb(self, mass):
-		m_st = int(mass * 0.15747)
-		m_lb = (mass - (m_st / 0.15747)) * 2.2046
-		return (m_st, m_lb)
+	def mass_kg_to_st(self, mass):
+		m_st = mass * 0.15747
+		#m_lb = (mass - (m_st / 0.15747)) * 2.2046
+		#return (m_st, m_lb)
+		return m_st
+
+	def mass_kg_to_lb(self, mass):
+		m_lb = mass * 2.2046
+		return m_lb
 
 	def dist_m_to_km(self, dist):
 		d_km = dist / 1000
