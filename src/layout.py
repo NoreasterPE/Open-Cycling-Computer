@@ -13,15 +13,16 @@ class layout():
 		self.occ = occ
 		self.uc = units()
 		self.screen = occ.screen
+		self.colorkey = [0,0,0]
+		self.alpha = 255
 		self.page_list = {}
 		self.page_index = {}
 		self.function_rect_list = {}
 		self.current_function_list = []
+		self.current_image_list = {}
 		self.layout_path = layout_path
 		self.load_layout(layout_path)
 		self.render_button = None
-		self.colorkey = [0,0,0]
-		self.alpha = 255
 
 		#Helpers for editing values
 		self.editor = {}
@@ -113,6 +114,12 @@ class layout():
 				rect = pygame.Rect(x0, y0, w, h)
 				self.function_rect_list[name] = rect
 				self.current_button_list.append(name)
+			image_path = field.find('text_center').get('file')
+			if (image_path is not None):
+				image = pygame.image.load(image_path).convert()
+				image.set_colorkey(self.colorkey)
+				image.set_alpha(self.alpha)
+				self.current_image_list[self.current_page_name + image_path] = image
 
 	def use_main_page(self):
 		self.use_page()
@@ -156,9 +163,8 @@ class layout():
 				text_center_y = int(field.find('text_center').get('y'))
 				try:
 					image_path = field.find('text_center').get('file')
-					image = pygame.image.load(image_path).convert()
-					image.set_colorkey(self.colorkey)
-					image.set_alpha(self.alpha)
+					imagekey = self.current_page_name + image_path
+					image = self.current_image_list[imagekey]
 					screen.blit(image, [text_center_x, text_center_y])
 				except:
 					pass
