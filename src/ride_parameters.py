@@ -575,7 +575,7 @@ class ride_parameters():
 		self.p_raw["pressure_at_sea_level"] = float(pressure/pow((1 - altitude_home/44330), 5.255))
 		self.pressure_at_sea_level_calculated = True
 		self.occ.log.debug("[RP] pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]))
-
+	#FIXME Remove this 
 	def update_temperature(self, name):
 		temp = self.occ.rp.p_raw[name]
 		#FIXME make a stripping function
@@ -596,6 +596,7 @@ class ride_parameters():
 		self.set_min("temperature")
 		self.set_max("temperature")
 		self.calculate_average_temperature()
+		#FIXME Remove it, use units.py
 		self.update_temperature("temperature")
 		self.update_temperature("temperature_average")
 		self.update_temperature("temperature_min")
