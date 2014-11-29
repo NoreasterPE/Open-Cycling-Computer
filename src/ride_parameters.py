@@ -46,6 +46,7 @@ class ride_parameters():
 		self.p_raw["cadence"] = 0
 		self.p_raw["climb"] = 0
 		self.p_raw["distance"] = 0
+		#FIXME Name doesn't follow the policy
 		self.p_raw["gps_fix"] = ""
 		self.p_raw["gradient"] = 0
 		self.p_raw["heart_rate"] = 0
@@ -53,21 +54,26 @@ class ride_parameters():
 		self.p_raw["longitude"] = 0
 		self.p_raw["odometer"] = 0
 		self.p_raw["pressure"] = 0
+		#FIXME Name doesn't follow the policy
 		self.p_raw["pressure_at_sea_level"] = 0
 		self.p_raw["riderweight"] = 0
 		self.p_raw["ridetime"] = 0
 		self.p_raw["ridetime_total"] = 0
 		self.p_raw["rtc"] = ""
 		self.p_raw["satellites"] = 0
+		#FIXME Name doesn't follow the policy
 		self.p_raw["satellites_used"] = 0
 		self.p_raw["speed"] = 0
 		self.p_raw["speed_average"] = 0
+		#FIXME Name doesn't follow the policy
 		self.p_raw["speed_gps"] = 0
 		self.p_raw["speed_max"] = 0
 		self.p_raw["temperature"] = 0
+		#FIXME Use avg?
 		self.p_raw["temperature_average"] = 0
 		self.p_raw["temperature_min"] = INF
 		self.p_raw["temperature_max"] = INF_MIN
+		#FIXME Name doesn't follow the policy
 		self.p_raw["time_on"] = 0.0001 #Avoid DIV/0
 		self.p_raw["utc"] = ""
 
