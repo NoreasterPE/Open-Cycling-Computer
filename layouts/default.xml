@@ -27,7 +27,7 @@
 		</field>
 		<field name="middle">
 			<function>distance</function>
-			<button x0="0" y0="150" w="239" h="89"/>
+			<button x0="0" y0="150" w="239" h="39"/>
 			<text_center x="140" y="175" size="4"/>
 		</field>
 		<field name="lag">
@@ -40,6 +40,7 @@
 		</field>
                 <field name="middle_1">
                         <function>ridetime_hms</function>
+			<button x0="0" y0="190" w="239" h="25"/>
                         <text_center x="120" y="200" size="3"/>
                 </field>
                 <field name="middle_2">

@@ -251,6 +251,7 @@ class ride_parameters():
 		self.p_resettable["distance"] = 1
 		self.p_resettable["odometer"] = 1
 		self.p_resettable["speed_max"] = 1
+		self.p_resettable["ridetime"] = 1
 		self.p_resettable["speed_average"] = 1
 		#Do not record any speed below 2.5 m/s
 		self.speed_gps_low = 2.5
@@ -440,11 +441,13 @@ class ride_parameters():
 		self.update_param("satellites")
 
 	def strip_end(self, param_name):
-		#Make sure there is no _digits or _tenths at the end
+		#Make sure there is no _digits, _tenths, _hms at the end
 		if param_name.endswith("_digits"):
 			param_name = param_name[:-7]
 		if param_name.endswith("_tenths"):
 			param_name = param_name[:-7]
+		if param_name.endswith("_hms"):
+			param_name = param_name[:-4]
 		return param_name
 
 	def reset_param(self, param_name):
