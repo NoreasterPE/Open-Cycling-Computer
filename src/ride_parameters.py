@@ -31,6 +31,7 @@ class ride_parameters():
 		self.p_resettable = {}
 		self.units = {}
 		self.units_allowed = {}
+		self.suffixes =("_digits", "_tenths", "_hms")
 
 		#Internal params of the ride.
 		self.p_raw["time_stamp"] = time.time()
@@ -259,7 +260,8 @@ class ride_parameters():
 		#Do not show speed below 1 m/s
 		self.speed_gps_noise = 1
 		self.occ.log.info("[RP] speed_gps_noise treshold set to {}".format(self.speed_gps_noise))
-		self.update_and_split_speed("speed_max")
+		self.update_param("speed_max")
+		self.split_speed("speed_max")
 		self.update_param("altitude_home")
 		self.occ.log.info("[RP] altitude_home set to {}".format(self.params["altitude_home"]))
 		self.pressure_at_sea_level_calculated = False
@@ -307,7 +309,8 @@ class ride_parameters():
 			self.p_raw["ridetime"] += self.p_raw["dtime"]
 			self.p_raw["ridetime_total"] += self.p_raw["dtime"]
 			self.p_raw["speed_average"] = self.p_raw["distance"] / self.p_raw["ridetime"]
-			self.update_and_split_speed("speed_average")
+			self.update_param("speed_average")
+			self.split_speed("speed_average")
 			self.occ.log.debug("[RP] speed_gps: {}, distance: {}, odometer: {}".\
 					format(s, self.p_raw["distance"], self.p_raw["odometer"]))
 		else:
@@ -380,15 +383,14 @@ class ride_parameters():
 		self.occ.log.error("[RP] raw speed_gps {}".format(self.p_raw["speed_gps"]))
 		self.p_raw["climb"] = self.clean_value(cmb);
 
-	def update_and_split_speed(self, speed_name):
-		self.update_param(speed_name)
+	def split_speed(self, speed_name):
 		self.params[speed_name + "_digits"] = self.params[speed_name][:-2]
 		self.params[speed_name + "_tenths"] = self.params[speed_name][-1:]
 
 	def update_max_speed(self):
 		if self.p_raw["speed"] > self.p_raw["speed_max"]:
 			self.p_raw["speed_max"] = self.p_raw["speed"]
-			self.update_and_split_speed("speed_max")
+		self.split_speed("speed_max")
 
 	def update_gps(self):
 		self.params["gps_fix"] = self.p_raw["gps_fix"]
@@ -427,7 +429,9 @@ class ride_parameters():
 		self.update_hms("ridetime_total")
 		self.update_hms("time_on")
 		self.update_max_speed()
-		self.update_and_split_speed("speed")
+		self.update_param("speed")
+		self.update_param("speed_max")
+		self.split_speed("speed")
 		self.occ.log.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}".\
 				format(self.params["speed"], self.params["speed_max"],\
 				self.params["speed_average"], self.units["speed_average"]))
@@ -442,22 +446,19 @@ class ride_parameters():
 
 	def strip_end(self, param_name):
 		#Make sure there is no _digits, _tenths, _hms at the end
-		if param_name.endswith("_digits"):
-			param_name = param_name[:-7]
-		if param_name.endswith("_tenths"):
-			param_name = param_name[:-7]
-		if param_name.endswith("_hms"):
-			param_name = param_name[:-4]
+		for s in self.suffixes:
+			if param_name.endswith(s):
+				l = -1 * len(s)
+				param_name = param_name[:l]
 		return param_name
 
 	def reset_param(self, param_name):
 		self.occ.log.debug("[RP] Resetting {}".format(param_name))
-		param_name = self.strip_end(param_name)
 		self.p_raw[param_name] = 0
 		self.update_param(param_name)
 		#Speed needs special handling due to digit/tenth split
-		if param_name.startswith("speed"):
-			self.update_and_split_speed(param_name)
+		#if param_name.startswith("speed"):
+		#	self.update_and_split_speed(param_name)
 
 	def update_param(self, param_name):
 		if param_name in self.p_format:

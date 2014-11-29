@@ -134,7 +134,8 @@ class open_cycling_computer():
 			self.rp.units["temperature"] = self.config.find("temperature_units").text
 		except AttributeError:
 			error_list.append("temperature") 
-		self.rp.update_and_split_speed("speed_max")
+		self.rp.update_param("speed_max")
+		self.rp.split_speed("speed_max")
 		if len(error_list) > 0:
 			for item in error_list:
 				log.error("[OCC] Missing: {} in config file".format(item))
