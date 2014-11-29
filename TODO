@@ -56,4 +56,12 @@ Update: twice same error showed up in my code
 40. [DONE] Setting home altitude has to trigger sea level pressure recalculation
 41. Icons with different states, i.e. to show gps signal strength
 42. Use sprites to make smooth page switching?
+43. Error after stopping gpsd:
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/threading.py", line 552, in __bootstrap_inner
+    self.run()
+  File "/home/pi/OpenCyclingComputer/src/gps_mtk3339.py", line 112, in run
+    self.fix_mode = fix_mode[0]
+KeyError: 0
 
