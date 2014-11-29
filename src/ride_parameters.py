@@ -251,6 +251,7 @@ class ride_parameters():
 		self.p_resettable["distance"] = 1
 		self.p_resettable["odometer"] = 1
 		self.p_resettable["speed_max"] = 1
+		self.p_resettable["speed_average"] = 1
 		#Do not record any speed below 2.5 m/s
 		self.speed_gps_low = 2.5
 		self.occ.log.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
