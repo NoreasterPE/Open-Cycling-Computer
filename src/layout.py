@@ -20,6 +20,8 @@ class layout():
 		self.layout_path = layout_path
 		self.load_layout(layout_path)
 		self.render_button = None
+		self.colorkey = [0,0,0]
+		self.alpha = 255
 
 		#Helpers for editing values
 		self.editor = {}
@@ -155,6 +157,8 @@ class layout():
 				try:
 					image_path = field.find('text_center').get('file')
 					image = pygame.image.load(image_path).convert()
+					image.set_colorkey(self.colorkey)
+					image.set_alpha(self.alpha)
 					screen.blit(image, [text_center_x, text_center_y])
 				except:
 					pass
