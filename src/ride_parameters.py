@@ -285,7 +285,6 @@ class ride_parameters():
 		self.pressure_at_sea_level_calculated = False
 		self.cadence_timestamp = None
 		self.cadence_timestamp_old = None
-		self.calculate_cadence()
 
 	def stop(self):
 		self.gps.stop()
