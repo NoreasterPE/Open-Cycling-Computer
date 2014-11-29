@@ -486,7 +486,12 @@ class ride_parameters():
 	def reset_param(self, param_name):
 		self.occ.log.debug("[RP] Resetting {}".format(param_name))
 		self.p_raw[param_name] = 0
-		self.update_param(param_name)
+		#FIXME make a function like reset ride 
+		if param_name == "ridetime" or param_name == "distance":
+			self.p_raw["distance"] = 0
+			self.p_raw["ridetime"] = 0
+			self.p_raw["speed_average"] = 0
+			
 		#Speed needs special handling due to digit/tenth split
 		#if param_name.startswith("speed"):
 		#	self.update_and_split_speed(param_name)
