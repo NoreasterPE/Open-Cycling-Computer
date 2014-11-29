@@ -19,6 +19,7 @@ class units():
 		                "hPa" : value,
 		                "kg" : value,
 		                "s" : value,
+		                "RPM" : value,
 		                "m/s" : value,
 		                "m" : value,
 		                "" : value,

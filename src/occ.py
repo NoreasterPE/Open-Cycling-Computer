@@ -25,9 +25,13 @@ LOG_LEVEL = {   "DEBUG"    : log.DEBUG,
 }
 EV_UPDATE_VALUES = USEREVENT + 1
 EV_SAVE_CONFIG = USEREVENT + 2
+#FIXME To be removed when bluetooth sensor goes live
+EV_CADENCE_EMUL = USEREVENT + 3
 
-REFRESH_TIME = 1500
+REFRESH_TIME = 900
 CONFIG_SAVE_TIME = 15000
+#FIXME To be removed when bluetooth sensor goes live
+CADENCE_EMUL = 500
 
 class open_cycling_computer():
 	'Class for PiTFT 2.8" 320x240 cycling computer'
@@ -46,6 +50,8 @@ class open_cycling_computer():
 		pygame.time.set_timer(EV_UPDATE_VALUES, REFRESH_TIME)
 		log.debug("[OCC] EV_SAVE_CONFIG to be generated every {} s".format(CONFIG_SAVE_TIME/1000))
 		pygame.time.set_timer(EV_SAVE_CONFIG, CONFIG_SAVE_TIME)
+		log.debug("[OCC] Cadence event emulation every {} ms".format(CADENCE_EMUL))
+		pygame.time.set_timer(EV_CADENCE_EMUL, CADENCE_EMUL)
 		self.width = width
 		self.height = height
 		log.debug("[OCC] Screen size is {} x {}".format(self.width, self.height))
@@ -179,6 +185,8 @@ class open_cycling_computer():
 			elif event.type == EV_UPDATE_VALUES:
 				self.rp.update_values()
 				log.debug("[OCC] EV_UPDATE_VALUES {}".format(time_now))
+			elif event.type == EV_CADENCE_EMUL:
+				self.rp.calculate_cadence()
 			elif event.type == EV_SAVE_CONFIG:
 				self.write_config()
 				log.debug("[OCC] EV_SAVE_CONFIG {}".format(time_now))

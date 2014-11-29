@@ -44,6 +44,8 @@ class ride_parameters():
 		self.p_raw["altitude_min"] = INF
 		self.p_raw["altitude_max"] = INF_MIN
 		self.p_raw["cadence"] = 0
+		self.p_raw["cadence_average"] = 0
+		self.p_raw["cadence_max"] = INF_MIN
 		self.p_raw["climb"] = 0
 		self.p_raw["distance"] = 0
 		#FIXME Name doesn't follow the policy
@@ -89,6 +91,9 @@ class ride_parameters():
 		self.p_raw_units["altitude_min"] = "m"
 		self.p_raw_units["altitude_max"] = "m"
 		self.p_raw_units["distance"] = "m"
+		self.p_raw_units["cadence"] = "RPM"
+		self.p_raw_units["cadence_average"] = "RPM"
+		self.p_raw_units["cadence_max"] = "RPM"
 		self.p_raw_units["climb"] = "m/s"
 		self.p_raw_units["gps_fix"] = ""
 		self.p_raw_units["latitude"] = ""
@@ -117,6 +122,8 @@ class ride_parameters():
 		self.params["altitude_min"] = "-"
 		self.params["altitude_max"] = "-"
 		self.params["cadence"] = "-"
+		self.params["cadence_average"] = "-"
+		self.params["cadence_max"] = "-"
 		self.params["climb"] = "-"
 		self.params["distance"] = 0
 		self.params["gps_fix"] = "-"
@@ -161,6 +168,8 @@ class ride_parameters():
 		self.p_format["altitude_min"] = "%.0f"
 		self.p_format["altitude_max"] = "%.0f"
 		self.p_format["cadence"] = "%.0f"
+		self.p_format["cadence_average"] = "%.0f"
+		self.p_format["cadence_max"] = "%.0f"
 		self.p_format["climb"] = "%.1f"
 		self.p_format["distance"] = "%.1f"
 		self.p_format["gps_fix"] = ""
@@ -203,6 +212,9 @@ class ride_parameters():
 		self.units["altitude_min"] = "m"
 		self.units["altitude_max"] = "m"
 		self.units["climb"] = "m/s"
+		self.units["cadence"] = "RPM"
+		self.units["cadence_average"] = "RPM"
+		self.units["cadence_max"] = "RPM"
 		self.units["distance"] = "km"
 		self.units["gps_fix"] = ""
 		self.units["gradient"] = "%"
@@ -271,6 +283,9 @@ class ride_parameters():
 		self.update_param("altitude_home")
 		self.occ.log.info("[RP] altitude_home set to {}".format(self.params["altitude_home"]))
 		self.pressure_at_sea_level_calculated = False
+		self.cadence_timestamp = None
+		self.cadence_timestamp_old = None
+		self.calculate_cadence()
 
 	def stop(self):
 		self.gps.stop()
@@ -415,6 +430,14 @@ class ride_parameters():
 		ta_new = (t * dt + ta * tt) / (tt + dt)
 		self.p_raw["temperature_average"] = ta_new
 
+	def calculate_average_cadence(self):
+		dt = self.p_raw["dtime"]
+		c = self.p_raw["cadence"]
+		ca = self.p_raw["cadence_average"]
+		tt = self.p_raw["time_on"]
+		ca_new = (c * dt + ca * tt) / (tt + dt)
+		self.p_raw["cadence_average"] = ca_new
+
 	def update_params(self):
 		#FIXME Make a list of params and call from for loop
 		#FIXME Use the list to dump DEBUG data
@@ -428,6 +451,7 @@ class ride_parameters():
 		self.set_min("altitude")
 		self.update_param("altitude_min")
 		self.update_param("altitude_max")
+		self.update_cadence()
 		self.update_param("climb")
 		self.update_param("distance")
 		self.update_param("ridetime")
@@ -438,9 +462,10 @@ class ride_parameters():
 		self.update_param("speed")
 		self.update_param("speed_max")
 		self.split_speed("speed")
-		self.occ.log.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}".\
+		self.occ.log.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}, cadence {} {}".\
 				format(self.params["speed"], self.params["speed_max"],\
-				self.params["speed_average"], self.units["speed_average"]))
+				self.params["speed_average"], self.units["speed_average"],\
+				self.params["cadence"], self.units["cadence"]))
 			
 		self.params["utc"] = self.p_raw["utc"]
 		self.update_param("odometer")
@@ -575,3 +600,17 @@ class ride_parameters():
 		self.update_temperature("temperature_average")
 		self.update_temperature("temperature_min")
 		self.update_temperature("temperature_max")
+
+	def calculate_cadence(self):
+		self.cadence_timestamp = time.time()
+		if self.cadence_timestamp_old is not None:
+			dt = self.cadence_timestamp - self.cadence_timestamp_old 
+			self.p_raw["cadence"] = 60 / dt
+		self.cadence_timestamp_old = self.cadence_timestamp
+
+	def update_cadence(self):
+		self.calculate_average_cadence()
+		self.set_max("cadence")
+		self.update_param("cadence")
+		self.update_param("cadence_average")
+		self.update_param("cadence_max")
