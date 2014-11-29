@@ -229,11 +229,7 @@ class layout():
 							self.editor_type = self.occ.rp.p_editable[param_name]
 							self.open_editor_page(param_name)
 							break
-						pi = param_name.find("_")
-						if pi > -1:
-							p = param_name[:pi]
-						else:
-							p = param_name
+						p = self.occ.rp.strip_end(param_name)
 						if p in self.occ.rp.p_resettable:
 							self.occ.rp.reset_param(p)
 				except KeyError:

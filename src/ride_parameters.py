@@ -438,8 +438,17 @@ class ride_parameters():
 		self.update_param("satellites_used")
 		self.update_param("satellites")
 
+	def strip_end(self, param_name):
+		#Make sure there is no _digits or _tenths at the end
+		if param_name.endswith("_digits"):
+			param_name = param_name[:-7]
+		if param_name.endswith("_tenths"):
+			param_name = param_name[:-7]
+		return param_name
+
 	def reset_param(self, param_name):
-		self.occ.log.debug("[LY] Resetting {}".format(param_name))
+		self.occ.log.debug("[RP] Resetting {}".format(param_name))
+		param_name = self.strip_end(param_name)
 		self.p_raw[param_name] = 0
 		self.update_param(param_name)
 		#Speed needs special handling due to digit/tenth split
