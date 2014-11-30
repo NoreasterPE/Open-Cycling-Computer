@@ -50,6 +50,7 @@ class ride_parameters():
 		self.p_raw["distance"] = 0
 		#FIXME Name doesn't follow the policy
 		self.p_raw["gps_fix"] = ""
+		self.p_raw["gps_strength"] = 0
 		self.p_raw["gradient"] = 0
 		self.p_raw["heart_rate"] = 0
 		self.p_raw["latitude"] = 0
@@ -394,6 +395,12 @@ class ride_parameters():
 		self.p_raw["speed_gps"] = self.clean_value(spd);
 		self.p_raw["satellites_used"] = self.clean_value(sud);
 		self.p_raw["satellites"] = self.clean_value(sat);
+		gps_str = self.p_raw["satellites_used"] - 3
+		if gps_str < 0:
+			gps_str = 0
+		if gps_str > 3:
+			gps_str = 3
+		self.p_raw["gps_strength"] = gps_str
 		self.p_raw["speed"] = self.clean_value(spd);
 		if self.p_raw["speed"] < self.speed_gps_noise:
 			self.p_raw["speed"] = 0

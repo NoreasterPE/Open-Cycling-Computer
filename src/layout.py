@@ -115,11 +115,13 @@ class layout():
 				self.function_rect_list[name] = rect
 				self.current_button_list.append(name)
 			image_path = field.find('text_center').get('file')
+			variable = field.find('text_center').get('variable')
 			if (image_path is not None):
 				image = pygame.image.load(image_path).convert()
 				image.set_colorkey(self.colorkey)
 				image.set_alpha(self.alpha)
 				self.current_image_list[self.current_page_name + image_path] = image
+				if variable != 0 set image. on 0 ignore on 1 use image_1, on 2 use _2
 
 	def use_main_page(self):
 		self.use_page()
