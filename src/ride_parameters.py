@@ -271,7 +271,6 @@ class ride_parameters():
 		self.p_resettable["odometer"] = 1
 		self.p_resettable["speed_max"] = 1
 		self.p_resettable["ridetime"] = 1
-		self.p_resettable["speed_average"] = 1
 		#Do not record any speed below 2.5 m/s
 		self.speed_gps_low = 2.5
 		self.occ.log.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
@@ -489,7 +488,6 @@ class ride_parameters():
 		if param_name == "ridetime" or param_name == "distance":
 			self.p_raw["distance"] = 0
 			self.p_raw["ridetime"] = 0
-			self.p_raw["speed_average"] = 0
 			
 		#Speed needs special handling due to digit/tenth split
 		#if param_name.startswith("speed"):
