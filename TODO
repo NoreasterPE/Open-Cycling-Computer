@@ -64,4 +64,4 @@ Traceback (most recent call last):
   File "/home/pi/OpenCyclingComputer/src/gps_mtk3339.py", line 112, in run
     self.fix_mode = fix_mode[0]
 KeyError: 0
-
+44. Setting time from gps is breaking distance calculations. (time shift * speed is added to distance). Record time shift and make correction?
