@@ -115,13 +115,23 @@ class layout():
 				self.function_rect_list[name] = rect
 				self.current_button_list.append(name)
 			image_path = field.find('text_center').get('file')
-			variable = field.find('text_center').get('variable')
 			if (image_path is not None):
-				image = pygame.image.load(image_path).convert()
-				image.set_colorkey(self.colorkey)
-				image.set_alpha(self.alpha)
-				self.current_image_list[self.current_page_name + image_path] = image
-				if variable != 0 set image. on 0 ignore on 1 use image_1, on 2 use _2
+				variable = field.find('text_center').get('variable')
+				frames = field.find('text_center').get('frames')
+				#FIXME Do no force frames for static icons
+				#FIXME Make a function to create image_key
+				if frames is not None:
+					frames = int(frames)
+					for i in range(frames):
+						suffix = "_" + unicode(i)
+						extension = image_path[-4:]
+						name = image_path[:-4]
+						image_path_for_frame = name + suffix + extension
+						image = pygame.image.load(image_path_for_frame).convert()
+						image.set_colorkey(self.colorkey)
+						image.set_alpha(self.alpha)
+						image_key = self.current_page_name + variable + image_path_for_frame
+						self.current_image_list[image_key] = image
 
 	def use_main_page(self):
 		self.use_page()
@@ -163,10 +173,16 @@ class layout():
 				uv = unicode(value)
 				text_center_x = int(field.find('text_center').get('x'))
 				text_center_y = int(field.find('text_center').get('y'))
+				variable = field.find('text_center').get('variable')
 				try:
 					image_path = field.find('text_center').get('file')
-					imagekey = self.current_page_name + image_path
-					image = self.current_image_list[imagekey]
+					value =  self.occ.rp.p_raw[variable]
+					suffix = "_" + unicode(value)
+					extension = image_path[-4:]
+					name = image_path[:-4]
+					image_path_for_frame = name + suffix + extension
+					image_key = self.current_page_name + variable + image_path_for_frame
+					image = self.current_image_list[image_key]
 					screen.blit(image, [text_center_x, text_center_y])
 				except:
 					pass
