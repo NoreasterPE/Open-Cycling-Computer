@@ -23,6 +23,10 @@ LOG_LEVEL = {   "DEBUG"    : log.DEBUG,
 		"ERROR"    : log.ERROR,
 		"CRITICAL" : log.CRITICAL
 }
+
+LONG_CLICK = 1000 #ms of long click
+SWIPE_LENGTH = 30 #pixels of swipe
+
 EV_UPDATE_VALUES = USEREVENT + 1
 EV_SAVE_CONFIG = USEREVENT + 2
 #FIXME To be removed when bluetooth sensor goes live
@@ -70,6 +74,16 @@ class open_cycling_computer():
 		self.rendering.start()
 		self.running = True
 		self.refresh = False
+
+	def event_iterator(self):
+	     while True:
+		 yield pygame.event.wait()
+		 while True:
+		     event = pygame.event.poll()
+		     if event.type == NOEVENT:
+			 break
+		     else:
+			 yield event
 
 	def force_refresh(self):
 		self.refresh = True
@@ -170,88 +184,90 @@ class open_cycling_computer():
 		#FIXME error handling for file operation
 		eltree.ElementTree(config_tree).write(self.config_path, encoding="UTF-8", pretty_print=True)
 
+	def screen_touched_handler(self, time_now):
+		if (time_now - self.pressed_t) > LONG_CLICK:
+			log.debug("[OCC] LONG CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
+			self.layout.check_click(self.pressed_pos, 1)
+			self.reset_motion()
+		if (self.released_t != 0):
+			log.debug("[OCC] SHORT CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
+			self.layout.check_click(self.pressed_pos, 0)
+			self.reset_motion()
+		dx = self.rel_movement[0]
+		dy = self.rel_movement[1]
+		if (abs(dx)) > SWIPE_LENGTH:
+			if (dx > 0):
+				log.debug("[OCC] SWIPE X RIGHT to LEFT : {} {} {} {} {} {}".\
+					format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
+				self.layout.check_click(self.pressed_pos, 2)
+				self.reset_motion()
+			else:
+				log.debug("[OCC] SWIPE X LEFT to RIGHT : {} {} {} {} {} {}".\
+					format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
+				self.layout.check_click(self.pressed_pos, 3)
+				self.reset_motion()
+		elif (abs(dy)) > SWIPE_LENGTH:
+			if (dy < 0):
+				log.debug("[OCC] SWIPE X BOTTOM to TOP : {} {} {} {} {} {}".\
+					format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
+				self.layout.check_click(self.pressed_pos, 4)
+				self.reset_motion()
+			else:
+				log.debug("[OCC] SWIPE X TOP to BOTTOM : {} {} {} {} {} {}".\
+					format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
+				self.layout.check_click(self.pressed_pos, 5)
+				self.reset_motion()
+
+	def event_handeler(self, event, time_now):
+		if event.type == pygame.QUIT:
+			self.running = False
+			log.debug("[OCC] QUIT {}".format(time_now))
+		elif event.type == EV_UPDATE_VALUES:
+			self.rp.update_values()
+			log.debug("[OCC] EV_UPDATE_VALUES {}".format(time_now))
+		elif event.type == EV_CADENCE_EMUL:
+			self.rp.calculate_cadence()
+		elif event.type == EV_SAVE_CONFIG:
+			self.write_config()
+			log.debug("[OCC] EV_SAVE_CONFIG {}".format(time_now))
+		elif event.type == pygame.MOUSEBUTTONDOWN:
+			self.pressed_t = time_now
+			self.pressed_pos = pygame.mouse.get_pos()
+			#Read rel to clean the value generated on click
+			pressed_rel =  pygame.mouse.get_rel()
+			self.add_rel_motion = True
+			self.layout.render_button = self.pressed_pos
+			log.debug("[OCC] DOWN:{} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
+		elif event.type == pygame.MOUSEBUTTONUP:
+			#That check prevents setting release_x after long click
+			if (self.pressed_t != 0):
+				self.released_t = time_now
+				self.released_pos = pygame.mouse.get_pos()
+			self.add_rel_motion = False
+			self.layout.render_button = None
+			log.debug("[OCC] UP: {} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
+		elif event.type == pygame.MOUSEMOTION:
+			pressed_rel =  pygame.mouse.get_rel()
+			if self.add_rel_motion:
+				self.rel_movement = tuple(map(add, self.rel_movement, pressed_rel))
+			log.debug("[OCC] MOTION: {}".format(self.rel_movement))
+		#log.debug("[OCC] ticking:time_now:{} pressed_t:{} pressed_pos:{} released_t:{} released_pos:{}". \
+		#		format(time_now, self.pressed_t, self.pressed_pos, self.released_t, self.released_pos))
+		if (self.pressed_t != 0):
+			self.refresh = True
+			self.screen_touched_handler(time_now)
+
 	def main_loop(self):
 		log.debug("[OCC][F] main_loop")
-		LONG_CLICK = 1000 #ms of long click
-		SWIPE_LENGTH = 30 #pixels of swipe
 		self.reset_motion()
 		while self.running:
-			time_now = pygame.time.get_ticks()
-			#event = pygame.event.poll()
-			event = pygame.event.wait()
-			if event.type == pygame.QUIT:
-				self.running = False
-				log.debug("[OCC] QUIT {}".format(time_now))
-			elif event.type == EV_UPDATE_VALUES:
-				self.rp.update_values()
-				log.debug("[OCC] EV_UPDATE_VALUES {}".format(time_now))
-			elif event.type == EV_CADENCE_EMUL:
-				self.rp.calculate_cadence()
-			elif event.type == EV_SAVE_CONFIG:
-				self.write_config()
-				log.debug("[OCC] EV_SAVE_CONFIG {}".format(time_now))
-			elif event.type == pygame.MOUSEBUTTONDOWN:
-				self.pressed_t = time_now
-				self.pressed_pos = pygame.mouse.get_pos()
-				#Read rel to clean the value generated on click
-				pressed_rel =  pygame.mouse.get_rel()
-				self.add_rel_motion = True
-				self.layout.render_button = self.pressed_pos
-				log.debug("[OCC] DOWN:{} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
-			elif event.type == pygame.MOUSEBUTTONUP:
-				#That check prevents setting release_x after long click
-				if (self.pressed_t != 0):
-					self.released_t = time_now
-					self.released_pos = pygame.mouse.get_pos()
-				self.add_rel_motion = False
-				self.layout.render_button = None
-				log.debug("[OCC] UP: {} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
-			elif event.type == pygame.MOUSEMOTION:
-				pressed_rel =  pygame.mouse.get_rel()
-				if self.add_rel_motion:
-					self.rel_movement = tuple(map(add, self.rel_movement, pressed_rel))
-				log.debug("[OCC] MOTION: {}".format(self.rel_movement))
-			#log.debug("[OCC] ticking:time_now:{} pressed_t:{} pressed_pos:{} released_t:{} released_pos:{}". \
-			#		format(time_now, self.pressed_t, self.pressed_pos, self.released_t, self.released_pos))
-			if (self.pressed_t != 0):
-				self.refresh = True
-				if (time_now - self.pressed_t) > LONG_CLICK:
-					log.debug("[OCC] LONG CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
-					self.layout.check_click(self.pressed_pos, 1)
-					self.reset_motion()
-				if (self.released_t != 0):
-					log.debug("[OCC] SHORT CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
-					self.layout.check_click(self.pressed_pos, 0)
-					self.reset_motion()
-				dx = self.rel_movement[0]
-				dy = self.rel_movement[1]
-				if (abs(dx)) > SWIPE_LENGTH:
-					if (dx > 0):
-						log.debug("[OCC] SWIPE X RIGHT to LEFT : {} {} {} {} {} {}".\
-							format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
-						self.layout.check_click(self.pressed_pos, 2)
-						self.reset_motion()
-					else:
-						log.debug("[OCC] SWIPE X LEFT to RIGHT : {} {} {} {} {} {}".\
-							format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
-						self.layout.check_click(self.pressed_pos, 3)
-						self.reset_motion()
-				elif (abs(dy)) > SWIPE_LENGTH:
-					if (dy < 0):
-						log.debug("[OCC] SWIPE X BOTTOM to TOP : {} {} {} {} {} {}".\
-							format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
-						self.layout.check_click(self.pressed_pos, 4)
-						self.reset_motion()
-					else:
-						log.debug("[OCC] SWIPE X TOP to BOTTOM : {} {} {} {} {} {}".\
-							format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
-						self.layout.check_click(self.pressed_pos, 5)
-						self.reset_motion()
-
-			if self.refresh:
-				self.refresh = False
-				self.layout.layout_changed = 0
-				self.rendering.force_refresh()
+			for event in self.event_iterator():
+				time_now = pygame.time.get_ticks()
+				self.event_handeler(event, time_now)
+				if self.refresh:
+					self.refresh = False
+					self.layout.layout_changed = 0
+					self.rendering.force_refresh()
 
 	def reset_motion(self):
 		log.debug("[OCC][F] reset_motion")
