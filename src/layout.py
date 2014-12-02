@@ -130,8 +130,7 @@ class layout():
 						image = pygame.image.load(image_path_for_frame).convert()
 						image.set_colorkey(self.colorkey)
 						image.set_alpha(self.alpha)
-						image_key = self.current_page_name + variable + image_path_for_frame
-						self.current_image_list[image_key] = image
+						self.current_image_list[image_path_for_frame] = image
 
 	def use_main_page(self):
 		self.use_page()
@@ -181,8 +180,7 @@ class layout():
 					extension = image_path[-4:]
 					name = image_path[:-4]
 					image_path_for_frame = name + suffix + extension
-					image_key = self.current_page_name + variable + image_path_for_frame
-					image = self.current_image_list[image_key]
+					image = self.current_image_list[image_path_for_frame]
 					screen.blit(image, [text_center_x, text_center_y])
 				except:
 					pass
