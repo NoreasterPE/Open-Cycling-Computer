@@ -52,6 +52,10 @@
 			<button x0="0" y0="240" w="119" h="80"/>
 			<text_center x="50" y="290" size="7"/>
 		</field>
+		<field name="temperature_icon">
+			<function>temperature_icon</function>
+			<text_center x="98" y="267" file="images/temperature_icon_20x32.png"/>
+		</field>
 		<field name="bottom_left">
 			<function>temperature_min</function>
 			<text_center x="20" y="255" size="2"/>

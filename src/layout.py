@@ -131,6 +131,11 @@ class layout():
 						image.set_colorkey(self.colorkey)
 						image.set_alpha(self.alpha)
 						self.current_image_list[image_path_for_frame] = image
+				else:
+					image = pygame.image.load(image_path).convert()
+					image.set_colorkey(self.colorkey)
+					image.set_alpha(self.alpha)
+					self.current_image_list[image_path] = image
 
 	def use_main_page(self):
 		self.use_page()
@@ -173,8 +178,8 @@ class layout():
 				text_center_x = int(field.find('text_center').get('x'))
 				text_center_y = int(field.find('text_center').get('y'))
 				variable = field.find('text_center').get('variable')
-				try:
-					image_path = field.find('text_center').get('file')
+				image_path = field.find('text_center').get('file')
+				if variable is not None:
 					value =  self.occ.rp.p_raw[variable]
 					suffix = "_" + unicode(value)
 					extension = image_path[-4:]
@@ -182,8 +187,9 @@ class layout():
 					image_path_for_frame = name + suffix + extension
 					image = self.current_image_list[image_path_for_frame]
 					screen.blit(image, [text_center_x, text_center_y])
-				except:
-					pass
+				elif image_path is not None:
+					image = pygame.image.load(image_path).convert()
+					screen.blit(image, [text_center_x, text_center_y])
 				try:
 					fs = int(field.find('text_center').get('size'))
 				except:
