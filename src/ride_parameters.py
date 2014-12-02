@@ -276,8 +276,13 @@ class ride_parameters():
 	def update_values(self):
 		t = time.time()
 		self.p_raw["dtime"] = t - self.p_raw["time_stamp"]
+		dt_adjustment = self.occ.rp.gps.time_adjustment_delta = 0
+		if dt_adjustment > 0:
+			self.p_raw["dtime"] = self.p_raw["dtime"] - dt_adjustment
+			self.occ.rp.gps.time_adjustment_delta = 0
+			self.occ.log.debug("[RP] dtime adjusted by {}".format(dt_adjustment))
 		self.p_raw["time_stamp"] = t
-		self.occ.log.debug("[RP] update_values timestamp: {}".format(t))
+		self.occ.log.debug("[RP] timestamp: {} dtime {}".format(t, self.p_raw["dtime"]))
 		self.update_rtc()
 		self.read_bmp183_sensor()
 		if not self.pressure_at_sea_level_calculated:

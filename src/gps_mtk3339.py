@@ -36,6 +36,7 @@ class gps_mtk3339(threading.Thread):
 		self.speed = NaN
 		self.utc = None
 		self.set_time = True
+		self.time_adjustment_delta = 0
 		if not self.simulate:
 			try:
 				#FIXME Add check for running gpsd. Restart if missing. Consider watchdog thread to start gpsd
@@ -155,5 +156,7 @@ class gps_mtk3339(threading.Thread):
 		if ret == 0:
 			self.set_time = False
 			tt_after = time.time()
+			self.time_adjustment_delta = tt_before - tt_after
 			self.occ.log.error("[GPS] time.time after {}".format(tt_after))
-			self.occ.log.error("[GPS] time.time delta {}".format(tt_before - tt_after))
+			self.occ.log.error("[GPS] time.time delta {}".format(self.time_adjustment_delta))
+			
