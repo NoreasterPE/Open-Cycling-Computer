@@ -50,7 +50,7 @@ class open_cycling_computer():
 		if not self.simulate:
 			pygame.event.set_grab(True)
 			pygame.mouse.set_visible(0)
-		log.debug("[OCC] EV_UPDATE_VALUES to be generated every {} s".format(REFRESH_TIME/1000))
+		log.debug("[OCC] EV_UPDATE_VALUES to be generated every {} ms".format(REFRESH_TIME))
 		pygame.time.set_timer(EV_UPDATE_VALUES, REFRESH_TIME)
 		log.debug("[OCC] EV_SAVE_CONFIG to be generated every {} s".format(CONFIG_SAVE_TIME/1000))
 		pygame.time.set_timer(EV_SAVE_CONFIG, CONFIG_SAVE_TIME)
