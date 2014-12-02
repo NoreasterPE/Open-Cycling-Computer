@@ -72,7 +72,6 @@ class gps_mtk3339(threading.Thread):
 						self.altitude = self.data.fix.altitude
 						self.fix_mode = fix_mode[self.data.fix.mode]
 						self.fix_time = self.data.fix.time
-						# Convert string time value to float if necessary. Snipped by Adafruit
 						if not isinstance(self.fix_time, float):
 							#Workaround for python bug
 							#ImportError: Failed to import _strptime because the import lockis held by another thread.
@@ -81,6 +80,14 @@ class gps_mtk3339(threading.Thread):
 								self.fix_time = time.mktime(time.strptime(self.data.fix.time, '%Y-%m-%dT%H:%M:%S.%fZ'))
 							except ImportError:
 								pass
+#FIXME
+#Exception in thread Thread-1:
+#Traceback (most recent call last):
+#  File "/usr/lib/python2.7/threading.py", line 552, in __bootstrap_inner
+#    self.run()
+#  File "/home/pi/OpenCyclingComputer/src/gps_mtk3339.py", line 84, in run
+#    self.lag = timestamp - self.fix_time
+#TypeError: unsupported operand type(s) for -: 'float' and 'unicode'
 						self.lag = timestamp - self.fix_time
 						self.occ.log.debug("[GPS] timestamp to fix time delta: {}".format(self.lag))
 						if self.set_time:
