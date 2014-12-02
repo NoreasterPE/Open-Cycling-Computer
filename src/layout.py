@@ -196,7 +196,7 @@ class layout():
 					image = self.current_image_list[image_path_for_frame]
 					screen.blit(image, [text_center_x, text_center_y])
 				elif image_path is not None:
-					image = pygame.image.load(image_path).convert()
+					image = self.current_image_list[image_path]
 					screen.blit(image, [text_center_x, text_center_y])
 				try:
 					fs = int(field.find('text_center').get('size'))
