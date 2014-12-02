@@ -200,6 +200,10 @@
 			<function>cadence_icon</function>
 			<text_center x="98" y="267" file="images/cadence_icon_20x32.png"/>
 		</field>
+		<field name="heartrate_icon">
+			<function>heartrate_icon</function>
+			<text_center x="218" y="267" file="images/heartrate_icon_20x32.png"/>
+		</field>
 	</page>
 	<page name="Settings 0" id="settings_0" background="images/occ_settings_0_background.png" buttons="images/occ_settings_0_buttons.png" font="" fg_colour="FFFFFF">
 		<field name="first">
