@@ -390,7 +390,6 @@ class ride_parameters():
 			self.p_raw["speed"] = 0
 		#FIXME That will have to be changed with bluetooth speed sensor
 		self.p_raw["speed_gps"] = self.p_raw["speed"] 
-		self.occ.log.error("[RP] raw speed_gps {}".format(self.p_raw["speed_gps"]))
 		self.p_raw["climb"] = self.clean_value(cmb);
 
 	def split_speed(self, speed_name):
