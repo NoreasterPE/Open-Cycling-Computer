@@ -116,6 +116,7 @@ class layout():
 				self.current_button_list.append(name)
 			image_path = field.find('text_center').get('file')
 			if (image_path is not None):
+				#FIXME Optimisation!
 				variable = field.find('text_center').get('variable')
 				frames = field.find('text_center').get('frames')
 				#FIXME Do no force frames for static icons
@@ -177,6 +178,7 @@ class layout():
 				uv = unicode(value)
 				text_center_x = int(field.find('text_center').get('x'))
 				text_center_y = int(field.find('text_center').get('y'))
+				#FIXME Optimisation!
 				variable = field.find('text_center').get('variable')
 				image_path = field.find('text_center').get('file')
 				if variable is not None:
