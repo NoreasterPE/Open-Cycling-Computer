@@ -122,7 +122,7 @@ class layout():
 				#FIXME Make a function to create image_key
 				if frames is not None:
 					frames = int(frames)
-					for i in range(frames):
+					for i in range(frames + 1):
 						suffix = "_" + unicode(i)
 						extension = image_path[-4:]
 						name = image_path[:-4]
