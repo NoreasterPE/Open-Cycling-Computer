@@ -128,15 +128,21 @@ class layout():
 						extension = image_path[-4:]
 						name = image_path[:-4]
 						image_path_for_frame = name + suffix + extension
-						image = pygame.image.load(image_path_for_frame).convert()
+						try:
+							image = pygame.image.load(image_path_for_frame).convert()
+							image.set_colorkey(self.colorkey)
+							image.set_alpha(self.alpha)
+							self.current_image_list[image_path_for_frame] = image
+						except:
+							self.occ.log.error("[LY] Cannot load image {}".format(image_path_for_frame))
+				else:
+					try:
+						image = pygame.image.load(image_path).convert()
 						image.set_colorkey(self.colorkey)
 						image.set_alpha(self.alpha)
-						self.current_image_list[image_path_for_frame] = image
-				else:
-					image = pygame.image.load(image_path).convert()
-					image.set_colorkey(self.colorkey)
-					image.set_alpha(self.alpha)
-					self.current_image_list[image_path] = image
+						self.current_image_list[image_path] = image
+					except:
+						self.occ.log.error("[LY] Cannot load image {}".format(image_path))
 
 	def use_main_page(self):
 		self.use_page()
