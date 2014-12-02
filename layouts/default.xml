@@ -89,6 +89,10 @@
 			<function>altitude_units</function>
 			<text_center x="230" y="310" size="2"/>
 		</field>
+		<field name="altitude_icon">
+			<function>altitude_icon</function>
+			<text_center x="217" y="267" file="images/altitude_icon_22x32.png"/>
+		</field>
 	</page>
 	<page name="Weather" id="page_1" background="images/occ_page_1_background.png" buttons="images/occ_page_1_buttons.png" font="" fg_colour="FFFFFF">
 		<field name="speed_max_label">
