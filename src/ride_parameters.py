@@ -87,14 +87,8 @@ class ride_parameters():
 
 		#Internal units
 		self.p_raw_units["altitude"] = "m"
-		self.p_raw_units["altitude_home"] = "m"
-		self.p_raw_units["altitude_gps"] = "m"
-		self.p_raw_units["altitude_min"] = "m"
-		self.p_raw_units["altitude_max"] = "m"
 		self.p_raw_units["distance"] = "m"
 		self.p_raw_units["cadence"] = "RPM"
-		self.p_raw_units["cadence_average"] = "RPM"
-		self.p_raw_units["cadence_max"] = "RPM"
 		self.p_raw_units["climb"] = "m/s"
 		self.p_raw_units["gps_fix"] = ""
 		self.p_raw_units["latitude"] = ""
@@ -107,13 +101,7 @@ class ride_parameters():
 		self.p_raw_units["satellites"] = ""
 		self.p_raw_units["satellites_used"] = ""
 		self.p_raw_units["speed"] = "m/s"
-		self.p_raw_units["speed_average"] = "m/s"
-		self.p_raw_units["speed_gps"] = "m/s"
-		self.p_raw_units["speed_max"] = "m/s"
 		self.p_raw_units["temperature"] = "C"
-		self.p_raw_units["temperature_average"] = "C"
-		self.p_raw_units["temperature_min"] = "C"
-		self.p_raw_units["temperature_max"] = "C"
 		self.p_raw_units["time_on"] = "s"
 
 		#Params of the ride ready for rendering.
@@ -208,14 +196,8 @@ class ride_parameters():
 
 		#Units - name has to be identical as in params #FIXME reduce number of units (i.e one for speed)
 		self.units["altitude"] = "m"
-		self.units["altitude_home"] = "m"
-		self.units["altitude_gps"] = "m"
-		self.units["altitude_min"] = "m"
-		self.units["altitude_max"] = "m"
 		self.units["climb"] = "m/s"
 		self.units["cadence"] = "RPM"
-		self.units["cadence_average"] = "RPM"
-		self.units["cadence_max"] = "RPM"
 		self.units["distance"] = "km"
 		self.units["gps_fix"] = ""
 		self.units["gradient"] = "%"
@@ -232,8 +214,6 @@ class ride_parameters():
 		self.units["satellites"] = ""
 		self.units["satellites_used"] = ""
 		self.units["speed"] = "km/h"
-		self.units["speed_average"] = "km/h"
-		self.units["speed_max"] = "km/h"
 		self.units["temperature"] = "C"
 		self.units["time_on"] = "s"
 		self.units["time_on_hms"] = "s"
@@ -351,17 +331,21 @@ class ride_parameters():
 		else:
 			return self.params[func]
 
-	def get_unit(self, func):
-		if func.endswith("_units"):
+	def get_unit(self, param_name):
+		suffixes =("_min", "_max", "_average", "_gps", "_home")
+		p = self.strip_end(param_name, suffixes)
+		if p.endswith("_units"):
 			return None
 		else:
-			return self.units[func]
+			return self.units[p]
 
-	def get_internal_unit(self, func):
-		if func.endswith("_units"):
+	def get_internal_unit(self, param_name):
+		suffixes =("_min", "_max", "_average", "_gps", "_home")
+		p = self.strip_end(param_name, suffixes)
+		if p.endswith("_units"):
 			return None
 		else:
-			return self.p_raw_units[func]
+			return self.p_raw_units[p]
 
 	def get_description(self, param_name):
 		if param_name in self.p_desc:
@@ -469,7 +453,7 @@ class ride_parameters():
 		self.split_speed("speed")
 		self.occ.log.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}, cadence {} {}".\
 				format(self.params["speed"], self.params["speed_max"],\
-				self.params["speed_average"], self.units["speed_average"],\
+				self.params["speed_average"], self.units["speed"],\
 				self.params["cadence"], self.units["cadence"]))
 			
 		self.params["utc"] = self.p_raw["utc"]
@@ -480,9 +464,11 @@ class ride_parameters():
 		self.update_param("satellites_used")
 		self.update_param("satellites")
 
-	def strip_end(self, param_name):
+	def strip_end(self, param_name, suffix = None):
 		#Make sure there is no _digits, _tenths, _hms at the end
-		for s in self.suffixes:
+		if suffix is None:
+			suffix = self.suffixes
+		for s in suffix:
 			if param_name.endswith(s):
 				l = -1 * len(s)
 				param_name = param_name[:l]
