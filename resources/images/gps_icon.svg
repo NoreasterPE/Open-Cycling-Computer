@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.5 r10040"
-   sodipodi:docname="Nowy dokument 1">
+   sodipodi:docname="gps_icon.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -25,13 +25,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="286.89993"
-     inkscape:cy="425.07051"
+     inkscape:cx="330.07063"
+     inkscape:cy="422.3835"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="702"
+     inkscape:window-width="1680"
+     inkscape:window-height="984"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1" />
@@ -43,7 +43,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -55,14 +55,14 @@
        sodipodi:nodetypes="ssssssssssssssssss"
        inkscape:connector-curvature="0"
        id="path3812"
-       d="m 416.40439,504.69832 c -7.44493,0.90267 -13.75,6.2193 -13.75,13.71875 l 0,13.35268 c 0,7.49945 6.33156,12.61941 13.75,13.71875 l 79.53125,11.78571 c 7.41844,1.09934 13.71875,-6.2193 13.71875,-13.71875 l 0,-34.78125 c 0,-7.49945 -6.27382,-14.62142 -13.71875,-13.71875 z m 0,12 79.53125,-9.64286 c 1.05131,-0.12747 1.71875,0.65974 1.71875,1.71875 l 0,34.78125 c 0,1.05901 -0.67118,1.87399 -1.71875,1.71875 L 416.40439,533.4885 c -1.04757,-0.15524 -1.75,-0.65974 -1.75,-1.71875 l 0,-13.35268 c 0,-1.05901 0.69869,-1.59129 1.75,-1.71875 z"
+       d="m 474.40919,565.47136 c -5.90265,-4.62608 -14.12043,-5.32501 -19.42334,-0.0221 l -9.44177,9.44177 c -5.30291,5.30291 -4.44618,13.40036 0.0221,19.42334 l 47.90333,64.57084 c 4.46828,6.02298 14.09833,5.30291 19.40124,0 l 24.59406,-24.59406 c 5.30291,-5.30291 5.90264,-14.77516 0,-19.40124 z m -8.48528,8.48528 63.05562,49.41855 c 0.83352,0.65326 0.74883,1.68185 0,2.43068 l -24.59406,24.59406 c -0.74883,0.74883 -1.79971,0.85051 -2.43068,0 l -47.90333,-64.57084 c -0.63097,-0.85052 -0.77093,-1.70395 -0.0221,-2.45278 l 9.44177,-9.44177 c 0.74883,-0.74883 1.61926,-0.63116 2.45278,0.0221 z"
        style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:12;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
        inkscape:export-filename="/home/przemo/sat.png"
        inkscape:export-xdpi="41.860001"
        inkscape:export-ydpi="41.860001" />
     <path
        style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:12;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
-       d="m 327.6901,504.69832 c 7.44493,0.90267 13.75,6.2193 13.75,13.71875 l 0,13.35268 c 0,7.49945 -6.33156,12.61941 -13.75,13.71875 l -79.53125,11.78571 c -7.41844,1.09934 -13.71875,-6.2193 -13.71875,-13.71875 l 0,-34.78125 c 0,-7.49945 6.27382,-14.62142 13.71875,-13.71875 z m 0,12 -79.53125,-9.64286 c -1.05131,-0.12747 -1.71875,0.65974 -1.71875,1.71875 l 0,34.78125 c 0,1.05901 0.67118,1.87399 1.71875,1.71875 L 327.6901,533.4885 c 1.04757,-0.15524 1.75,-0.65974 1.75,-1.71875 l 0,-13.35268 c 0,-1.05901 -0.69869,-1.59129 -1.75,-1.71875 z"
+       d="m 411.67871,502.74088 c 4.62608,5.90265 5.32501,14.12043 0.0221,19.42334 l -9.44177,9.44177 c -5.30291,5.30291 -13.40036,4.44618 -19.42334,-0.0221 l -64.57084,-47.90333 c -6.02298,-4.46828 -5.30291,-14.09833 0,-19.40124 l 24.59406,-24.59406 c 5.30291,-5.30291 14.77516,-5.90264 19.40124,0 z m -8.48528,8.48528 -49.41855,-63.05562 c -0.65326,-0.83352 -1.68185,-0.74883 -2.43068,0 l -24.59406,24.59406 c -0.74883,0.74884 -0.85051,1.79971 0,2.43068 l 64.57084,47.90333 c 0.85052,0.63097 1.70395,0.77093 2.45278,0.0221 l 9.44177,-9.44177 c 0.74883,-0.74883 0.63116,-1.61926 -0.0221,-2.45278 z"
        id="rect2985-0"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ssssssssssssssssss"
@@ -74,36 +74,39 @@
        id="rect2985-0-1"
        width="66.965973"
        height="28.039282"
-       x="492.69812"
-       y="-386.06689"
+       x="52.390476"
+       y="-704.96912"
        ry="9.383935"
-       transform="matrix(0,1,-1,0,0,0)"
+       transform="matrix(-0.70710678,0.70710678,-0.70710678,-0.70710678,0,0)"
        inkscape:export-filename="/home/przemo/sat.png"
        inkscape:export-xdpi="41.860001"
        inkscape:export-ydpi="41.860001" />
     <path
        style="color:#000000;fill:none;stroke:#000000;stroke-width:24;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="m 337.75,590.125 c -0.26937,1.74226 -0.40625,3.52604 -0.40625,5.34375 0,19.16408 15.55467,34.6875 34.71875,34.6875 19.16408,0 34.6875,-15.52342 34.6875,-34.6875 0,-1.81771 -0.13688,-3.60149 -0.40625,-5.34375 l -68.59375,0 z"
+       d="m 354.32049,573.75143 c -13.55105,13.55105 -13.52896,35.52658 0.0221,49.07763 13.55105,13.55105 35.50448,13.55105 49.05553,0"
        id="path3816"
        inkscape:connector-curvature="0"
        inkscape:export-filename="/home/przemo/sat.png"
        inkscape:export-xdpi="41.860001"
-       inkscape:export-ydpi="41.860001" />
+       inkscape:export-ydpi="41.860001"
+       sodipodi:nodetypes="csc" />
     <path
        style="color:#000000;fill:none;stroke:#000000;stroke-width:24;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="m 296.59375,590.125 c -0.12278,1.76234 -0.1875,3.5502 -0.1875,5.34375 0,41.77828 33.87797,75.65625 75.65625,75.65625 41.77828,0 75.625,-33.87797 75.625,-75.65625 0,-1.79355 -0.0647,-3.58141 -0.1875,-5.34375 l -150.90625,0 z"
+       d="m 325.3733,544.80424 c -29.5417,29.54171 -29.5417,77.45239 0,106.9941 29.54171,29.5417 77.4303,29.51961 106.972,-0.0221"
        id="path3818"
        inkscape:connector-curvature="0"
        inkscape:export-filename="/home/przemo/sat.png"
        inkscape:export-xdpi="41.860001"
-       inkscape:export-ydpi="41.860001" />
+       inkscape:export-ydpi="41.860001"
+       sodipodi:nodetypes="csc" />
     <path
-       style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:24;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
-       d="m 256.5625,578.125 a 12.0012,12.0012 0 0 0 -12,11.46875 c -0.0883,1.93873 -0.125,3.88446 -0.125,5.875 0,70.33277 57.29614,127.59375 127.625,127.59375 70.32886,0 127.59375,-57.26489 127.59375,-127.59375 0,-1.99059 -0.0367,-3.93625 -0.125,-5.875 a 12.0012,12.0012 0 0 0 -12,-11.46875 l -230.96875,0 z m 12.21875,24 206.53125,0 c -3.4273,54.22496 -48.13608,96.9375 -103.25,96.9375 -55.11392,0 -99.85169,-42.71573 -103.28125,-96.9375 z"
-       id="path3814"
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:24;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 296.8243,517.66718 c -44.92014,44.92014 -44.92015,117.77153 -10e-6,162.69167 44.92014,44.92014 117.73794,44.88654 162.65808,-0.0336"
+       id="path3818-1"
        inkscape:connector-curvature="0"
        inkscape:export-filename="/home/przemo/sat.png"
        inkscape:export-xdpi="41.860001"
-       inkscape:export-ydpi="41.860001" />
+       inkscape:export-ydpi="41.860001"
+       sodipodi:nodetypes="csc" />
   </g>
 </svg>
