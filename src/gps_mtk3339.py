@@ -74,8 +74,13 @@ class gps_mtk3339(threading.Thread):
 						self.fix_time = self.data.fix.time
 						# Convert string time value to float if necessary. Snipped by Adafruit
 						if not isinstance(self.fix_time, float):
-							# self.data.fix.time is a string, so parse it to get the float time value.
-							self.fix_time = time.mktime(time.strptime(self.data.fix.time, '%Y-%m-%dT%H:%M:%S.%fZ'))
+							#Workaround for python bug
+							#ImportError: Failed to import _strptime because the import lockis held by another thread.
+							try:
+								#self.data.fix.time is a string, so parse it to get the float time value.
+								self.fix_time = time.mktime(time.strptime(self.data.fix.time, '%Y-%m-%dT%H:%M:%S.%fZ'))
+							except ImportError:
+								pass
 						self.lag = timestamp - self.fix_time
 						self.occ.log.debug("[GPS] timestamp to fix time delta: {}".format(self.lag))
 						if self.set_time:
