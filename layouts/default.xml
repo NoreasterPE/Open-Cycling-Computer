@@ -196,6 +196,10 @@
 			<function>cadence_units</function>
 			<text_center x="105" y="310" size="1"/>
 		</field>
+		<field name="cadence_icon">
+			<function>cadence_icon</function>
+			<text_center x="98" y="267" file="images/cadence_icon_20x32.png"/>
+		</field>
 	</page>
 	<page name="Settings 0" id="settings_0" background="images/occ_settings_0_background.png" buttons="images/occ_settings_0_buttons.png" font="" fg_colour="FFFFFF">
 		<field name="first">
