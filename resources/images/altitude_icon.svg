@@ -14,19 +14,19 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.5 r10040"
-   sodipodi:docname="elevation_icon.svg">
+   sodipodi:docname="altitude_icon.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#ffffff"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="0.66992145"
-     inkscape:cx="398.15795"
-     inkscape:cy="550.06155"
+     inkscape:cx="96.259822"
+     inkscape:cy="485.0169"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -52,20 +52,21 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="fill:none;stroke:#000000;stroke-width:24;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 257.56773,613.22834 c 36.28129,-171.50792 47.59928,-175.83187 47.59928,-175.83187 l 27.49637,57.04658 38.91989,-137.5036 66.32473,256.24644 z"
+       style="fill:none;stroke:#ffffff;stroke-width:24;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 293.7278,579.53243 c 36.67053,-139.54368 48.10994,-143.06177 48.10994,-143.06177 l 27.79136,46.41471 39.33743,-111.87681 67.03629,208.48934 z"
        id="path3071"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc"
-       inkscape:export-filename="/run/user/1000/gvfs/sftp:host=192.168.1.33,port=33,user=pi/home/pi/OpenCyclingComputer/resources/images/path3843.png"
-       inkscape:export-xdpi="9.6889801"
-       inkscape:export-ydpi="9.6889801" />
+       inkscape:export-filename="/run/user/1000/gvfs/sftp:host=192.168.1.33,port=33,user=pi/home/pi/OpenCyclingComputer/images/altitude_icon_20x32.png"
+       inkscape:export-xdpi="8.902854"
+       inkscape:export-ydpi="8.902854" />
     <path
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:23.76591492;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 368.02814,381.67466 c -27.80994,86.66058 -28.72855,89.15428 -28.72855,89.15428 0,0 19.99079,16.80241 21.52181,16.37246 1.53102,-0.42995 10.061,-15.95971 10.061,-15.95971 0,0 8.87994,14.10234 9.95165,12.60611 1.07172,-1.49621 17.72706,-21.51466 17.72706,-21.51466 z"
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:24;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 405.37326,391.13382 c -28.10829,70.5095 -29.03676,72.53844 -29.03676,72.53844 0,0 20.20526,13.67092 21.75271,13.3211 1.54744,-0.34982 10.16893,-12.98527 10.16893,-12.98527 0,0 8.97521,11.47406 10.05842,10.25669 1.08322,-1.21736 17.91724,-17.50494 17.91724,-17.50494 z"
        id="path3843"
        inkscape:connector-curvature="0"
-       inkscape:export-xdpi="9.6889801"
-       inkscape:export-ydpi="9.6889801" />
+       inkscape:export-xdpi="8.902854"
+       inkscape:export-ydpi="8.902854"
+       inkscape:export-filename="/run/user/1000/gvfs/sftp:host=192.168.1.33,port=33,user=pi/home/pi/OpenCyclingComputer/images/altitude_icon_20x32.png" />
   </g>
 </svg>

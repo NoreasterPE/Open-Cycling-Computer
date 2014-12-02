@@ -91,7 +91,7 @@
 		</field>
 		<field name="altitude_icon">
 			<function>altitude_icon</function>
-			<text_center x="217" y="267" file="images/altitude_icon_22x32.png"/>
+			<text_center x="217" y="267" file="images/altitude_icon_20x32.png"/>
 		</field>
 	</page>
 	<page name="Weather" id="page_1" background="images/occ_page_1_background.png" buttons="images/occ_page_1_buttons.png" font="" fg_colour="FFFFFF">
