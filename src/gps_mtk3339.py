@@ -147,8 +147,13 @@ class gps_mtk3339(threading.Thread):
 
 	#FIXME temporary location
 	def set_system_time(self):
+		tt_before = time.time()
+		self.occ.log.error("[GPS] time.time before {}".format(tt_before))
 		self.occ.log.debug("[GPS] Setting UTC system time to {}".format(self.utc))
 		command = 'date -u --set={} "+%Y-%m-%dT%H:%M:%S.000Z" 2>&1 > /dev/null'.format(self.utc)
 		ret = os.system(command)
 		if ret == 0:
 			self.set_time = False
+			tt_after = time.time()
+			self.occ.log.error("[GPS] time.time after {}".format(tt_after))
+			self.occ.log.error("[GPS] time.time delta {}".format(tt_before - tt_after))
