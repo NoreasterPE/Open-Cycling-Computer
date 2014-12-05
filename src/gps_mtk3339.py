@@ -2,6 +2,7 @@
  
 from gps import *
 import os
+import serial
 import threading
 import time
 
@@ -38,6 +39,7 @@ class gps_mtk3339(threading.Thread):
 		self.set_time = True
 		self.time_adjustment_delta = 0
 		if not self.simulate:
+			self.setup_gpsd()
 			try:
 				#FIXME Add check for running gpsd. Restart if missing. Consider watchdog thread to start gpsd
 				#FIXME Check how that reacts for missing gps hardware
@@ -160,4 +162,16 @@ class gps_mtk3339(threading.Thread):
 			self.time_adjustment_delta = tt_before - tt_after
 			self.occ.log.error("[GPS] time.time after {}".format(tt_after))
 			self.occ.log.error("[GPS] time.time delta {}".format(self.time_adjustment_delta))
+
+	def setup_gpsd(self):
+		BAUD_115200 = "$PMTK251,115200*1F\r\n" #Mine
+		NMEA_OUTPUT_ALLDATA = "$PMTK314,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n"
+		FIX_CTL_1HZ = "$PMTK300,1000,0,0,0,0*1C\r\n"
+		NMEA_UPDATE_1HZ = "$PMTK220,1000*1F\r\n"
+		ser = serial.Serial(port = "/dev/ttyAMA0", baudrate = 115200, timeout=3)
+		#looks like it's safe to open ser with working gps do the business and quit
+		ser.write(FIX_CTL_1HZ);
+		ser.write(NMEA_UPDATE_1HZ);
+		ser.write(NMEA_OUTPUT_ALLDATA);
+		ser.close()
 			
