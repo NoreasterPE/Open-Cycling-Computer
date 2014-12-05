@@ -116,7 +116,7 @@ class gps_mtk3339(threading.Thread):
 						self.climb = NaN
 						self.speed = NaN
 						self.altitude = NaN
-						self.fix_mode = fix_mode[0]
+						self.fix_mode = fix_mode[1]
 						self.fix_time = NaN
 						self.satellites = 0
 						self.satellites_used = 0
