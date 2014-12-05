@@ -43,31 +43,6 @@
                         <function>time_on_hms</function>
                         <text_center x="120" y="225" size="3"/>
                 </field>
-		<field name="bottom_left">
-			<function>temperature</function>
-			<button x0="0" y0="240" w="119" h="80"/>
-			<text_center x="50" y="290" size="7"/>
-		</field>
-		<field name="temperature_icon">
-			<function>temperature_icon</function>
-			<text_center x="98" y="267" file="images/temperature_icon_20x32.png"/>
-		</field>
-		<field name="bottom_left">
-			<function>temperature_min</function>
-			<text_center x="20" y="255" size="2"/>
-		</field>
-		<field name="bottom_left">
-			<function>temperature_average</function>
-			<text_center x="60" y="255" size="2"/>
-		</field>
-		<field name="bottom_left">
-			<function>temperature_max</function>
-			<text_center x="100" y="255" size="2"/>
-		</field>
-		<field name="bottom_left_auxiliary">
-			<function>temperature_units</function>
-			<text_center x="110" y="310" size="2"/>
-		</field>
 		<field name="bottom_right">
 			<function>altitude</function>
 			<button x0="120" y0="240" w="119" h="80"/>
@@ -122,19 +97,36 @@
 			<text_center x="210" y="175" size="2"/>
 		</field>
 		<field name="bottom_left">
-			<function>pressure</function>
-			<text_center x="50" y="280" size="5"/>
+			<function>temperature</function>
+			<button x0="0" y0="240" w="119" h="80"/>
+			<text_center x="50" y="290" size="7"/>
+		</field>
+		<field name="temperature_icon">
+			<function>temperature_icon</function>
+			<text_center x="98" y="267" file="images/temperature_icon_20x32.png"/>
+		</field>
+		<field name="bottom_left">
+			<function>temperature_min</function>
+			<text_center x="20" y="255" size="2"/>
+		</field>
+		<field name="bottom_left">
+			<function>temperature_average</function>
+			<text_center x="60" y="255" size="2"/>
+		</field>
+		<field name="bottom_left">
+			<function>temperature_max</function>
+			<text_center x="100" y="255" size="2"/>
 		</field>
 		<field name="bottom_left_auxiliary">
-			<function>pressure_units</function>
-			<text_center x="100" y="310" size="2"/>
+			<function>temperature_units</function>
+			<text_center x="110" y="310" size="2"/>
 		</field>
 		<field name="bottom_right">
-			<function>temperature</function>
-			<text_center x="180" y="280" size="5"/>
+			<function>pressure</function>
+			<text_center x="170" y="280" size="5"/>
 		</field>
-		<field name="bottom_right_auxiliary">
-			<function>temperature_units</function>
+		<field name="bottom_rigth_auxiliary">
+			<function>pressure_units</function>
 			<text_center x="220" y="310" size="2"/>
 		</field>
 		<field name="ridetime_total_hms">
