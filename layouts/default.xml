@@ -30,10 +30,6 @@
 			<button x0="0" y0="150" w="239" h="39"/>
 			<text_center x="140" y="175" size="4"/>
 		</field>
-		<field name="lag">
-			<function>lag</function>
-			<text_center x="40" y="175" size="4"/>
-		</field>
 		<field name="middle_auxiliary">
 			<function>distance_units</function>
 			<text_center x="210" y="175" size="2"/>
