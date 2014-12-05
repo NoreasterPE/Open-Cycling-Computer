@@ -80,6 +80,7 @@ class gps_mtk3339(threading.Thread):
 								#self.data.fix.time is a string, so parse it to get the float time value.
 								self.fix_time = time.mktime(time.strptime(self.data.fix.time, '%Y-%m-%dT%H:%M:%S.%fZ'))
 							except ImportError:
+								self.occ.log.critical("[GPS] self.fix_time {}".format(self.fix_time))
 								pass
 #FIXME
 #Exception in thread Thread-1:
