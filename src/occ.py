@@ -308,7 +308,7 @@ if __name__ == "__main__":
 
 	logging.getLogger('system').setLevel(logging.DEBUG)
 	sys_log_handler = logging.handlers.RotatingFileHandler(sys_log_filename)
-	sys_log_format = '[%(levelname)s] %(asctime)s %(message)s'
+	sys_log_format = '[%(levelname)-5s] %(message)s'
 	sys_log_handler.setFormatter(logging.Formatter(sys_log_format))
 	logging.getLogger('system').addHandler(sys_log_handler)
 	sys_logger = logging.getLogger('system')
