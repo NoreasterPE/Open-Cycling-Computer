@@ -21,18 +21,18 @@ class gps_mtk3339(threading.Thread):
 		threading.Thread.__init__(self)
 		self.l = occ.l
 		self.occ = occ
-		#ser = mtk3339.mt3339("/dev/ttyAMA0")
+		ser = mtk3339.mt3339("/dev/ttyAMA0")
 		#os.system("sudo /usr/sbin/service gpsd stop")
-		#time.sleep(1)
-		#ser.set_baudrate(115200)
-		#time.sleep(0.1)
-		#ser.set_fix_update_rate(2000)
-		#time.sleep(0.1)
-		#ser.set_nmea_update_rate(2000)
-		#time.sleep(0.1)
-		#ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 5, gsa = 5, gsv = 5)
+		time.sleep(1)
+		ser.set_baudrate(115200)
+		time.sleep(0.1)
+		ser.set_fix_update_rate(1000)
+		time.sleep(0.1)
+		ser.set_nmea_update_rate(1000)
+		time.sleep(0.1)
+		ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 5, gsa = 5, gsv = 5)
 		#ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 0, gsa = 0, gsv = 0)
-		#time.sleep(0.1)
+		time.sleep(0.1)
 		#os.system("sudo /usr/sbin/service gpsd start")
 		self.simulate = simulate
 		self.altitude = NaN
@@ -49,7 +49,6 @@ class gps_mtk3339(threading.Thread):
 		self.set_time = True
 		self.time_adjustment_delta = 0
 		if not self.simulate:
-			self.setup_gpsd()
 			try:
 				#FIXME Add check for running gpsd. Restart if missing. Consider watchdog thread to start gpsd
 				#FIXME Check how that reacts for missing gps hardware
@@ -176,15 +175,3 @@ class gps_mtk3339(threading.Thread):
 			self.l.error("[GPS] time.time after {}".format(tt_after))
 			self.l.error("[GPS] time.time delta {}".format(self.time_adjustment_delta))
 
-	def setup_gpsd(self):
-		BAUD_115200 = "$PMTK251,115200*1F\r\n" #Mine
-		NMEA_OUTPUT_ALLDATA = "$PMTK314,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n"
-		FIX_CTL_1HZ = "$PMTK300,1000,0,0,0,0*1C\r\n"
-		NMEA_UPDATE_1HZ = "$PMTK220,1000*1F\r\n"
-		ser = serial.Serial(port = "/dev/ttyAMA0", baudrate = 115200, timeout=3)
-		#looks like it's safe to open ser with working gps do the business and quit
-		ser.write(FIX_CTL_1HZ);
-		ser.write(NMEA_UPDATE_1HZ);
-		ser.write(NMEA_OUTPUT_ALLDATA);
-		ser.close()
-			
