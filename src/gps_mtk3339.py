@@ -21,12 +21,13 @@ class gps_mtk3339(threading.Thread):
 		threading.Thread.__init__(self)
 		self.l = occ.l
 		self.occ = occ
-		ser = mtk3339.mt3339("/dev/ttyAMA0")
-		ser.set_baudrate(115200)
-		ser.set_fix_update_rate(800)
-		ser.set_nmea_update_rate(800)
-		ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 5, gsa = 5, gsv = 5)
 		self.simulate = simulate
+		if not self.simulate:
+			ser = mtk3339.mt3339("/dev/ttyAMA0")
+			ser.set_baudrate(115200)
+			ser.set_fix_update_rate(800)
+			ser.set_nmea_update_rate(800)
+			ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 5, gsa = 5, gsv = 5)
 		self.altitude = NaN
 		self.climb = NaN
 		self.fix_mode = ""
