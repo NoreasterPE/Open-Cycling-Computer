@@ -80,8 +80,9 @@ class gps_mtk3339(threading.Thread):
 						self.speed = data.fix.speed
 						self.altitude = data.fix.altitude
 						self.fix_mode = fix_mode[data.fix.mode]
-						self.fix_time = data.fix.time
-						if not isinstance(self.fix_time, float):
+						if isinstance(data.fix.time, float):
+							self.fix_time = data.fix.time
+						else:
 							#Workaround for python bug
 							#ImportError: Failed to import _strptime because the import lock is held by another thread.
 							try:
