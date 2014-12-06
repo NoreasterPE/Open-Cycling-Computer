@@ -43,9 +43,9 @@ class layout():
 			self.layout_tree = eltree.parse(layout_path)
 			self.layout_path = layout_path
 		except:
-			self.occ.log.error("{} Loading layout {} failed, falling back to default.xml".format(__name__, layout_path))
+			self.occ.l.error("{} Loading layout {} failed, falling back to default.xml".format(__name__, layout_path))
 			sys_info = "Error details: {}".format(sys.exc_info()[0])
-			self.occ.log.error(sys_info)
+			self.occ.l.error(sys_info)
 			#Fallback to default layout
 			#FIXME - define const file with paths?
 			self.layout_tree = eltree.parse("layouts/default.xml")
@@ -71,7 +71,7 @@ class layout():
 		self.layout_tree.write(layout_path, encoding="UTF-8", pretty_print=True)
 
 	def use_page(self, page_id = "page_0"):
-		self.occ.log.debug("[LY][F] use_page {}".format(page_id))
+		self.occ.l.debug("[LY][F] use_page {}".format(page_id))
 		self.occ.force_refresh()
 		self.current_function_list = []
 		self.current_button_list = []
@@ -82,7 +82,7 @@ class layout():
 			bg_path = self.current_page.get('background')
 			self.bg_image = pygame.image.load(bg_path).convert()
 		except pygame.error:
-			self.occ.log.critical("{} Cannot load background image! layout_path = {} background path = {} page_id = {}"\
+			self.occ.l.critical("{} Cannot load background image! layout_path = {} background path = {} page_id = {}"\
 					.format(__name__, self.layout_path, bg_path, page_id))
 			#That stops occ but not immediately - errors can occur
 			self.occ.running = False
@@ -91,7 +91,7 @@ class layout():
 			bt_path = self.current_page.get('buttons')
 			self.bt_image = pygame.image.load(bt_path).convert()
 		except pygame.error:
-			self.occ.log.critical("{} Cannot load buttons image! layout_path = {} buttons path = {} page_id = {}"\
+			self.occ.l.critical("{} Cannot load buttons image! layout_path = {} buttons path = {} page_id = {}"\
 					.format(__name__, self.layout_path, bt_path, page_id))
 			self.occ.running = False
 			self.occ.cleanup()
@@ -134,7 +134,7 @@ class layout():
 							image.set_alpha(self.alpha)
 							self.current_image_list[image_path_for_frame] = image
 						except:
-							self.occ.log.error("[LY] Cannot load image {}".format(image_path_for_frame))
+							self.occ.l.error("[LY] Cannot load image {}".format(image_path_for_frame))
 				else:
 					try:
 						image = pygame.image.load(image_path).convert()
@@ -142,7 +142,7 @@ class layout():
 						image.set_alpha(self.alpha)
 						self.current_image_list[image_path] = image
 					except:
-						self.occ.log.error("[LY] Cannot load image {}".format(image_path))
+						self.occ.l.error("[LY] Cannot load image {}".format(image_path))
 
 	def use_main_page(self):
 		self.use_page()
@@ -241,7 +241,7 @@ class layout():
 						self.render_pressed_button(self.screen, func)
 						break
 				except KeyError:
-					self.occ.log.critical("{} show_pressed_button failed! func ={}".format, __name__, func)
+					self.occ.l.critical("{} show_pressed_button failed! func ={}".format, __name__, func)
 					self.occ.running = False
 
 	def check_click(self, position, click):
@@ -256,7 +256,7 @@ class layout():
 						self.run_function(param_name)
 						break
 				except KeyError:
-					self.occ.log.debug("[LY] CLICK on non-clickable {}".format(param_name))
+					self.occ.l.debug("[LY] CLICK on non-clickable {}".format(param_name))
 		elif click == 1:
 			#print self.function_rect_list
 			#print self.current_button_list
@@ -265,7 +265,7 @@ class layout():
 					if self.function_rect_list[param_name].collidepoint(position):
 						#FIXME I's dirty way of getting value - add some helper function
 						if param_name in self.occ.rp.p_editable:
-							self.occ.log.debug("[LY] LONG CLICK on {}".format(param_name))
+							self.occ.l.debug("[LY] LONG CLICK on {}".format(param_name))
 							self.editor_type = self.occ.rp.p_editable[param_name]
 							self.open_editor_page(param_name)
 							break
@@ -273,7 +273,7 @@ class layout():
 						if p in self.occ.rp.p_resettable:
 							self.occ.rp.reset_param(p)
 				except KeyError:
-					self.occ.log.debug("[LY] LONG CLICK on non-clickable {}".format(param_name))
+					self.occ.l.debug("[LY] LONG CLICK on non-clickable {}".format(param_name))
 		elif click == 2: #Swipe RIGHT to LEFT
 			self.run_function("next_page")
 		elif click == 3: #Swipe LEFT to RIGHT
@@ -425,7 +425,7 @@ class layout():
 		try:
 			f = self.occ.rp.p_format[variable]
 		except KeyError:
-			self.occ.log.warning("[LY] Formatting not available: param_name ={}".format(variable))
+			self.occ.l.warning("[LY] Formatting not available: param_name ={}".format(variable))
 			f = "%.1f"
 		self.editor["variable_value"] = float(f % float(variable_value))
 		self.editor["variable_unit"] = next_unit
@@ -458,7 +458,7 @@ class layout():
 		self.force_refresh()
 
 	def next_page(self):
-		self.occ.log.debug("[LY][F] next_page")
+		self.occ.l.debug("[LY][F] next_page")
 		#cp = self.current_page_id
 		no = int(self.current_page_id[-1:])
 		name = self.current_page_id[:-1]
@@ -473,7 +473,7 @@ class layout():
 				#self.use_page(cp)
 
 	def prev_page(self):
-		self.occ.log.debug("[LY][F] prev_page")
+		self.occ.l.debug("[LY][F] prev_page")
 		#cp = self.current_page_id
 		no = int(self.current_page_id[-1:])
 		name = self.current_page_id[:-1]
@@ -520,16 +520,16 @@ class layout():
 
 	def debug_level(self):
 		#FIXME Merge with occ LOG_LEVEL
-		LOG_LEVEL = {   "DEBUG"    : self.occ.log.DEBUG,
-				"INFO"     : self.occ.log.INFO,
-				"WARNING"  : self.occ.log.WARNING,
-				"ERROR"    : self.occ.log.ERROR,
-				"CRITICAL" : self.occ.log.CRITICAL
+		LOG_LEVEL = {   "DEBUG"    : self.occ.l.DEBUG,
+				"INFO"     : self.occ.l.INFO,
+				"WARNING"  : self.occ.l.WARNING,
+				"ERROR"    : self.occ.l.ERROR,
+				"CRITICAL" : self.occ.l.CRITICAL
 		}
-		log_level = self.occ.logger.getEffectiveLevel()
+		log_level = self.occ.l.getEffectiveLevel()
 		log_level -= 10
 		if log_level < 10:
 			log_level = 40
-		log_level_name = self.occ.log.getLevelName(log_level)
+		log_level_name = self.occ.l.getLevelName(log_level)
 		self.occ.switch_log_level(log_level_name)
 		self.occ.rp.params["debug_level"] = log_level_name

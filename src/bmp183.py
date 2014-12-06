@@ -70,7 +70,7 @@ class bmp183(threading.Thread):
 		# Run init for super class
 		super(bmp183, self).__init__()
 		self.occ = occ
-		self.occ.log.debug("[BMP] __init__")
+		self.occ.l.debug("[BMP] __init__")
 		self.simulate = simulate
 		self.sensor_ready = False
 		self.running = False
@@ -91,7 +91,7 @@ class bmp183(threading.Thread):
 			# Check comunication / read ID
 			ret = self.read_byte(self.BMP183_REG['ID'])
 			if ret != self.BMP183_CMD['ID_VALUE']:
-				self.occ.log.error("[BMP] Communication witn bmp183 failed")
+				self.occ.l.error("[BMP] Communication witn bmp183 failed")
 				self.sensor_ready = False
 			else:
 				self.sensor_ready = True
@@ -100,18 +100,18 @@ class bmp183(threading.Thread):
 				self.measure_pressure()
 
 	def stop(self):
-		self.occ.log.debug("[BMP] stop")
+		self.occ.l.debug("[BMP] stop")
 		self.running = False
 		time.sleep(1)
 		if not self.simulate:
 			self.cleanup_gpio()
 
 	def __del__(self):
-		self.occ.log.debug("[BMP] __del__")
+		self.occ.l.debug("[BMP] __del__")
 		self.stop()
 
 	def set_up_gpio(self):
-		self.occ.log.debug("[BMP] set_up_gpio")
+		self.occ.l.debug("[BMP] set_up_gpio")
 		# GPIO initialisation
 		GPIO.setmode(GPIO.BOARD)
 		GPIO.setup(self.SCK, GPIO.OUT, initial=GPIO.HIGH)
@@ -120,7 +120,7 @@ class bmp183(threading.Thread):
 		GPIO.setup(self.SDO, GPIO.IN)
 
 	def cleanup_gpio(self):
-		self.occ.log.debug("[BMP] cleanup_gpio")
+		self.occ.l.debug("[BMP] cleanup_gpio")
 		GPIO.cleanup(self.SCK)
 		GPIO.cleanup(self.CS)
 		GPIO.cleanup(self.SDI)
@@ -185,7 +185,7 @@ class bmp183(threading.Thread):
 		return ret_value
 
 	def read_calibration_data(self):
-		self.occ.log.debug("[BMP] read_calibration_data")
+		self.occ.l.debug("[BMP] read_calibration_data")
 		# Read calibration data
 		self.AC1 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC1']))
 		self.AC2 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC2']))
@@ -256,13 +256,13 @@ class bmp183(threading.Thread):
 		self.temperature = self.T / 10.0
 
 	def stop_measurement(self):
-		self.occ.log.debug("[BMP] stop_measurement")
+		self.occ.l.debug("[BMP] stop_measurement")
 		self.running = False
 
 	def run(self):
-		self.occ.log.debug("[BMP] run")
+		self.occ.l.debug("[BMP] run")
 		self.running = True
 		while (self.running == True):
 			self.measure_pressure()
-			self.occ.log.debug("[BMP] pressure = {} Pa, temperature = {} degC".format(self.pressure, self.temperature))
+			self.occ.l.debug("[BMP] pressure = {} Pa, temperature = {} degC".format(self.pressure, self.temperature))
 			time.sleep(self.measurement_delay)

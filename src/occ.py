@@ -8,7 +8,8 @@ from rendering import rendering
 from ride_parameters import ride_parameters
 from time import *
 import locale
-import logging as log
+import logging
+import logging.handlers
 import lxml.etree as eltree
 import math
 import os
@@ -17,11 +18,11 @@ import pygame
 import signal
 import sys
 
-LOG_LEVEL = {   "DEBUG"    : log.DEBUG,
-		"INFO"     : log.INFO,
-		"WARNING"  : log.WARNING,
-		"ERROR"    : log.ERROR,
-		"CRITICAL" : log.CRITICAL
+LOG_LEVEL = {   "DEBUG"    : logging.DEBUG,
+		"INFO"     : logging.INFO,
+		"WARNING"  : logging.WARNING,
+		"ERROR"    : logging.ERROR,
+		"CRITICAL" : logging.CRITICAL
 }
 
 LONG_CLICK = 1000 #ms of long click
@@ -39,38 +40,35 @@ CADENCE_EMUL = 500
 
 class open_cycling_computer():
 	'Class for PiTFT 2.8" 320x240 cycling computer'
-	def __init__(self, simulate = False, width = 240, height = 320):
-		log_suffix = strftime("%d-%H:%M:%S")
-		log.basicConfig(filename="log/debug." + log_suffix + ".log",level=log.DEBUG)
+	def __init__(self, sys_logger, ride_logger, simulate = False, width = 240, height = 320):
 		self.simulate = simulate
-		self.logger = log.getLogger()
-		self.log = log
-		log.debug("[OCC] Log start")
+		self.r = ride_logger
+		self.l = sys_logger
 		pygame.init()
 		if not self.simulate:
 			pygame.event.set_grab(True)
 			pygame.mouse.set_visible(0)
-		log.debug("[OCC] EV_UPDATE_VALUES to be generated every {} ms".format(REFRESH_TIME))
+		self.l.debug("[OCC] EV_UPDATE_VALUES to be generated every {} ms".format(REFRESH_TIME))
 		pygame.time.set_timer(EV_UPDATE_VALUES, REFRESH_TIME)
-		log.debug("[OCC] EV_SAVE_CONFIG to be generated every {} s".format(CONFIG_SAVE_TIME/1000))
+		self.l.debug("[OCC] EV_SAVE_CONFIG to be generated every {} s".format(CONFIG_SAVE_TIME/1000))
 		pygame.time.set_timer(EV_SAVE_CONFIG, CONFIG_SAVE_TIME)
-		log.debug("[OCC] Cadence event emulation every {} ms".format(CADENCE_EMUL))
+		self.l.debug("[OCC] Cadence event emulation every {} ms".format(CADENCE_EMUL))
 		pygame.time.set_timer(EV_CADENCE_EMUL, CADENCE_EMUL)
 		self.width = width
 		self.height = height
-		log.debug("[OCC] Screen size is {} x {}".format(self.width, self.height))
+		self.l.debug("[OCC] Screen size is {} x {}".format(self.width, self.height))
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		self.clock = pygame.time.Clock()
-		log.debug("[OCC] Calling ride_parameters")
+		self.l.debug("[OCC] Calling ride_parameters")
 		self.rp = ride_parameters(self, simulate)
 		self.config_path = "config/config.xml"
-		log.debug("[OCC] Reading config. Path = {}".format(self.config_path))
+		self.l.debug("[OCC] Reading config. Path = {}".format(self.config_path))
 		self.read_config()
-		log.debug("[OCC] Setting layout. Path = {}".format(self.layout_path))
+		self.l.debug("[OCC] Setting layout. Path = {}".format(self.layout_path))
 		self.layout = layout(self, self.layout_path)
-		log.debug("[OCC] Setting up rendering")
+		self.l.debug("[OCC] Setting up rendering")
 		self.rendering = rendering(self.layout)
-		log.debug("[OCC] Starting rendering thread")
+		self.l.debug("[OCC] Starting rendering thread")
 		self.rendering.start()
 		self.running = True
 		self.refresh = False
@@ -89,17 +87,17 @@ class open_cycling_computer():
 		self.refresh = True
 
 	def read_config(self):
-		log.debug("[OCC][F] read_config")
+		self.l.debug("[OCC][F] read_config")
 		#FIXME error handling and emergency config read if main is corrupted
 		try:
 			config_tree = eltree.parse(self.config_path)
 		except IOError:
-			log.exception("[OCC] I/O Error when trying to parse config file. Falling back to default config")
+			self.l.exception("[OCC] I/O Error when trying to parse config file. Falling back to default config")
 			self.config_path = "config/config_base.xml"
 			try:
 				config_tree = eltree.parse(self.config_path)
 			except IOError:
-				log.exception("[OCC] I/O Error when trying to parse to default config. Quitting!!")
+				self.l.exception("[OCC] I/O Error when trying to parse to default config. Quitting!!")
 				self.cleanup()
 		self.config = config_tree.getroot()
 		try:
@@ -112,7 +110,7 @@ class open_cycling_computer():
 			self.layout_path = self.config.find("layout_path").text
 		except AttributeError:
 			self.layout_path = "layouts/default.xml"
-			log.error("[OCC] Missing layout path, falling back to default.xml")
+			self.l.error("[OCC] Missing layout path, falling back to default.xml")
 		error_list = []
 		try:
 			self.rp.p_raw["riderweight"] = float(self.config.find("riderweight").text)
@@ -158,16 +156,16 @@ class open_cycling_computer():
 		self.rp.split_speed("speed_max")
 		if len(error_list) > 0:
 			for item in error_list:
-				log.error("[OCC] Missing: {} in config file".format(item))
+				self.l.error("[OCC] Missing: {} in config file".format(item))
 			error_list = []
 
 	def switch_log_level(self, log_level):
 		self.logger.setLevel(LOG_LEVEL[log_level])
-		log.log(100, "[OCC] Switching to log_level {}".format(log_level))
+		self.l.log(100, "[OCC] Switching to log_level {}".format(log_level))
 
 	def write_config(self):
-		log.debug("[OCC] Writing config file")
-		log_level =  log.getLevelName(self.logger.getEffectiveLevel())
+		self.l.debug("[OCC] Writing config file")
+		log_level = logging.getLevelName(self.l.getEffectiveLevel())
 		config_tree = eltree.Element("config")
 		eltree.SubElement(config_tree, "log_level").text = log_level
 		eltree.SubElement(config_tree, "layout_path").text = self.layout.layout_path
@@ -186,34 +184,34 @@ class open_cycling_computer():
 
 	def screen_touched_handler(self, time_now):
 		if (time_now - self.pressed_t) > LONG_CLICK:
-			log.debug("[OCC] LONG CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
+			self.l.debug("[OCC] LONG CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
 			self.layout.check_click(self.pressed_pos, 1)
 			self.reset_motion()
 		if (self.released_t != 0):
-			log.debug("[OCC] SHORT CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
+			self.l.debug("[OCC] SHORT CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
 			self.layout.check_click(self.pressed_pos, 0)
 			self.reset_motion()
 		dx = self.rel_movement[0]
 		dy = self.rel_movement[1]
 		if (abs(dx)) > SWIPE_LENGTH:
 			if (dx > 0):
-				log.debug("[OCC] SWIPE X RIGHT to LEFT : {} {} {} {} {} {}".\
+				self.l.debug("[OCC] SWIPE X RIGHT to LEFT : {} {} {} {} {} {}".\
 					format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 				self.layout.check_click(self.pressed_pos, 2)
 				self.reset_motion()
 			else:
-				log.debug("[OCC] SWIPE X LEFT to RIGHT : {} {} {} {} {} {}".\
+				self.l.debug("[OCC] SWIPE X LEFT to RIGHT : {} {} {} {} {} {}".\
 					format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 				self.layout.check_click(self.pressed_pos, 3)
 				self.reset_motion()
 		elif (abs(dy)) > SWIPE_LENGTH:
 			if (dy < 0):
-				log.debug("[OCC] SWIPE X BOTTOM to TOP : {} {} {} {} {} {}".\
+				self.l.debug("[OCC] SWIPE X BOTTOM to TOP : {} {} {} {} {} {}".\
 					format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 				self.layout.check_click(self.pressed_pos, 4)
 				self.reset_motion()
 			else:
-				log.debug("[OCC] SWIPE X TOP to BOTTOM : {} {} {} {} {} {}".\
+				self.l.debug("[OCC] SWIPE X TOP to BOTTOM : {} {} {} {} {} {}".\
 					format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 				self.layout.check_click(self.pressed_pos, 5)
 				self.reset_motion()
@@ -221,15 +219,15 @@ class open_cycling_computer():
 	def event_handeler(self, event, time_now):
 		if event.type == pygame.QUIT:
 			self.running = False
-			log.debug("[OCC] QUIT {}".format(time_now))
+			self.l.debug("[OCC] QUIT {}".format(time_now))
 		elif event.type == EV_UPDATE_VALUES:
 			self.rp.update_values()
-			log.debug("[OCC] EV_UPDATE_VALUES {}".format(time_now))
+			self.l.debug("[OCC] EV_UPDATE_VALUES {}".format(time_now))
 		elif event.type == EV_CADENCE_EMUL:
 			self.rp.calculate_cadence()
 		elif event.type == EV_SAVE_CONFIG:
 			self.write_config()
-			log.debug("[OCC] EV_SAVE_CONFIG {}".format(time_now))
+			self.l.debug("[OCC] EV_SAVE_CONFIG {}".format(time_now))
 		elif event.type == pygame.MOUSEBUTTONDOWN:
 			self.pressed_t = time_now
 			self.pressed_pos = pygame.mouse.get_pos()
@@ -237,7 +235,7 @@ class open_cycling_computer():
 			pressed_rel =  pygame.mouse.get_rel()
 			self.add_rel_motion = True
 			self.layout.render_button = self.pressed_pos
-			log.debug("[OCC] DOWN:{} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
+			self.l.debug("[OCC] DOWN:{} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
 		elif event.type == pygame.MOUSEBUTTONUP:
 			#That check prevents setting release_x after long click
 			if (self.pressed_t != 0):
@@ -245,20 +243,20 @@ class open_cycling_computer():
 				self.released_pos = pygame.mouse.get_pos()
 			self.add_rel_motion = False
 			self.layout.render_button = None
-			log.debug("[OCC] UP: {} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
+			self.l.debug("[OCC] UP: {} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
 		elif event.type == pygame.MOUSEMOTION:
 			pressed_rel =  pygame.mouse.get_rel()
 			if self.add_rel_motion:
 				self.rel_movement = tuple(map(add, self.rel_movement, pressed_rel))
-			log.debug("[OCC] MOTION: {}".format(self.rel_movement))
-		#log.debug("[OCC] ticking:time_now:{} pressed_t:{} pressed_pos:{} released_t:{} released_pos:{}". \
+			self.l.debug("[OCC] MOTION: {}".format(self.rel_movement))
+		#self.l.debug("[OCC] ticking:time_now:{} pressed_t:{} pressed_pos:{} released_t:{} released_pos:{}". \
 		#		format(time_now, self.pressed_t, self.pressed_pos, self.released_t, self.released_pos))
 		if (self.pressed_t != 0):
 			self.refresh = True
 			self.screen_touched_handler(time_now)
 
 	def main_loop(self):
-		log.debug("[OCC][F] main_loop")
+		self.l.debug("[OCC][F] main_loop")
 		self.reset_motion()
 		while self.running:
 			for event in self.event_iterator():
@@ -270,7 +268,7 @@ class open_cycling_computer():
 					self.rendering.force_refresh()
 
 	def reset_motion(self):
-		log.debug("[OCC][F] reset_motion")
+		self.l.debug("[OCC][F] reset_motion")
 		self.pressed_t = 0
 		self.released_t = 0
 		self.pressed_pos = (0,0)
@@ -296,27 +294,50 @@ class open_cycling_computer():
 		except AttributeError:
 			pass
 		pygame.quit()
-		log.debug("[OCC] Log end")
+		self.r.info("[OCC] Ride log end")
+		self.l.debug("[OCC] Log end")
 		quit()
 
 def quit_handler(signal, frame):
 	main_window.cleanup()
 
 if __name__ == "__main__":
+	suffix = strftime("%d-%H:%M:%S")
+	sys_log_filename = "log/debug." + suffix + ".log"
+	ride_log_filename = "log/ride." + suffix + ".log"
+
+	logging.getLogger('system').setLevel(logging.DEBUG)
+	sys_log_handler = logging.handlers.RotatingFileHandler(sys_log_filename)
+	sys_log_format = '[%(levelname)s] %(asctime)s %(message)s'
+	sys_log_handler.setFormatter(logging.Formatter(sys_log_format))
+	logging.getLogger('system').addHandler(sys_log_handler)
+	sys_logger = logging.getLogger('system')
+
+	logging.getLogger('ride').setLevel(logging.INFO)
+	ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
+	ride_log_format = '%(asctime)s, %(time)s, %(altitude)s'
+	ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
+	logging.getLogger('ride').addHandler(ride_log_handler)
+	ride_logger = logging.getLogger('ride')
+
+	ride_logger.info('', extra={'time': "Time", 'altitude': "Altitude"})
+#	ride_logger.info('', extra={'time': time(), 'altitude': altitude})
+
 	signal.signal(signal.SIGTERM, quit_handler)
 	signal.signal(signal.SIGINT, quit_handler)
 	#FIXME Move logger init here
+	sys_logger.debug("[OCC] Log start")
 	os.environ["SDL_FBDEV"] = "/dev/fb1"
 	os.putenv('SDL_MOUSEDEV' , '/dev/input/touchscreen')
 	#This is a simple check if we're running on Raspberry PI. Switch to simulation mode if we're not
 	if (platform.machine() == "armv6l"):
 		os.putenv('SDL_VIDEODRIVER', 'fbcon')
 		os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
-		main_window = open_cycling_computer(False)
-		log.debug("[OCC] simulate = False")
+		main_window = open_cycling_computer(sys_logger, ride_logger, False)
+		sys_logger.debug("[OCC] simulate = False")
 	else:
-		main_window = open_cycling_computer(True)
-		log.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
-		log.debug("[OCC] simulate = True")
+		main_window = open_cycling_computer(sys_logger, ride_logger, True)
+		sys_logger.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
+		sys_logger.debug("[OCC] simulate = True")
 	main_window.main_loop()
 	main_window.cleanup()
