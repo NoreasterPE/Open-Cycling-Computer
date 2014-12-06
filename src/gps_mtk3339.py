@@ -22,18 +22,10 @@ class gps_mtk3339(threading.Thread):
 		self.l = occ.l
 		self.occ = occ
 		ser = mtk3339.mt3339("/dev/ttyAMA0")
-		#os.system("sudo /usr/sbin/service gpsd stop")
-		time.sleep(1)
 		ser.set_baudrate(115200)
-		time.sleep(0.1)
-		ser.set_fix_update_rate(1000)
-		time.sleep(0.1)
-		ser.set_nmea_update_rate(1000)
-		time.sleep(0.1)
+		ser.set_fix_update_rate(800)
+		ser.set_nmea_update_rate(800)
 		ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 5, gsa = 5, gsv = 5)
-		#ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 0, gsa = 0, gsv = 0)
-		time.sleep(0.1)
-		#os.system("sudo /usr/sbin/service gpsd start")
 		self.simulate = simulate
 		self.altitude = NaN
 		self.climb = NaN
