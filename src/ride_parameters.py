@@ -80,7 +80,7 @@ class ride_parameters():
 		self.p_raw["temperature_min"] = INF
 		self.p_raw["temperature_max"] = INF_MIN
 		#FIXME Name doesn't follow the policy
-		self.p_raw["time_on"] = 0.0001 #Avoid DIV/0
+		self.p_raw["timeon"] = 0.0001 #Avoid DIV/0
 		self.p_raw["utc"] = ""
 
 		#System params
@@ -93,6 +93,7 @@ class ride_parameters():
 		self.p_raw_units["distance"] = "m"
 		self.p_raw_units["cadence"] = "RPM"
 		self.p_raw_units["climb"] = "m/s"
+		self.p_raw_units["dtime"] = "s"
 		self.p_raw_units["gps_fix"] = ""
 		self.p_raw_units["latitude"] = ""
 		self.p_raw_units["longitude"] = ""
@@ -105,7 +106,7 @@ class ride_parameters():
 		self.p_raw_units["satellites_used"] = ""
 		self.p_raw_units["speed"] = "m/s"
 		self.p_raw_units["temperature"] = "C"
-		self.p_raw_units["time_on"] = "s"
+		self.p_raw_units["timeon"] = "s"
 
 		#Params of the ride ready for rendering.
 		self.params["altitude"] = "-"
@@ -118,6 +119,7 @@ class ride_parameters():
 		self.params["cadence_max"] = "-"
 		self.params["climb"] = "-"
 		self.params["distance"] = 0
+		self.params["dtime"] = 0
 		self.params["gps_fix"] = "-"
 		self.params["gradient"] = "-"
 		self.params["heart_rate"] = "-"
@@ -147,7 +149,8 @@ class ride_parameters():
 		self.params["temperature_average"] = ""
 		self.params["temperature_min"] = ""
 		self.params["temperature_max"] = ""
-		self.params["time_on"] = ""
+		self.params["timeon"] = ""
+		self.params["timeon_hms"] = ""
 		self.params["utc"] = ""
 
 		#System params
@@ -164,6 +167,7 @@ class ride_parameters():
 		self.p_format["cadence_max"] = "%.0f"
 		self.p_format["climb"] = "%.1f"
 		self.p_format["distance"] = "%.1f"
+		self.p_format["dtime"] = "%.2f"
 		self.p_format["gps_fix"] = ""
 		self.p_format["gradient"] = ""
 		self.p_format["heart_rate"] = "%.0f"
@@ -193,8 +197,8 @@ class ride_parameters():
 		self.p_format["temperature_average"] = "%.1f"
 		self.p_format["temperature_min"] = "%.0f"
 		self.p_format["temperature_max"] = "%.0f"
-		self.p_format["time_on"] = "%.0f"
-		self.p_format["time_on_hms"] = ""
+		self.p_format["timeon"] = "%.0f"
+		self.p_format["timeon_hms"] = ""
 		self.p_format["utc"] = ""
 
 		#Units - name has to be identical as in params #FIXME reduce number of units (i.e one for speed)
@@ -202,6 +206,7 @@ class ride_parameters():
 		self.units["climb"] = "m/s"
 		self.units["cadence"] = "RPM"
 		self.units["distance"] = "km"
+		self.units["dtime"] = "s"
 		self.units["gps_fix"] = ""
 		self.units["gradient"] = "%"
 		self.units["heart_rate"] = "BPM"
@@ -218,8 +223,8 @@ class ride_parameters():
 		self.units["satellites_used"] = ""
 		self.units["speed"] = "km/h"
 		self.units["temperature"] = "C"
-		self.units["time_on"] = "s"
-		self.units["time_on_hms"] = "s"
+		self.units["timeon"] = "s"
+		self.units["timeon_hms"] = ""
 
 		#Allowed units - user can switch between those when editing value 
 		self.units_allowed["odometer"] = ["km", "mi"]
@@ -299,7 +304,7 @@ class ride_parameters():
 
 	def calculate_time_related_parameters(self):
 		dt = self.p_raw["dtime"]
-		self.p_raw["time_on"] += dt
+		self.p_raw["timeon"] += dt
 		#FIXME calculate with speed not speed_gps when bt sensors are set up
 		s = self.p_raw["speed_gps"]
 		if (s > self.speed_gps_low):
@@ -422,7 +427,7 @@ class ride_parameters():
 		dt = self.p_raw["dtime"]
 		t = self.p_raw["temperature"]
 		ta = self.p_raw["temperature_average"]
-		tt = self.p_raw["time_on"]
+		tt = self.p_raw["timeon"]
 		ta_new = (t * dt + ta * tt) / (tt + dt)
 		self.p_raw["temperature_average"] = ta_new
 
@@ -430,7 +435,7 @@ class ride_parameters():
 		dt = self.p_raw["dtime"]
 		c = self.p_raw["cadence"]
 		ca = self.p_raw["cadence_average"]
-		tt = self.p_raw["time_on"]
+		tt = self.p_raw["timeon"]
 		ca_new = (c * dt + ca * tt) / (tt + dt)
 		self.p_raw["cadence_average"] = ca_new
 
@@ -438,6 +443,7 @@ class ride_parameters():
 		#FIXME Make a list of params and call from for loop
 		#FIXME Use the list to dump DEBUG data
 		self.update_gps()
+		self.update_param("dtime")
 		self.update_param("latitude")
 		self.update_param("longitude")
 		self.update_param("altitude_gps")
@@ -453,7 +459,8 @@ class ride_parameters():
 		self.update_param("ridetime")
 		self.update_hms("ridetime")
 		self.update_hms("ridetime_total")
-		self.update_hms("time_on")
+		self.update_hms("timeon")
+		self.update_param("timeon")
 		self.update_max_speed()
 		self.update_param("speed")
 		self.update_param("speed_max")
@@ -470,6 +477,10 @@ class ride_parameters():
 		self.update_temperatures()
 		self.update_param("satellites_used")
 		self.update_param("satellites")
+		tme = self.params["timeon_hms"]
+		dte = self.params["dtime"]
+		alt = self.params["altitude"]
+		self.r.info('', extra={'time': tme, 'dtime': dte, 'altitude': alt})
 
 	def strip_end(self, param_name, suffix = None):
 		#Make sure there is no _digits, _tenths, _hms at the end
