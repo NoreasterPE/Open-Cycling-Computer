@@ -160,7 +160,7 @@ class open_cycling_computer():
 			error_list = []
 
 	def switch_log_level(self, log_level):
-		self.logger.setLevel(LOG_LEVEL[log_level])
+		self.l.setLevel(LOG_LEVEL[log_level])
 		self.l.log(100, "[OCC] Switching to log_level {}".format(log_level))
 
 	def write_config(self):

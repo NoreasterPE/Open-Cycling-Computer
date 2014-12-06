@@ -2,6 +2,7 @@ from units import units
 import lxml.etree as eltree
 import os
 import pygame
+import logging
 import struct
 import sys
 import time
@@ -11,6 +12,7 @@ class layout():
 	#Temporary change
 	def __init__(self, occ, layout_path="layouts/default.xml"):
 		self.occ = occ
+		self.l = occ.l
 		self.uc = units()
 		self.screen = occ.screen
 		self.colorkey = [0,0,0]
@@ -520,16 +522,16 @@ class layout():
 
 	def debug_level(self):
 		#FIXME Merge with occ LOG_LEVEL
-		LOG_LEVEL = {   "DEBUG"    : self.occ.l.DEBUG,
-				"INFO"     : self.occ.l.INFO,
-				"WARNING"  : self.occ.l.WARNING,
-				"ERROR"    : self.occ.l.ERROR,
-				"CRITICAL" : self.occ.l.CRITICAL
+		LOG_LEVEL = {   "DEBUG"    : logging.DEBUG,
+				"INFO"     : logging.INFO,
+				"WARNING"  : logging.WARNING,
+				"ERROR"    : logging.ERROR,
+				"CRITICAL" : logging.CRITICAL
 		}
-		log_level = self.occ.l.getEffectiveLevel()
+		log_level = self.l.getEffectiveLevel()
 		log_level -= 10
 		if log_level < 10:
 			log_level = 40
-		log_level_name = self.occ.l.getLevelName(log_level)
+		log_level_name = logging.getLevelName(log_level)
 		self.occ.switch_log_level(log_level_name)
 		self.occ.rp.params["debug_level"] = log_level_name
