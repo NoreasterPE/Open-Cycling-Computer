@@ -9,17 +9,19 @@ INF_MIN = float("-inf")
 INF = float("inf")
 
 class ride_parameters():
-	def __init__(self, occ, simulate = False):
+	def __init__(self, occ, ride_logger, simulate = False):
 		self.occ = occ
+		self.l = occ.l
+		self.r = ride_logger
 		self.uc = units()
-		self.occ.l.info("[RP] Initialising GPS")
+		self.l.info("[RP] Initialising GPS")
 		self.gps = gps_mtk3339(occ, simulate)
-		self.occ.l.info("[RP] Starting GPS thread")
+		self.l.info("[RP] Starting GPS thread")
 		self.gps.start()
-		self.occ.l.info("[RP] Initialising bmp183 sensor")
+		self.l.info("[RP] Initialising bmp183 sensor")
 		self.bmp183_sensor = bmp183(occ, simulate)
 		self.bmp183_first_run = True
-		self.occ.l.info("[RP] Starting BMP thread")
+		self.l.info("[RP] Starting BMP thread")
 		self.bmp183_sensor.start()
 
 		self.p_desc = {}
@@ -254,14 +256,14 @@ class ride_parameters():
 		self.p_resettable["ridetime"] = 1
 		#Do not record any speed below 2.5 m/s
 		self.speed_gps_low = 2.5
-		self.occ.l.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
+		self.l.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
 		#Do not show speed below 1 m/s
 		self.speed_gps_noise = 1
-		self.occ.l.info("[RP] speed_gps_noise treshold set to {}".format(self.speed_gps_noise))
+		self.l.info("[RP] speed_gps_noise treshold set to {}".format(self.speed_gps_noise))
 		self.update_param("speed_max")
 		self.split_speed("speed_max")
 		self.update_param("altitude_home")
-		self.occ.l.info("[RP] altitude_home set to {}".format(self.params["altitude_home"]))
+		self.l.info("[RP] altitude_home set to {}".format(self.params["altitude_home"]))
 		self.pressure_at_sea_level_calculated = False
 		self.cadence_timestamp = None
 		self.cadence_timestamp_old = None
@@ -280,9 +282,9 @@ class ride_parameters():
 		if dt_adjustment > 0:
 			self.p_raw["dtime"] = self.p_raw["dtime"] - dt_adjustment
 			self.occ.rp.gps.time_adjustment_delta = 0
-			self.occ.l.debug("[RP] dtime adjusted by {}".format(dt_adjustment))
+			self.l.debug("[RP] dtime adjusted by {}".format(dt_adjustment))
 		self.p_raw["time_stamp"] = t
-		self.occ.l.debug("[RP] timestamp: {} dtime {}".format(t, self.p_raw["dtime"]))
+		self.l.debug("[RP] timestamp: {} dtime {}".format(t, self.p_raw["dtime"]))
 		self.update_rtc()
 		self.read_bmp183_sensor()
 		if not self.pressure_at_sea_level_calculated:
@@ -305,10 +307,10 @@ class ride_parameters():
 				d = dt * s
 				d = float(d)
 			except ValueError:
-				self.occ.l.error("[RP] calculate_time_related_parameters ValueError")
+				self.l.error("[RP] calculate_time_related_parameters ValueError")
 				pass
 			except TypeError:
-				self.occ.l.error("[RP] calculate_time_related_parameters TypeError")
+				self.l.error("[RP] calculate_time_related_parameters TypeError")
 			self.p_raw["distance"] += d
 			self.p_raw["odometer"] += d
 			self.p_raw["ridetime"] += self.p_raw["dtime"]
@@ -316,10 +318,10 @@ class ride_parameters():
 			self.p_raw["speed_average"] = self.p_raw["distance"] / self.p_raw["ridetime"]
 			self.update_param("speed_average")
 			self.split_speed("speed_average")
-			self.occ.l.debug("[RP] speed_gps: {}, distance: {}, odometer: {}".\
+			self.l.debug("[RP] speed_gps: {}, distance: {}, odometer: {}".\
 					format(s, self.p_raw["distance"], self.p_raw["odometer"]))
 		else:
-			self.occ.l.debug("[RP] speed_gps: below speed_gps_low treshold")
+			self.l.debug("[RP] speed_gps: below speed_gps_low treshold")
 
 	def force_refresh(self):
 		self.occ.force_refresh()
@@ -356,7 +358,7 @@ class ride_parameters():
 		if param_name in self.p_desc:
 			return self.p_desc[param_name]
 		else:
-			self.occ.l.error("[RP] {} has no description defined".format(param_name))
+			self.l.error("[RP] {} has no description defined".format(param_name))
 			return "No description"
 
 	def clean_value(self, variable, empty = 0):
@@ -455,7 +457,7 @@ class ride_parameters():
 		self.update_param("speed")
 		self.update_param("speed_max")
 		self.split_speed("speed")
-		self.occ.l.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}, cadence {} {}".\
+		self.l.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}, cadence {} {}".\
 				format(self.params["speed"], self.params["speed_max"],\
 				self.params["speed_average"], self.units["speed"],\
 				self.params["cadence"], self.units["cadence"]))
@@ -479,7 +481,7 @@ class ride_parameters():
 		return param_name
 
 	def reset_param(self, param_name):
-		self.occ.l.debug("[RP] Resetting {}".format(param_name))
+		self.l.debug("[RP] Resetting {}".format(param_name))
 		self.p_raw[param_name] = 0
 		#FIXME make a function like reset ride 
 		if param_name == "ridetime" or param_name == "distance":
@@ -494,7 +496,7 @@ class ride_parameters():
 		if param_name in self.p_format:
 			f = self.p_format[param_name]
 		else:
-			self.occ.l.error("[RP] Formatting not available: param_name = {}".format(param_name))
+			self.l.error("[RP] Formatting not available: param_name = {}".format(param_name))
 			f = "%.1f"
 
 		if self.p_raw[param_name] != "-":
@@ -508,16 +510,16 @@ class ride_parameters():
 			except TypeError:
 			#FIXME Required?
 				#Value conversion failed, so don't change anything
-				self.occ.l.error("[RP] TypeError: update_param exception: {} {} {}".\
+				self.l.error("[RP] TypeError: update_param exception: {} {} {}".\
 						format(__name__ ,param_name, self.params[param_name],\
 							self.p_raw[param_name]))
 			#FIXME Required?
 			except ValueError:
-				self.occ.l.error("[RP] ValueError: update_param exception: {} {} {}".\
+				self.l.error("[RP] ValueError: update_param exception: {} {} {}".\
 						format(__name__ ,param_name, self.params[param_name],\
 							self.p_raw[param_name]))
 		else:
-			self.occ.l.debug("[RP] param_name {} = -".format(param_name))
+			self.l.debug("[RP] param_name {} = -".format(param_name))
 			
 	def add_zero(self, value):
 		if value < 10:
@@ -564,7 +566,7 @@ class ride_parameters():
 			self.p_raw["altitude"] = float(44330*(1 - pow((pressure/pressure_at_sea_level), (1/5.255))))
 		else:
 			self.p_raw["altitude"] = 0
-		self.occ.l.debug("[RP] altitude: {}".format(self.p_raw["altitude"]))
+		self.l.debug("[RP] altitude: {}".format(self.p_raw["altitude"]))
 
 	def calculate_pressure_at_sea_level(self):
 		#Set pressure_at_sea_level based on given altitude
@@ -573,7 +575,7 @@ class ride_parameters():
 		#Potential DIV/0 is altitude_home set to 44330
 		self.p_raw["pressure_at_sea_level"] = float(pressure/pow((1 - altitude_home/44330), 5.255))
 		self.pressure_at_sea_level_calculated = True
-		self.occ.l.debug("[RP] pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]))
+		self.l.debug("[RP] pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]))
 
 	def update_temperatures(self):
 		self.set_min("temperature")

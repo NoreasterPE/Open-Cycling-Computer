@@ -19,6 +19,7 @@ class gps_mtk3339(threading.Thread):
 
 	def __init__(self, occ = None, simulate = False):
 		threading.Thread.__init__(self)
+		self.l = occ.l
 		self.occ = occ
 		#ser = mtk3339.mt3339("/dev/ttyAMA0")
 		#os.system("sudo /usr/sbin/service gpsd stop")
@@ -55,7 +56,7 @@ class gps_mtk3339(threading.Thread):
 				self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
 				self.present = True
 			except:
-				self.occ.l.error("[GPS] Cannot talk to GPS")
+				self.l.error("[GPS] Cannot talk to GPS")
 				self.present = False
 		else:
 			self.present = True
@@ -66,14 +67,14 @@ class gps_mtk3339(threading.Thread):
 			if not self.simulate:
 				while self.running:
 					timestamp = time.time()
-					self.occ.l.debug("[GPS] timestamp: {}, running: {},".format(timestamp, self.running))
+					self.l.debug("[GPS] timestamp: {}, running: {},".format(timestamp, self.running))
 					gps_data_available = False
 					try:
 						#FIXME Fails sometimes with ImportError from gps.py - see TODO 21 [IN TESTING]
 						self.data.next()
 						gps_data_available = True
 					except StopIteration:
-						self.occ.l.error("[GPS] StopIteration exception in GPS")
+						self.l.error("[GPS] StopIteration exception in GPS")
 						#FIXME Reinit gps after a delay (from RP?) as restarting gpsd doesn't help
 						#so this need to be in the loop as well: self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
 						time.sleep(0.5)
@@ -94,7 +95,7 @@ class gps_mtk3339(threading.Thread):
 								#self.data.fix.time is a string, so parse it to get the float time value.
 								self.fix_time = time.mktime(time.strptime(self.data.fix.time, '%Y-%m-%dT%H:%M:%S.%fZ'))
 							except ImportError:
-								self.occ.l.critical("[GPS] self.fix_time {}".format(self.fix_time))
+								self.l.critical("[GPS] self.fix_time {}".format(self.fix_time))
 								pass
 #FIXME
 #Exception in thread Thread-1:
@@ -105,7 +106,7 @@ class gps_mtk3339(threading.Thread):
 #    self.lag = timestamp - self.fix_time
 #TypeError: unsupported operand type(s) for -: 'float' and 'unicode'
 						self.lag = timestamp - self.fix_time
-						self.occ.l.debug("[GPS] timestamp to fix time delta: {}".format(self.lag))
+						self.l.debug("[GPS] timestamp to fix time delta: {}".format(self.lag))
 						if self.set_time:
 							if (self.utc is not None):
 								if (len(self.utc) > 5):
@@ -115,16 +116,16 @@ class gps_mtk3339(threading.Thread):
 							self.satellites = len(sat)
 							self.satellites_used = self.data.satellites_used
 						except AttributeError:
-							self.occ.l.error("[GPS] AttributeError exception in GPS")
+							self.l.error("[GPS] AttributeError exception in GPS")
 							pass
-						self.occ.l.debug("[GPS] timestamp: {}, fix time: {}, UTC: {}, Satellites: {}, Used: {}"\
+						self.l.debug("[GPS] timestamp: {}, fix time: {}, UTC: {}, Satellites: {}, Used: {}"\
 									.format(timestamp, self.fix_time, self.utc, self.satellites,\
 									 self.satellites_used))
-						self.occ.l.debug("[GPS] Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"\
+						self.l.debug("[GPS] Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"\
 									.format(self.fix_mode, self.latitude, self.longitude,\
 									self.speed, self.altitude, self.climb))
 					else:
-						self.occ.l.debug("[GPS] Setting null values to GPS params")
+						self.l.debug("[GPS] Setting null values to GPS params")
 						self.latitude = NaN
 						self.longitude = NaN
 						self.utc = None
@@ -164,16 +165,16 @@ class gps_mtk3339(threading.Thread):
 	#FIXME temporary location
 	def set_system_time(self):
 		tt_before = time.time()
-		self.occ.l.error("[GPS] time.time before {}".format(tt_before))
-		self.occ.l.debug("[GPS] Setting UTC system time to {}".format(self.utc))
+		self.l.error("[GPS] time.time before {}".format(tt_before))
+		self.l.debug("[GPS] Setting UTC system time to {}".format(self.utc))
 		command = 'date -u --set={} "+%Y-%m-%dT%H:%M:%S.000Z" 2>&1 > /dev/null'.format(self.utc)
 		ret = os.system(command)
 		if ret == 0:
 			self.set_time = False
 			tt_after = time.time()
 			self.time_adjustment_delta = tt_before - tt_after
-			self.occ.l.error("[GPS] time.time after {}".format(tt_after))
-			self.occ.l.error("[GPS] time.time delta {}".format(self.time_adjustment_delta))
+			self.l.error("[GPS] time.time after {}".format(tt_after))
+			self.l.error("[GPS] time.time delta {}".format(self.time_adjustment_delta))
 
 	def setup_gpsd(self):
 		BAUD_115200 = "$PMTK251,115200*1F\r\n" #Mine

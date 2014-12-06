@@ -60,7 +60,7 @@ class open_cycling_computer():
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		self.clock = pygame.time.Clock()
 		self.l.debug("[OCC] Calling ride_parameters")
-		self.rp = ride_parameters(self, simulate)
+		self.rp = ride_parameters(self, ride_logger, simulate)
 		self.config_path = "config/config.xml"
 		self.l.debug("[OCC] Reading config. Path = {}".format(self.config_path))
 		self.read_config()
