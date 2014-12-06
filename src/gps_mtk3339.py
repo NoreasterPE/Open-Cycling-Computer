@@ -1,22 +1,18 @@
 #! /usr/bin/python
  
 from gps import *
+import mtk3339
 import os
 import serial
 import threading
 import time
 
 NaN = float('nan')
-fix_mode = { 1 : "No fix",
+fix_mode = { 0 : "No data",
+	     1 : "No fix",
 	     2 : "Fix 2D",
 	     3 : "Fix 3D"
 }
-
-NMEA_UPDATE_5HZ = "$PMTK220,200*2C"
-NMEA_UPDATE_10HZ = "$PMTK220,100*2F"
-#FIX_CTL_1HZ = "$PMTK300,1000,0,0,0,0*1C"
-FIX_CTL_5HZ = "$PMTK300,200,0,0,0,0*2F"
-SET_BAUD_57600 = "$PMTK251,57600*2C"
 
 class gps_mtk3339(threading.Thread):
 	#Class for gps mtk3339 as sold by Adafruit
@@ -24,6 +20,19 @@ class gps_mtk3339(threading.Thread):
 	def __init__(self, occ = None, simulate = False):
 		threading.Thread.__init__(self)
 		self.occ = occ
+		#ser = mtk3339.mt3339("/dev/ttyAMA0")
+		#os.system("sudo /usr/sbin/service gpsd stop")
+		#time.sleep(1)
+		#ser.set_baudrate(115200)
+		#time.sleep(0.1)
+		#ser.set_fix_update_rate(2000)
+		#time.sleep(0.1)
+		#ser.set_nmea_update_rate(2000)
+		#time.sleep(0.1)
+		#ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 5, gsa = 5, gsv = 5)
+		#ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 0, gsa = 0, gsv = 0)
+		#time.sleep(0.1)
+		#os.system("sudo /usr/sbin/service gpsd start")
 		self.simulate = simulate
 		self.altitude = NaN
 		self.climb = NaN
@@ -65,6 +74,9 @@ class gps_mtk3339(threading.Thread):
 						gps_data_available = True
 					except StopIteration:
 						self.occ.log.error("[GPS] StopIteration exception in GPS")
+						#FIXME Reinit gps after a delay (from RP?) as restarting gpsd doesn't help
+						#so this need to be in the loop as well: self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
+						time.sleep(0.5)
 						pass
 					if gps_data_available:
 						self.latitude = self.data.fix.latitude
