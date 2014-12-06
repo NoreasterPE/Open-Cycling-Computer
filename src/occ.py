@@ -312,7 +312,7 @@ if __name__ == "__main__":
 	sys_log_handler.setFormatter(logging.Formatter(sys_log_format))
 	logging.getLogger('system').addHandler(sys_log_handler)
 	sys_logger = logging.getLogger('system')
-
+	#FIXME Ride logger init should be here or in RP?
 	logging.getLogger('ride').setLevel(logging.INFO)
 	ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
 	ride_log_format = '%(asctime)s, %(time)s, %(altitude)s'
@@ -321,11 +321,9 @@ if __name__ == "__main__":
 	ride_logger = logging.getLogger('ride')
 
 	ride_logger.info('', extra={'time': "Time", 'altitude': "Altitude"})
-#	ride_logger.info('', extra={'time': time(), 'altitude': altitude})
 
 	signal.signal(signal.SIGTERM, quit_handler)
 	signal.signal(signal.SIGINT, quit_handler)
-	#FIXME Move logger init here
 	sys_logger.debug("[OCC] Log start")
 	os.environ["SDL_FBDEV"] = "/dev/fb1"
 	os.putenv('SDL_MOUSEDEV' , '/dev/input/touchscreen')
