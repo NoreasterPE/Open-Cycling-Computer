@@ -1,6 +1,7 @@
 from time import strftime
 from bmp183 import bmp183
 from gps_mtk3339 import gps_mtk3339
+import logging
 import math
 import time
 from units import units
@@ -9,17 +10,17 @@ INF_MIN = float("-inf")
 INF = float("inf")
 
 class ride_parameters():
-	def __init__(self, occ, ride_logger, simulate = False):
+	def __init__(self, occ, simulate = False):
 		self.occ = occ
-		self.l = occ.l
-		self.r = ride_logger
+		self.l = logging.getLogger('system')
+		self.r = logging.getLogger('ride')
 		self.uc = units()
 		self.l.info("[RP] Initialising GPS")
 		self.gps = gps_mtk3339(occ, simulate)
 		self.l.info("[RP] Starting GPS thread")
 		self.gps.start()
 		self.l.info("[RP] Initialising bmp183 sensor")
-		self.bmp183_sensor = bmp183(occ, simulate)
+		self.bmp183_sensor = bmp183(simulate)
 		self.bmp183_first_run = True
 		self.l.info("[RP] Starting BMP thread")
 		self.bmp183_sensor.start()

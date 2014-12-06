@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+import logging
 import time
 import numpy
 import threading
@@ -66,11 +67,10 @@ class bmp183(threading.Thread):
 		'OVERSAMPLE_3_WAIT' : 0.0255,
 	}
 
-	def __init__(self, occ = None, simulate = False):
+	def __init__(self, simulate = False):
 		# Run init for super class
 		super(bmp183, self).__init__()
-		self.occ = occ
-		self.l = occ.l
+		self.l = logging.getLogger('system')
 		self.l.debug("[BMP] __init__")
 		self.simulate = simulate
 		self.sensor_ready = False

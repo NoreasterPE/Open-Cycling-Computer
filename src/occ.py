@@ -40,10 +40,10 @@ CADENCE_EMUL = 500
 
 class open_cycling_computer():
 	'Class for PiTFT 2.8" 320x240 cycling computer'
-	def __init__(self, sys_logger, ride_logger, simulate = False, width = 240, height = 320):
+	def __init__(self, simulate = False, width = 240, height = 320):
 		self.simulate = simulate
-		self.r = ride_logger
-		self.l = sys_logger
+		self.r = logging.getLogger('ride')
+		self.l = logging.getLogger('system')
 		pygame.init()
 		if not self.simulate:
 			pygame.event.set_grab(True)
@@ -60,7 +60,7 @@ class open_cycling_computer():
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		self.clock = pygame.time.Clock()
 		self.l.debug("[OCC] Calling ride_parameters")
-		self.rp = ride_parameters(self, ride_logger, simulate)
+		self.rp = ride_parameters(self, simulate)
 		self.config_path = "config/config.xml"
 		self.l.debug("[OCC] Reading config. Path = {}".format(self.config_path))
 		self.read_config()
@@ -294,7 +294,6 @@ class open_cycling_computer():
 		except AttributeError:
 			pass
 		pygame.quit()
-		self.r.info("[OCC] Ride log end")
 		self.l.debug("[OCC] Log end")
 		quit()
 
@@ -331,10 +330,10 @@ if __name__ == "__main__":
 	if (platform.machine() == "armv6l"):
 		os.putenv('SDL_VIDEODRIVER', 'fbcon')
 		os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
-		main_window = open_cycling_computer(sys_logger, ride_logger, False)
+		main_window = open_cycling_computer(False)
 		sys_logger.debug("[OCC] simulate = False")
 	else:
-		main_window = open_cycling_computer(sys_logger, ride_logger, True)
+		main_window = open_cycling_computer(True)
 		sys_logger.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
 		sys_logger.debug("[OCC] simulate = True")
 	main_window.main_loop()
