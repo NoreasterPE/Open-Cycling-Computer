@@ -150,7 +150,6 @@ class mt3339():
 		return 0
 
 	def send_command(self, nmea_command):
-		print nmea_command
 		ser = serial.Serial(port = self.device, baudrate = self.baudrate, timeout=3)
 		time.sleep(0.1)
 		ser.write(nmea_command);
