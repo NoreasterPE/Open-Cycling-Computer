@@ -25,7 +25,7 @@ LOG_LEVEL = {   "DEBUG"    : logging.DEBUG,
 		"CRITICAL" : logging.CRITICAL
 }
 
-LONG_CLICK = 1000 #ms of long click
+LONG_CLICK = 800 #ms of long click
 SWIPE_LENGTH = 30 #pixels of swipe
 
 EV_UPDATE_VALUES = USEREVENT + 1
@@ -33,10 +33,10 @@ EV_SAVE_CONFIG = USEREVENT + 2
 #FIXME To be removed when bluetooth sensor goes live
 EV_CADENCE_EMUL = USEREVENT + 3
 
-REFRESH_TIME = 900
+REFRESH_TIME = 1000
 CONFIG_SAVE_TIME = 15000
 #FIXME To be removed when bluetooth sensor goes live
-CADENCE_EMUL = 500
+CADENCE_EMUL = 650
 
 class open_cycling_computer():
 	'Class for PiTFT 2.8" 320x240 cycling computer'
