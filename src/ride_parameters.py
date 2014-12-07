@@ -577,7 +577,7 @@ class ride_parameters():
 		pressure = self.p_raw["pressure"]
 		pressure_at_sea_level = self.p_raw["pressure_at_sea_level"]
 		if pressure_at_sea_level > 0:
-			self.p_raw["altitude"] = float(44330*(1 - pow((pressure/pressure_at_sea_level), (1/5.255))))
+			self.p_raw["altitude"] = round(44330.0*(1 - pow((pressure/pressure_at_sea_level), (1/5.255))), 2)
 		else:
 			self.p_raw["altitude"] = 0
 		self.l.debug("[RP] altitude: {}".format(self.p_raw["altitude"]))
