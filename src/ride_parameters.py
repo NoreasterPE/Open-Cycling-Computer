@@ -560,6 +560,7 @@ class ride_parameters():
 	def read_bmp183_sensor(self):
 		temperature = self.bmp183_sensor.temperature
 		pressure = self.bmp183_sensor.pressure/100.0
+		#FIXME Kalman filter in bmp183 module will obsolete this code
 		if not self.bmp183_first_run:
 			dtemperature = abs(temperature - self.p_raw["temperature"])
 			dpressure = abs(pressure - self.p_raw["pressure"])
