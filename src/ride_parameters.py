@@ -42,6 +42,7 @@ class ride_parameters():
 		self.p_raw["dtime"] = 1
 
 		self.p_raw["altitude"] = 0
+		self.p_raw["altitude_kalman"] = 0
 		self.p_raw["altitude_home"] = 0
 		self.p_raw["altitude_gps"] = 0
 		self.p_raw["altitude_min"] = INF
@@ -91,6 +92,7 @@ class ride_parameters():
 
 		#Internal units
 		self.p_raw_units["altitude"] = "m"
+		self.p_raw_units["altitude_kalman"] = "m"
 		self.p_raw_units["distance"] = "m"
 		self.p_raw_units["cadence"] = "RPM"
 		self.p_raw_units["climb"] = "m/s"
@@ -111,6 +113,7 @@ class ride_parameters():
 
 		#Params of the ride ready for rendering.
 		self.params["altitude"] = "-"
+		self.params["altitude_kalman"] = "-"
 		self.params["altitude_home"] = "-"
 		self.params["altitude_gps"] = "-"
 		self.params["altitude_min"] = "-"
@@ -159,6 +162,7 @@ class ride_parameters():
 
 		#Formatting strings for params.
 		self.p_format["altitude"] = "%.0f"
+		self.p_format["altitude_kalman"] = "%.0f"
 		self.p_format["altitude_home"] = "%.0f"
 		self.p_format["altitude_gps"] = "%.0f"
 		self.p_format["altitude_min"] = "%.0f"
@@ -204,6 +208,7 @@ class ride_parameters():
 
 		#Units - name has to be identical as in params #FIXME reduce number of units (i.e one for speed)
 		self.units["altitude"] = "m"
+		self.units["altitude_kalman"] = "m"
 		self.units["climb"] = "m/s"
 		self.units["cadence"] = "RPM"
 		self.units["distance"] = "km"
@@ -279,13 +284,13 @@ class ride_parameters():
 		ride_log_filename = "log/ride." + strftime("%Y-%m-%d-%H:%M:%S") + ".log"
 		logging.getLogger('ride').setLevel(logging.INFO)
 		ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
-		ride_log_format = '%(time)-8s, %(dtime)-8s, %(pr_kalman)-8s, %(pressure)-8s, %(temperature)-8s, %(altitude)-8s, %(distance)-8s'
+		ride_log_format = '%(time)-8s, %(dtime)-8s, %(pr_kalman)-8s, %(pressure)-8s, %(temperature)-8s, %(altitude_kalman)-8s, %(altitude)-8s, %(distance)-8s'
 		ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
 		logging.getLogger('ride').addHandler(ride_log_handler)
 		ride_logger = logging.getLogger('ride')
 		ride_logger.info('', extra={'time': "Time", 'dtime': "Delta",\
 			'pr_kalman': "Pr_Kalman", 'pressure': "Pressure", 'temperature': "Temperature",\
-			'altitude': "Altitude", 'distance': "Distance"})
+			'altitude_kalman': "Altitude_Kalman", 'altitude': "Altitude", 'distance': "Distance"})
 		return ride_logger
 
 	def stop(self):
@@ -311,6 +316,7 @@ class ride_parameters():
 			self.calculate_pressure_at_sea_level()
 		self.read_gps_data()
 		self.calculate_altitude()
+		self.calculate_altitude_kalman()
 		self.update_params()
 		self.calculate_time_related_parameters()
 		self.force_refresh()
@@ -463,6 +469,7 @@ class ride_parameters():
 		self.update_param("altitude_gps")
 		self.update_param("altitude_home")
 		self.update_param("altitude")
+		self.update_param("altitude_kalman")
 		self.set_max("altitude")
 		self.set_min("altitude")
 		self.update_param("altitude_min")
@@ -497,9 +504,10 @@ class ride_parameters():
 		prk = self.p_raw["pressure_kalman"]
 		tem = self.p_raw["temperature"]
 		alt = self.p_raw["altitude"]
+		alk = self.p_raw["altitude_kalman"]
 		dst = self.params["distance"]
 		self.r.info('', extra={'time': tme, 'dtime': dte, 'pr_kalman': prk,\
-			 'pressure': pre, 'temperature': tem, 'altitude': alt, 'distance': dst})
+			 'pressure': pre, 'temperature': tem, 'altitude_kalman': alk, 'altitude': alt, 'distance': dst})
 
 	def strip_end(self, param_name, suffix = None):
 		#Make sure there is no _digits, _tenths, _hms at the end
@@ -600,6 +608,15 @@ class ride_parameters():
 		else:
 			self.p_raw["altitude"] = 0
 		self.l.debug("[RP] altitude: {}".format(self.p_raw["altitude"]))
+
+	def calculate_altitude_kalman(self):
+		pressure = self.p_raw["pressure_kalman"]
+		pressure_at_sea_level = self.p_raw["pressure_at_sea_level"]
+		if pressure_at_sea_level > 0:
+			self.p_raw["altitude_kalman"] = round(44330.0*(1 - pow((pressure/pressure_at_sea_level), (1/5.255))), 2)
+		else:
+			self.p_raw["altitude_kalman"] = 0
+		self.l.debug("[RP] altitude_kalman: {}".format(self.p_raw["altitude_kalman"]))
 
 	def calculate_pressure_at_sea_level(self):
 		#Set pressure_at_sea_level based on given altitude
