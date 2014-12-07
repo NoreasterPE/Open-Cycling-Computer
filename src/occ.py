@@ -314,7 +314,7 @@ if __name__ == "__main__":
 	#FIXME Ride logger init should be here or in RP?
 	logging.getLogger('ride').setLevel(logging.INFO)
 	ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
-	ride_log_format = '%(time)s, %(dtime)s, %(pressure)s, %(altitude)s'
+	ride_log_format = '%(time)s, %(dtime)s, %(pressure)-7s, %(altitude)-7s'
 	ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
 	logging.getLogger('ride').addHandler(ride_log_handler)
 	ride_logger = logging.getLogger('ride')

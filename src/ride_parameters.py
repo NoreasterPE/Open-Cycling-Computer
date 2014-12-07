@@ -479,8 +479,8 @@ class ride_parameters():
 		self.update_param("satellites")
 		tme = self.params["timeon_hms"]
 		dte = self.params["dtime"]
-		pre = self.params["pressure"]
-		alt = self.params["altitude"]
+		pre = self.p_raw["pressure"]
+		alt = self.p_raw["altitude"]
 		self.r.info('', extra={'time': tme, 'dtime': dte, 'pressure':pre, 'altitude': alt})
 
 	def strip_end(self, param_name, suffix = None):
