@@ -278,11 +278,13 @@ class ride_parameters():
 		ride_log_filename = "log/ride." + strftime("%Y-%m-%d-%H:%M:%S") + ".log"
 		logging.getLogger('ride').setLevel(logging.INFO)
 		ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
-		ride_log_format = '%(time)s, %(dtime)s, %(pressure)-7s, %(altitude)-7s'
+		ride_log_format = '%(time)s, %(dtime)s, %(pressure)-7s, %(temperature)-4s, %(altitude)-7s'
 		ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
 		logging.getLogger('ride').addHandler(ride_log_handler)
 		ride_logger = logging.getLogger('ride')
-		ride_logger.info('', extra={'time': "Time", 'dtime': "Delta", 'pressure': "Pressure", 'altitude': "Altitude"})
+		ride_logger.info('', extra={'time': "Time", 'dtime': "Delta",\
+			'pressure': "Pressure", 'temperature': "Temperature",\
+			'altitude': "Altitude"})
 		return ride_logger
 
 	def stop(self):
@@ -491,8 +493,9 @@ class ride_parameters():
 		tme = self.params["timeon_hms"]
 		dte = self.params["dtime"]
 		pre = self.p_raw["pressure"]
+		tem = self.p_raw["temperature"]
 		alt = self.p_raw["altitude"]
-		self.r.info('', extra={'time': tme, 'dtime': dte, 'pressure':pre, 'altitude': alt})
+		self.r.info('', extra={'time': tme, 'dtime': dte, 'pressure': pre, 'temperature': tem, 'altitude': alt})
 
 	def strip_end(self, param_name, suffix = None):
 		#Make sure there is no _digits, _tenths, _hms at the end
