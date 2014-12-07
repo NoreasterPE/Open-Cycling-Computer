@@ -303,22 +303,12 @@ def quit_handler(signal, frame):
 if __name__ == "__main__":
 	suffix = strftime("%d-%H:%M:%S")
 	sys_log_filename = "log/debug." + suffix + ".log"
-	ride_log_filename = "log/ride." + suffix + ".log"
-
 	logging.getLogger('system').setLevel(logging.DEBUG)
 	sys_log_handler = logging.handlers.RotatingFileHandler(sys_log_filename)
 	sys_log_format = '[%(levelname)-5s] %(message)s'
 	sys_log_handler.setFormatter(logging.Formatter(sys_log_format))
 	logging.getLogger('system').addHandler(sys_log_handler)
 	sys_logger = logging.getLogger('system')
-	#FIXME Ride logger init should be here or in RP?
-	logging.getLogger('ride').setLevel(logging.INFO)
-	ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
-	ride_log_format = '%(time)s, %(dtime)s, %(pressure)-7s, %(altitude)-7s'
-	ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
-	logging.getLogger('ride').addHandler(ride_log_handler)
-	ride_logger = logging.getLogger('ride')
-	ride_logger.info('', extra={'time': "Time", 'dtime': "Delta", 'pressure': "Pressure", 'altitude': "Altitude"})
 	signal.signal(signal.SIGTERM, quit_handler)
 	signal.signal(signal.SIGINT, quit_handler)
 	sys_logger.debug("[OCC] Log start")

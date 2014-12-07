@@ -13,7 +13,7 @@ class ride_parameters():
 	def __init__(self, occ, simulate = False):
 		self.occ = occ
 		self.l = logging.getLogger('system')
-		self.r = logging.getLogger('ride')
+		self.r = self.setup_ridelog()
 		self.uc = units()
 		self.l.info("[RP] Initialising GPS")
 		self.gps = gps_mtk3339(occ, simulate)
@@ -273,6 +273,17 @@ class ride_parameters():
 		self.pressure_at_sea_level_calculated = False
 		self.cadence_timestamp = None
 		self.cadence_timestamp_old = None
+
+	def setup_ridelog(self):
+		ride_log_filename = "log/ride." + strftime("%Y-%m-%d-%H:%M:%S") + ".log"
+		logging.getLogger('ride').setLevel(logging.INFO)
+		ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
+		ride_log_format = '%(time)s, %(dtime)s, %(pressure)-7s, %(altitude)-7s'
+		ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
+		logging.getLogger('ride').addHandler(ride_log_handler)
+		ride_logger = logging.getLogger('ride')
+		ride_logger.info('', extra={'time': "Time", 'dtime': "Delta", 'pressure': "Pressure", 'altitude': "Altitude"})
+		return ride_logger
 
 	def stop(self):
 		self.gps.stop()
