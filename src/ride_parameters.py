@@ -60,6 +60,7 @@ class ride_parameters():
 		self.p_raw["longitude"] = 0
 		self.p_raw["odometer"] = 0
 		self.p_raw["pressure"] = 0
+		self.p_raw["pressure_kalman"] = 0
 		#FIXME Name doesn't follow the policy
 		self.p_raw["pressure_at_sea_level"] = 0
 		self.p_raw["riderweight"] = 0
@@ -278,13 +279,13 @@ class ride_parameters():
 		ride_log_filename = "log/ride." + strftime("%Y-%m-%d-%H:%M:%S") + ".log"
 		logging.getLogger('ride').setLevel(logging.INFO)
 		ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
-		ride_log_format = '%(time)s, %(dtime)s, %(pressure)-7s, %(temperature)-4s, %(altitude)-7s'
+		ride_log_format = '%(time)-8s, %(dtime)-8s, %(pr_kalman)-8s, %(pressure)-8s, %(temperature)-8s, %(altitude)-8s, %(distance)-8s'
 		ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
 		logging.getLogger('ride').addHandler(ride_log_handler)
 		ride_logger = logging.getLogger('ride')
 		ride_logger.info('', extra={'time': "Time", 'dtime': "Delta",\
-			'pressure': "Pressure", 'temperature': "Temperature",\
-			'altitude': "Altitude"})
+			'pr_kalman': "Pr_Kalman", 'pressure': "Pressure", 'temperature': "Temperature",\
+			'altitude': "Altitude", 'distance': "Distance"})
 		return ride_logger
 
 	def stop(self):
@@ -493,9 +494,12 @@ class ride_parameters():
 		tme = self.params["timeon_hms"]
 		dte = self.params["dtime"]
 		pre = self.p_raw["pressure"]
+		prk = self.p_raw["pressure_kalman"]
 		tem = self.p_raw["temperature"]
 		alt = self.p_raw["altitude"]
-		self.r.info('', extra={'time': tme, 'dtime': dte, 'pressure': pre, 'temperature': tem, 'altitude': alt})
+		dst = self.params["distance"]
+		self.r.info('', extra={'time': tme, 'dtime': dte, 'pr_kalman': prk,\
+			 'pressure': pre, 'temperature': tem, 'altitude': alt, 'distance': dst})
 
 	def strip_end(self, param_name, suffix = None):
 		#Make sure there is no _digits, _tenths, _hms at the end
@@ -574,6 +578,7 @@ class ride_parameters():
 	def read_bmp183_sensor(self):
 		temperature = self.bmp183_sensor.temperature
 		pressure = self.bmp183_sensor.pressure/100.0
+		self.p_raw["pressure_kalman"] = self.bmp183_sensor.pressure_kalman/100.0
 		#FIXME Kalman filter in bmp183 module will obsolete this code
 		if not self.bmp183_first_run:
 			dtemperature = abs(temperature - self.p_raw["temperature"])

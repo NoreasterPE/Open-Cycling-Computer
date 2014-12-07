@@ -79,6 +79,7 @@ class bmp183(threading.Thread):
 		self.measurement_delay = 1
 		self.temperature = 0
 		self.pressure = 0
+		self.pressure_kalman = 0
 		# Setup Raspberry PINS, as numbered on BOARD
 		self.SCK = 15  # GPIO for SCK, other name SCLK
 		self.SDO = 13  # GPIO for SDO, other name MISO
@@ -99,6 +100,7 @@ class bmp183(threading.Thread):
 				self.read_calibration_data()
 				# Proceed with initial pressure/temperature measurement
 				self.measure_pressure()
+		self.kalman_setup()
 
 	def stop(self):
 		self.l.debug("[BMP] stop")
@@ -265,5 +267,40 @@ class bmp183(threading.Thread):
 		self.running = True
 		while (self.running == True):
 			self.measure_pressure()
-			self.l.debug("[BMP] pressure = {} Pa, temperature = {} degC".format(self.pressure, self.temperature))
+			self.kalman_update()
+			self.l.debug("[BMP] pressure = {} Pa, kalman = {} Pa, temperature = {} degC"\
+				.format(self.pressure, self.pressure_kalman, self.temperature))
 			time.sleep(self.measurement_delay)
+
+	def kalman_setup(self):
+		#FIXME Add detailed commants
+		#FIXME that will depend on max descend/ascend speed.  calculate from max +/- 1.5m/s
+		self.Q = 0.01
+		# First estimate
+		self.pressure_estimate = self.pressure
+		# Error
+		self.P = 1.0
+		# First previous estimate
+		self.pressure_estimate_previous = 0.0
+		# First previous error
+		self.P_previous = 0.0
+		# First gain
+		self.K = 0.0
+		# Estimate of measurement variance, sensor noise
+		self.R = 0.5
+
+	def kalman_update(self):
+		#FIXME Add detailed commants
+		z = self.pressure
+		# Save previous value
+		self.pressure_estimate_previous = self.pressure_estimate
+		# Save previous error
+		self.P_previous = self.P + self.Q
+		# Calculate current gain
+		self.K = self.P_previous/(self.P_previous + self.R)
+		# Calculate new estimate
+		self.pressure_estimate = self.pressure_estimate_previous + self.K * (z - self.pressure_estimate_previous)
+		# Calculate new error estimate
+		self.P = (1 - self.K) * self.P_previous
+		self.pressure_kalman = round(self.pressure_estimate, 0)
+
