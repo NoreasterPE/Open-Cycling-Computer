@@ -156,6 +156,7 @@ class mt3339():
 		time.sleep(0.1)
 		ser.close()
 
+#Example commands:
 #gps = mt3339("/dev/ttyAMA0")
 #gps.cold_start()
 #gps.warm_start()
