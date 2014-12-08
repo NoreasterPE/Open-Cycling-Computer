@@ -505,7 +505,7 @@ class ride_parameters():
 		tem = self.p_raw["temperature"]
 		alt = self.p_raw["altitude"]
 		alk = self.p_raw["altitude_kalman"]
-		dst = self.params["distance"]
+		dst = self.p_raw["distance"]
 		self.r.info('', extra={'time': tme, 'dtime': dte, 'pr_kalman': prk,\
 			 'pressure': pre, 'temperature': tem, 'altitude_kalman': alk, 'altitude': alt, 'distance': dst})
 
