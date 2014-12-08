@@ -18,7 +18,7 @@ import pygame
 import signal
 import sys
 
-LOG_LEVEL = {   "DEBUG"    : logging.DEBUG,
+LOG_LEVEL = {	"DEBUG"    : logging.DEBUG,
 		"INFO"     : logging.INFO,
 		"WARNING"  : logging.WARNING,
 		"ERROR"    : logging.ERROR,
@@ -40,7 +40,7 @@ CADENCE_EMUL = 650
 
 class open_cycling_computer():
 	'Class for PiTFT 2.8" 320x240 cycling computer'
-	def __init__(self, simulate = False, width = 240, height = 320):
+	def __init__(self, simulate=False, width=240, height=320):
 		self.simulate = simulate
 		self.r = logging.getLogger('ride')
 		self.l = logging.getLogger('system')
@@ -70,6 +70,14 @@ class open_cycling_computer():
 		self.rendering = rendering(self.layout)
 		self.l.debug("[OCC] Starting rendering thread")
 		self.rendering.start()
+		self.released_t = 0
+		self.rel_movement = 0
+		self.pressed_t = 0
+		self.config = 0
+		self.pressed_pos = 0
+		self.layout_path = 0
+		self.released_pos = 0
+		self.add_rel_motion = 0
 		self.running = True
 		self.refresh = False
 
@@ -115,43 +123,43 @@ class open_cycling_computer():
 		try:
 			self.rp.p_raw["riderweight"] = float(self.config.find("riderweight").text)
 		except AttributeError:
-			error_list.append("riderweight") 
+			error_list.append("riderweight")
 		try:
 			self.rp.units["riderweight"] = self.config.find("riderweight_units").text
 		except AttributeError:
-			error_list.append("riderweight_units") 
+			error_list.append("riderweight_units")
 		try:
 			self.rp.p_raw["altitude_home"] = float(self.config.find("altitude_home").text)
 		except AttributeError:
-			error_list.append("") 
+			error_list.append("")
 		try:
 			self.rp.units["altitude_home"] = self.config.find("altitude_home_units").text
 		except AttributeError:
-			error_list.append("altitude_home") 
+			error_list.append("altitude_home")
 		try:
 			self.rp.p_raw["odometer"] = float(self.config.find("odometer").text)
 		except AttributeError:
-			error_list.append("odometer") 
+			error_list.append("odometer")
 		try:
 			self.rp.units["odometer"] = self.config.find("odometer_units").text
 		except AttributeError:
-			error_list.append("odometer") 
+			error_list.append("odometer")
 		try:
 			self.rp.p_raw["ridetime_total"] = float(self.config.find("ridetime_total").text)
 		except AttributeError:
-			error_list.append("ridetime_total") 
+			error_list.append("ridetime_total")
 		try:
 			self.rp.p_raw["speed_max"] = float(self.config.find("speed_max").text)
 		except AttributeError:
-			error_list.append("speed_max") 
+			error_list.append("speed_max")
 		try:
 			self.rp.units["speed"] = self.config.find("speed_units").text
 		except AttributeError:
-			error_list.append("speed") 
+			error_list.append("speed")
 		try:
 			self.rp.units["temperature"] = self.config.find("temperature_units").text
 		except AttributeError:
-			error_list.append("temperature") 
+			error_list.append("temperature")
 		self.rp.update_param("speed_max")
 		self.rp.split_speed("speed_max")
 		if len(error_list) > 0:
@@ -187,14 +195,14 @@ class open_cycling_computer():
 			self.l.debug("[OCC] LONG CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
 			self.layout.check_click(self.pressed_pos, 1)
 			self.reset_motion()
-		if (self.released_t != 0):
+		if self.released_t != 0:
 			self.l.debug("[OCC] SHORT CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
 			self.layout.check_click(self.pressed_pos, 0)
 			self.reset_motion()
 		dx = self.rel_movement[0]
 		dy = self.rel_movement[1]
 		if (abs(dx)) > SWIPE_LENGTH:
-			if (dx > 0):
+			if dx > 0:
 				self.l.debug("[OCC] SWIPE X RIGHT to LEFT : {} {} {} {} {} {}".\
 					format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 				self.layout.check_click(self.pressed_pos, 2)
@@ -205,7 +213,7 @@ class open_cycling_computer():
 				self.layout.check_click(self.pressed_pos, 3)
 				self.reset_motion()
 		elif (abs(dy)) > SWIPE_LENGTH:
-			if (dy < 0):
+			if dy < 0:
 				self.l.debug("[OCC] SWIPE X BOTTOM to TOP : {} {} {} {} {} {}".\
 					format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
 				self.layout.check_click(self.pressed_pos, 4)
@@ -232,7 +240,7 @@ class open_cycling_computer():
 			self.pressed_t = time_now
 			self.pressed_pos = pygame.mouse.get_pos()
 			#Read rel to clean the value generated on click
-			pressed_rel =  pygame.mouse.get_rel()
+			pressed_rel = pygame.mouse.get_rel()
 			self.add_rel_motion = True
 			self.layout.render_button = self.pressed_pos
 			self.l.debug("[OCC] DOWN:{} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
@@ -245,13 +253,13 @@ class open_cycling_computer():
 			self.layout.render_button = None
 			self.l.debug("[OCC] UP: {} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
 		elif event.type == pygame.MOUSEMOTION:
-			pressed_rel =  pygame.mouse.get_rel()
+			pressed_rel = pygame.mouse.get_rel()
 			if self.add_rel_motion:
 				self.rel_movement = tuple(map(add, self.rel_movement, pressed_rel))
 			self.l.debug("[OCC] MOTION: {}".format(self.rel_movement))
 		#self.l.debug("[OCC] ticking:time_now:{} pressed_t:{} pressed_pos:{} released_t:{} released_pos:{}". \
 		#		format(time_now, self.pressed_t, self.pressed_pos, self.released_t, self.released_pos))
-		if (self.pressed_t != 0):
+		if self.pressed_t != 0:
 			self.refresh = True
 			self.screen_touched_handler(time_now)
 
@@ -271,9 +279,9 @@ class open_cycling_computer():
 		self.l.debug("[OCC][F] reset_motion")
 		self.pressed_t = 0
 		self.released_t = 0
-		self.pressed_pos = (0,0)
-		self.released_pos = (0,0)
-		self.rel_movement = (0,0)
+		self.pressed_pos = (0, 0)
+		self.released_pos = (0, 0)
+		self.rel_movement = (0, 0)
 		self.layout.render_button = None
 		self.add_rel_motion = False
 		pygame.event.clear()
@@ -313,11 +321,12 @@ if __name__ == "__main__":
 	signal.signal(signal.SIGINT, quit_handler)
 	sys_logger.debug("[OCC] Log start")
 	os.environ["SDL_FBDEV"] = "/dev/fb1"
-	os.putenv('SDL_MOUSEDEV' , '/dev/input/touchscreen')
-	#This is a simple check if we're running on Raspberry PI. Switch to simulation mode if we're not
+	os.putenv('SDL_MOUSEDEV', '/dev/input/touchscreen')
+	#This is a simple check if we're running on Raspberry PI.
+	#Switch to simulation mode if we're not
 	if (platform.machine() == "armv6l"):
 		os.putenv('SDL_VIDEODRIVER', 'fbcon')
-		os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
+		os.putenv('SDL_MOUSEDRV', 'TSLIB')
 		main_window = open_cycling_computer(False)
 		sys_logger.debug("[OCC] simulate = False")
 	else:
