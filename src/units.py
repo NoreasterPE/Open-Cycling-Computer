@@ -5,6 +5,8 @@ class units():
 		pass
 
 	def convert(self, value, target_unit):
+		C = u'\N{DEGREE SIGN}' + "C"
+		#FIXME Add degree to F and K
 		conversions = { "F" : self.temp_C_to_F(value),
 		                "K" : self.temp_C_to_K(value),
 		                "km/h" : self.speed_ms_to_kmh(value),
@@ -15,7 +17,8 @@ class units():
 		                "km" : self.dist_m_to_km(value),
 		                "mi" : self.dist_m_to_mi(value),
 		                "yd" : self.dist_m_to_yd(value),
-		                "C" : value,
+		                "%" : self.m_m_to_percent(value),
+		                C : value,
 		                "hPa" : value,
 		                "kg" : value,
 		                "s" : value,

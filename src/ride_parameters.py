@@ -8,6 +8,7 @@ from units import units
 
 INF_MIN = float("-inf")
 INF = float("inf")
+degC = u'\N{DEGREE SIGN}' + "C"
 
 class ride_parameters():
 	def __init__(self, occ, simulate = False):
@@ -108,7 +109,7 @@ class ride_parameters():
 		self.p_raw_units["satellites"] = ""
 		self.p_raw_units["satellites_used"] = ""
 		self.p_raw_units["speed"] = "m/s"
-		self.p_raw_units["temperature"] = "C"
+		self.p_raw_units["temperature"] = degC
 		self.p_raw_units["timeon"] = "s"
 
 		#Params of the ride ready for rendering.
@@ -228,7 +229,7 @@ class ride_parameters():
 		self.units["satellites"] = ""
 		self.units["satellites_used"] = ""
 		self.units["speed"] = "km/h"
-		self.units["temperature"] = "C"
+		self.units["temperature"] = degC
 		self.units["timeon"] = "s"
 		self.units["timeon_hms"] = ""
 
@@ -236,10 +237,7 @@ class ride_parameters():
 		self.units_allowed["odometer"] = ["km", "mi"]
 		self.units_allowed["riderweight"] = ["kg", "st", "lb"]
 		self.units_allowed["speed"] = ["km/h", "m/s", "mi/h"]
-		self.units_allowed["temperature"] = ["C", "F", "K"]
-
-		#FIXME Make pretty units for temperature
-		#self.units["temperature"] = u'\N{DEGREE SIGN}' + "C"
+		self.units_allowed["temperature"] = [degC, "F", "K"]
 
 		#Params description FIXME localisation
 		self.p_desc["altitude_home"] = "Home altitude"
