@@ -327,7 +327,7 @@ class ride_parameters():
 		self.update_params()
 		self.calculate_time_related_parameters()
 		if self.p_raw["daltitude"] != 0:
-			slope = self.p_raw["ddistance"] / self.p_raw["daltitude"]
+			slope = self.p_raw["daltitude"] / self.p_raw["ddistance"]
 			if abs(slope) == 0:
 				slope = 0
 		else:
@@ -513,7 +513,7 @@ class ride_parameters():
 		self.update_param("satellites_used")
 		self.update_param("satellites")
 		self.update_param("slope")
-		slp = round(self.p_raw["slope"], 3)
+		slp = round(self.p_raw["slope"], 1)
 		tme = self.params["timeon_hms"]
 		dte = self.params["dtime"]
 		pre = self.p_raw["pressure"]
@@ -521,7 +521,7 @@ class ride_parameters():
 		tem = self.p_raw["temperature"]
 		alt = self.p_raw["altitude"]
 		alk = self.p_raw["altitude_kalman"]
-		dst = self.p_raw["distance"]
+		dst = round(self.p_raw["distance"], 0)
 		self.r.info('', extra={'time': tme, 'dtime': dte, 'pr_kalman': prk,\
 			 'pressure': pre, 'temperature': tem, 'altitude_kalman': alk, 'altitude': alt, 'distance': dst, 'slope': slp})
 
