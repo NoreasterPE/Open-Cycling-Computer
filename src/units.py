@@ -24,6 +24,7 @@ class units():
 		                "s" : value,
 		                "RPM" : value,
 		                "m/s" : value,
+		                "m/m" : value,
 		                "m" : value,
 		                "" : value,
 		}
@@ -70,6 +71,10 @@ class units():
 	def dist_m_to_yd(self, dist):
 		d_yd = dist / 0.9144
 		return d_yd
+
+	def m_m_to_percent(self, value):
+		v = 100 * value
+		return v
 
 if __name__ == '__main__':
 	u = units()

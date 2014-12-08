@@ -35,6 +35,14 @@
                         <function>time_on_hms</function>
                         <text_center x="120" y="225" size="3"/>
                 </field>
+		<field name="middle_left">
+			<function>slope</function>
+			<text_center x="50" y="210" size="5"/>
+		</field>
+		<field name="middle_left_auxiliary">
+			<function>slope_units</function>
+			<text_center x="110" y="230" size="2"/>
+		</field>
 		<field name="bottom_left">
 			<function>altitude_kalman</function>
 			<text_center x="50" y="290" size="7"/>

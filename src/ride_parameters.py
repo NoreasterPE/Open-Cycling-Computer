@@ -43,6 +43,7 @@ class ride_parameters():
 		self.p_raw["dtime"] = 1
 
 		self.p_raw["altitude"] = 0
+		self.p_raw["daltitude"] = 0
 		self.p_raw["altitude_kalman"] = 0
 		self.p_raw["altitude_home"] = 0
 		self.p_raw["altitude_gps"] = 0
@@ -53,6 +54,7 @@ class ride_parameters():
 		self.p_raw["cadence_max"] = INF_MIN
 		self.p_raw["climb"] = 0
 		self.p_raw["distance"] = 0
+		self.p_raw["ddistance"] = 0
 		#FIXME Name doesn't follow the policy
 		self.p_raw["gps_fix"] = ""
 		self.p_raw["gps_strength"] = 0
@@ -72,6 +74,7 @@ class ride_parameters():
 		self.p_raw["satellites"] = 0
 		#FIXME Name doesn't follow the policy
 		self.p_raw["satellites_used"] = 0
+		self.p_raw["slope"] = 0
 		self.p_raw["speed"] = 0
 		self.p_raw["speed_average"] = 0
 		#FIXME Name doesn't follow the policy
@@ -108,6 +111,7 @@ class ride_parameters():
 		self.p_raw_units["ridetime_total"] = "s"
 		self.p_raw_units["satellites"] = ""
 		self.p_raw_units["satellites_used"] = ""
+		self.p_raw_units["slope"] = "m/m"
 		self.p_raw_units["speed"] = "m/s"
 		self.p_raw_units["temperature"] = degC
 		self.p_raw_units["timeon"] = "s"
@@ -141,6 +145,7 @@ class ride_parameters():
 		self.params["ridetime_total_hms"] = ""
 		self.params["satellites"] = "-"
 		self.params["satellites_used"] = "-"
+		self.params["slope"] = "-"
 		self.params["speed"] = "-"
 		self.params["speed_digits"] = "-"
 		self.params["speed_tenths"] = "-"
@@ -190,6 +195,7 @@ class ride_parameters():
 		self.p_format["ridetime_total_hms"] = ""
 		self.p_format["satellites"] = "%.0f"
 		self.p_format["satellites_used"] = "%.0f"
+		self.p_format["slope"] = "%.1f"
 		self.p_format["speed"] = "%.1f"
 		self.p_format["speed_digits"] = "%.0f"
 		self.p_format["speed_tenths"] = "%.0f"
@@ -228,6 +234,7 @@ class ride_parameters():
 		self.units["ridetime_total_hms"] = ""
 		self.units["satellites"] = ""
 		self.units["satellites_used"] = ""
+		self.units["slope"] = "%"
 		self.units["speed"] = "km/h"
 		self.units["temperature"] = degC
 		self.units["timeon"] = "s"
@@ -236,6 +243,7 @@ class ride_parameters():
 		#Allowed units - user can switch between those when editing value 
 		self.units_allowed["odometer"] = ["km", "mi"]
 		self.units_allowed["riderweight"] = ["kg", "st", "lb"]
+		#self.units_allowed["slope"] = ["%", degC]
 		self.units_allowed["speed"] = ["km/h", "m/s", "mi/h"]
 		self.units_allowed["temperature"] = [degC, "F", "K"]
 
@@ -282,13 +290,14 @@ class ride_parameters():
 		ride_log_filename = "log/ride." + strftime("%Y-%m-%d-%H:%M:%S") + ".log"
 		logging.getLogger('ride').setLevel(logging.INFO)
 		ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
-		ride_log_format = '%(time)-8s, %(dtime)-8s, %(pr_kalman)-8s, %(pressure)-8s, %(temperature)-8s, %(altitude_kalman)-8s, %(altitude)-8s, %(distance)-8s'
+		ride_log_format = '%(time)-8s,%(dtime)-8s,%(pr_kalman)-8s,%(pressure)-8s,%(temperature)-8s,%(altitude_kalman)-8s,%(altitude)-8s,%(distance)-8s,%(slope)-8s'
 		ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
 		logging.getLogger('ride').addHandler(ride_log_handler)
 		ride_logger = logging.getLogger('ride')
 		ride_logger.info('', extra={'time': "Time", 'dtime': "Delta",\
 			'pr_kalman': "Pr_Kalman", 'pressure': "Pressure", 'temperature': "Temperature",\
-			'altitude_kalman': "Altitude_Kalman", 'altitude': "Altitude", 'distance': "Distance"})
+			'altitude_kalman': "Altitude_Kalman", 'altitude': "Altitude", 'distance': "Distance",\
+			'slope': "Slope"})
 		return ride_logger
 
 	def stop(self):
@@ -305,7 +314,7 @@ class ride_parameters():
 		if dt_adjustment > 0:
 			self.p_raw["dtime"] = self.p_raw["dtime"] - dt_adjustment
 			self.occ.rp.gps.time_adjustment_delta = 0
-			self.l.debug("[RP] dtime adjusted by {}".format(dt_adjustment))
+			self.l.info("[RP] dtime adjusted by {}".format(dt_adjustment))
 		self.p_raw["time_stamp"] = t
 		self.l.debug("[RP] timestamp: {} dtime {}".format(t, self.p_raw["dtime"]))
 		self.update_rtc()
@@ -317,8 +326,14 @@ class ride_parameters():
 		self.calculate_altitude_kalman()
 		self.update_params()
 		self.calculate_time_related_parameters()
+		if self.p_raw["daltitude"] != 0:
+			slope = self.p_raw["ddistance"] / self.p_raw["daltitude"]
+			if abs(slope) == 0:
+				slope = 0
+		else:
+			slope = 0
+		self.p_raw["slope"] = slope
 		self.force_refresh()
-		#FIXME Add calculations of gradient, etc
 
 	def calculate_time_related_parameters(self):
 		dt = self.p_raw["dtime"]
@@ -335,6 +350,7 @@ class ride_parameters():
 				pass
 			except TypeError:
 				self.l.error("[RP] calculate_time_related_parameters TypeError")
+			self.p_raw["ddistance"] = d
 			self.p_raw["distance"] += d
 			self.p_raw["odometer"] += d
 			self.p_raw["ridetime"] += self.p_raw["dtime"]
@@ -496,6 +512,8 @@ class ride_parameters():
 		self.update_temperatures()
 		self.update_param("satellites_used")
 		self.update_param("satellites")
+		self.update_param("slope")
+		slp = round(self.p_raw["slope"], 3)
 		tme = self.params["timeon_hms"]
 		dte = self.params["dtime"]
 		pre = self.p_raw["pressure"]
@@ -505,7 +523,7 @@ class ride_parameters():
 		alk = self.p_raw["altitude_kalman"]
 		dst = self.p_raw["distance"]
 		self.r.info('', extra={'time': tme, 'dtime': dte, 'pr_kalman': prk,\
-			 'pressure': pre, 'temperature': tem, 'altitude_kalman': alk, 'altitude': alt, 'distance': dst})
+			 'pressure': pre, 'temperature': tem, 'altitude_kalman': alk, 'altitude': alt, 'distance': dst, 'slope': slp})
 
 	def strip_end(self, param_name, suffix = None):
 		#Make sure there is no _digits, _tenths, _hms at the end
@@ -611,7 +629,9 @@ class ride_parameters():
 		pressure = self.p_raw["pressure_kalman"]
 		pressure_at_sea_level = self.p_raw["pressure_at_sea_level"]
 		if pressure_at_sea_level > 0:
+			alt_previous = self.p_raw["altitude_kalman"]
 			self.p_raw["altitude_kalman"] = round(44330.0*(1 - pow((pressure/pressure_at_sea_level), (1/5.255))), 2)
+			self.p_raw["daltitude"] = self.p_raw["altitude_kalman"] - alt_previous
 		else:
 			self.p_raw["altitude_kalman"] = 0
 		self.l.debug("[RP] altitude_kalman: {}".format(self.p_raw["altitude_kalman"]))
