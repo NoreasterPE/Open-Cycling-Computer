@@ -219,17 +219,11 @@ class bmp183(threading.Thread):
 		elif self.sensor_ready:
 			# Measure temperature - required for calculations
 			self.measure_temperature()
-			# Read 3 samples of uncompensated pressure
-			UP = {}
-			for i in range(3): 
-				# Start pressure measurement
-				self.write_byte (self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['PRESS'] | (self.BMP183_CMD['OVERSAMPLE_3'] << 4))
-				# Wait for conversion
-				time.sleep (self.BMP183_CMD['OVERSAMPLE_3_WAIT'])
-				# Store uncmpensated pressure for averaging
-				UP[i] = numpy.int32 (self.read_word(self.BMP183_REG['DATA'], 3))
-		
-			self.UP = (UP[0] + UP[1] + UP[2]) / 3
+			self.write_byte (self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['PRESS'] | (self.BMP183_CMD['OVERSAMPLE_3'] << 4))
+			# Wait for conversion
+			time.sleep (self.BMP183_CMD['OVERSAMPLE_3_WAIT'])
+			# Store uncmpensated pressure for averaging
+			self.UP = numpy.int32 (self.read_word(self.BMP183_REG['DATA'], 3))
 			self.calculate_pressure()
 
 	def calculate_pressure(self):
