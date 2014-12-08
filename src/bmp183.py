@@ -76,7 +76,7 @@ class bmp183(threading.Thread):
 		self.sensor_ready = False
 		self.running = False
 		# Delay between measurements = 1s
-		self.measurement_delay = 1
+		self.measurement_delay = 0.3
 		self.temperature = 0
 		self.pressure = 0
 		self.pressure_kalman = 0
