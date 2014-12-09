@@ -269,19 +269,21 @@ class bmp183(threading.Thread):
 	def kalman_setup(self):
 		#FIXME Add detailed commants
 		#FIXME that will depend on max descend/ascend speed.  calculate from max +/- 1.5m/s
-		self.Q = 2.0
+		# R makes no difference, R/Q is what matters
+		# P and K are self tuning
+		self.Q = 0.08
 		# First estimate
 		self.pressure_estimate = self.pressure
 		# Error
-		self.P = 6.9
+		self.P = 0.33
 		# First previous estimate
 		self.pressure_estimate_previous = 0.0
 		# First previous error
 		self.P_previous = 0.0
 		# First gain
-		self.K = 0.46
+		self.K = 0.25
 		# Estimate of measurement variance, sensor noise
-		self.R = 5.0
+		self.R = 1.0
 
 	def kalman_update(self):
 		#FIXME Add detailed commants
