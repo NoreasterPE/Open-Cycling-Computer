@@ -44,7 +44,6 @@ class ride_parameters():
 
 		self.p_raw["altitude"] = 0
 		self.p_raw["daltitude"] = 0
-		self.p_raw["altitude_kalman"] = 0
 		self.p_raw["altitude_home"] = 0
 		self.p_raw["altitude_gps"] = 0
 		self.p_raw["altitude_min"] = INF
@@ -64,7 +63,6 @@ class ride_parameters():
 		self.p_raw["longitude"] = 0
 		self.p_raw["odometer"] = 0
 		self.p_raw["pressure"] = 0
-		self.p_raw["pressure_kalman"] = 0
 		#FIXME Name doesn't follow the policy
 		self.p_raw["pressure_at_sea_level"] = 0
 		self.p_raw["riderweight"] = 0
@@ -92,11 +90,9 @@ class ride_parameters():
 		#System params
 		#Maximum allowable temperature change between measurements. If measurement differ more than delta they are ignored.
 		self.p_raw["temperature_max_delta"] = 10 #degC
-		self.p_raw["pressure_max_delta"] = 1 #hPa
 
 		#Internal units
 		self.p_raw_units["altitude"] = "m"
-		self.p_raw_units["altitude_kalman"] = "m"
 		self.p_raw_units["distance"] = "m"
 		self.p_raw_units["cadence"] = "RPM"
 		self.p_raw_units["climb"] = "m/s"
@@ -105,7 +101,7 @@ class ride_parameters():
 		self.p_raw_units["latitude"] = ""
 		self.p_raw_units["longitude"] = ""
 		self.p_raw_units["odometer"] = "m"
-		self.p_raw_units["pressure"] = "hPa"
+		self.p_raw_units["pressure"] = "Pa"
 		self.p_raw_units["riderweight"] = "kg"
 		self.p_raw_units["ridetime"] = "s"
 		self.p_raw_units["ridetime_total"] = "s"
@@ -118,7 +114,6 @@ class ride_parameters():
 
 		#Params of the ride ready for rendering.
 		self.params["altitude"] = "-"
-		self.params["altitude_kalman"] = "-"
 		self.params["altitude_home"] = "-"
 		self.params["altitude_gps"] = "-"
 		self.params["altitude_min"] = "-"
@@ -168,7 +163,6 @@ class ride_parameters():
 
 		#Formatting strings for params.
 		self.p_format["altitude"] = "%.0f"
-		self.p_format["altitude_kalman"] = "%.0f"
 		self.p_format["altitude_home"] = "%.0f"
 		self.p_format["altitude_gps"] = "%.0f"
 		self.p_format["altitude_min"] = "%.0f"
@@ -215,7 +209,6 @@ class ride_parameters():
 
 		#Units - name has to be identical as in params #FIXME reduce number of units (i.e one for speed)
 		self.units["altitude"] = "m"
-		self.units["altitude_kalman"] = "m"
 		self.units["climb"] = "m/s"
 		self.units["cadence"] = "RPM"
 		self.units["distance"] = "km"
@@ -290,13 +283,13 @@ class ride_parameters():
 		ride_log_filename = "log/ride." + strftime("%Y-%m-%d-%H:%M:%S") + ".log"
 		logging.getLogger('ride').setLevel(logging.INFO)
 		ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
-		ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(pr_kalman)-8s,%(pressure)-8s,%(temperature)-8s,%(altitude_kalman)-8s,%(altitude)-8s,%(distance)-8s,%(slope)-8s'
+		ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(distance)-8s,%(slope)-8s'
 		ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
 		logging.getLogger('ride').addHandler(ride_log_handler)
 		ride_logger = logging.getLogger('ride')
 		ride_logger.info('', extra={'time': "Time", 'dtime': "Delta", 'speed': "Speed",\
-			'pr_kalman': "Pr_Kalman", 'pressure': "Pressure", 'temperature': "Temperature",\
-			'altitude_kalman': "Altitude_Kalman", 'altitude': "Altitude", 'distance': "Distance",\
+			'pressure': "Pressure", 'temperature': "Temperature",\
+			'altitude': "Altitude", 'distance': "Distance",\
 			'slope': "Slope"})
 		return ride_logger
 
@@ -324,7 +317,6 @@ class ride_parameters():
 		self.read_gps_data()
 		self.update_params()
 		self.calculate_altitude()
-		self.calculate_altitude_kalman()
 		self.calculate_time_related_parameters()
 		if self.p_raw["ddistance"] != 0:
 			slope = self.p_raw["daltitude"] / self.p_raw["ddistance"]
@@ -483,7 +475,6 @@ class ride_parameters():
 		self.update_param("altitude_gps")
 		self.update_param("altitude_home")
 		self.update_param("altitude")
-		self.update_param("altitude_kalman")
 		self.set_max("altitude")
 		self.set_min("altitude")
 		self.update_param("altitude_min")
@@ -518,14 +509,12 @@ class ride_parameters():
 		spd = self.params["speed"]
 		dte = self.params["dtime"]
 		pre = self.p_raw["pressure"]
-		prk = self.p_raw["pressure_kalman"]
 		tem = self.p_raw["temperature"]
 		alt = self.p_raw["altitude"]
-		alk = self.p_raw["altitude_kalman"]
 		dst = round(self.p_raw["distance"], 0)
 		self.r.info('', extra={'time': tme, 'dtime': dte, 'speed':spd,\
-			'pr_kalman': prk, 'pressure': pre, 'temperature': tem,\
-			'altitude_kalman': alk, 'altitude': alt, 'distance': dst,\
+			'pressure': pre, 'temperature': tem,\
+			'altitude': alt, 'distance': dst,\
 			'slope': slp})
 
 	def strip_end(self, param_name, suffix = None):
@@ -603,21 +592,16 @@ class ride_parameters():
 		self.params["rtc"] = self.params["date"] + " " + self.params["time"]
 
 	def read_bmp183_sensor(self):
+		self.p_raw["pressure"] = self.bmp183_sensor.pressure
 		temperature = self.bmp183_sensor.temperature
-		pressure = self.bmp183_sensor.pressure/100.0
-		self.p_raw["pressure_kalman"] = self.bmp183_sensor.pressure_kalman/100.0
-		#FIXME Kalman filter in bmp183 module will obsolete this code
 		if not self.bmp183_first_run:
 			dtemperature = abs(temperature - self.p_raw["temperature"])
-			dpressure = abs(pressure - self.p_raw["pressure"])
 		else:
 			dtemperature = 0
-			dpressure = 0
 			self.bmp183_first_run = False
+		#FIXME Kalman filter in bmp183 module will obsolete this code
 		if dtemperature < self.p_raw["temperature_max_delta"]:
 			self.p_raw["temperature"] = temperature
-		if dpressure < self.p_raw["pressure_max_delta"]:
-			self.p_raw["pressure"] = pressure
 		
 	def calculate_altitude(self):
 		pressure = self.p_raw["pressure"]
@@ -627,17 +611,6 @@ class ride_parameters():
 		else:
 			self.p_raw["altitude"] = 0
 		self.l.debug("[RP] altitude: {}".format(self.p_raw["altitude"]))
-
-	def calculate_altitude_kalman(self):
-		pressure = self.p_raw["pressure_kalman"]
-		pressure_at_sea_level = self.p_raw["pressure_at_sea_level"]
-		if pressure_at_sea_level > 0:
-			alt_previous = self.p_raw["altitude_kalman"]
-			self.p_raw["altitude_kalman"] = round(44330.0*(1 - pow((pressure/pressure_at_sea_level), (1/5.255))), 2)
-			self.p_raw["daltitude"] = self.p_raw["altitude_kalman"] - alt_previous
-		else:
-			self.p_raw["altitude_kalman"] = 0
-		self.l.debug("[RP] altitude_kalman: {}".format(self.p_raw["altitude_kalman"]))
 
 	def calculate_pressure_at_sea_level(self):
 		#Set pressure_at_sea_level based on given altitude

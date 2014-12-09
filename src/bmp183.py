@@ -79,7 +79,7 @@ class bmp183(threading.Thread):
 		self.measurement_delay = 0.2
 		self.temperature = 0
 		self.pressure = 0
-		self.pressure_kalman = 0
+		self.pressure_unfiltered = 0
 		# Setup Raspberry PINS, as numbered on BOARD
 		self.SCK = 15  # GPIO for SCK, other name SCLK
 		self.SDO = 13  # GPIO for SDO, other name MISO
@@ -214,7 +214,7 @@ class bmp183(threading.Thread):
 
 	def measure_pressure(self):
 		if self.simulate:
-			self.pressure = 101300
+			self.pressure_unfiltered = 101300
 			self.temperature = 19.8
 		elif self.sensor_ready:
 			# Measure temperature - required for calculations
@@ -222,7 +222,6 @@ class bmp183(threading.Thread):
 			self.write_byte (self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['PRESS'] | (self.BMP183_CMD['OVERSAMPLE_3'] << 4))
 			# Wait for conversion
 			time.sleep (self.BMP183_CMD['OVERSAMPLE_3_WAIT'])
-			# Store uncmpensated pressure for averaging
 			self.UP = numpy.int32 (self.read_word(self.BMP183_REG['DATA'], 3))
 			self.calculate_pressure()
 
@@ -242,7 +241,7 @@ class bmp183(threading.Thread):
 		X1 = (p / 2**8) * ( p / 2**8)
 		X1 = int (X1 * 3038) / 2**16
 		X2 = int (-7357 * p) / 2**16
-		self.pressure = p + (X1 + X2 +3791) / 2**4
+		self.pressure_unfiltered = p + (X1 + X2 +3791) / 2**4
 
 	def calculate_temperature(self):
 		#Calculate temperature in [degC]
@@ -262,8 +261,8 @@ class bmp183(threading.Thread):
 		while (self.running == True):
 			self.measure_pressure()
 			self.kalman_update()
-			self.l.debug("[BMP] pressure = {} Pa, kalman = {} Pa, temperature = {} degC"\
-				.format(self.pressure, self.pressure_kalman, self.temperature))
+			self.l.debug("[BMP] pressure = {} Pa, temperature = {} degC"\
+				.format(self.pressure, self.temperature))
 			time.sleep(self.measurement_delay)
 
 	def kalman_setup(self):
@@ -273,7 +272,7 @@ class bmp183(threading.Thread):
 		# P and K are self tuning
 		self.Q = 0.08
 		# First estimate
-		self.pressure_estimate = self.pressure
+		self.pressure_estimate = self.pressure_unfiltered
 		# Error
 		self.P = 0.33
 		# First previous estimate
@@ -287,7 +286,7 @@ class bmp183(threading.Thread):
 
 	def kalman_update(self):
 		#FIXME Add detailed commants
-		z = self.pressure
+		z = self.pressure_unfiltered
 		# Save previous value
 		self.pressure_estimate_previous = self.pressure_estimate
 		# Save previous error
@@ -298,5 +297,5 @@ class bmp183(threading.Thread):
 		self.pressure_estimate = self.pressure_estimate_previous + self.K * (z - self.pressure_estimate_previous)
 		# Calculate new error estimate
 		self.P = (1 - self.K) * self.P_previous
-		self.pressure_kalman = round(self.pressure_estimate, 0)
+		self.pressure = round(self.pressure_estimate, 0)
 

@@ -18,8 +18,9 @@ class units():
 		                "mi" : self.dist_m_to_mi(value),
 		                "yd" : self.dist_m_to_yd(value),
 		                "%" : self.m_m_to_percent(value),
+		                "hPa" : self.pressure_Pa_to_hPa(value),
 		                C : value,
-		                "hPa" : value,
+		                "Pa" : value,
 		                "kg" : value,
 		                "s" : value,
 		                "RPM" : value,
@@ -74,6 +75,10 @@ class units():
 
 	def m_m_to_percent(self, value):
 		v = 100 * value
+		return v
+
+	def pressure_Pa_to_hPa(self, value):
+		v = value / 100.0
 		return v
 
 if __name__ == '__main__':
