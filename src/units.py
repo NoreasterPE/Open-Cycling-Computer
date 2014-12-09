@@ -89,14 +89,17 @@ if __name__ == '__main__':
 
 	dist = 1854.3
 	print "m {} km {} mi {} yd {}".format(dist, u.convert(dist, "km"),  
-	u.convert(dist, "mi"), u.convert(dist, "yd"))
+				u.convert(dist, "mi"), u.convert(dist, "yd"))
 
 	mass = 79.5
-	print "kg {} pd {} st/lb {}".format(mass, u.convert(mass, "pd"),  
-	u.convert(mass ,"st_lb"))
+	print "kg {} pd {}".format(mass, u.convert(mass, "pd"))
 
 	speed = 10
-	print "m/s {} km/h {} mph {}".format(speed, u.convert(speed, "kmh"),  
-	u.convert(speed, "mph"))
+	print "m/s {} km/h {} mph {}".format(speed, u.convert(speed, "km/h"),  
+				u.convert(speed, "mi/h"))
 
+	slope = 0.013
+	print "m/m {} % {}".format(slope, u.convert(slope, "%"))
+	pressure = 101013
+	print "Pa {} hPa {}".format(pressure, u.convert(pressure, "hPa"))
 
