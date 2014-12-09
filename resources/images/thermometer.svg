@@ -19,14 +19,14 @@
      id="defs4" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#ffffff"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="0.66992145"
-     inkscape:cx="372.04724"
-     inkscape:cy="523.19567"
+     inkscape:cx="52.606804"
+     inkscape:cy="520.21025"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -56,17 +56,18 @@
        inkscape:export-filename="/run/user/1000/gvfs/sftp:host=192.168.1.33,port=33,user=pi/home/pi/OpenCyclingComputer/images/path3957.png"
        inkscape:export-xdpi="6.1553936"
        inkscape:export-ydpi="6.1553936"
-       transform="translate(-68.802872,2.9619174)">
+       transform="translate(-68.802872,2.9619174)"
+       style="stroke:#ffffff;stroke-opacity:1;fill:#000000;fill-opacity:1">
       <path
          inkscape:connector-curvature="0"
          id="path3844"
          d="m 420.07508,583.89405 c 19.08665,14.50868 31.40979,37.45519 31.40979,63.27991 l 0,0 c 0,43.87219 -35.56544,79.43763 -79.43763,79.43763 -43.87219,0 -79.43763,-35.56544 -79.43763,-79.43763 0,-25.78797 12.28807,-48.70591 31.32832,-63.21791"
-         style="color:#000000;fill:none;stroke:#000000;stroke-width:24;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+         style="color:#000000;fill:#000000;stroke:#ffffff;stroke-width:24;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;fill-opacity:1" />
       <path
          inkscape:connector-curvature="0"
          id="path3886"
          d="m 324.04333,584.84833 0,-225.21066 c 0,-26.59417 21.40975,-48.00391 48.00391,-48.00391 l 0,0 c 26.59417,0 48.00391,21.40974 48.00391,48.00391 l 0,225.17942"
-         style="color:#000000;fill:none;stroke:#000000;stroke-width:23.99218178;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+         style="color:#000000;fill:#000000;stroke:#ffffff;stroke-width:23.99218177999999924;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;fill-opacity:1" />
     </g>
     <g
        id="g3946"
@@ -98,7 +99,8 @@
        inkscape:export-xdpi="6.1553936"
        inkscape:export-ydpi="6.1553936"
        inkscape:export-filename="/run/user/1000/gvfs/sftp:host=192.168.1.33,port=33,user=pi/home/pi/OpenCyclingComputer/images/path3957.png"
-       transform="translate(-68.802872,2.9619174)">
+       transform="translate(-68.802872,2.9619174)"
+       style="stroke:#ffffff;stroke-opacity:1;fill:#ffffff;fill-opacity:1">
       <rect
          transform="matrix(0,-1,1,0,0,0)"
          ry="9.7270565"
@@ -107,7 +109,7 @@
          height="62.583897"
          width="19.454113"
          id="rect3894-2"
-         style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:12.9871788;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+         style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:12.98717880000000058;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
       <rect
          transform="matrix(0,-1,1,0,0,0)"
          ry="9.7270565"
@@ -116,7 +118,7 @@
          height="62.583897"
          width="19.454113"
          id="rect3894-2-4"
-         style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:12.9871788;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+         style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:12.98717880000000058;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
       <rect
          transform="matrix(0,-1,1,0,0,0)"
          ry="9.7270565"
@@ -125,7 +127,7 @@
          height="62.583897"
          width="19.454113"
          id="rect3894-2-8"
-         style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:12.9871788;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+         style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:12.98717880000000058;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
       <rect
          transform="matrix(0,-1,1,0,0,0)"
          ry="9.7270565"
@@ -134,7 +136,7 @@
          height="62.583897"
          width="19.454113"
          id="rect3894-2-1"
-         style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:12.9871788;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+         style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:12.98717880000000058;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
     </g>
     <path
        sodipodi:type="star"
