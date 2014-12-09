@@ -322,9 +322,9 @@ class ride_parameters():
 		if not self.pressure_at_sea_level_calculated:
 			self.calculate_pressure_at_sea_level()
 		self.read_gps_data()
+		self.update_params()
 		self.calculate_altitude()
 		self.calculate_altitude_kalman()
-		self.update_params()
 		self.calculate_time_related_parameters()
 		if self.p_raw["daltitude"] != 0:
 			slope = self.p_raw["daltitude"] / self.p_raw["ddistance"]
