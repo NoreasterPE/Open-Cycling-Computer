@@ -19,8 +19,8 @@
 		</field>
 		<field name="middle">
 			<function>distance</function>
-			<button x0="0" y0="150" w="239" h="39"/>
-			<text_center x="140" y="175" size="4"/>
+			<button x0="120" y0="150" w="119" h="90"/>
+			<text_center x="170" y="175" size="4"/>
 		</field>
 		<field name="middle_auxiliary">
 			<function>distance_units</function>
@@ -28,20 +28,27 @@
 		</field>
                 <field name="middle_1">
                         <function>ridetime_hms</function>
-			<button x0="0" y0="190" w="239" h="25"/>
-                        <text_center x="120" y="200" size="3"/>
+                        <text_center x="180" y="205" size="3"/>
                 </field>
                 <field name="middle_2">
-                        <function>time_on_hms</function>
-                        <text_center x="120" y="225" size="3"/>
+                        <function>timeon_hms</function>
+                        <text_center x="180" y="225" size="3"/>
                 </field>
 		<field name="middle_left">
+			<function>climb</function>
+			<text_center x="50" y="180" size="4"/>
+		</field>
+		<field name="middle_left_auxiliary">
+			<function>climb_units</function>
+			<text_center x="100" y="185" size="2"/>
+		</field>
+		<field name="middle_left">
 			<function>slope</function>
-			<text_center x="50" y="210" size="5"/>
+			<text_center x="50" y="215" size="4"/>
 		</field>
 		<field name="middle_left_auxiliary">
 			<function>slope_units</function>
-			<text_center x="110" y="230" size="2"/>
+			<text_center x="100" y="220" size="2"/>
 		</field>
 		<field name="bottom_left">
 			<function>altitude_kalman</function>
@@ -76,7 +83,7 @@
 	<page name="Weather" id="page_1" background="images/occ_page_1_background.png" buttons="images/occ_page_1_buttons.png" font="" fg_colour="FFFFFF">
 		<field name="speed_max_label">
 			<function>speed_max_label</function>
-			<text_center x="20" y="12" size="2">Max</text_center>
+			<text_center x="25" y="10" size="2">Max</text_center>
 		</field>
 		<field name="top">
 			<function>speed_max_digits</function>
@@ -93,7 +100,7 @@
 		</field>
 		<field name="speed_average_label">
 			<function>speed_average_label</function>
-			<text_center x="20" y="172" size="2">Ave</text_center>
+			<text_center x="25" y="160" size="2">Ave</text_center>
 		</field>
 		<field name="middle">
 			<function>speed_average</function>
@@ -145,35 +152,27 @@
 	<page name="GPS" id="page_2" background="images/occ_page_2_background.png" buttons="images/occ_page_2_buttons.png" font="" fg_colour="FFFFFF">
 		<field name="latitude">
 			<function>latitude</function>
-			<text_center x="60" y="30" size="4"/>
+			<text_center x="60" y="25" size="4"/>
 		</field>
 		<field name="longitude">
 			<function>longitude</function>
-			<text_center x="180" y="30" size="4"/>
+			<text_center x="60" y="60" size="4"/>
 		</field>
 		<field name="altitude">
 			<function>altitude_gps</function>
-			<text_center x="120" y="60" size="4"/>
+			<text_center x="60" y="95" size="4"/>
 		</field>
 		<field name="gps_fix">
 			<function>gps_fix</function>
-			<text_center x="180" y="90" size="2"/>
-		</field>
-		<field name="middle_upper_left">
-			<function>satellites_used</function>
-			<text_center x="185" y="165" size="2"/>
-		</field>
-		<field name="middle_upper_right">
-			<function>satellites</function>
-			<text_center x="225" y="165" size="2"/>
+			<text_center x="60" y="130" size="4"/>
 		</field>
 		<field name="time">
 			<function>time</function>
-			<text_center x="100" y="175" size="4"/>
+			<text_center x="180" y="25" size="3"/>
 		</field>
 		<field name="date">
 			<function>date</function>
-			<text_center x="120" y="215" size="4"/>
+			<text_center x="180" y="60" size="3"/>
 		</field>
 		<field name="bottom_left">
 			<function>cadence</function>
