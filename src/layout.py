@@ -104,15 +104,15 @@ class layout():
 		self.fg_colour_rgb = self.current_page.get('fg_colour') 
 		self.fg_colour = struct.unpack('BBB',self.fg_colour_rgb.decode('hex'))
 		for field in self.current_page:
-			#print "function name : ", field.find('function').text
-			self.current_function_list.append(field.find('function').text)
+			#print "function name : ", field.get('function')
+			self.current_function_list.append(field.get('function'))
 			b = field.find('button')
 			if (b is not None):
 				x0 = int(b.get('x0'))
 				y0 = int(b.get('y0'))
 				w = int(b.get('w'))
 				h = int(b.get('h'))
-				name = field.find('function').text
+				name = field.get('function')
 				rect = pygame.Rect(x0, y0, w, h)
 				self.function_rect_list[name] = rect
 				self.current_button_list.append(name)
@@ -177,7 +177,7 @@ class layout():
 
 	def render(self, screen, function, value = None):
 		for field in self.current_page:
-			if (field.find('function').text == function):
+			if (field.get('function') == function):
 				#FIXME Move parsing to a separate function? Make list of icons to improve speed
 				if value == None:
 					value = field.find('text_center').text
