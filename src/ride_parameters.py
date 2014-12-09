@@ -290,11 +290,11 @@ class ride_parameters():
 		ride_log_filename = "log/ride." + strftime("%Y-%m-%d-%H:%M:%S") + ".log"
 		logging.getLogger('ride').setLevel(logging.INFO)
 		ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
-		ride_log_format = '%(time)-8s,%(dtime)-8s,%(pr_kalman)-8s,%(pressure)-8s,%(temperature)-8s,%(altitude_kalman)-8s,%(altitude)-8s,%(distance)-8s,%(slope)-8s'
+		ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(pr_kalman)-8s,%(pressure)-8s,%(temperature)-8s,%(altitude_kalman)-8s,%(altitude)-8s,%(distance)-8s,%(slope)-8s'
 		ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
 		logging.getLogger('ride').addHandler(ride_log_handler)
 		ride_logger = logging.getLogger('ride')
-		ride_logger.info('', extra={'time': "Time", 'dtime': "Delta",\
+		ride_logger.info('', extra={'time': "Time", 'dtime': "Delta", 'speed': "Speed",\
 			'pr_kalman': "Pr_Kalman", 'pressure': "Pressure", 'temperature': "Temperature",\
 			'altitude_kalman': "Altitude_Kalman", 'altitude': "Altitude", 'distance': "Distance",\
 			'slope': "Slope"})
@@ -515,6 +515,7 @@ class ride_parameters():
 		self.update_param("slope")
 		slp = round(self.p_raw["slope"], 1)
 		tme = self.params["timeon_hms"]
+		spd = self.params["speed"]
 		dte = self.params["dtime"]
 		pre = self.p_raw["pressure"]
 		prk = self.p_raw["pressure_kalman"]
@@ -522,8 +523,10 @@ class ride_parameters():
 		alt = self.p_raw["altitude"]
 		alk = self.p_raw["altitude_kalman"]
 		dst = round(self.p_raw["distance"], 0)
-		self.r.info('', extra={'time': tme, 'dtime': dte, 'pr_kalman': prk,\
-			 'pressure': pre, 'temperature': tem, 'altitude_kalman': alk, 'altitude': alt, 'distance': dst, 'slope': slp})
+		self.r.info('', extra={'time': tme, 'dtime': dte, 'speed':spd,\
+			'pr_kalman': prk, 'pressure': pre, 'temperature': tem,\
+			'altitude_kalman': alk, 'altitude': alt, 'distance': dst,\
+			'slope': slp})
 
 	def strip_end(self, param_name, suffix = None):
 		#Make sure there is no _digits, _tenths, _hms at the end
