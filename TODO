@@ -67,4 +67,5 @@ KeyError: 0
 44. [DONE] Setting time from gps is breaking distance calculations. (time shift * speed is added to distance). Record time shift and make correction?
 45. [TESTING] Replace speed_gps_noise with hardware option
 46. [DONE] Remove oversampling of pressure when Kalman filter is in place
-46. Click to switch value i.e. click on temperature to cycle over min/average/max
+47. Click to switch value i.e. click on temperature to cycle over min/average/max
+48. Ridetime, ridetime_total, odometer  are affected by time shift
