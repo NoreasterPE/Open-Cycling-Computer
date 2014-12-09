@@ -353,6 +353,7 @@ class ride_parameters():
 			self.l.debug("[RP] speed_gps: {}, distance: {}, odometer: {}".\
 					format(s, self.p_raw["distance"], self.p_raw["odometer"]))
 		else:
+			self.p_raw["ddistance"] = 0
 			self.l.debug("[RP] speed_gps: below speed_gps_low treshold")
 
 	def force_refresh(self):
