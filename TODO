@@ -39,7 +39,7 @@ Update: twice same error showed up in my code
 23. [DONE] Add option for easy rendering icons, like a small image that is overlapped on top of background.
 24. [DONE] Units switching for non-editable parameters
 25. [DONE] Saving preferred units to config file
-26. Database setup + full ride logging. Or just text file and normal logging? http://bytes.com/topic/python/answers/44055-logging-two-files
+26. [DONE - text file] Database setup + full ride logging. Or just text file and normal logging? http://bytes.com/topic/python/answers/44055-logging-two-files
 27. Review & avoid try/catch. It's too expensive
 28. Speed filtering or max speed will be false sooner or later. Average from 2/3 samples?
 29. [DONE] Read time from GPS when it will be battery powered
@@ -48,8 +48,8 @@ Update: twice same error showed up in my code
 32. [DONE] Resetting records
 33. [DONE] Add total_time (no speed trigger)
 34. [DONE] Speed gets stuck when loosing fix at speed != 0
-35. Kalman for altitude
-36. Unit editor for non-editabl parameters like speed. Long click to trigger. Or units in Settings?
+35. [DONE - for pressure] Kalman for altitude
+36. [DONE - in settings] Unit editor for non-editabl parameters like speed. Long click to trigger. Or units in Settings?
 37. [DONE] Mousemove turn off highlight
 38. Threads write to log aftred log end
 39. [DONE] Resetng speed_max doesn't wrk
@@ -66,5 +66,5 @@ Traceback (most recent call last):
 KeyError: 0
 44. [DONE] Setting time from gps is breaking distance calculations. (time shift * speed is added to distance). Record time shift and make correction?
 45. [TESTING] Replace speed_gps_noise with hardware option
-46. Remove oversampling of pressure when Kalman filter is in place
+46. [DONE] Remove oversampling of pressure when Kalman filter is in place
 46. Click to switch value i.e. click on temperature to cycle over min/average/max
