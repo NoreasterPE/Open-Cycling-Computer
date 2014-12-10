@@ -303,18 +303,21 @@ class ride_parameters():
 	def update_values(self):
 		t = time.time()
 		self.p_raw["dtime"] = t - self.p_raw["time_stamp"]
-		dt_adjustment = self.occ.rp.gps.time_adjustment_delta = 0
+		self.read_gps_data()
+		#FIXME Move this to gps module?
+		dt_adjustment = self.occ.rp.gps.time_adjustment_delta
 		if dt_adjustment > 0:
 			self.p_raw["dtime"] = self.p_raw["dtime"] - dt_adjustment
 			self.occ.rp.gps.time_adjustment_delta = 0
 			self.l.info("[RP] dtime adjusted by {}".format(dt_adjustment))
+			self.occ.rp.gps.time_adjustment_delta = 0
+			#FIXME Correct other parameters like ridetime
 		self.p_raw["time_stamp"] = t
 		self.l.debug("[RP] timestamp: {} dtime {}".format(t, self.p_raw["dtime"]))
 		self.update_rtc()
 		self.read_bmp183_sensor()
 		if not self.pressure_at_sea_level_calculated:
 			self.calculate_pressure_at_sea_level()
-		self.read_gps_data()
 		self.update_params()
 		self.calculate_altitude()
 		self.calculate_time_related_parameters()
