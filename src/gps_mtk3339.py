@@ -31,7 +31,6 @@ class gps_mtk3339(threading.Thread):
 		self.altitude = NaN
 		self.climb = NaN
 		self.fix_mode = ""
-		self.lag = 0
 		self.latitude = NaN
 		self.longitude = NaN
 		self.present = False
@@ -91,8 +90,6 @@ class gps_mtk3339(threading.Thread):
 							except ImportError:
 								self.l.critical("[GPS] self.fix_time {}".format(self.fix_time))
 								pass
-						self.lag = timestamp - self.fix_time
-						self.l.debug("[GPS] timestamp to fix time delta: {}".format(self.lag))
 						if self.set_time:
 							if (self.utc is not None):
 								if (len(self.utc) > 5):
@@ -140,7 +137,7 @@ class gps_mtk3339(threading.Thread):
 			self.utc, 			#4
 			self.satellites_used,		#5
 			self.satellites, self.fix_mode,	#6, 7
-			self.climb, self.lag)		#8, 9
+			self.climb)			#8
 
 	def __del__(self):
 		self.stop()

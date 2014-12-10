@@ -303,6 +303,7 @@ class ride_parameters():
 	def update_values(self):
 		t = time.time()
 		self.p_raw["dtime"] = t - self.p_raw["time_stamp"]
+		self.p_raw["time_stamp"] = t
 		self.read_gps_data()
 		#FIXME Move this to gps module?
 		dt_adjustment = self.occ.rp.gps.time_adjustment_delta
@@ -312,13 +313,10 @@ class ride_parameters():
 			self.l.info("[RP] dtime adjusted by {}".format(dt_adjustment))
 			self.occ.rp.gps.time_adjustment_delta = 0
 			#FIXME Correct other parameters like ridetime
-		self.p_raw["time_stamp"] = t
 		self.l.debug("[RP] timestamp: {} dtime {}".format(t, self.p_raw["dtime"]))
-		self.update_rtc()
-		self.read_bmp183_sensor()
+		self.read_bmp183_data()
 		if not self.pressure_at_sea_level_calculated:
 			self.calculate_pressure_at_sea_level()
-		self.update_params()
 		self.calculate_altitude()
 		self.calculate_time_related_parameters()
 		if self.p_raw["ddistance"] != 0:
@@ -330,7 +328,7 @@ class ride_parameters():
 			slope = 0
 		self.p_raw["slope"] = slope
 		self.l.debug("[RP] slope: {}".format(slope))
-		self.force_refresh()
+		self.update_params()
 
 	def calculate_time_related_parameters(self):
 		dt = self.p_raw["dtime"]
@@ -407,35 +405,27 @@ class ride_parameters():
 
 	def read_gps_data(self):
 		data = self.gps.get_data()
-		lat = data[0]
-		lon = data[1]
-		alt = data[2]
-		spd = data[3]
+		self.p_raw["latitude"] = self.clean_value(data[0]);
+		self.p_raw["longitude"] = self.clean_value(data[1]);
+		self.p_raw["altitude_gps"] = self.clean_value(data[2]);
+		self.p_raw["speed_gps"] = self.clean_value(data[3]);
 		self.p_raw["utc"] = data[4]
-		sud = data[5]
-		sat = data[6]
+		self.p_raw["satellites_used"] = self.clean_value(data[5]);
+		self.p_raw["satellites"] = self.clean_value(data[6]);
 		self.p_raw["gps_fix"] = data[7]
-		cmb = data[8]
-		lag = data[9]
-		self.params["lag"] = "%.2f" % lag
-		self.p_raw["latitude"] = self.clean_value(lat);
-		self.p_raw["longitude"] = self.clean_value(lon);
-		self.p_raw["altitude_gps"] = self.clean_value(alt);
-		self.p_raw["speed_gps"] = self.clean_value(spd);
-		self.p_raw["satellites_used"] = self.clean_value(sud);
-		self.p_raw["satellites"] = self.clean_value(sat);
+		self.p_raw["climb"] = self.clean_value(data[8]);
+
 		gps_str = self.p_raw["satellites_used"] - 3
 		if gps_str < 0:
 			gps_str = 0
 		if gps_str > 3:
 			gps_str = 3
 		self.p_raw["gps_strength"] = gps_str
-		self.p_raw["speed"] = self.clean_value(spd);
+		self.p_raw["speed"] = self.clean_value(self.p_raw["speed_gps"]);
 		if self.p_raw["speed"] < self.speed_gps_noise:
 			self.p_raw["speed"] = 0
 		#FIXME That will have to be changed with bluetooth speed sensor
 		self.p_raw["speed_gps"] = self.p_raw["speed"] 
-		self.p_raw["climb"] = self.clean_value(cmb);
 
 	def split_speed(self, speed_name):
 		self.params[speed_name + "_digits"] = self.params[speed_name][:-2]
@@ -474,6 +464,7 @@ class ride_parameters():
 	def update_params(self):
 		#FIXME Make a list of params and call from for loop
 		#FIXME Use the list to dump DEBUG data
+		self.update_rtc()
 		self.update_gps()
 		self.update_param("dtime")
 		self.update_param("latitude")
@@ -497,11 +488,6 @@ class ride_parameters():
 		self.update_param("speed")
 		self.update_param("speed_max")
 		self.split_speed("speed")
-		self.l.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}, cadence {} {}".\
-				format(self.params["speed"], self.params["speed_max"],\
-				self.params["speed_average"], self.units["speed"],\
-				self.params["cadence"], self.units["cadence"]))
-			
 		self.params["utc"] = self.p_raw["utc"]
 		self.update_param("odometer")
 		self.update_param("riderweight")
@@ -510,6 +496,7 @@ class ride_parameters():
 		self.update_param("satellites_used")
 		self.update_param("satellites")
 		self.update_param("slope")
+		self.force_refresh()
 		slp = self.params["slope"]
 		tme = self.params["timeon_hms"]
 		spd = self.params["speed"]
@@ -522,6 +509,11 @@ class ride_parameters():
 			'pressure': pre, 'temperature': tem,\
 			'altitude': alt, 'distance': dst,\
 			'slope': slp})
+		self.l.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}, cadence {} {}".\
+				format(self.params["speed"], self.params["speed_max"],\
+				self.params["speed_average"], self.units["speed"],\
+				self.params["cadence"], self.units["cadence"]))
+			
 
 	def strip_end(self, param_name, suffix = None):
 		#Make sure there is no _digits, _tenths, _hms at the end
@@ -597,7 +589,7 @@ class ride_parameters():
 		self.params["time"] = strftime("%H:%M:%S")
 		self.params["rtc"] = self.params["date"] + " " + self.params["time"]
 
-	def read_bmp183_sensor(self):
+	def read_bmp183_data(self):
 		self.p_raw["pressure"] = self.bmp183_sensor.pressure
 		temperature = self.bmp183_sensor.temperature
 		if not self.bmp183_first_run:
