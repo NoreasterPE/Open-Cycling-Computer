@@ -229,13 +229,14 @@ class open_cycling_computer():
 			self.running = False
 			self.l.debug("[OCC] QUIT {}".format(time_now))
 		elif event.type == EV_UPDATE_VALUES:
+			self.l.debug("[OCC] calling update_values {}".format(time_now))
 			self.rp.update_values()
-			self.l.debug("[OCC] EV_UPDATE_VALUES {}".format(time_now))
 		elif event.type == EV_CADENCE_EMUL:
+			self.l.debug("[OCC] calling calculate_cadence {}".format(time_now))
 			self.rp.calculate_cadence()
 		elif event.type == EV_SAVE_CONFIG:
+			self.l.debug("[OCC] calling write_config {}".format(time_now))
 			self.write_config()
-			self.l.debug("[OCC] EV_SAVE_CONFIG {}".format(time_now))
 		elif event.type == pygame.MOUSEBUTTONDOWN:
 			self.pressed_t = time_now
 			self.pressed_pos = pygame.mouse.get_pos()
