@@ -1,8 +1,8 @@
 from units import units
+import logging
 import lxml.etree as eltree
 import os
 import pygame
-import logging
 import struct
 import sys
 import time
@@ -17,6 +17,7 @@ class layout():
 		self.screen = occ.screen
 		self.colorkey = [0,0,0]
 		self.alpha = 255
+		self.font_list = {}
 		self.page_list = {}
 		self.page_index = {}
 		self.function_rect_list = {}
@@ -25,16 +26,6 @@ class layout():
 		self.layout_path = layout_path
 		self.load_layout(layout_path)
 		self.render_button = None
-
-		#Helpers for editing values
-		self.editor = {}
-		self.editor["variable_value"] = None
-		self.editor["variable_raw_value"] = None
-		self.editor["variable_unit"] = None
-		self.editor["variable_description"] = None
-		self.editor["variable"] = None
-		self.editor_index = 0
-		self.editor_type = 0
 
 	def load_layout(self, layout_path):
 		self.max_page_id = 0
@@ -164,76 +155,83 @@ class layout():
 	def render_page(self):
 		self.render_background(self.screen)
 		self.show_pressed_button()
-		for func in self.current_function_list:
-			#FIXME Dirty hack - iron me out
-			try:
-				try:
-					self.render(self.screen, func, self.editor[func])
-				except KeyError:
-					self.render(self.screen, func, self.occ.rp.get_val(func))
-			except KeyError:
-				# if rp.get_val returns KeyError call render with empty value
-				self.render(self.screen, func)
+		self.render(self.screen)
 
-	def render(self, screen, function, value = None):
+	def render(self, screen):
+		#FIXME Optimisation!
 		for field in self.current_page:
-			if (field.get('function') == function):
-				#FIXME Move parsing to a separate function? Make list of icons to improve speed
-				if value == None:
-					value = field.find('text_center').text
-				if value == None:
-					value = ""
-				uv = unicode(value)
-				text_center_x = int(field.find('text_center').get('x'))
-				text_center_y = int(field.find('text_center').get('y'))
-				#FIXME Optimisation!
-				variable = field.find('text_center').get('variable')
-				image_path = field.find('text_center').get('file')
-				if variable is not None:
-					value =  self.occ.rp.p_raw[variable]
-					suffix = "_" + unicode(value)
-					extension = image_path[-4:]
-					name = image_path[:-4]
-					image_path_for_frame = name + suffix + extension
-					image = self.current_image_list[image_path_for_frame]
-					screen.blit(image, [text_center_x, text_center_y])
-				elif image_path is not None:
-					image = self.current_image_list[image_path]
-					screen.blit(image, [text_center_x, text_center_y])
-				try:
-					fs = int(field.find('text_center').get('size'))
-				except:
-					fs = 0
+			function = field.get('function')
+			text_center = field.find('text_center')
+			value = self.occ.rp.get_val(function)
+			if value == None:
+				value = text_center.text
+			if value == None:
+				value = ""
+			uv = unicode(value)
+			text_center_x = int(text_center.get('x'))
+			text_center_y = int(text_center.get('y'))
+			variable = text_center.get('variable')
+			image_path = text_center.get('file')
+			if variable is not None:
+				value =  self.occ.rp.p_raw[variable]
+				suffix = "_" + unicode(value)
+				extension = image_path[-4:]
+				name = image_path[:-4]
+				image_path_for_frame = name + suffix + extension
+				image = self.current_image_list[image_path_for_frame]
+				screen.blit(image, [text_center_x, text_center_y])
+			elif image_path is not None:
+				image = self.current_image_list[image_path]
+				screen.blit(image, [text_center_x, text_center_y])
+			try:
+				fs = int(text_center.get('size'))
+			except:
+				fs = 0
+			if function != "variable_value":
 				font_size = 12 * fs
+				if font_size in self.font_list:
+					font = self.font_list[font_size]
+				else:
+					font = pygame.font.Font(self.font, font_size)
+					self.font_list[font_size] = font
+				#font = pygame.font.Font(self.font, font_size)
+				ren = font.render(uv, 1, self.fg_colour)
+				x = ren.get_rect().centerx
+				y = ren.get_rect().centery
+				screen.blit(ren, (text_center_x - x, text_center_y - y))
+			else:
 				font_size_small = 12 * (fs - 1)
 				font_size_large = 12 * (fs + 1)
-				if function != "variable_value":
-					font = pygame.font.Font(self.font, font_size)
-					ren = font.render(uv, 1, self.fg_colour)
-					x = ren.get_rect().centerx
-					y = ren.get_rect().centery
-					screen.blit(ren, (text_center_x - x, text_center_y - y))
+				if font_size_small in self.font_list:
+					font = self.font_list[font_size_small]
 				else:
 					font = pygame.font.Font(self.font, font_size_small)
-					i = self.editor_index
-					rv1 = uv[:i]
-					ren1 = font.render(rv1, 1, self.fg_colour)
-					w1 = ren1.get_rect().width
-					y1 = ren1.get_rect().centery
-					rv2 = uv[i]
+					self.font_list[font_size_small] = font
+				if font_size_large in self.font_list:
+					font = self.font_list[font_size_large]
+				else:
 					font = pygame.font.Font(self.font, font_size_large)
-					ren2 = font.render(rv2, 1, self.fg_colour)
-					w2 = ren2.get_rect().width
-					y2 = ren2.get_rect().centery
-					rv3 = uv[i + 1:]
-					font = pygame.font.Font(self.font, font_size_small)
-					ren3 = font.render(rv3, 1, self.fg_colour)
-					w3 = ren3.get_rect().width
-					y3 = ren3.get_rect().centery
-					x = text_center_y - int((w1 + w2 + w3)/2)
-					screen.blit(ren1, (x, text_center_y - y1))
-					screen.blit(ren2, (x + w1, text_center_y - y2))
-					screen.blit(ren3, (x + w1 + w2, text_center_y - y3))
+					self.font_list[font_size_large] = font
+				#font = pygame.font.Font(self.font, font_size_small)
+				i = self.occ.rp.params["editor_index"]
+				rv1 = uv[:i]
+				ren1 = font.render(rv1, 1, self.fg_colour)
+				w1 = ren1.get_rect().width
+				y1 = ren1.get_rect().centery
+				rv2 = uv[i]
+				#font = pygame.font.Font(self.font, font_size_large)
+				ren2 = font.render(rv2, 1, self.fg_colour)
+				w2 = ren2.get_rect().width
+				y2 = ren2.get_rect().centery
+				rv3 = uv[i + 1:]
+				#font = pygame.font.Font(self.font, font_size_small)
+				ren3 = font.render(rv3, 1, self.fg_colour)
+				w3 = ren3.get_rect().width
+				y3 = ren3.get_rect().centery
+				x = text_center_y - int((w1 + w2 + w3)/2)
+				screen.blit(ren1, (x, text_center_y - y1))
+				screen.blit(ren2, (x + w1, text_center_y - y2))
+				screen.blit(ren3, (x + w1 + w2, text_center_y - y3))
 
 	def show_pressed_button(self):
 		if self.render_button:
@@ -268,7 +266,7 @@ class layout():
 						#FIXME I's dirty way of getting value - add some helper function
 						if param_name in self.occ.rp.p_editable:
 							self.occ.l.debug("[LY] LONG CLICK on {}".format(param_name))
-							self.editor_type = self.occ.rp.p_editable[param_name]
+							self.occ.rp.params["editor_type"] = self.occ.rp.p_editable[param_name]
 							self.open_editor_page(param_name)
 							break
 						p = self.occ.rp.strip_end(param_name)
@@ -286,16 +284,17 @@ class layout():
 			self.run_function("settings")
 
 	def open_editor_page(self, param_name):
-		#FIXME add different editors
-		self.editor["variable"] = param_name
-		self.editor["variable_raw_value"] = self.occ.rp.get_raw_val(param_name)
-		self.editor["variable_value"] = self.occ.rp.get_val(param_name)
-		self.editor["variable_unit"] = self.occ.rp.get_unit(param_name)
-		self.editor["variable_description"] = self.occ.rp.get_description(param_name)
-		self.editor_index = 0
+		#FIXME move to RP
+		self.occ.rp.params["variable"] = param_name
+		self.occ.rp.params["variable_raw_value"] = self.occ.rp.get_raw_val(param_name)
+		self.occ.rp.params["variable_value"] = self.occ.rp.get_val(param_name)
+		self.occ.rp.params["variable_unit"] = self.occ.rp.get_unit(param_name)
+		self.occ.rp.params["variable_description"] = self.occ.rp.get_description(param_name)
+		self.occ.rp.params["editor_index"] = 0
+
 		#FIXME Make it mory pythonic
-		if self.editor_type == 0: 
-			name = self.editor["variable"]
+		if self.occ.rp.params["editor_type"] == 0: 
+			name = self.occ.rp.params["variable"]
 			#FIXME make a stripping function
 			na = name.find("_")
 			if na > -1:
@@ -303,11 +302,11 @@ class layout():
 			else:
 				n = name
 			unit = self.occ.rp.get_unit(n)
-			self.editor["variable"] = n
-			self.editor["variable_unit"] = unit
-			self.editor["variable_value"] = 0
+			self.occ.rp.params["variable"] = n
+			self.occ.rp.params["variable_unit"] = unit
+			self.occ.rp.params["variable_value"] = 0
 			self.use_page("editor_units")
-		if self.editor_type == 1: 
+		if self.occ.rp.params["editor_type"] == 1: 
 			self.use_page("editor_numbers")
 
 	def run_function(self, name):
@@ -351,33 +350,33 @@ class layout():
 		self.use_main_page()
 
 	def ed_decrease(self):
-		u = unicode(self.editor["variable_value"])
-		i = self.editor_index
+		u = unicode(self.occ.rp.params["variable_value"])
+		i = self.occ.rp.params["editor_index"]
 		ui = u[i]
 		if ui == "0":
 			ui = "9"
 		else:
 			ui = unicode(int(ui) - 1)
 		un = u[:i] + ui + u[i + 1:]
-		self.editor["variable_value"] = un
+		self.occ.rp.params["variable_value"] = un
 		self.force_refresh()
 
 	def ed_increase(self):
-		u = unicode(self.editor["variable_value"])
-		i = self.editor_index
+		u = unicode(self.occ.rp.params["variable_value"])
+		i = self.occ.rp.params["editor_index"]
 		ui = u[i]
 		if ui == "9":
 			ui = "0"
 		else:
 			ui = unicode(int(ui) + 1)
 		un = u[:i] + ui + u[i + 1:]
-		self.editor["variable_value"] = un
+		self.occ.rp.params["variable_value"] = un
 		self.force_refresh()
 
 	def ed_next(self):
-		u = unicode(self.editor["variable_value"])
+		u = unicode(self.occ.rp.params["variable_value"])
 		l = len(u) - 1
-		i = self.editor_index
+		i = self.occ.rp.params["editor_index"]
 		i += 1
 		if i > l:
 			i = l 
@@ -386,31 +385,31 @@ class layout():
 			#FIXME localisation points to be used here
 			if (ui == ".") or (ui == ","):
 				i += 1
-		self.editor_index = i
+		self.occ.rp.params["editor_index"] = i
 		self.force_refresh()
 
 	def ed_prev(self):
-		u = unicode(self.editor["variable_value"])
+		u = unicode(self.occ.rp.params["variable_value"])
 		l = len(u) 
-		i = self.editor_index
+		i = self.occ.rp.params["editor_index"]
 		i -= 1
 		if i < 0:
 			i = 0
 			uv = "0" + u	
-			self.editor["variable_value"] = uv
+			self.occ.rp.params["variable_value"] = uv
 		else:
 			ui = u[i]
 			#FIXME localisation points to be used here
 			if (ui == ".") or (ui == ","):
 				i -= 1
-		self.editor_index = i
+		self.occ.rp.params["editor_index"] = i
 		self.force_refresh()
 
 	def ed_change_unit(self, direction):
 		#direction to be 1 (next) or 0 (previous)
-		variable = self.editor["variable"]
-		variable_unit = self.editor["variable_unit"]
-		variable_value = self.editor["variable_raw_value"]
+		variable = self.occ.rp.params["variable"]
+		variable_unit = self.occ.rp.params["variable_unit"]
+		variable_value = self.occ.rp.params["variable_raw_value"]
 		current_unit_index = self.occ.rp.units_allowed[variable].index(variable_unit)
 		if direction == 1:
 			try:
@@ -429,8 +428,8 @@ class layout():
 		except KeyError:
 			self.occ.l.warning("[LY] Formatting not available: param_name ={}".format(variable))
 			f = "%.1f"
-		self.editor["variable_value"] = float(f % float(variable_value))
-		self.editor["variable_unit"] = next_unit
+		self.occ.rp.params["variable_value"] = float(f % float(variable_value))
+		self.occ.rp.params["variable_unit"] = next_unit
 
 	def ed_next_unit(self):
 		self.ed_change_unit(1)
@@ -441,19 +440,19 @@ class layout():
 		self.force_refresh()
 
 	def accept_edit(self):
-		variable = self.editor["variable"]
-		variable_unit = self.editor["variable_unit"]
-		variable_raw_value = self.editor["variable_raw_value"]
-		variable_value = self.editor["variable_value"]
-		if self.editor_type == 0:
+		variable = self.occ.rp.params["variable"]
+		variable_unit = self.occ.rp.params["variable_unit"]
+		variable_raw_value = self.occ.rp.params["variable_raw_value"]
+		variable_value = self.occ.rp.params["variable_value"]
+		if self.occ.rp.params["editor_type"] == 0:
 			self.occ.rp.units[variable] = variable_unit
-		if self.editor_type == 1:
+		if self.occ.rp.params["editor_type"] == 1:
 			unit_raw = self.occ.rp.get_internal_unit(variable)
 			value = variable_value
 			if unit_raw != variable_unit:
 				value = self.uc.convert(variable_raw_value, variable_unit)
 			self.occ.rp.p_raw[variable] = float(value)
-			self.occ.rp.units[variable] = self.editor["variable_unit"]
+			self.occ.rp.units[variable] = self.occ.rp.params["variable_unit"]
 			if variable == "altitude_home":
 				#Force recalculation
 				self.occ.rp.pressure_at_sea_level_calculated = False

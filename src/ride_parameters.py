@@ -160,6 +160,14 @@ class ride_parameters():
 
 		#System params
 		self.params["debug_level"] = ""
+		#Editor params
+		self.params["variable_value"] = None
+		self.params["variable_raw_value"] = None
+		self.params["variable_unit"] = None
+		self.params["variable_description"] = None
+		self.params["variable"] = None
+		self.params["editor_index"] = 0
+		self.params["editor_type"] = 0
 
 		#Formatting strings for params.
 		self.p_format["altitude"] = "%.0f"
@@ -370,9 +378,13 @@ class ride_parameters():
 
 	def get_val(self, func):
 		if func.endswith("_units"):
-			return self.units[func[:-6]]
+			value = self.get_unit(func[:-6])
 		else:
-			return self.params[func]
+			if func in self.params:
+				value = self.params[func]
+			else:
+				value = None
+		return value
 
 	def get_unit(self, param_name):
 		suffixes =("_min", "_max", "_average", "_gps", "_home")
