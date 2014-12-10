@@ -323,11 +323,13 @@ class ride_parameters():
 		self.calculate_time_related_parameters()
 		if self.p_raw["ddistance"] != 0:
 			slope = self.p_raw["daltitude"] / self.p_raw["ddistance"]
+			self.l.debug("[RP] daltitude: {} ddistance: {}".format(self.p_raw["daltitude"], self.p_raw["ddistance"]))
 			if abs(slope) == 0:
 				slope = 0
 		else:
 			slope = 0
 		self.p_raw["slope"] = slope
+		self.l.debug("[RP] slope: {}".format(slope))
 		self.force_refresh()
 
 	def calculate_time_related_parameters(self):
