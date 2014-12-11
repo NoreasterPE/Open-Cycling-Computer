@@ -66,6 +66,8 @@ class open_cycling_computer():
 		self.read_config()
 		self.l.debug("[OCC] Setting layout. Path = {}".format(self.layout_path))
 		self.layout = layout(self, self.layout_path)
+		self.l.debug("[OCC] Starting RP sensors")
+		self.rp.start_sensors()
 		self.l.debug("[OCC] Setting up rendering")
 		self.rendering = rendering(self.layout)
 		self.l.debug("[OCC] Starting rendering thread")

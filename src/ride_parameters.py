@@ -18,13 +18,9 @@ class ride_parameters():
 		self.uc = units()
 		self.l.info("[RP] Initialising GPS")
 		self.gps = gps_mtk3339(occ, simulate)
-		self.l.info("[RP] Starting GPS thread")
-		self.gps.start()
 		self.l.info("[RP] Initialising bmp183 sensor")
 		self.bmp183_sensor = bmp183(simulate)
 		self.bmp183_first_run = True
-		self.l.info("[RP] Starting BMP thread")
-		self.bmp183_sensor.start()
 
 		self.p_desc = {}
 		self.p_editable = {}
@@ -286,6 +282,12 @@ class ride_parameters():
 		self.pressure_at_sea_level_calculated = False
 		self.cadence_timestamp = None
 		self.cadence_timestamp_old = None
+
+	def start_sensors(self):
+		self.l.info("[RP] Starting GPS thread")
+		self.gps.start()
+		self.l.info("[RP] Starting BMP thread")
+		self.bmp183_sensor.start()
 
 	def setup_ridelog(self):
 		ride_log_filename = "log/ride." + strftime("%Y-%m-%d-%H:%M:%S") + ".log"
