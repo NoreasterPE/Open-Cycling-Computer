@@ -344,15 +344,7 @@ class ride_parameters():
 		#FIXME calculate with speed not speed_gps when bt sensors are set up
 		s = self.p_raw["speed_gps"]
 		if (s > self.speed_gps_low):
-			d = 0
-			try:
-				d = dt * s
-				d = float(d)
-			except ValueError:
-				self.l.error("[RP] calculate_time_related_parameters ValueError")
-				pass
-			except TypeError:
-				self.l.error("[RP] calculate_time_related_parameters TypeError")
+			d = float(dt * s)
 			self.p_raw["ddistance"] = d
 			self.p_raw["distance"] += d
 			self.p_raw["odometer"] += d
