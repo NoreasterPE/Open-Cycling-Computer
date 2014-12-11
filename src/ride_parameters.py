@@ -550,23 +550,11 @@ class ride_parameters():
 
 		if self.p_raw[param_name] != "-":
 			unit_raw = self.get_internal_unit(param_name)
-			try:
-				unit = self.get_unit(param_name)
-				value = self.p_raw[param_name]
-				if unit_raw != unit:
-					value = self.uc.convert(value, unit)
-				self.params[param_name] = f % float(value)
-			except TypeError:
-			#FIXME Required?
-				#Value conversion failed, so don't change anything
-				self.l.error("[RP] TypeError: update_param exception: {} {} {}".\
-						format(__name__ ,param_name, self.params[param_name],\
-							self.p_raw[param_name]))
-			#FIXME Required?
-			except ValueError:
-				self.l.error("[RP] ValueError: update_param exception: {} {} {}".\
-						format(__name__ ,param_name, self.params[param_name],\
-							self.p_raw[param_name]))
+			unit = self.get_unit(param_name)
+			value = self.p_raw[param_name]
+			if unit_raw != unit:
+				value = self.uc.convert(value, unit)
+			self.params[param_name] = f % float(value)
 		else:
 			self.l.debug("[RP] param_name {} = -".format(param_name))
 			
