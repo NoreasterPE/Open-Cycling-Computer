@@ -330,11 +330,11 @@ if __name__ == "__main__":
 	if (platform.machine() == "armv6l"):
 		os.putenv('SDL_VIDEODRIVER', 'fbcon')
 		os.putenv('SDL_MOUSEDRV', 'TSLIB')
-		main_window = open_cycling_computer(False)
-		sys_logger.debug("[OCC] simulate = False")
+		simulate = False
 	else:
-		main_window = open_cycling_computer(True)
+		simulate = True
 		sys_logger.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
-		sys_logger.debug("[OCC] simulate = True")
+	main_window = open_cycling_computer(simulate)
+	sys_logger.debug("[OCC] simulate = {}".format(simulate))
 	main_window.main_loop()
 	main_window.cleanup()
