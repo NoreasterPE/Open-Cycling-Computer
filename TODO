@@ -69,3 +69,4 @@ KeyError: 0
 46. [DONE] Remove oversampling of pressure when Kalman filter is in place
 47. Click to switch value i.e. click on temperature to cycle over min/average/max
 48. Ridetime, ridetime_total, odometer  are affected by time shift
+49. Altitude goes crazy in simulation mode and stabilises on 2052m
