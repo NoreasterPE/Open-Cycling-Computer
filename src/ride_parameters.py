@@ -608,11 +608,14 @@ class ride_parameters():
 	def calculate_altitude(self):
 		pressure = self.p_raw["pressure"]
 		pressure_at_sea_level = self.p_raw["pressure_at_sea_level"]
+		altitude_previous = self.p_raw["altitude"]
 		if pressure_at_sea_level > 0:
 			self.p_raw["altitude"] = round(44330.0*(1 - pow((pressure/pressure_at_sea_level), (1/5.255))), 2)
+			self.p_raw["daltitude"] = altitude_previous - self.p_raw["altitude"]
 		else:
 			self.p_raw["altitude"] = 0
-		self.l.debug("[RP] altitude: {}".format(self.p_raw["altitude"]))
+			self.p_raw["daltitude"] = 0
+		self.l.debug("[RP] altitude: {}, daltitude {}".format(self.p_raw["altitude"], self.p_raw["daltitude"]))
 
 	def calculate_pressure_at_sea_level(self):
 		#Set pressure_at_sea_level based on given altitude
