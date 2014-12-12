@@ -28,7 +28,7 @@ class gps_mtk3339(threading.Thread):
 			ser.set_fix_update_rate(1000)
 			ser.set_nmea_update_rate(1000)
 			#ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 5, gsa = 5, gsv = 5)
-			ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 1, gsa = 1, gsv = 1)
+			ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 1, gsa = 5, gsv = 5)
 		self.altitude = NaN
 		self.climb = NaN
 		self.fix_mode = ""
