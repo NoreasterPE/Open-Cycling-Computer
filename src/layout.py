@@ -177,7 +177,9 @@ class layout():
 			text_center_y = int(text_center.get('y'))
 			variable = text_center.get('variable')
 			image_path = text_center.get('file')
+			#FIXME Optimisation
 			if variable is not None:
+				#FIXME function to make key
 				value =  self.occ.rp.p_raw[variable]
 				suffix = "_" + unicode(value)
 				extension = image_path[-4:]
@@ -287,9 +289,9 @@ class layout():
 			self.run_function("next_page")
 		elif click == 3: #Swipe LEFT to RIGHT
 			self.run_function("prev_page")
-		elif click == 4: #print "Swipe BOTTOM to TOP"
+		elif click == 4: #Swipe BOTTOM to TOP
 			self.run_function("page_0")
-		elif click == 5: #print "Swipe TOP to BOTTOM"
+		elif click == 5: #Swipe TOP to BOTTOM
 			self.run_function("settings")
 
 	def open_editor_page(self, param_name):
