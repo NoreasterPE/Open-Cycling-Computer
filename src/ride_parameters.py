@@ -291,14 +291,14 @@ class ride_parameters():
 		ride_log_filename = "log/ride." + strftime("%Y-%m-%d-%H:%M:%S") + ".log"
 		logging.getLogger('ride').setLevel(logging.INFO)
 		ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
-		ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(distance)-8s,%(slope)-8s'
+		ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(distance)-8s,%(slope)-8s,%(climb)-8s'
 		ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
 		logging.getLogger('ride').addHandler(ride_log_handler)
 		ride_logger = logging.getLogger('ride')
 		ride_logger.info('', extra={'time': "Time", 'dtime': "Delta", 'speed': "Speed",\
 			'pressure': "Pressure", 'temperature': "Temperature",\
 			'altitude': "Altitude", 'distance': "Distance",\
-			'slope': "Slope"})
+			'slope': "Slope", 'climb': "Climb"})
 		return ride_logger
 
 	def stop(self):
@@ -507,10 +507,11 @@ class ride_parameters():
 		tem = self.p_raw["temperature"]
 		alt = self.p_raw["altitude"]
 		dst = round(self.p_raw["distance"], 0)
+		clb = self.p_raw["climb"]
 		self.r.info('', extra={'time': tme, 'dtime': dte, 'speed':spd,\
 			'pressure': pre, 'temperature': tem,\
 			'altitude': alt, 'distance': dst,\
-			'slope': slp})
+			'slope': slp, 'climb': clb})
 		self.l.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}, cadence {} {}".\
 				format(self.params["speed"], self.params["speed_max"],\
 				self.params["speed_average"], self.units["speed"],\
