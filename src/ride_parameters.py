@@ -599,7 +599,9 @@ class ride_parameters():
 			self.p_raw["daltitude"] = 0
 		else:
 			self.p_raw["daltitude"] = altitude_previous - self.p_raw["altitude"]
-		self.p_raw["altitude"] = round(44330.0*(1 - pow((pressure/self.p_raw["pressure_at_sea_level"]), (1/5.255))), 2)
+		#That check prevents DIV/0 error on real device as it might be here before real pressure is measured
+		if self.p_raw["pressure_at_sea_level"] != 0:
+			self.p_raw["altitude"] = round(44330.0*(1 - pow((pressure/self.p_raw["pressure_at_sea_level"]), (1/5.255))), 2)
 		self.l.debug("[RP] altitude: {}, daltitude {}".format(self.p_raw["altitude"], self.p_raw["daltitude"]))
 
 	def calculate_pressure_at_sea_level(self):
