@@ -107,40 +107,35 @@ class layout():
 				rect = pygame.Rect(x0, y0, w, h)
 				self.function_rect_list[name] = rect
 				self.current_button_list.append(name)
-				self.load_image(field.find('text_center'))
+				text_center = field.find('text_center')
+				image_path = text_center.get('file')
+				if (image_path is not None):
+					self.load_image(text_center)
 
 	#FIXME text_center isn't really good name
 	def load_image(self, text_center):
 		image_path = text_center.get('file')
-		#FIXME required here?
-		if (image_path is not None):
-			variable = text_center.get('variable')
-			frames = text_center.get('frames')
-			if frames is not None:
-				frames = int(frames)
-				for i in range(frames + 1):
-					#FIXME Make a function to create image_key
-					suffix = "_" + unicode(i)
-					extension = image_path[-4:]
-					name = image_path[:-4]
-					image_path_for_frame = name + suffix + extension
-					try:
-						image = pygame.image.load(image_path_for_frame).convert()
-						image.set_colorkey(self.colorkey)
-						image.set_alpha(self.alpha)
-						self.current_image_list[image_path_for_frame] = image
-					except:
-						self.occ.l.error("[LY] Cannot load image {}".format(image_path_for_frame))
-			else:
+		variable = text_center.get('variable')
+		frames = text_center.get('frames')
+		if frames is not None:
+			frames = int(frames)
+			for i in range(frames + 1):
+				image_path_for_frame = self.make_image_key(image_path, i)
 				try:
-					image = pygame.image.load(image_path).convert()
+					image = pygame.image.load(image_path_for_frame).convert()
 					image.set_colorkey(self.colorkey)
 					image.set_alpha(self.alpha)
-					self.current_image_list[image_path] = image
+					self.current_image_list[image_path_for_frame] = image
 				except:
-					self.occ.l.error("[LY] Cannot load image {}".format(image_path))
+					self.occ.l.error("[LY] Cannot load image {}".format(image_path_for_frame))
 		else:
-			self.occ.l.error("[LY] Cannot load image as image path is None!")
+			try:
+				image = pygame.image.load(image_path).convert()
+				image.set_colorkey(self.colorkey)
+				image.set_alpha(self.alpha)
+				self.current_image_list[image_path] = image
+			except:
+				self.occ.l.error("[LY] Cannot load image {}".format(image_path))
 
 	def use_main_page(self):
 		self.use_page()
@@ -162,6 +157,12 @@ class layout():
 		self.show_pressed_button()
 		self.render(self.screen)
 
+	def make_image_key(self, image_path, value):
+		suffix = "_" + unicode(value)
+		extension = image_path[-4:]
+		name = image_path[:-4]
+		return (name + suffix + extension)
+
 	def render(self, screen):
 		#FIXME Optimisation!
 		for field in self.current_page:
@@ -177,14 +178,9 @@ class layout():
 			text_center_y = int(text_center.get('y'))
 			variable = text_center.get('variable')
 			image_path = text_center.get('file')
-			#FIXME Optimisation
 			if variable is not None:
-				#FIXME function to make key
-				value =  self.occ.rp.p_raw[variable]
-				suffix = "_" + unicode(value)
-				extension = image_path[-4:]
-				name = image_path[:-4]
-				image_path_for_frame = name + suffix + extension
+				value = self.occ.rp.get_raw_val(variable)
+				image_path_for_frame = self.make_image_key(image_path, value)
 				if image_path_for_frame not in self.current_image_list:
 					self.load_image(text_center)
 				image = self.current_image_list[image_path_for_frame]
