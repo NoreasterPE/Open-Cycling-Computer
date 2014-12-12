@@ -107,35 +107,40 @@ class layout():
 				rect = pygame.Rect(x0, y0, w, h)
 				self.function_rect_list[name] = rect
 				self.current_button_list.append(name)
-			image_path = field.find('text_center').get('file')
-			if (image_path is not None):
-				#FIXME Optimisation!
-				variable = field.find('text_center').get('variable')
-				frames = field.find('text_center').get('frames')
-				#FIXME Do no force frames for static icons
-				#FIXME Make a function to create image_key
-				if frames is not None:
-					frames = int(frames)
-					for i in range(frames + 1):
-						suffix = "_" + unicode(i)
-						extension = image_path[-4:]
-						name = image_path[:-4]
-						image_path_for_frame = name + suffix + extension
-						try:
-							image = pygame.image.load(image_path_for_frame).convert()
-							image.set_colorkey(self.colorkey)
-							image.set_alpha(self.alpha)
-							self.current_image_list[image_path_for_frame] = image
-						except:
-							self.occ.l.error("[LY] Cannot load image {}".format(image_path_for_frame))
-				else:
+				self.load_image(field.find('text_center'))
+
+	#FIXME text_center isn't really good name
+	def load_image(self, text_center):
+		image_path = text_center.get('file')
+		#FIXME required here?
+		if (image_path is not None):
+			variable = text_center.get('variable')
+			frames = text_center.get('frames')
+			if frames is not None:
+				frames = int(frames)
+				for i in range(frames + 1):
+					#FIXME Make a function to create image_key
+					suffix = "_" + unicode(i)
+					extension = image_path[-4:]
+					name = image_path[:-4]
+					image_path_for_frame = name + suffix + extension
 					try:
-						image = pygame.image.load(image_path).convert()
+						image = pygame.image.load(image_path_for_frame).convert()
 						image.set_colorkey(self.colorkey)
 						image.set_alpha(self.alpha)
-						self.current_image_list[image_path] = image
+						self.current_image_list[image_path_for_frame] = image
 					except:
-						self.occ.l.error("[LY] Cannot load image {}".format(image_path))
+						self.occ.l.error("[LY] Cannot load image {}".format(image_path_for_frame))
+			else:
+				try:
+					image = pygame.image.load(image_path).convert()
+					image.set_colorkey(self.colorkey)
+					image.set_alpha(self.alpha)
+					self.current_image_list[image_path] = image
+				except:
+					self.occ.l.error("[LY] Cannot load image {}".format(image_path))
+		else:
+			self.occ.l.error("[LY] Cannot load image as image path is None!")
 
 	def use_main_page(self):
 		self.use_page()
@@ -178,9 +183,13 @@ class layout():
 				extension = image_path[-4:]
 				name = image_path[:-4]
 				image_path_for_frame = name + suffix + extension
+				if image_path_for_frame not in self.current_image_list:
+					self.load_image(text_center)
 				image = self.current_image_list[image_path_for_frame]
 				screen.blit(image, [text_center_x, text_center_y])
 			elif image_path is not None:
+				if image_path not in self.current_image_list:
+					self.load_image(text_center)
 				image = self.current_image_list[image_path]
 				screen.blit(image, [text_center_x, text_center_y])
 			try:
