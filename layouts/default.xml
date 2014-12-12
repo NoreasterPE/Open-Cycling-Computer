@@ -38,6 +38,16 @@
 		<field function="slope_units">
 			<text_center x="100" y="220" size="2"/>
 		</field>
+		<field function="altitude_gps">
+			<button x0="120" y0="240" w="119" h="80"/>
+			<text_center x="50" y="290" size="7"/>
+		</field>
+		<field function="altitude_units">
+			<text_center x="110" y="310" size="2"/>
+		</field>
+		<field function="altitude_gps_icon">
+			<text_center x="97" y="267" file="images/altitude_icon_20x32.png"/>
+		</field>
 		<field function="altitude">
 			<button x0="120" y0="240" w="119" h="80"/>
 			<text_center x="170" y="290" size="7"/>
