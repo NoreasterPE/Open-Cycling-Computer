@@ -99,7 +99,7 @@ class bmp183(threading.Thread):
 				self.sensor_ready = True
 				self.read_calibration_data()
 				# Proceed with initial pressure/temperature measurement
-				self.measure_pressure()
+		self.measure_pressure()
 		self.kalman_setup()
 
 	def stop(self):
@@ -274,13 +274,13 @@ class bmp183(threading.Thread):
 		# First estimate
 		self.pressure_estimate = self.pressure_unfiltered
 		# Error
-		self.P = 0.33
+		self.P = 0.245657137142
 		# First previous estimate
-		self.pressure_estimate_previous = 0.0
+		self.pressure_estimate_previous = self.pressure_unfiltered
 		# First previous error
-		self.P_previous = 0.0
+		self.P_previous = 0.325657137142
 		# First gain
-		self.K = 0.25
+		self.K = 0.245657137142
 		# Estimate of measurement variance, sensor noise
 		self.R = 1.0
 

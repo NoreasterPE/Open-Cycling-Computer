@@ -59,7 +59,6 @@ class ride_parameters():
 		self.p_raw["longitude"] = 0
 		self.p_raw["odometer"] = 0
 		self.p_raw["pressure"] = 0
-		#FIXME Name doesn't follow the policy
 		self.p_raw["pressure_at_sea_level"] = 0
 		self.p_raw["riderweight"] = 0
 		self.p_raw["ridetime"] = 0
@@ -279,7 +278,6 @@ class ride_parameters():
 		self.split_speed("speed_max")
 		self.update_param("altitude_home")
 		self.l.info("[RP] altitude_home set to {}".format(self.params["altitude_home"]))
-		self.pressure_at_sea_level_calculated = False
 		self.cadence_timestamp = None
 		self.cadence_timestamp_old = None
 
@@ -325,8 +323,6 @@ class ride_parameters():
 			#FIXME Correct other parameters like ridetime
 		self.l.debug("[RP] timestamp: {} dtime {}".format(t, self.p_raw["dtime"]))
 		self.read_bmp183_data()
-		if not self.pressure_at_sea_level_calculated:
-			self.calculate_pressure_at_sea_level()
 		self.calculate_altitude()
 		self.calculate_time_related_parameters()
 		if self.p_raw["ddistance"] != 0:
@@ -597,14 +593,13 @@ class ride_parameters():
 		
 	def calculate_altitude(self):
 		pressure = self.p_raw["pressure"]
-		pressure_at_sea_level = self.p_raw["pressure_at_sea_level"]
 		altitude_previous = self.p_raw["altitude"]
-		if pressure_at_sea_level > 0:
-			self.p_raw["altitude"] = round(44330.0*(1 - pow((pressure/pressure_at_sea_level), (1/5.255))), 2)
-			self.p_raw["daltitude"] = altitude_previous - self.p_raw["altitude"]
-		else:
-			self.p_raw["altitude"] = 0
+		if self.p_raw["pressure_at_sea_level"] == 0:
+			self.calculate_pressure_at_sea_level()
 			self.p_raw["daltitude"] = 0
+		else:
+			self.p_raw["daltitude"] = altitude_previous - self.p_raw["altitude"]
+		self.p_raw["altitude"] = round(44330.0*(1 - pow((pressure/self.p_raw["pressure_at_sea_level"]), (1/5.255))), 2)
 		self.l.debug("[RP] altitude: {}, daltitude {}".format(self.p_raw["altitude"], self.p_raw["daltitude"]))
 
 	def calculate_pressure_at_sea_level(self):
