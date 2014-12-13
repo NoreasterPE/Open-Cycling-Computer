@@ -297,5 +297,5 @@ class bmp183(threading.Thread):
 		self.pressure_estimate = self.pressure_estimate_previous + self.K * (z - self.pressure_estimate_previous)
 		# Calculate new error estimate
 		self.P = (1 - self.K) * self.P_previous
-		self.pressure = round(self.pressure_estimate, 0)
+		self.pressure = self.pressure_estimate
 
