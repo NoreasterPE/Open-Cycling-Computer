@@ -210,29 +210,26 @@ class layout():
 				font_size_small = 12 * (fs - 1)
 				font_size_large = 12 * (fs + 1)
 				if font_size_small in self.font_list:
-					font = self.font_list[font_size_small]
+					font_s = self.font_list[font_size_small]
 				else:
-					font = pygame.font.Font(self.font, font_size_small)
-					self.font_list[font_size_small] = font
+					font_s = pygame.font.Font(self.font, font_size_small)
+					self.font_list[font_size_small] = font_s
 				if font_size_large in self.font_list:
-					font = self.font_list[font_size_large]
+					font_l = self.font_list[font_size_large]
 				else:
-					font = pygame.font.Font(self.font, font_size_large)
-					self.font_list[font_size_large] = font
-				#font = pygame.font.Font(self.font, font_size_small)
+					font_l = pygame.font.Font(self.font, font_size_large)
+					self.font_list[font_size_large] = font_l
 				i = self.occ.rp.params["editor_index"]
 				rv1 = uv[:i]
-				ren1 = font.render(rv1, 1, self.fg_colour)
+				ren1 = font_s.render(rv1, 1, self.fg_colour)
 				w1 = ren1.get_rect().width
 				y1 = ren1.get_rect().centery
 				rv2 = uv[i]
-				#font = pygame.font.Font(self.font, font_size_large)
-				ren2 = font.render(rv2, 1, self.fg_colour)
+				ren2 = font_l.render(rv2, 1, self.fg_colour)
 				w2 = ren2.get_rect().width
 				y2 = ren2.get_rect().centery
 				rv3 = uv[i + 1:]
-				#font = pygame.font.Font(self.font, font_size_small)
-				ren3 = font.render(rv3, 1, self.fg_colour)
+				ren3 = font_s.render(rv3, 1, self.fg_colour)
 				w3 = ren3.get_rect().width
 				y3 = ren3.get_rect().centery
 				x = text_center_y - int((w1 + w2 + w3)/2)
