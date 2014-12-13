@@ -67,9 +67,10 @@ class bmp183(threading.Thread):
 		'OVERSAMPLE_3_WAIT' : 0.0255,
 	}
 
-	def __init__(self, simulate = False):
+	def __init__(self, occ, simulate = False):
 		# Run init for super class
 		super(bmp183, self).__init__()
+		self.occ = occ
 		self.l = logging.getLogger('system')
 		self.l.debug("[BMP] __init__")
 		self.simulate = simulate
@@ -270,7 +271,8 @@ class bmp183(threading.Thread):
 		#FIXME that will depend on max descend/ascend speed.  calculate from max +/- 1.5m/s
 		# R makes no difference, R/Q is what matters
 		# P and K are self tuning
-		self.Q = 0.08
+		self.Q = 0.04
+		#self.Q = 0.08
 		# First estimate
 		self.pressure_estimate = self.pressure_unfiltered
 		# Error
@@ -285,6 +287,9 @@ class bmp183(threading.Thread):
 		self.R = 1.0
 
 	def kalman_update(self):
+		#Temporary: get Q from RP
+		self.Q = float(self.occ.rp.p_raw["Q"])
+		self.l.error("[BMP] Q = {}".format(self.Q))
 		#FIXME Add detailed commants
 		z = self.pressure_unfiltered
 		# Save previous value

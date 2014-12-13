@@ -19,7 +19,7 @@ class ride_parameters():
 		self.l.info("[RP] Initialising GPS")
 		self.gps = gps_mtk3339(occ, simulate)
 		self.l.info("[RP] Initialising bmp183 sensor")
-		self.bmp183_sensor = bmp183(simulate)
+		self.bmp183_sensor = bmp183(self.occ, simulate)
 		self.bmp183_first_run = True
 
 		self.p_desc = {}
@@ -61,6 +61,7 @@ class ride_parameters():
 		self.p_raw["odometer"] = 0
 		self.p_raw["pressure"] = 0
 		self.p_raw["pressure_at_sea_level"] = 0
+		self.p_raw["Q"] = 0
 		self.p_raw["riderweight"] = 0
 		self.p_raw["ridetime"] = 0
 		self.p_raw["ridetime_total"] = 0
@@ -98,6 +99,7 @@ class ride_parameters():
 		self.p_raw_units["longitude"] = ""
 		self.p_raw_units["odometer"] = "m"
 		self.p_raw_units["pressure"] = "Pa"
+		self.p_raw_units["Q"] = ""
 		self.p_raw_units["riderweight"] = "kg"
 		self.p_raw_units["ridetime"] = "s"
 		self.p_raw_units["ridetime_total"] = "s"
@@ -127,6 +129,7 @@ class ride_parameters():
 		self.params["longitude"] = "-"
 		self.params["odometer"] = 0.0
 		self.params["pressure"] = "-"
+		self.params["Q"] = "-"
 		self.params["pressure_at_sea_level"] = "-" 
 		self.params["rtc"] = ""
 		self.params["riderweight"] = 0.0
@@ -184,6 +187,7 @@ class ride_parameters():
 		self.p_format["longitude"] = "%.4f"
 		self.p_format["odometer"] = "%.0f"
 		self.p_format["pressure"] = "%.0f"
+		self.p_format["Q"] = "%.3f"
 		self.p_format["pressure_at_sea_level"] = "%.0f"
 		self.p_format["riderweight"] = "%.1f"
 		self.p_format["rtc"] = ""
@@ -224,6 +228,7 @@ class ride_parameters():
 		self.units["longitude"] = ""
 		self.units["odometer"] = "km"
 		self.units["pressure"] = "hPa"
+		self.units["Q"] = ""
 		self.units["riderweight"] = "kg"
 		self.units["ridetime"] = "s"
 		self.units["ridetime_hms"] = ""
@@ -260,6 +265,7 @@ class ride_parameters():
 		self.p_editable["altitude_home"] = 1
 		self.p_editable["odometer"] = 1 
 		self.p_editable["odometer_units"] = 0
+		self.p_editable["Q"] = 1
 		self.p_editable["riderweight"] = 1
 		self.p_editable["riderweight_units"] = 0
 		self.p_editable["speed_units"] = 0
@@ -281,6 +287,8 @@ class ride_parameters():
 		self.l.info("[RP] altitude_home set to {}".format(self.params["altitude_home"]))
 		self.cadence_timestamp = None
 		self.cadence_timestamp_old = None
+		#Temporary
+		self.p_raw["Q"] = self.bmp183_sensor.Q
 
 	def start_sensors(self):
 		self.l.info("[RP] Starting GPS thread")
@@ -310,6 +318,8 @@ class ride_parameters():
 		self.stop()
 
 	def update_values(self):
+		self.p_raw["Q"] = self.bmp183_sensor.Q
+		self.update_param("Q")
 		t = time.time()
 		self.p_raw["dtime"] = t - self.p_raw["time_stamp"]
 		self.p_raw["time_stamp"] = t

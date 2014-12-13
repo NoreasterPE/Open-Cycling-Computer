@@ -462,7 +462,11 @@ class layout():
 			self.occ.rp.units[variable] = self.occ.rp.params["variable_unit"]
 			if variable == "altitude_home":
 				#Force recalculation
-				self.occ.rp.pressure_at_sea_level_calculated = False
+				self.occ.rp.p_raw["pressure_at_sea_level"] = 0
+			if variable == "Q":
+				self.occ.rp.bmp183_sensor.Q = float(value)
+				print "after edit"
+				print float(value)
 		self.force_refresh()
 
 	def next_page(self):
