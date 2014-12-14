@@ -305,8 +305,8 @@ class ride_parameters():
 		logging.getLogger('ride').addHandler(ride_log_handler)
 		ride_logger = logging.getLogger('ride')
 		ride_logger.info('', extra={'time': "Time", 'dtime': "Delta", 'speed': "Speed",\
-			'pressure': "Pressure", 'temperature': "Temperature",\
-			'altitude': "Altitude", 'altitude_gps': "Altitude GPS", 'distance': "Distance",\
+			'pressure': "Pressure", 'temperature': "Temp",\
+			'altitude': "Altitude", 'altitude_gps': "Alt GPS", 'distance': "Distance",\
 			'slope': "Slope", 'climb': "Climb"})
 		return ride_logger
 
