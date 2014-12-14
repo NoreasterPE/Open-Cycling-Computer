@@ -514,7 +514,7 @@ class ride_parameters():
 		tme = self.params["timeon_hms"]
 		spd = self.params["speed"]
 		dte = self.params["dtime"]
-		pre = self.p_raw["pressure"]
+		pre = round(self.p_raw["pressure"], 1)
 		tem = self.p_raw["temperature"]
 		alt = self.p_raw["altitude"]
 		alg = self.p_raw["altitude_gps"]
