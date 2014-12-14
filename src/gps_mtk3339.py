@@ -37,7 +37,7 @@ class gps_mtk3339(threading.Thread):
 		self.longitude = NaN
 		self.present = False
 		self.satellites = 0
-		self.satellites_used = 0
+		self.satellitesused = 0
 		self.speed = NaN
 		self.utc = None
 		self.set_time = True
@@ -83,7 +83,7 @@ class gps_mtk3339(threading.Thread):
 				self.speed = 9.99
 				self.altitude = 50.0
 				self.satellites = 10
-				self.satellites_used = 4
+				self.satellitesused = 4
 				self.fix_mode = fix_mode[2]
 				time.sleep(1)
 
@@ -129,13 +129,13 @@ class gps_mtk3339(threading.Thread):
 			try:
 				sat = self.data.satellites
 				self.satellites = len(sat)
-				self.satellites_used = self.data.satellites_used
+				self.satellitesused = self.data.satellites_used
 			except AttributeError:
 				self.l.error("[GPS] AttributeError exception in GPS")
 				pass
 			self.l.debug("[GPS] timestamp: {}, fix time: {}, UTC: {}, Satellites: {}, Used: {}"\
 						.format(timestamp, self.fix_time, self.utc, self.satellites,\
-						 self.satellites_used))
+						 self.satellitesused))
 			self.l.debug("[GPS] Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"\
 						.format(self.fix_mode, self.latitude, self.longitude,\
 						self.speed, self.altitude, self.climb))
@@ -150,13 +150,13 @@ class gps_mtk3339(threading.Thread):
 			self.fix_mode = fix_mode[1]
 			self.fix_time = NaN
 			self.satellites = 0
-			self.satellites_used = 0
+			self.satellitesused = 0
 
 	def get_data(self):
 		return (self.latitude, self.longitude, 	#0, 1
 			self.altitude, self.speed,	#2, 3
 			self.utc, 			#4
-			self.satellites_used,		#5
+			self.satellitesused,		#5
 			self.satellites, self.fix_mode,	#6, 7
 			self.climb)			#8
 

@@ -65,12 +65,10 @@ class ride_parameters():
 		self.p_raw["ridetime_total"] = 0
 		self.p_raw["rtc"] = ""
 		self.p_raw["satellites"] = 0
-		#FIXME Name doesn't follow the policy
-		self.p_raw["satellites_used"] = 0
+		self.p_raw["satellitesused"] = 0
 		self.p_raw["slope"] = 0
 		self.p_raw["speed"] = 0
 		self.p_raw["speed_average"] = 0
-		#FIXME Name doesn't follow the policy
 		self.p_raw["speed_gps"] = 0
 		self.p_raw["speed_max"] = 0
 		self.p_raw["temperature"] = 0
@@ -78,7 +76,6 @@ class ride_parameters():
 		self.p_raw["temperature_average"] = 0
 		self.p_raw["temperature_min"] = INF
 		self.p_raw["temperature_max"] = INF_MIN
-		#FIXME Name doesn't follow the policy
 		self.p_raw["timeon"] = 0.0001 #Avoid DIV/0
 		self.p_raw["utc"] = ""
 
@@ -102,7 +99,7 @@ class ride_parameters():
 		self.p_raw_units["ridetime"] = "s"
 		self.p_raw_units["ridetime_total"] = "s"
 		self.p_raw_units["satellites"] = ""
-		self.p_raw_units["satellites_used"] = ""
+		self.p_raw_units["satellitesused"] = ""
 		self.p_raw_units["slope"] = "m/m"
 		self.p_raw_units["speed"] = "m/s"
 		self.p_raw_units["temperature"] = degC
@@ -135,7 +132,7 @@ class ride_parameters():
 		self.params["ridetime_total"] = ""
 		self.params["ridetime_total_hms"] = ""
 		self.params["satellites"] = "-"
-		self.params["satellites_used"] = "-"
+		self.params["satellitesused"] = "-"
 		self.params["slope"] = "-"
 		self.params["speed"] = "-"
 		self.params["speed_digits"] = "-"
@@ -192,7 +189,7 @@ class ride_parameters():
 		self.p_format["ridetime_total"] = ".0f"
 		self.p_format["ridetime_total_hms"] = ""
 		self.p_format["satellites"] = "%.0f"
-		self.p_format["satellites_used"] = "%.0f"
+		self.p_format["satellitesused"] = "%.0f"
 		self.p_format["slope"] = "%.1f"
 		self.p_format["speed"] = "%.1f"
 		self.p_format["speed_digits"] = "%.0f"
@@ -230,7 +227,7 @@ class ride_parameters():
 		self.units["ridetime_total"] = "s"
 		self.units["ridetime_total_hms"] = ""
 		self.units["satellites"] = ""
-		self.units["satellites_used"] = ""
+		self.units["satellitesused"] = ""
 		self.units["slope"] = "%"
 		self.units["speed"] = "km/h"
 		self.units["temperature"] = degC
@@ -418,12 +415,12 @@ class ride_parameters():
 		self.p_raw["altitude_gps"] = self.clean_value(data[2]);
 		self.p_raw["speed_gps"] = self.clean_value(data[3]);
 		self.p_raw["utc"] = data[4]
-		self.p_raw["satellites_used"] = self.clean_value(data[5]);
+		self.p_raw["satellitesused"] = self.clean_value(data[5]);
 		self.p_raw["satellites"] = self.clean_value(data[6]);
 		self.p_raw["gpsfix"] = data[7]
 		self.p_raw["climb"] = self.clean_value(data[8]);
 
-		gps_str = self.p_raw["satellites_used"] - 3
+		gps_str = self.p_raw["satellitesused"] - 3
 		if gps_str < 0:
 			gps_str = 0
 		if gps_str > 3:
@@ -501,7 +498,7 @@ class ride_parameters():
 		self.update_param("riderweight")
 		self.update_param("pressure")
 		self.update_temperatures()
-		self.update_param("satellites_used")
+		self.update_param("satellitesused")
 		self.update_param("satellites")
 		self.update_param("slope")
 		self.force_refresh()
