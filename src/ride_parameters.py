@@ -465,14 +465,7 @@ class ride_parameters():
 		ca_new = (c * dt + ca * tt) / (tt + dt)
 		self.p_raw["cadence_avg"] = ca_new
 
-	def update_params(self):
-		#FIXME Make a list of params and call from for loop
-		#FIXME Use the list to dump DEBUG data
-		self.update_rtc()
-		self.update_gpsfix()
-		self.update_param("dtime")
-		self.update_param("latitude")
-		self.update_param("longitude")
+	def update_altitude(self)
 		self.update_param("altitude_gps")
 		self.update_param("altitude_home")
 		self.update_param("altitude")
@@ -480,6 +473,14 @@ class ride_parameters():
 		self.set_min("altitude")
 		self.update_param("altitude_min")
 		self.update_param("altitude_max")
+
+	def update_params(self):
+		self.update_rtc()
+		self.update_gpsfix()
+		self.update_param("dtime")
+		self.update_param("latitude")
+		self.update_param("longitude")
+		self.update_altitude()
 		self.update_cadence()
 		self.update_param("climb")
 		self.update_param("distance")
