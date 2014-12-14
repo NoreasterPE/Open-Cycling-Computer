@@ -46,7 +46,7 @@ class ride_parameters():
 		self.p_raw["altitude_min"] = INF
 		self.p_raw["altitude_previous"] = 0
 		self.p_raw["cadence"] = 0
-		self.p_raw["cadence_average"] = 0
+		self.p_raw["cadence_avg"] = 0
 		self.p_raw["cadence_max"] = INF_MIN
 		self.p_raw["climb"] = 0
 		self.p_raw["daltitude"] = 0
@@ -68,12 +68,12 @@ class ride_parameters():
 		self.p_raw["satellitesused"] = 0
 		self.p_raw["slope"] = 0
 		self.p_raw["speed"] = 0
-		self.p_raw["speed_average"] = 0
+		self.p_raw["speed_avg"] = 0
 		self.p_raw["speed_gps"] = 0
 		self.p_raw["speed_max"] = 0
 		self.p_raw["temperature"] = 0
 		#FIXME Use avg?
-		self.p_raw["temperature_average"] = 0
+		self.p_raw["temperature_avg"] = 0
 		self.p_raw["temperature_max"] = INF_MIN
 		self.p_raw["temperature_min"] = INF
 		self.p_raw["timeon"] = 0.0001 #Avoid DIV/0
@@ -113,7 +113,7 @@ class ride_parameters():
 		self.params["altitude_max"] = "-"
 		self.params["altitude_min"] = "-"
 		self.params["cadence"] = "-"
-		self.params["cadence_average"] = "-"
+		self.params["cadence_avg"] = "-"
 		self.params["cadence_max"] = "-"
 		self.params["climb"] = "-"
 		self.params["distance"] = 0
@@ -135,16 +135,16 @@ class ride_parameters():
 		self.params["satellitesused"] = "-"
 		self.params["slope"] = "-"
 		self.params["speed"] = "-"
-		self.params["speed_average"] = "-"
-		self.params["speed_average_digits"] = "-"
-		self.params["speed_average_tenths"] = "-"
+		self.params["speed_avg"] = "-"
+		self.params["speed_avg_digits"] = "-"
+		self.params["speed_avg_tenths"] = "-"
 		self.params["speed_digits"] = "-"
 		self.params["speed_max"] = "-"
 		self.params["speed_max_digits"] = "-"
 		self.params["speed_max_tenths"] = "-"
 		self.params["speed_tenths"] = "-"
 		self.params["temperature"] = ""
-		self.params["temperature_average"] = ""
+		self.params["temperature_avg"] = ""
 		self.params["temperature_max"] = ""
 		self.params["temperature_min"] = ""
 		self.params["timeon"] = ""
@@ -170,7 +170,7 @@ class ride_parameters():
 		self.p_format["altitude_max"] = "%.0f"
 		self.p_format["altitude_min"] = "%.0f"
 		self.p_format["cadence"] = "%.0f"
-		self.p_format["cadence_average"] = "%.0f"
+		self.p_format["cadence_avg"] = "%.0f"
 		self.p_format["cadence_max"] = "%.0f"
 		self.p_format["climb"] = "%.1f"
 		self.p_format["distance"] = "%.1f"
@@ -192,16 +192,16 @@ class ride_parameters():
 		self.p_format["satellitesused"] = "%.0f"
 		self.p_format["slope"] = "%.1f"
 		self.p_format["speed"] = "%.1f"
-		self.p_format["speed_average"] = "%.1f"
-		self.p_format["speed_average_digits"] = "%.0f"
-		self.p_format["speed_average_tenths"] = "%.0f"
+		self.p_format["speed_avg"] = "%.1f"
+		self.p_format["speed_avg_digits"] = "%.0f"
+		self.p_format["speed_avg_tenths"] = "%.0f"
 		self.p_format["speed_digits"] = "%.0f"
 		self.p_format["speed_max"] = "%.1f"
 		self.p_format["speed_max_digits"] = "%.0f"
 		self.p_format["speed_max_tenths"] = "%.0f"
 		self.p_format["speed_tenths"] = "%.0f"
 		self.p_format["temperature"] = "%.0f"
-		self.p_format["temperature_average"] = "%.1f"
+		self.p_format["temperature_avg"] = "%.1f"
 		self.p_format["temperature_max"] = "%.0f"
 		self.p_format["temperature_min"] = "%.0f"
 		self.p_format["timeon"] = "%.0f"
@@ -351,9 +351,9 @@ class ride_parameters():
 			self.p_raw["odometer"] += d
 			self.p_raw["ridetime"] += dt
 			self.p_raw["ridetime_total"] += dt
-			self.p_raw["speed_average"] = self.p_raw["distance"] / self.p_raw["ridetime"]
-			self.update_param("speed_average")
-			self.split_speed("speed_average")
+			self.p_raw["speed_avg"] = self.p_raw["distance"] / self.p_raw["ridetime"]
+			self.update_param("speed_avg")
+			self.split_speed("speed_avg")
 			self.l.debug("[RP] speed_gps: {}, distance: {}, odometer: {}".\
 					format(s, self.p_raw["distance"], self.p_raw["odometer"]))
 		else:
@@ -380,7 +380,7 @@ class ride_parameters():
 		return value
 
 	def get_unit(self, param_name):
-		suffixes =("_min", "_max", "_average", "_gps", "_home")
+		suffixes =("_min", "_max", "_avg", "_gps", "_home")
 		p = self.strip_end(param_name, suffixes)
 		if p.endswith("_units"):
 			return None
@@ -388,7 +388,7 @@ class ride_parameters():
 			return self.units[p]
 
 	def get_internal_unit(self, param_name):
-		suffixes =("_min", "_max", "_average", "_gps", "_home")
+		suffixes =("_min", "_max", "_avg", "_gps", "_home")
 		p = self.strip_end(param_name, suffixes)
 		if p.endswith("_units"):
 			return None
@@ -450,21 +450,21 @@ class ride_parameters():
 	def set_min(self, param):
 		self.p_raw[param + "_min"] = min(self.p_raw[param], self.p_raw[param + "_min"])
 
-	def calculate_average_temperature(self):
+	def calculate_avg_temperature(self):
 		dt = self.p_raw["dtime"]
 		t = self.p_raw["temperature"]
-		ta = self.p_raw["temperature_average"]
+		ta = self.p_raw["temperature_avg"]
 		tt = self.p_raw["timeon"]
 		ta_new = (t * dt + ta * tt) / (tt + dt)
-		self.p_raw["temperature_average"] = ta_new
+		self.p_raw["temperature_avg"] = ta_new
 
-	def calculate_average_cadence(self):
+	def calculate_avg_cadence(self):
 		dt = self.p_raw["dtime"]
 		c = self.p_raw["cadence"]
-		ca = self.p_raw["cadence_average"]
+		ca = self.p_raw["cadence_avg"]
 		tt = self.p_raw["timeon"]
 		ca_new = (c * dt + ca * tt) / (tt + dt)
-		self.p_raw["cadence_average"] = ca_new
+		self.p_raw["cadence_avg"] = ca_new
 
 	def update_params(self):
 		#FIXME Make a list of params and call from for loop
@@ -504,7 +504,7 @@ class ride_parameters():
 		self.add_ridelog_entry()
 		self.l.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}, cadence {} {}".\
 				format(self.params["speed"], self.params["speed_max"],\
-				self.params["speed_average"], self.units["speed"],\
+				self.params["speed_avg"], self.units["speed"],\
 				self.params["cadence"], self.units["cadence"]))
 		self.force_refresh()
 
@@ -627,9 +627,9 @@ class ride_parameters():
 	def update_temperatures(self):
 		self.set_min("temperature")
 		self.set_max("temperature")
-		self.calculate_average_temperature()
+		self.calculate_avg_temperature()
 		self.update_param("temperature")
-		self.update_param("temperature_average")
+		self.update_param("temperature_avg")
 		self.update_param("temperature_min")
 		self.update_param("temperature_max")
 
@@ -641,8 +641,8 @@ class ride_parameters():
 		self.cadence_timestamp_old = self.cadence_timestamp
 
 	def update_cadence(self):
-		self.calculate_average_cadence()
+		self.calculate_avg_cadence()
 		self.set_max("cadence")
 		self.update_param("cadence")
-		self.update_param("cadence_average")
+		self.update_param("cadence_avg")
 		self.update_param("cadence_max")

@@ -79,14 +79,14 @@
 		<field function="speed_units">
 			<text_center x="205" y="75" size="2"/>
 		</field>
-		<field function="speed_average_label">
+		<field function="speed_avg_label">
 			<text_center x="25" y="160" size="2">Ave</text_center>
 		</field>
-		<field function="speed_average">
+		<field function="speed_avg">
 			<button x0="0" y0="150" w="239" h="89"/>
 			<text_center x="100" y="175" size="4"/>
 		</field>
-		<field function="speed_average_units">
+		<field function="speed_avg_units">
 			<text_center x="210" y="175" size="2"/>
 		</field>
 		<field function="temperature">
@@ -99,7 +99,7 @@
 		<field function="temperature_min">
 			<text_center x="20" y="255" size="2"/>
 		</field>
-		<field function="temperature_average">
+		<field function="temperature_avg">
 			<text_center x="60" y="255" size="2"/>
 		</field>
 		<field function="temperature_max">
@@ -141,7 +141,7 @@
 			<button x0="0" y0="240" w="119" h="80"/>
 			<text_center x="50" y="290" size="7"/>
 		</field>
-		<field function="cadence_average">
+		<field function="cadence_avg">
 			<text_center x="60" y="255" size="2"/>
 		</field>
 		<field function="cadence_max">
