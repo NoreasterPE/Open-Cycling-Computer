@@ -441,7 +441,7 @@ class ride_parameters():
 			self.p_raw["speed_max"] = self.p_raw["speed"]
 		self.split_speed("speed_max")
 
-	def update_gps(self):
+	def update_gpsfix(self):
 		self.params["gpsfix"] = self.p_raw["gpsfix"]
 	
 	def set_max(self, param):
@@ -470,7 +470,7 @@ class ride_parameters():
 		#FIXME Make a list of params and call from for loop
 		#FIXME Use the list to dump DEBUG data
 		self.update_rtc()
-		self.update_gps()
+		self.update_gpsfix()
 		self.update_param("dtime")
 		self.update_param("latitude")
 		self.update_param("longitude")
