@@ -56,7 +56,7 @@ Update: twice same error showed up in my code
 40. [DONE] Setting home altitude has to trigger sea level pressure recalculation
 41. [DONE] Icons with different states, i.e. to show gps signal strength
 42. Use sprites to make smooth page switching?
-43. Error after stopping gpsd:
+43. [DONE] Error after stopping gpsd:
 Exception in thread Thread-1:
 Traceback (most recent call last):
   File "/usr/lib/python2.7/threading.py", line 552, in __bootstrap_inner
@@ -69,4 +69,5 @@ KeyError: 0
 46. [DONE] Remove oversampling of pressure when Kalman filter is in place
 47. Click to switch value i.e. click on temperature to cycle over min/average/max
 48. Ridetime, ridetime_total, odometer  are affected by time shift
-49. Altitude goes crazy in simulation mode and stabilises on 2052m
+49. [DONE] Altitude goes crazy in simulation mode and stabilises on 2052m
+50. [DONE] GPS doesn't come back after gpsd restart
