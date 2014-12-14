@@ -620,8 +620,8 @@ class ride_parameters():
 		#Set pressure_at_sea_level based on given altitude
 		pressure = self.p_raw["pressure"]
 		altitude_home = self.p_raw["altitude_home"]
-		#Potential DIV/0 is altitude_home set to 44330
-		self.p_raw["pressure_at_sea_level"] = float(pressure/pow((1 - altitude_home/44330), 5.255))
+		if altitude_home < 43300:
+			self.p_raw["pressure_at_sea_level"] = float(pressure/pow((1 - altitude_home/44330), 5.255))
 		self.l.debug("[RP] pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]))
 
 	def update_temperatures(self):
