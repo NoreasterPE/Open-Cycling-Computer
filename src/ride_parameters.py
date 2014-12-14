@@ -534,13 +534,15 @@ class ride_parameters():
 				param_name = param_name[:l]
 		return param_name
 
+	def reset_ride(self):
+		self.p_raw["distance"] = 0
+		self.p_raw["ridetime"] = 0
+
 	def reset_param(self, param_name):
 		self.l.debug("[RP] Resetting {}".format(param_name))
 		self.p_raw[param_name] = 0
-		#FIXME make a function like reset ride 
 		if param_name == "ridetime" or param_name == "distance":
-			self.p_raw["distance"] = 0
-			self.p_raw["ridetime"] = 0
+			self.reset_ride()
 			
 	def update_param(self, param_name):
 		if param_name in self.p_format:
