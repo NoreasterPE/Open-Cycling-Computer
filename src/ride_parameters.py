@@ -54,7 +54,6 @@ class ride_parameters():
 		#FIXME Name doesn't follow the policy
 		self.p_raw["gps_fix"] = ""
 		self.p_raw["gps_strength"] = 0
-		self.p_raw["gradient"] = 0
 		self.p_raw["heart_rate"] = 0
 		self.p_raw["latitude"] = 0
 		self.p_raw["longitude"] = 0
@@ -123,7 +122,6 @@ class ride_parameters():
 		self.params["distance"] = 0
 		self.params["dtime"] = 0
 		self.params["gps_fix"] = "-"
-		self.params["gradient"] = "-"
 		self.params["heart_rate"] = "-"
 		self.params["latitude"] = "-"
 		self.params["longitude"] = "-"
@@ -181,7 +179,6 @@ class ride_parameters():
 		self.p_format["distance"] = "%.1f"
 		self.p_format["dtime"] = "%.2f"
 		self.p_format["gps_fix"] = ""
-		self.p_format["gradient"] = ""
 		self.p_format["heart_rate"] = "%.0f"
 		self.p_format["latitude"] = "%.4f"
 		self.p_format["longitude"] = "%.4f"
@@ -222,7 +219,6 @@ class ride_parameters():
 		self.units["distance"] = "km"
 		self.units["dtime"] = "s"
 		self.units["gps_fix"] = ""
-		self.units["gradient"] = "%"
 		self.units["heart_rate"] = "BPM"
 		self.units["latitude"] = ""
 		self.units["longitude"] = ""
