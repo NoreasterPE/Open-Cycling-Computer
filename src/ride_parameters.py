@@ -465,7 +465,7 @@ class ride_parameters():
 		ca_new = (c * dt + ca * tt) / (tt + dt)
 		self.p_raw["cadence_avg"] = ca_new
 
-	def update_altitude(self)
+	def update_altitude(self):
 		self.update_param("altitude_gps")
 		self.update_param("altitude_home")
 		self.update_param("altitude")
