@@ -1,10 +1,10 @@
-from time import strftime
 from bmp183 import bmp183
 from gps_mtk3339 import gps_mtk3339
+from time import strftime
+from units import units
 import logging
 import math
 import time
-from units import units
 
 INF_MIN = float("-inf")
 INF = float("inf")
@@ -27,8 +27,8 @@ class ride_parameters():
 		self.p_format = {}
 		self.p_raw = {}
 		self.p_raw_units = {}
-		self.params = {}
 		self.p_resettable = {}
+		self.params = {}
 		self.units = {}
 		self.units_allowed = {}
 		self.suffixes =("_digits", "_tenths", "_hms")
@@ -38,28 +38,28 @@ class ride_parameters():
 		#Time delta since last p_raw update
 		self.p_raw["dtime"] = 1
 
+		self.p_raw["Q"] = 0
 		self.p_raw["altitude"] = 0
-		self.p_raw["altitude_previous"] = 0
-		self.p_raw["daltitude"] = 0
-		self.p_raw["altitude_home"] = 0
 		self.p_raw["altitude_gps"] = 0
-		self.p_raw["altitude_min"] = INF
+		self.p_raw["altitude_home"] = 0
 		self.p_raw["altitude_max"] = INF_MIN
+		self.p_raw["altitude_min"] = INF
+		self.p_raw["altitude_previous"] = 0
 		self.p_raw["cadence"] = 0
 		self.p_raw["cadence_average"] = 0
 		self.p_raw["cadence_max"] = INF_MIN
 		self.p_raw["climb"] = 0
-		self.p_raw["distance"] = 0
+		self.p_raw["daltitude"] = 0
 		self.p_raw["ddistance"] = 0
-		self.p_raw["gpsfix"] = ""
+		self.p_raw["distance"] = 0
 		self.p_raw["gps_strength"] = 0
+		self.p_raw["gpsfix"] = ""
 		self.p_raw["heartrate"] = 0
 		self.p_raw["latitude"] = 0
 		self.p_raw["longitude"] = 0
 		self.p_raw["odometer"] = 0
 		self.p_raw["pressure"] = 0
 		self.p_raw["pressure_at_sea_level"] = 0
-		self.p_raw["Q"] = 0
 		self.p_raw["riderweight"] = 0
 		self.p_raw["ridetime"] = 0
 		self.p_raw["ridetime_total"] = 0
@@ -74,8 +74,8 @@ class ride_parameters():
 		self.p_raw["temperature"] = 0
 		#FIXME Use avg?
 		self.p_raw["temperature_average"] = 0
-		self.p_raw["temperature_min"] = INF
 		self.p_raw["temperature_max"] = INF_MIN
+		self.p_raw["temperature_min"] = INF
 		self.p_raw["timeon"] = 0.0001 #Avoid DIV/0
 		self.p_raw["utc"] = ""
 
@@ -84,17 +84,17 @@ class ride_parameters():
 		self.p_raw["temperature_max_delta"] = 10 #degC
 
 		#Internal units
+		self.p_raw_units["Q"] = ""
 		self.p_raw_units["altitude"] = "m"
-		self.p_raw_units["distance"] = "m"
 		self.p_raw_units["cadence"] = "RPM"
 		self.p_raw_units["climb"] = "m/s"
+		self.p_raw_units["distance"] = "m"
 		self.p_raw_units["dtime"] = "s"
 		self.p_raw_units["gpsfix"] = ""
 		self.p_raw_units["latitude"] = ""
 		self.p_raw_units["longitude"] = ""
 		self.p_raw_units["odometer"] = "m"
 		self.p_raw_units["pressure"] = "Pa"
-		self.p_raw_units["Q"] = ""
 		self.p_raw_units["riderweight"] = "kg"
 		self.p_raw_units["ridetime"] = "s"
 		self.p_raw_units["ridetime_total"] = "s"
@@ -106,11 +106,12 @@ class ride_parameters():
 		self.p_raw_units["timeon"] = "s"
 
 		#Params of the ride ready for rendering.
+		self.params["Q"] = "-"
 		self.params["altitude"] = "-"
-		self.params["altitude_home"] = "-"
 		self.params["altitude_gps"] = "-"
-		self.params["altitude_min"] = "-"
+		self.params["altitude_home"] = "-"
 		self.params["altitude_max"] = "-"
+		self.params["altitude_min"] = "-"
 		self.params["cadence"] = "-"
 		self.params["cadence_average"] = "-"
 		self.params["cadence_max"] = "-"
@@ -123,30 +124,29 @@ class ride_parameters():
 		self.params["longitude"] = "-"
 		self.params["odometer"] = 0.0
 		self.params["pressure"] = "-"
-		self.params["Q"] = "-"
 		self.params["pressure_at_sea_level"] = "-" 
-		self.params["rtc"] = ""
 		self.params["riderweight"] = 0.0
 		self.params["ridetime"] = ""
 		self.params["ridetime_hms"] = ""
 		self.params["ridetime_total"] = ""
 		self.params["ridetime_total_hms"] = ""
+		self.params["rtc"] = ""
 		self.params["satellites"] = "-"
 		self.params["satellitesused"] = "-"
 		self.params["slope"] = "-"
 		self.params["speed"] = "-"
-		self.params["speed_digits"] = "-"
-		self.params["speed_tenths"] = "-"
 		self.params["speed_average"] = "-"
 		self.params["speed_average_digits"] = "-"
 		self.params["speed_average_tenths"] = "-"
+		self.params["speed_digits"] = "-"
 		self.params["speed_max"] = "-"
 		self.params["speed_max_digits"] = "-"
 		self.params["speed_max_tenths"] = "-"
+		self.params["speed_tenths"] = "-"
 		self.params["temperature"] = ""
 		self.params["temperature_average"] = ""
-		self.params["temperature_min"] = ""
 		self.params["temperature_max"] = ""
+		self.params["temperature_min"] = ""
 		self.params["timeon"] = ""
 		self.params["timeon_hms"] = ""
 		self.params["utc"] = ""
@@ -154,20 +154,21 @@ class ride_parameters():
 		#System params
 		self.params["debug_level"] = ""
 		#Editor params
-		self.params["variable_value"] = None
-		self.params["variable_raw_value"] = None
-		self.params["variable_unit"] = None
-		self.params["variable_description"] = None
-		self.params["variable"] = None
 		self.params["editor_index"] = 0
 		self.params["editor_type"] = 0
+		self.params["variable"] = None
+		self.params["variable_description"] = None
+		self.params["variable_raw_value"] = None
+		self.params["variable_unit"] = None
+		self.params["variable_value"] = None
 
 		#Formatting strings for params.
+		self.p_format["Q"] = "%.3f"
 		self.p_format["altitude"] = "%.0f"
-		self.p_format["altitude_home"] = "%.0f"
 		self.p_format["altitude_gps"] = "%.0f"
-		self.p_format["altitude_min"] = "%.0f"
+		self.p_format["altitude_home"] = "%.0f"
 		self.p_format["altitude_max"] = "%.0f"
+		self.p_format["altitude_min"] = "%.0f"
 		self.p_format["cadence"] = "%.0f"
 		self.p_format["cadence_average"] = "%.0f"
 		self.p_format["cadence_max"] = "%.0f"
@@ -180,38 +181,38 @@ class ride_parameters():
 		self.p_format["longitude"] = "%.4f"
 		self.p_format["odometer"] = "%.0f"
 		self.p_format["pressure"] = "%.0f"
-		self.p_format["Q"] = "%.3f"
 		self.p_format["pressure_at_sea_level"] = "%.0f"
 		self.p_format["riderweight"] = "%.1f"
-		self.p_format["rtc"] = ""
 		self.p_format["ridetime"] = "%.0f"
 		self.p_format["ridetime_hms"] = ""
 		self.p_format["ridetime_total"] = ".0f"
 		self.p_format["ridetime_total_hms"] = ""
+		self.p_format["rtc"] = ""
 		self.p_format["satellites"] = "%.0f"
 		self.p_format["satellitesused"] = "%.0f"
 		self.p_format["slope"] = "%.1f"
 		self.p_format["speed"] = "%.1f"
-		self.p_format["speed_digits"] = "%.0f"
-		self.p_format["speed_tenths"] = "%.0f"
 		self.p_format["speed_average"] = "%.1f"
 		self.p_format["speed_average_digits"] = "%.0f"
 		self.p_format["speed_average_tenths"] = "%.0f"
+		self.p_format["speed_digits"] = "%.0f"
 		self.p_format["speed_max"] = "%.1f"
 		self.p_format["speed_max_digits"] = "%.0f"
 		self.p_format["speed_max_tenths"] = "%.0f"
+		self.p_format["speed_tenths"] = "%.0f"
 		self.p_format["temperature"] = "%.0f"
 		self.p_format["temperature_average"] = "%.1f"
-		self.p_format["temperature_min"] = "%.0f"
 		self.p_format["temperature_max"] = "%.0f"
+		self.p_format["temperature_min"] = "%.0f"
 		self.p_format["timeon"] = "%.0f"
 		self.p_format["timeon_hms"] = ""
 		self.p_format["utc"] = ""
 
 		#Units - name has to be identical as in params #FIXME reduce number of units (i.e one for speed)
+		self.units["Q"] = ""
 		self.units["altitude"] = "m"
-		self.units["climb"] = "m/s"
 		self.units["cadence"] = "RPM"
+		self.units["climb"] = "m/s"
 		self.units["distance"] = "km"
 		self.units["dtime"] = "s"
 		self.units["gpsfix"] = ""
@@ -220,7 +221,6 @@ class ride_parameters():
 		self.units["longitude"] = ""
 		self.units["odometer"] = "km"
 		self.units["pressure"] = "hPa"
-		self.units["Q"] = ""
 		self.units["riderweight"] = "kg"
 		self.units["ridetime"] = "s"
 		self.units["ridetime_hms"] = ""
@@ -254,10 +254,10 @@ class ride_parameters():
 		# 0 - unit editor
 		# 1 - number editor
 		#Params that can be changed in Settings by user
+		self.p_editable["Q"] = 1
 		self.p_editable["altitude_home"] = 1
 		self.p_editable["odometer"] = 1 
 		self.p_editable["odometer_units"] = 0
-		self.p_editable["Q"] = 1
 		self.p_editable["riderweight"] = 1
 		self.p_editable["riderweight_units"] = 0
 		self.p_editable["speed_units"] = 0
@@ -265,8 +265,8 @@ class ride_parameters():
 
 		self.p_resettable["distance"] = 1
 		self.p_resettable["odometer"] = 1
-		self.p_resettable["speed_max"] = 1
 		self.p_resettable["ridetime"] = 1
+		self.p_resettable["speed_max"] = 1
 		#Do not record any speed below 2.5 m/s
 		self.speed_gps_low = 2.5
 		self.l.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
