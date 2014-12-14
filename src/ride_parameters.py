@@ -52,6 +52,10 @@ class ride_parameters():
 		self.p_raw["daltitude"] = 0
 		self.p_raw["ddistance"] = 0
 		self.p_raw["distance"] = 0
+		self.p_raw["eps"] = 0
+		self.p_raw["ept"] = 0
+		self.p_raw["epv"] = 0
+		self.p_raw["epx"] = 0
 		self.p_raw["gps_strength"] = 0
 		self.p_raw["gpsfix"] = ""
 		self.p_raw["heartrate"] = 0
@@ -76,6 +80,7 @@ class ride_parameters():
 		self.p_raw["temperature_max"] = INF_MIN
 		self.p_raw["temperature_min"] = INF
 		self.p_raw["timeon"] = 0.0001 #Avoid DIV/0
+		self.p_raw["track"] = 0
 		self.p_raw["utc"] = ""
 
 		#System params
@@ -88,6 +93,10 @@ class ride_parameters():
 		self.p_raw_units["cadence"] = "RPM"
 		self.p_raw_units["climb"] = "m/s"
 		self.p_raw_units["distance"] = "m"
+		self.p_raw_units["eps"] = ""
+		self.p_raw_units["ept"] = ""
+		self.p_raw_units["epv"] = ""
+		self.p_raw_units["epx"] = ""
 		self.p_raw_units["dtime"] = "s"
 		self.p_raw_units["gpsfix"] = ""
 		self.p_raw_units["latitude"] = ""
@@ -103,6 +112,8 @@ class ride_parameters():
 		self.p_raw_units["speed"] = "m/s"
 		self.p_raw_units["temperature"] = degC
 		self.p_raw_units["timeon"] = "s"
+		#FIXME degrees
+		self.p_raw_units["track"] = ""
 
 		#Params of the ride ready for rendering.
 		self.params["Q"] = "-"
@@ -116,6 +127,10 @@ class ride_parameters():
 		self.params["cadence_max"] = "-"
 		self.params["climb"] = "-"
 		self.params["distance"] = 0
+		self.params["eps"] = "-"
+		self.params["ept"] = "-"
+		self.params["epv"] = "-"
+		self.params["epx"] = "-"
 		self.params["dtime"] = 0
 		self.params["gpsfix"] = "-"
 		self.params["heartrate"] = "-"
@@ -148,6 +163,7 @@ class ride_parameters():
 		self.params["temperature_min"] = ""
 		self.params["timeon"] = ""
 		self.params["timeon_hms"] = ""
+		self.params["track"] = "-"
 		self.params["utc"] = ""
 
 		#System params
@@ -173,6 +189,10 @@ class ride_parameters():
 		self.p_format["cadence_max"] = "%.0f"
 		self.p_format["climb"] = "%.1f"
 		self.p_format["distance"] = "%.1f"
+		self.p_format["eps"] = "%.4f"
+		self.p_format["epx"] = "%.4f"
+		self.p_format["epv"] = "%.4f"
+		self.p_format["ept"] = "%.4f"
 		self.p_format["dtime"] = "%.2f"
 		self.p_format["gpsfix"] = ""
 		self.p_format["heartrate"] = "%.0f"
@@ -205,6 +225,7 @@ class ride_parameters():
 		self.p_format["temperature_min"] = "%.0f"
 		self.p_format["timeon"] = "%.0f"
 		self.p_format["timeon_hms"] = ""
+		self.p_format["track"] = "%.1f"
 		self.p_format["utc"] = ""
 
 		#Units - name has to be identical as in params
@@ -213,6 +234,10 @@ class ride_parameters():
 		self.units["cadence"] = "RPM"
 		self.units["climb"] = "m/s"
 		self.units["distance"] = "km"
+		self.units["eps"] = ""
+		self.units["epx"] = ""
+		self.units["epv"] = ""
+		self.units["ept"] = ""
 		self.units["dtime"] = "s"
 		self.units["gpsfix"] = ""
 		self.units["heartrate"] = "BPM"
@@ -232,6 +257,7 @@ class ride_parameters():
 		self.units["temperature"] = degC
 		self.units["timeon"] = "s"
 		self.units["timeon_hms"] = ""
+		self.units["track"] = ""
 
 		#Allowed units - user can switch between those when editing value 
 		self.units_allowed["odometer"] = ["km", "mi"]
@@ -291,14 +317,14 @@ class ride_parameters():
 		ride_log_filename = "log/ride." + strftime("%Y-%m-%d-%H:%M:%S") + ".log"
 		logging.getLogger('ride').setLevel(logging.INFO)
 		ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
-		ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(cadence)-8s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(altitude_gps)-8s,%(distance)-8s,%(slope)-8s,%(climb)-8s'
+		ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(cadence)-8s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(altitude_gps)-8s,%(distance)-8s,%(slope)-8s,%(climb)-8s,%(track)-8s,%(eps)-8s,%(epx)-8s,%(epv)-8s,%(ept)-8s'
 		ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
 		logging.getLogger('ride').addHandler(ride_log_handler)
 		ride_logger = logging.getLogger('ride')
 		ride_logger.info('', extra={'time': "Time", 'dtime': "Delta", 'speed': "Speed",\
 			'cadence': "Cadence", 'heartrate':"Heart RT", 'pressure': "Pressure", 'temperature': "Temp",\
 			'altitude': "Altitude", 'altitude_gps': "Alt GPS", 'distance': "Distance",\
-			'slope': "Slope", 'climb': "Climb"})
+			'slope': "Slope", 'climb': "Climb", 'track': "Track", 'eps': "eps", 'epx': "epx", 'epv': "epv", 'ept': "ept"})
 		return ride_logger
 
 	def stop(self):
@@ -418,6 +444,11 @@ class ride_parameters():
 		self.p_raw["satellites"] = self.clean_value(data[6]);
 		self.p_raw["gpsfix"] = data[7]
 		self.p_raw["climb"] = self.clean_value(data[8]);
+		self.p_raw["track"] = self.clean_value(data[9]);
+		self.p_raw["eps"] = self.clean_value(data[10]);
+		self.p_raw["epx"] = self.clean_value(data[11]);
+		self.p_raw["epv"] = self.clean_value(data[12]);
+		self.p_raw["ept"] = self.clean_value(data[13]);
 
 		gps_str = self.p_raw["satellitesused"] - 3
 		if gps_str < 0:
@@ -521,10 +552,15 @@ class ride_parameters():
 		alg = self.p_raw["altitude_gps"]
 		dst = round(self.p_raw["distance"], 0)
 		clb = self.p_raw["climb"]
+		trk = self.p_raw["track"]
+		eps = self.p_raw["eps"]
+		epx = self.p_raw["epx"]
+		epv = self.p_raw["epv"]
+		ept = self.p_raw["ept"]
 		self.r.info('', extra={'time': tme, 'dtime': dte, 'speed':spd, 'cadence':cde,\
 			 'heartrate':hrt, 'pressure': pre, 'temperature': tem,\
 			'altitude': alt, 'altitude_gps': alg, 'distance': dst,\
-			'slope': slp, 'climb': clb})
+			'slope': slp, 'climb': clb, 'track': trk, 'eps': eps, 'epx': epx, 'epv': epv, 'ept': ept,})
 
 	def strip_end(self, param_name, suffix = None):
 		#Make sure there is no _digits, _tenths, _hms at the end

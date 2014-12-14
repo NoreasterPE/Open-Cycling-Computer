@@ -13,16 +13,16 @@ if __name__ == '__main__':
 			data = gps.get_data()
 			print 'latitude    ' , data[0]
 			print 'longitude   ' , data[1]
-			print 'time utc    ' , gps.data.utc
-			print 'fix time    ' , gps.data.fix.time
+			print 'time utc    ' , data[4]
+			print 'fix time    ' , data[7]
 			print 'altitude (m)' , data[2]
-			print 'eps         ' , gps.data.fix.eps
-			print 'epx         ' , gps.data.fix.epx
-			print 'epv         ' , gps.data.fix.epv
-			print 'ept         ' , gps.data.fix.ept
+			print 'eps         ' , data[10]
+			print 'epx         ' , data[11]
+			print 'epv         ' , data[12]
+			print 'ept         ' , data[13]
 			print 'speed (m/s) ' , data[3]
-			print 'climb       ' , gps.data.fix.climb
-			print 'track       ' , gps.data.fix.track
+			print 'climb       ' , data[8]
+			print 'track       ' , data[9]
 			print 'mode        ' , gps.data.fix.mode
 			print 
 			sat = gps.data.satellites

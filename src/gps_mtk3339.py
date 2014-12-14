@@ -39,6 +39,11 @@ class gps_mtk3339(threading.Thread):
 		self.satellites = 0
 		self.satellitesused = 0
 		self.speed = NaN
+		self.track = NaN
+		self.eps = NaN
+		self.epx = NaN
+		self.epv = NaN
+		self.ept = NaN
 		self.utc = None
 		self.set_time = True
 		self.time_adjustment_delta = 0
@@ -109,8 +114,13 @@ class gps_mtk3339(threading.Thread):
 			self.utc = data.utc
 			self.climb = data.fix.climb
 			self.speed = data.fix.speed
+			self.track = data.fix.track
 			self.altitude = data.fix.altitude
 			self.fix_mode = fix_mode[data.fix.mode]
+			self.eps = data.fix.eps
+			self.epx = data.fix.epx
+			self.epv = data.fix.epv
+			self.ept = data.fix.ept
 			if isinstance(data.fix.time, float):
 				self.fix_time = data.fix.time
 			else:
@@ -151,6 +161,11 @@ class gps_mtk3339(threading.Thread):
 			self.fix_time = NaN
 			self.satellites = 0
 			self.satellitesused = 0
+			self.track = NaN
+			self.eps = NaN
+			self.epx = NaN
+			self.epv = NaN
+			self.ept = NaN
 
 	def get_data(self):
 		return (self.latitude, self.longitude, 	#0, 1
@@ -158,7 +173,9 @@ class gps_mtk3339(threading.Thread):
 			self.utc, 			#4
 			self.satellitesused,		#5
 			self.satellites, self.fix_mode,	#6, 7
-			self.climb)			#8
+			self.climb ,self.track,		#8,9
+			self.eps, self.epx,		#10, 11
+			self.epv, self.ept)		#12, 13
 
 	def __del__(self):
 		self.stop()
