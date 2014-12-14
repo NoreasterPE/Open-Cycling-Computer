@@ -542,10 +542,6 @@ class ride_parameters():
 			self.p_raw["distance"] = 0
 			self.p_raw["ridetime"] = 0
 			
-		#Speed needs special handling due to digit/tenth split
-		#if param_name.startswith("speed"):
-		#	self.update_and_split_speed(param_name)
-
 	def update_param(self, param_name):
 		if param_name in self.p_format:
 			f = self.p_format[param_name]
