@@ -22,6 +22,7 @@ class gps_mtk3339(threading.Thread):
 		self.l = occ.l
 		self.occ = occ
 		self.simulate = simulate
+		self.restart_gps = False
 		if not self.simulate:
 			ser = mtk3339.mt3339("/dev/ttyAMA0")
 			ser.set_baudrate(115200)
@@ -42,22 +43,37 @@ class gps_mtk3339(threading.Thread):
 		self.set_time = True
 		self.time_adjustment_delta = 0
 		if not self.simulate:
-			try:
-				#FIXME Add check for running gpsd. Restart if missing. Consider watchdog thread to start gpsd
-				#FIXME Check how that reacts for missing gps hardware
-				self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
-				self.present = True
-			except:
-				self.l.error("[GPS] Cannot talk to GPS")
-				self.present = False
+			self.gpsd_link_init()
 		else:
 			self.present = True
+
+	def gpsd_link_init(self):
+		try:
+			#FIXME Add check for running gpsd. Restart if missing. Consider watchdog thread to start gpsd
+			#FIXME Check how that reacts for missing gps hardware
+			self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
+			self.present = True
+		except:
+			self.l.error("[GPS] Cannot talk to GPS")
+			self.present = False
+
+	def restart_gpsd(self):
+		command = "service gpsd restart"
+		ret = os.system(command)
+		if ret == 0:
+			self.l.info("[GPS] gpsd restarted succesfully")
+		self.restart_gps = False
+		self.gpsd_link_init()
+		time.sleep(3)
+
 	def run(self):
 		#FIXME split it into functions - lines are too long
 		if self.present:
 			self.running = True
 			if not self.simulate:
 				while self.running:
+					if self.restart_gps:
+						self.restart_gpsd()
 					self.process_gps()
 			else:
 				self.latitude = 52.0001
@@ -81,10 +97,11 @@ class gps_mtk3339(threading.Thread):
 			data = self.data
 			gps_data_available = True
 		except StopIteration:
-			self.l.error("[GPS] StopIteration exception in GPS.")
+			self.l.error("[GPS] StopIteration exception in GPS. Restarting GPS in 10 s")
 			#FIXME Reinit gps after a delay (from RP?) as restarting gpsd doesn't help
 			#so this need to be in the loop as well: self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
-			time.sleep(0.5)
+			time.sleep(10)
+			self.restart_gps = True
 			pass
 		if gps_data_available:
 			self.latitude = data.fix.latitude
