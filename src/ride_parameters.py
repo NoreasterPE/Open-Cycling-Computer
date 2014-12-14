@@ -501,7 +501,14 @@ class ride_parameters():
 		self.update_param("satellitesused")
 		self.update_param("satellites")
 		self.update_param("slope")
+		self.add_ridelog_entry()
+		self.l.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}, cadence {} {}".\
+				format(self.params["speed"], self.params["speed_max"],\
+				self.params["speed_average"], self.units["speed"],\
+				self.params["cadence"], self.units["cadence"]))
 		self.force_refresh()
+
+	def add_ridelog_entry(self):
 		slp = self.params["slope"]
 		hrt = self.params["heartrate"]
 		tme = self.params["timeon_hms"]
@@ -518,11 +525,6 @@ class ride_parameters():
 			 'heartrate':hrt, 'pressure': pre, 'temperature': tem,\
 			'altitude': alt, 'altitude_gps': alg, 'distance': dst,\
 			'slope': slp, 'climb': clb})
-		self.l.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}, cadence {} {}".\
-				format(self.params["speed"], self.params["speed_max"],\
-				self.params["speed_average"], self.units["speed"],\
-				self.params["cadence"], self.units["cadence"]))
-			
 
 	def strip_end(self, param_name, suffix = None):
 		#Make sure there is no _digits, _tenths, _hms at the end
