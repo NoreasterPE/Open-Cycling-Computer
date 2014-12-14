@@ -58,68 +58,7 @@ class gps_mtk3339(threading.Thread):
 			self.running = True
 			if not self.simulate:
 				while self.running:
-					timestamp = time.time()
-					self.l.debug("[GPS] timestamp: {}, running: {},".format(timestamp, self.running))
-					gps_data_available = False
-					try:
-						#FIXME Fails sometimes with ImportError from gps.py - see TODO 21 [IN TESTING]
-						self.data.next()
-						data = self.data
-						gps_data_available = True
-					except StopIteration:
-						self.l.error("[GPS] StopIteration exception in GPS")
-						#FIXME Reinit gps after a delay (from RP?) as restarting gpsd doesn't help
-						#so this need to be in the loop as well: self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
-						time.sleep(0.5)
-						pass
-					if gps_data_available:
-						self.latitude = data.fix.latitude
-						self.longitude = data.fix.longitude
-						self.utc = data.utc
-						self.climb = data.fix.climb
-						self.speed = data.fix.speed
-						self.altitude = data.fix.altitude
-						self.fix_mode = fix_mode[data.fix.mode]
-						if isinstance(data.fix.time, float):
-							self.fix_time = data.fix.time
-						else:
-							#Workaround for python bug
-							#ImportError: Failed to import _strptime because the import lock is held by another thread.
-							try:
-								#self.data.fix.time is a string, so parse it to get the float time value.
-								self.fix_time = time.mktime(time.strptime(data.fix.time, '%Y-%m-%dT%H:%M:%S.%fZ'))
-							except ImportError:
-								self.l.critical("[GPS] self.fix_time {}".format(self.fix_time))
-								pass
-						if self.set_time:
-							if (self.utc is not None):
-								if (len(self.utc) > 5):
-									self.set_system_time()
-						try:
-							sat = self.data.satellites
-							self.satellites = len(sat)
-							self.satellites_used = self.data.satellites_used
-						except AttributeError:
-							self.l.error("[GPS] AttributeError exception in GPS")
-							pass
-						self.l.debug("[GPS] timestamp: {}, fix time: {}, UTC: {}, Satellites: {}, Used: {}"\
-									.format(timestamp, self.fix_time, self.utc, self.satellites,\
-									 self.satellites_used))
-						self.l.debug("[GPS] Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"\
-									.format(self.fix_mode, self.latitude, self.longitude,\
-									self.speed, self.altitude, self.climb))
-					else:
-						self.l.debug("[GPS] Setting null values to GPS params")
-						self.latitude = NaN
-						self.longitude = NaN
-						self.utc = None
-						self.climb = NaN
-						self.speed = NaN
-						self.altitude = NaN
-						self.fix_mode = fix_mode[1]
-						self.fix_time = NaN
-						self.satellites = 0
-						self.satellites_used = 0
+					self.process_gps()
 			else:
 				self.latitude = 52.0001
 				self.longitude = -8.0001
@@ -131,6 +70,70 @@ class gps_mtk3339(threading.Thread):
 				self.satellites_used = 4
 				self.fix_mode = fix_mode[2]
 				time.sleep(1)
+
+	def process_gps(self):
+		timestamp = time.time()
+		self.l.debug("[GPS] timestamp: {}, running: {},".format(timestamp, self.running))
+		gps_data_available = False
+		try:
+			#FIXME Fails sometimes with ImportError from gps.py - see TODO 21 [IN TESTING]
+			self.data.next()
+			data = self.data
+			gps_data_available = True
+		except StopIteration:
+			self.l.error("[GPS] StopIteration exception in GPS.")
+			#FIXME Reinit gps after a delay (from RP?) as restarting gpsd doesn't help
+			#so this need to be in the loop as well: self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
+			time.sleep(0.5)
+			pass
+		if gps_data_available:
+			self.latitude = data.fix.latitude
+			self.longitude = data.fix.longitude
+			self.utc = data.utc
+			self.climb = data.fix.climb
+			self.speed = data.fix.speed
+			self.altitude = data.fix.altitude
+			self.fix_mode = fix_mode[data.fix.mode]
+			if isinstance(data.fix.time, float):
+				self.fix_time = data.fix.time
+			else:
+				#Workaround for python bug
+				#ImportError: Failed to import _strptime because the import lock is held by another thread.
+				try:
+					#self.data.fix.time is a string, so parse it to get the float time value.
+					self.fix_time = time.mktime(time.strptime(data.fix.time, '%Y-%m-%dT%H:%M:%S.%fZ'))
+				except ImportError:
+					self.l.critical("[GPS] self.fix_time {}".format(self.fix_time))
+					pass
+			if self.set_time:
+				if (self.utc is not None):
+					if (len(self.utc) > 5):
+						self.set_system_time()
+			try:
+				sat = self.data.satellites
+				self.satellites = len(sat)
+				self.satellites_used = self.data.satellites_used
+			except AttributeError:
+				self.l.error("[GPS] AttributeError exception in GPS")
+				pass
+			self.l.debug("[GPS] timestamp: {}, fix time: {}, UTC: {}, Satellites: {}, Used: {}"\
+						.format(timestamp, self.fix_time, self.utc, self.satellites,\
+						 self.satellites_used))
+			self.l.debug("[GPS] Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"\
+						.format(self.fix_mode, self.latitude, self.longitude,\
+						self.speed, self.altitude, self.climb))
+		else:
+			self.l.debug("[GPS] Setting null values to GPS params")
+			self.latitude = NaN
+			self.longitude = NaN
+			self.utc = None
+			self.climb = NaN
+			self.speed = NaN
+			self.altitude = NaN
+			self.fix_mode = fix_mode[1]
+			self.fix_time = NaN
+			self.satellites = 0
+			self.satellites_used = 0
 
 	def get_data(self):
 		return (self.latitude, self.longitude, 	#0, 1
