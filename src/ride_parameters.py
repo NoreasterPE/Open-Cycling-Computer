@@ -72,7 +72,6 @@ class ride_parameters():
 		self.p_raw["speed_gps"] = 0
 		self.p_raw["speed_max"] = 0
 		self.p_raw["temperature"] = 0
-		#FIXME Use avg?
 		self.p_raw["temperature_avg"] = 0
 		self.p_raw["temperature_max"] = INF_MIN
 		self.p_raw["temperature_min"] = INF
@@ -208,7 +207,7 @@ class ride_parameters():
 		self.p_format["timeon_hms"] = ""
 		self.p_format["utc"] = ""
 
-		#Units - name has to be identical as in params #FIXME reduce number of units (i.e one for speed)
+		#Units - name has to be identical as in params
 		self.units["Q"] = ""
 		self.units["altitude"] = "m"
 		self.units["cadence"] = "RPM"
