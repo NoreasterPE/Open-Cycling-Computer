@@ -289,7 +289,6 @@ class bmp183(threading.Thread):
 	def kalman_update(self):
 		#Temporary: get Q from RP
 		self.Q = float(self.occ.rp.p_raw["Q"])
-		self.l.error("[BMP] Q = {}".format(self.Q))
 		#FIXME Add detailed commants
 		z = self.pressure_unfiltered
 		# Save previous value
