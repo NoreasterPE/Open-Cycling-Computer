@@ -166,7 +166,6 @@ class gps_mtk3339(threading.Thread):
 	def stop(self):
 		self.running = False
 
-	#FIXME temporary location
 	def set_system_time(self):
 		tt_before = time.time()
 		self.l.error("[GPS] time.time before {}".format(tt_before))
