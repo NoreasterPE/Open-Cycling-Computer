@@ -51,8 +51,7 @@ class ride_parameters():
 		self.p_raw["climb"] = 0
 		self.p_raw["distance"] = 0
 		self.p_raw["ddistance"] = 0
-		#FIXME Name doesn't follow the policy
-		self.p_raw["gps_fix"] = ""
+		self.p_raw["gpsfix"] = ""
 		self.p_raw["gps_strength"] = 0
 		self.p_raw["heartrate"] = 0
 		self.p_raw["latitude"] = 0
@@ -93,7 +92,7 @@ class ride_parameters():
 		self.p_raw_units["cadence"] = "RPM"
 		self.p_raw_units["climb"] = "m/s"
 		self.p_raw_units["dtime"] = "s"
-		self.p_raw_units["gps_fix"] = ""
+		self.p_raw_units["gpsfix"] = ""
 		self.p_raw_units["latitude"] = ""
 		self.p_raw_units["longitude"] = ""
 		self.p_raw_units["odometer"] = "m"
@@ -121,7 +120,7 @@ class ride_parameters():
 		self.params["climb"] = "-"
 		self.params["distance"] = 0
 		self.params["dtime"] = 0
-		self.params["gps_fix"] = "-"
+		self.params["gpsfix"] = "-"
 		self.params["heartrate"] = "-"
 		self.params["latitude"] = "-"
 		self.params["longitude"] = "-"
@@ -178,7 +177,7 @@ class ride_parameters():
 		self.p_format["climb"] = "%.1f"
 		self.p_format["distance"] = "%.1f"
 		self.p_format["dtime"] = "%.2f"
-		self.p_format["gps_fix"] = ""
+		self.p_format["gpsfix"] = ""
 		self.p_format["heartrate"] = "%.0f"
 		self.p_format["latitude"] = "%.4f"
 		self.p_format["longitude"] = "%.4f"
@@ -218,7 +217,7 @@ class ride_parameters():
 		self.units["cadence"] = "RPM"
 		self.units["distance"] = "km"
 		self.units["dtime"] = "s"
-		self.units["gps_fix"] = ""
+		self.units["gpsfix"] = ""
 		self.units["heartrate"] = "BPM"
 		self.units["latitude"] = ""
 		self.units["longitude"] = ""
@@ -421,7 +420,7 @@ class ride_parameters():
 		self.p_raw["utc"] = data[4]
 		self.p_raw["satellites_used"] = self.clean_value(data[5]);
 		self.p_raw["satellites"] = self.clean_value(data[6]);
-		self.p_raw["gps_fix"] = data[7]
+		self.p_raw["gpsfix"] = data[7]
 		self.p_raw["climb"] = self.clean_value(data[8]);
 
 		gps_str = self.p_raw["satellites_used"] - 3
@@ -446,7 +445,7 @@ class ride_parameters():
 		self.split_speed("speed_max")
 
 	def update_gps(self):
-		self.params["gps_fix"] = self.p_raw["gps_fix"]
+		self.params["gpsfix"] = self.p_raw["gpsfix"]
 	
 	def set_max(self, param):
 		self.p_raw[param + "_max"] = max(self.p_raw[param], self.p_raw[param + "_max"])

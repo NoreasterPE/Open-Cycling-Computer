@@ -128,7 +128,7 @@
 		<field function="altitude_gps">
 			<text_center x="60" y="95" size="4"/>
 		</field>
-		<field function="gps_fix">
+		<field function="gpsfix">
 			<text_center x="60" y="130" size="4"/>
 		</field>
 		<field function="time">
