@@ -17,7 +17,7 @@ class ride_parameters():
 		self.r = self.setup_ridelog()
 		self.uc = units()
 		self.l.info("[RP] Initialising GPS")
-		self.gps = gps_mtk3339(occ, simulate)
+		self.gps = gps_mtk3339(simulate)
 		self.l.info("[RP] Initialising bmp183 sensor")
 		self.bmp183_sensor = bmp183(self.occ, simulate)
 		self.bmp183_first_run = True
@@ -357,8 +357,8 @@ class ride_parameters():
 			self.p_raw["ddistance"] = d
 			self.p_raw["distance"] += d
 			self.p_raw["odometer"] += d
-			self.p_raw["ridetime"] += self.p_raw["dtime"]
-			self.p_raw["ridetime_total"] += self.p_raw["dtime"]
+			self.p_raw["ridetime"] += dt
+			self.p_raw["ridetime_total"] += dt
 			self.p_raw["speed_average"] = self.p_raw["distance"] / self.p_raw["ridetime"]
 			self.update_param("speed_average")
 			self.split_speed("speed_average")

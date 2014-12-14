@@ -1,6 +1,7 @@
 #! /usr/bin/python
  
 from gps import *
+import logging
 import mtk3339
 import os
 import serial
@@ -17,10 +18,9 @@ fix_mode = { 0 : "No data",
 class gps_mtk3339(threading.Thread):
 	#Class for gps mtk3339 as sold by Adafruit
 
-	def __init__(self, occ = None, simulate = False):
+	def __init__(self, simulate = False):
 		threading.Thread.__init__(self)
-		self.l = occ.l
-		self.occ = occ
+		self.l = logging.getLogger('system')
 		self.simulate = simulate
 		self.restart_gps = False
 		if not self.simulate:
