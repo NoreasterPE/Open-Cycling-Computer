@@ -19,27 +19,28 @@
 19. [DONE] Add more logging, dump ride params to log?
 20. [DONE] Cut down logging without losing information
 21. [IN TESTING - see MOD[20] Rare error on start
-Exception in thread Thread-1:
-Traceback (most recent call last):
-  File "/usr/lib/python2.7/threading.py", line 552, in __bootstrap_inner
-    self.run()
-  File "/home/pi/OpenCyclingComputer/src/gps_mtk3339.py", line 51, in run
-    self.data.next()
-  File "/usr/lib/python2.7/dist-packages/gps/gps.py", line 311, in next
-    if self.read() == -1:
-  File "/usr/lib/python2.7/dist-packages/gps/gps.py", line 302, in read
-    self.__oldstyle_shim()
-  File "/usr/lib/python2.7/dist-packages/gps/gps.py", line 267, in __oldstyle_shim
-    self.fix.time = isotime(self.utc.encode("ascii"))
-  File "/usr/lib/python2.7/dist-packages/gps/misc.py", line 97, in isotime
-    return calendar.timegm(time.strptime(date, "%Y-%m-%dT%H:%M:%S")) + float("0." + msec)
-ImportError: Failed to import _strptime because the import lockis held by another thread.
-Update: twice same error showed up in my code
+	Exception in thread Thread-1:
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/threading.py", line 552, in __bootstrap_inner
+	    self.run()
+	  File "/home/pi/OpenCyclingComputer/src/gps_mtk3339.py", line 51, in run
+	    self.data.next()
+	  File "/usr/lib/python2.7/dist-packages/gps/gps.py", line 311, in next
+	    if self.read() == -1:
+	  File "/usr/lib/python2.7/dist-packages/gps/gps.py", line 302, in read
+	    self.__oldstyle_shim()
+	  File "/usr/lib/python2.7/dist-packages/gps/gps.py", line 267, in __oldstyle_shim
+	    self.fix.time = isotime(self.utc.encode("ascii"))
+	  File "/usr/lib/python2.7/dist-packages/gps/misc.py", line 97, in isotime
+	    return calendar.timegm(time.strptime(date, "%Y-%m-%dT%H:%M:%S")) + float("0." + msec)
+	ImportError: Failed to import _strptime because the import lockis held by another thread.
+	Update: twice same error showed up in my code
 22. [DONE] Use for exceptions logging: Logger.exception(msg, *args, **kwargs)
 23. [DONE] Add option for easy rendering icons, like a small image that is overlapped on top of background.
 24. [DONE] Units switching for non-editable parameters
 25. [DONE] Saving preferred units to config file
-26. [DONE - text file] Database setup + full ride logging. Or just text file and normal logging? http://bytes.com/topic/python/answers/44055-logging-two-files
+26. [DONE - text file] Database setup + full ride logging. Or just text file and normal logging?
+	http://bytes.com/topic/python/answers/44055-logging-two-files
 27. Review & avoid try/catch. It's too expensive
 28. Speed filtering or max speed will be false sooner or later. Average from 2/3 samples?
 29. [DONE] Read time from GPS when it will be battery powered
@@ -57,17 +58,17 @@ Update: twice same error showed up in my code
 41. [DONE] Icons with different states, i.e. to show gps signal strength
 42. Use sprites to make smooth page switching?
 43. [DONE] Error after stopping gpsd:
-Exception in thread Thread-1:
-Traceback (most recent call last):
-  File "/usr/lib/python2.7/threading.py", line 552, in __bootstrap_inner
-    self.run()
-  File "/home/pi/OpenCyclingComputer/src/gps_mtk3339.py", line 112, in run
-    self.fix_mode = fix_mode[0]
-KeyError: 0
+	Exception in thread Thread-1:
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/threading.py", line 552, in __bootstrap_inner
+	    self.run()
+	  File "/home/pi/OpenCyclingComputer/src/gps_mtk3339.py", line 112, in run
+	    self.fix_mode = fix_mode[0]
+	KeyError: 0
 44. [DONE] Setting time from gps is breaking distance calculations. (time shift * speed is added to distance). Record time shift and make correction?
 45. [TESTING] Replace speed_gps_noise with hardware option
 46. [DONE] Remove oversampling of pressure when Kalman filter is in place
 47. Click to switch value i.e. click on temperature to cycle over min/average/max
-48. Ridetime, ridetime_total, odometer  are affected by time shift
+48. [TESTING] Ridetime, ridetime_total, odometer  are affected by time shift
 49. [DONE] Altitude goes crazy in simulation mode and stabilises on 2052m
 50. [DONE] GPS doesn't come back after gpsd restart
