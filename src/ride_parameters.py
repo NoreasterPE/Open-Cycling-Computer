@@ -296,12 +296,12 @@ class ride_parameters():
 		ride_log_filename = "log/ride." + strftime("%Y-%m-%d-%H:%M:%S") + ".log"
 		logging.getLogger('ride').setLevel(logging.INFO)
 		ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
-		ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(altitude_gps)-8s,%(distance)-8s,%(slope)-8s,%(climb)-8s'
+		ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(cadence)-8s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(altitude_gps)-8s,%(distance)-8s,%(slope)-8s,%(climb)-8s'
 		ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
 		logging.getLogger('ride').addHandler(ride_log_handler)
 		ride_logger = logging.getLogger('ride')
 		ride_logger.info('', extra={'time': "Time", 'dtime': "Delta", 'speed': "Speed",\
-			'pressure': "Pressure", 'temperature': "Temp",\
+			'cadence': "Cadence", 'heartrate':"Heart RT", 'pressure': "Pressure", 'temperature': "Temp",\
 			'altitude': "Altitude", 'altitude_gps': "Alt GPS", 'distance': "Distance",\
 			'slope': "Slope", 'climb': "Climb"})
 		return ride_logger
@@ -507,8 +507,10 @@ class ride_parameters():
 		self.update_param("slope")
 		self.force_refresh()
 		slp = self.params["slope"]
+		hrt = self.params["heart_rate"]
 		tme = self.params["timeon_hms"]
 		spd = self.params["speed"]
+		cde = self.params["cadence"]
 		dte = self.params["dtime"]
 		pre = round(self.p_raw["pressure"], 1)
 		tem = self.p_raw["temperature"]
@@ -516,8 +518,8 @@ class ride_parameters():
 		alg = self.p_raw["altitude_gps"]
 		dst = round(self.p_raw["distance"], 0)
 		clb = self.p_raw["climb"]
-		self.r.info('', extra={'time': tme, 'dtime': dte, 'speed':spd,\
-			'pressure': pre, 'temperature': tem,\
+		self.r.info('', extra={'time': tme, 'dtime': dte, 'speed':spd, 'cadence':cde,\
+			 'heartrate':hrt, 'pressure': pre, 'temperature': tem,\
 			'altitude': alt, 'altitude_gps': alg, 'distance': dst,\
 			'slope': slp, 'climb': clb})
 		self.l.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}, cadence {} {}".\
