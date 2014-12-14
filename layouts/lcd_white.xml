@@ -11,11 +11,11 @@
 		<field function="speed_units">
 			<text_center x="205" y="75" size="2"/>
 		</field>
-		<field function="heart_rate">
+		<field function="heartrate">
 			<button x0="0" y0="80" w="239" h="89"></button>
 			<text_center x="100" y="195" size="8"/>
 		</field>
-		<field function="heart_rate_units">
+		<field function="heartrate_units">
 			<text_center x="210" y="195" size="2"/>
 		</field>
 		<field function="cadence">

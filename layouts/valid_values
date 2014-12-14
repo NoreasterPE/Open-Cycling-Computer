@@ -9,7 +9,7 @@ cadence			- not implemented yet (simulation)
 date			- current date
 distance
 slope			- gradient of the road
-heart_rate
+heartrate
 latitude		- latitude as reported by gps unit
 longitude		- longitude as reported by gps unit
 odometer		- total distance, editable

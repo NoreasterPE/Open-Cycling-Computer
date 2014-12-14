@@ -54,7 +54,7 @@ class ride_parameters():
 		#FIXME Name doesn't follow the policy
 		self.p_raw["gps_fix"] = ""
 		self.p_raw["gps_strength"] = 0
-		self.p_raw["heart_rate"] = 0
+		self.p_raw["heartrate"] = 0
 		self.p_raw["latitude"] = 0
 		self.p_raw["longitude"] = 0
 		self.p_raw["odometer"] = 0
@@ -122,7 +122,7 @@ class ride_parameters():
 		self.params["distance"] = 0
 		self.params["dtime"] = 0
 		self.params["gps_fix"] = "-"
-		self.params["heart_rate"] = "-"
+		self.params["heartrate"] = "-"
 		self.params["latitude"] = "-"
 		self.params["longitude"] = "-"
 		self.params["odometer"] = 0.0
@@ -179,7 +179,7 @@ class ride_parameters():
 		self.p_format["distance"] = "%.1f"
 		self.p_format["dtime"] = "%.2f"
 		self.p_format["gps_fix"] = ""
-		self.p_format["heart_rate"] = "%.0f"
+		self.p_format["heartrate"] = "%.0f"
 		self.p_format["latitude"] = "%.4f"
 		self.p_format["longitude"] = "%.4f"
 		self.p_format["odometer"] = "%.0f"
@@ -219,7 +219,7 @@ class ride_parameters():
 		self.units["distance"] = "km"
 		self.units["dtime"] = "s"
 		self.units["gps_fix"] = ""
-		self.units["heart_rate"] = "BPM"
+		self.units["heartrate"] = "BPM"
 		self.units["latitude"] = ""
 		self.units["longitude"] = ""
 		self.units["odometer"] = "km"
@@ -507,7 +507,7 @@ class ride_parameters():
 		self.update_param("slope")
 		self.force_refresh()
 		slp = self.params["slope"]
-		hrt = self.params["heart_rate"]
+		hrt = self.params["heartrate"]
 		tme = self.params["timeon_hms"]
 		spd = self.params["speed"]
 		cde = self.params["cadence"]
