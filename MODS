@@ -150,4 +150,4 @@ changed to:
                 print "ImportError on calendar.timegm. Will try again {} in 1s".format(i)
                 time.sleep(1)
                 i += 1
-
+21. sudo apt-get install i2c-tools
