@@ -151,3 +151,14 @@ changed to:
                 time.sleep(1)
                 i += 1
 21. sudo apt-get install i2c-tools
+22. Add i2c-dev to /etc/modules
+23. Install RPi from source and modify file cpuinfo.c:
+            (strcmp(revision, "000e") == 0) ||
+            (strcmp(revision, "000f") == 0))
+      return 2;  // revision 2
+   else if (strcmp(revision, "0011") == 0) ||
+           (strcmp(revision, "0012") == 0)} #Added
+      return 0;  // compute module
+   else   // assume B+ (0010) or A+ (0012)
+      return 3;
+
