@@ -161,4 +161,6 @@ changed to:
       return 0;  // compute module
    else   // assume B+ (0010) or A+ (0012)
       return 3;
-
+24. sudo apt-get install python-smbus
+	sudo chmod 666 /sys/module/i2c_bcm2708/parameters/combined
+	sudo echo -n 1 > /sys/module/i2c_bcm2708/parameters/combined
