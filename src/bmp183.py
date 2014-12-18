@@ -271,7 +271,7 @@ class bmp183(threading.Thread):
 		#FIXME that will depend on max descend/ascend speed.  calculate from max +/- 1.5m/s
 		# R makes no difference, R/Q is what matters
 		# P and K are self tuning
-		self.Q = 0.04
+		self.Q = 0.02
 		#self.Q = 0.08
 		# First estimate
 		self.pressure_estimate = self.pressure_unfiltered
