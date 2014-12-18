@@ -164,3 +164,17 @@ changed to:
 24. sudo apt-get install python-smbus
 	sudo chmod 666 /sys/module/i2c_bcm2708/parameters/combined
 	sudo echo -n 1 > /sys/module/i2c_bcm2708/parameters/combined
+
+xiTemporarly added to /etc/rc.local:
+
+if [ "$_IP" ]; then
+  printf "My IP address is %s\n" "$_IP"
+fi
+
+#Set up i2c - TEMPORARY FIX
+chmod 666 /sys/module/i2c_bcm2708/parameters/combined
+echo -n 1 > /sys/module/i2c_bcm2708/parameters/combined
+
+cd /home/pi/OpenCyclingComputer
+python src/occ.py &
+
