@@ -50,7 +50,9 @@ class ride_parameters():
 		self.p_raw["cadence_max"] = INF_MIN
 		self.p_raw["climb"] = 0
 		self.p_raw["daltitude"] = 0
+		self.p_raw["daltitude_cumulative"] = 0
 		self.p_raw["ddistance"] = 0
+		self.p_raw["ddistance_cumulative"] = 0
 		self.p_raw["distance"] = 0
 		self.p_raw["eps"] = 0
 		self.p_raw["ept"] = 0
@@ -353,15 +355,18 @@ class ride_parameters():
 		self.read_bmp183_data()
 		self.calculate_altitude()
 		self.calculate_time_related_parameters()
-		if self.p_raw["ddistance"] != 0:
-			slope = self.p_raw["daltitude"] / self.p_raw["ddistance"]
-			self.l.debug("[RP] daltitude: {} ddistance: {}".format(self.p_raw["daltitude"], self.p_raw["ddistance"]))
-			if abs(slope) == 0:
-				slope = 0
-		else:
-			slope = 0
-		self.p_raw["slope"] = slope
-		self.l.debug("[RP] slope: {}".format(slope))
+		self.p_raw["daltitude_cumulative"] += self.p_raw["daltitude"]
+		self.p_raw["ddistance_cumulative"] += self.p_raw["ddistance"]
+		if self.p_raw["ddistance_cumulative"] == 0:
+			self.p_raw["slope"] = 0
+		# FIXME make proper param for tunnig. Calculate slope if the distance delta was grater than 8,4m
+		elif self.p_raw["ddistance_cumulative"] > 8.4:
+			self.p_raw["slope"] = self.p_raw["daltitude_cumulative"] / self.p_raw["ddistance_cumulative"]
+			self.l.debug("[RP] daltitude_cumulative: {} ddistance_cumulative: {}".\
+				format(self.p_raw["daltitude_cumulative"], self.p_raw["ddistance_cumulative"]))
+			self.p_raw["daltitude_cumulative"] = 0
+			self.p_raw["ddistance_cumulative"] = 0
+		self.l.debug("[RP] slope: {}".format(self.p_raw["slope"]))
 		self.update_params()
 
 	def calculate_time_related_parameters(self):
