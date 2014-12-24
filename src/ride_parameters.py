@@ -211,7 +211,7 @@ class ride_parameters():
 		self.p_format["rtc"] = ""
 		self.p_format["satellites"] = "%.0f"
 		self.p_format["satellitesused"] = "%.0f"
-		self.p_format["slope"] = "%.1f"
+		self.p_format["slope"] = "%.0f"
 		self.p_format["speed"] = "%.1f"
 		self.p_format["speed_avg"] = "%.1f"
 		self.p_format["speed_avg_digits"] = "%.0f"
