@@ -1,0 +1,14 @@
+<config>
+  <log_level>ERROR</log_level>
+  <layout_path>layouts/default.xml</layout_path>
+  <riderweight>80.0</riderweight>
+  <riderweight_units>kg</riderweight_units>
+  <altitude_home>0.0</altitude_home>
+  <altitude_home_units>m</altitude_home_units>
+  <odometer>0.0</odometer>
+  <odometer_units>km</odometer_units>
+  <ridetime_total>0.0</ridetime_total>
+  <speed_max>0.0</speed_max>
+  <speed_units>km/h</speed_units>
+  <temperature_units>°C</temperature_units>
+</config>

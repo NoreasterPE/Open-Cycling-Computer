@@ -1,0 +1,180 @@
+1. /boot/commandline added for splashscreen:
+quiet
+
+modified for PiTFT in portrait mode:
+fbtft_device.rotate=0
+
+2. added file for splashscreen made executable using "sudo chmod a+x /etc/init.d/asplashscreen":
+/etc/init.d/asplashscreen
+
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          asplashscreen
+# Required-Start:
+# Required-Stop:
+# Should-Start:      
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Show custom splashscreen
+# Description:       Show custom splashscreen
+### END INIT INFO
+
+do_start () {
+
+    omxplayer /ect/occ/occ_splashscreen.mp4 &  
+    exit 0
+}
+
+case "$1" in
+  start|"")
+    do_start
+    ;;
+  restart|reload|force-reload)
+    echo "Error: argument '$1' not supported" >&2
+    exit 3
+    ;;
+  stop)
+    # No-op
+    ;;
+  status)
+    exit 0
+    ;;
+  *)
+    echo "Usage: asplashscreen [start|stop]" >&2
+    exit 3
+    ;;
+esac
+
+:
+
+3. added service:
+sudo insserv /etc/init.d/asplashscreen
+
+4. Added splashscreen video:
+/etc/occ/occ_splashscreen.mp4: ISO Media, MPEG v4 system, version 1
+
+  Duration: 00:00:20.13, start: 0.000000, bitrate: 209 kb/s
+    Stream #0:0(und): Video: h264 (High) (avc1 / 0x31637661), yuv420p, 240x320 [SAR 1:1 DAR 3:4], 11 kb/s, 19.98 fps, 19.98 tbr, 20k tbn, 39.96 tbc (default)
+
+5. Install mplayer
+6. Add fbcp and make /etc/init.d/asplashscreen use it. fbcp: https://github.com/tasanakorn/rpi-fbcp
+
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          asplashscreen
+# Required-Start:
+# Required-Stop:
+# Should-Start:      
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Show custom splashscreen
+# Description:       Show custom splashscreen
+### END INIT INFO
+
+do_start () {
+	/usr/bin/occ_splashscreen &
+	exit 0
+}
+
+case "$1" in
+  start|"")
+    do_start
+    ;;
+  restart|reload|force-reload)
+    echo "Error: argument '$1' not supported" >&2
+    exit 3
+    ;;
+  stop)
+    # No-op
+    ;;
+  status)
+    exit 0
+    ;;
+  *)
+    echo "Usage: asplashscreen [start|stop]" >&2
+    exit 3
+    ;;
+esac
+
+:
+
+
+7. Add service to runlevel 2 
+cd /etc/rc2.d
+sudo ln -s ../init.d/asplashscreen S01asplashscreen
+
+8. sudo apt-get remove wolfram-engine
+9. Install font Segment14 in ~/.fonts
+http://openfontlibrary.org/en/font/segment14#Segment14-Regular
+10. Calibrated touchscreen using 
+sudo TSLIB_FBDEVICE=/dev/fb1 TSLIB_TSDEVICE=/dev/input/touchscreen ts_calibrate
+
+and test using:
+sudo TSLIB_FBDEVICE=/dev/fb1 TSLIB_TSDEVICE=/dev/input/touchscreen ts_test
+
+10. sudo apt-get install python3-lxml
+
+
+11. sudo apt-get install minicom
+
+12. Remove tty from /boot/cmdline.txt
+13. Comment out serial console from /etc/inittab
+14. sudo apt-get install gpsd gpsd-clients python-gps
+
+15. Reconfigure gpsd config file to run gpsd by default
+16. sudo apt-get install python3-tz
+17. Install tzwhere for python from https://github.com/pegler/pytzwhere
+18. sudo apt-get install python-quantities
+19. add to etc/rc.local:
+fi
+
++cd /home/pi/OpenCyclingComputer
++python src/occ.py
+
+exit 0
+
+20. Modify file /usr/lib/python2.7/dist-packages/gps/misc.py as fix to TODO[21]
+        # Note: no leap-second correction! 
+	return calendar.timegm(time.strptime(date, "%Y-%m-%dT%H:%M:%S")) + float("0." + msec)
+
+changed to:
+
+        # Note: no leap-second correction! 
+        #WORKAROUND FOR IMPORTERROR
+        running = True
+        i = 0
+        while running
+        try:
+                return calendar.timegm(time.strptime(date, "%Y-%m-%dT%H:%M:%S")) + float("0." + msec)
+        except ImportError:
+                print "ImportError on calendar.timegm. Will try again {} in 1s".format(i)
+                time.sleep(1)
+                i += 1
+21. sudo apt-get install i2c-tools
+22. Add i2c-dev to /etc/modules
+23. Install RPi from source and modify file cpuinfo.c:
+            (strcmp(revision, "000e") == 0) ||
+            (strcmp(revision, "000f") == 0))
+      return 2;  // revision 2
+   else if (strcmp(revision, "0011") == 0) ||
+           (strcmp(revision, "0012") == 0)} #Added
+      return 0;  // compute module
+   else   // assume B+ (0010) or A+ (0012)
+      return 3;
+24. sudo apt-get install python-smbus
+	sudo chmod 666 /sys/module/i2c_bcm2708/parameters/combined
+	sudo echo -n 1 > /sys/module/i2c_bcm2708/parameters/combined
+
+xiTemporarly added to /etc/rc.local:
+
+if [ "$_IP" ]; then
+  printf "My IP address is %s\n" "$_IP"
+fi
+
+#Set up i2c - TEMPORARY FIX
+chmod 666 /sys/module/i2c_bcm2708/parameters/combined
+echo -n 1 > /sys/module/i2c_bcm2708/parameters/combined
+
+cd /home/pi/OpenCyclingComputer
+python src/occ.py &
+

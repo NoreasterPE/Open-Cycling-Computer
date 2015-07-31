@@ -1,0 +1,37 @@
+Each layout has to contain at least 3 pages: page_0 (main page), editor and settings. Use default.xml as a template.
+FIXME - list needs updating
+Valid function names for use in layout files:
+
+altitude		- current altitude in meters, calculated from pressure
+altitude_home		- home altitude
+altitude_gps		- altitude as reported by gps unit
+cadence			- not implemented yet (simulation)
+date			- current date
+distance
+slope			- gradient of the road
+heartrate
+latitude		- latitude as reported by gps unit
+longitude		- longitude as reported by gps unit
+odometer		- total distance, editable
+pressure		- current atmospheric pressure measured by hardware (currently BMP183 sensor)
+pressure_at_sea_level	- sea level pressure calculated from pressure and given altitude. It's a value fixed at start or updated after user edit
+riderweight		- weight of rider
+rtc			- combined date + time 
+satellites
+satellites_used
+satellites_visible
+speed			- speed, to be calculated using Kalman filter from gps + wheel sensor - not implemented yet (fixed value)
+speed_gps		- speed, reported by gps
+speed_tenths 		- first decimal place of speed
+time			- current time
+utc			- utc time as reported by gps unit
+
+Units:
+Each parameter from above list has to have an unit defined. The name has to be the same as parameter name + _unit
+i.e for speed is is speed_unit.
+
+Functions:
+FIXME - udate list of functions
+halt			- halts the system
+quit			- quits occ
+reboot			- reboots the system
