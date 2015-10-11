@@ -16,6 +16,8 @@ but it is highly experimental!
 Some info about the code can be found here:
 http://blog.firszt.eu/index.php?tag/OpenCyclingComputer
 
+Future main page of the Open Cycling Computer: http://opencyclingcomputer.eu
+
 ![DEMO 1](https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/code/demo_screenshoots/demo_1.png?raw=true)
 ![DEMO 2](https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/code/demo_screenshoots/demo_2.png?raw=true)
 ![DEMO 3](https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/code/demo_screenshoots/demo_3.png?raw=true)
