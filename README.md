@@ -13,6 +13,9 @@ sudo python src/occ.py
 ```
 but it is highly experimental!
 
+Drag screen left-right to switch view, drag down to access Options.
+Dragging left-right from Oprions switches to User Preferences
+
 Some info about the code can be found here:
 http://blog.firszt.eu/index.php?tag/OpenCyclingComputer
 
