@@ -328,7 +328,6 @@ class layout():
                              "halt": self.halt,
                              "load_default_layout": self.load_default_layout,
                              "load_current_layout": self.load_current_layout,
-                             "load_white_lcd_layout": self.load_lcd_white_layout,
                              "next_page": self.next_page,
                              "prev_page": self.prev_page,
                              "reboot": self.reboot,
@@ -503,9 +502,6 @@ class layout():
 
         def load_current_layout(self):
                 self.load_layout_by_name("current.xml")
-
-        def load_lcd_white_layout(self):
-                self.load_layout_by_name("lcd_white.xml")
 
         def load_default_layout(self):
                 self.load_layout_by_name("default.xml")

@@ -166,9 +166,9 @@
 			<button x0="0" y0="79" w="240" h="80"/>
 			<text_center x="120" y="120" size="2">Load default layout</text_center>
 		</field>
-		<field function="load_white_lcd_layout">
+		<field function="SPACE_HOLDER">
 			<button x0="0" y0="159" w="240" h="80"/>
-			<text_center x="120" y="200" size="2">White LCD</text_center>
+			<text_center x="120" y="200" size="2">SPACE HOLDER</text_center>
 		</field>
 		<field function="debug_level">
 			<button x0="0" y0="239" w="240" h="80"/>
