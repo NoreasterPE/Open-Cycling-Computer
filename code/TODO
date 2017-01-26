@@ -9,3 +9,4 @@
 42. Use sprites to make smooth page switching?
 47. Click to switch value i.e. click on temperature to cycle over min/average/max
 51. Add backlight control
+52. Add easy option to finish simulation on non RPI hardware
