@@ -224,7 +224,7 @@ class open_cycling_computer():
                                 self.layout.check_click(self.pressed_pos, 5)
                                 self.reset_motion()
 
-        def event_handeler(self, event, time_now):
+        def event_handler(self, event, time_now):
                 if event.type == pygame.QUIT:
                         self.running = False
                         self.l.debug("[OCC] QUIT {}".format(time_now))
@@ -270,7 +270,9 @@ class open_cycling_computer():
                 while self.running:
                         for event in self.event_iterator():
                                 time_now = pygame.time.get_ticks()
-                                self.event_handeler(event, time_now)
+                                self.event_handler(event, time_now)
+                                if not self.running:
+                                        break
                                 if self.refresh:
                                         self.refresh = False
                                         self.layout.layout_changed = 0
