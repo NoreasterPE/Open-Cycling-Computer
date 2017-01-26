@@ -1,4 +1,3 @@
-import RPi.GPIO as GPIO
 import logging
 import time
 import numpy
@@ -116,6 +115,7 @@ class bmp183(threading.Thread):
                 self.stop()
 
         def set_up_gpio(self):
+                import RPi.GPIO as GPIO
                 self.l.debug("[BMP] set_up_gpio")
                 # GPIO initialisation
                 GPIO.setmode(GPIO.BOARD)
@@ -125,6 +125,7 @@ class bmp183(threading.Thread):
                 GPIO.setup(self.SDO, GPIO.IN)
 
         def cleanup_gpio(self):
+                import RPi.GPIO as GPIO
                 self.l.debug("[BMP] cleanup_gpio")
                 GPIO.cleanup(self.SCK)
                 GPIO.cleanup(self.CS)
@@ -146,6 +147,7 @@ class bmp183(threading.Thread):
                 self.spi_transfer(addr, value, 0, 8)
 
         def spi_transfer(self, addr, value, rw, length):
+                import RPi.GPIO as GPIO
                 # Bit banging at address "addr", "rw" indicates READ (1) or WRITE (1) operation
                 ret_value = 0
                 if (rw == 0):
