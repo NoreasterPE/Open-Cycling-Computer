@@ -158,34 +158,6 @@
 		</field>
 	</page>
 	<page name="Settings 0" id="settings_0" background="images/occ_settings_0_background.png" buttons="images/occ_settings_0_buttons.png" font="" fg_colour="FFFFFF">
-		<field function="load_current_layout">
-			<button x0="0" y0="0" w="240" h="80"/>
-			<text_center x="120" y="40" size="2">Load current layout</text_center>
-		</field>
-		<field function="load_default_layout">
-			<button x0="0" y0="79" w="240" h="80"/>
-			<text_center x="120" y="120" size="2">Load default layout</text_center>
-		</field>
-		<field function="quit">
-			<button x0="0" y0="159" w="240" h="80"/>
-			<text_center x="120" y="200" size="2">QUIT!</text_center>
-		</field>
-		<field function="debug_level">
-			<button x0="0" y0="239" w="240" h="80"/>
-			<text_center x="120" y="280" size="2"></text_center>
-		</field>
-	</page>
-	<page name="Settings 1" id="settings_1" background="images/occ_settings_1_background.png" buttons="images/occ_settings_1_buttons.png" font="" fg_colour="FFFFFF">
-		<field function="halt">
-			<button x0="0" y0="0" w="240" h="80"/>
-			<text_center x="120" y="40" size="2">Halt</text_center>
-		</field>
-		<field function="reboot">
-			<button x0="0" y0="79" w="240" h="80"/>
-			<text_center x="120" y="120" size="2">Reboot</text_center>
-		</field>
-	</page>
-	<page name="Settings 2" id="settings_2" background="images/occ_settings_2_background.png" buttons="images/occ_settings_2_buttons.png" font="" fg_colour="FFFFFF">
 		<field function="text1">
 			<text_center x="60" y="15" size="2">Rider weight</text_center>
 		</field>
@@ -226,6 +198,34 @@
 		<field function="Q">
 			<button x0="0" y0="160" w="120" h="80"/>
 			<text_center x="60" y="210" size="4"></text_center>
+		</field>
+	</page>
+	<page name="Settings 1" id="settings_1" background="images/occ_settings_1_background.png" buttons="images/occ_settings_1_buttons.png" font="" fg_colour="FFFFFF">
+		<field function="halt">
+			<button x0="0" y0="0" w="240" h="80"/>
+			<text_center x="120" y="40" size="2">Halt</text_center>
+		</field>
+		<field function="reboot">
+			<button x0="0" y0="79" w="240" h="80"/>
+			<text_center x="120" y="120" size="2">Reboot</text_center>
+		</field>
+	</page>
+	<page name="Settings 2" id="settings_2" background="images/occ_settings_2_background.png" buttons="images/occ_settings_2_buttons.png" font="" fg_colour="FFFFFF">
+		<field function="load_current_layout">
+			<button x0="0" y0="0" w="240" h="80"/>
+			<text_center x="120" y="40" size="2">Load current layout</text_center>
+		</field>
+		<field function="load_default_layout">
+			<button x0="0" y0="79" w="240" h="80"/>
+			<text_center x="120" y="120" size="2">Load default layout</text_center>
+		</field>
+		<field function="quit">
+			<button x0="0" y0="159" w="240" h="80"/>
+			<text_center x="120" y="200" size="2">QUIT!</text_center>
+		</field>
+		<field function="debug_level">
+			<button x0="0" y0="239" w="240" h="80"/>
+			<text_center x="120" y="280" size="2"></text_center>
 		</field>
 	</page>
 	<page name="Editor Units" id="editor_units" background="images/occ_editor_background.png" buttons="images/occ_editor_buttons.png" font="" fg_colour="FFFFFF">
