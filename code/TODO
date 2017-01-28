@@ -10,3 +10,4 @@
 47. Click to switch value i.e. click on temperature to cycle over min/average/max
 51. Add backlight control
 52. Add easy option to finish simulation on non RPI hardware
+53. Is it possible to read date/time from GPS chip with no fix or a separate clock is needed?
