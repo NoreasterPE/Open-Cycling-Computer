@@ -263,6 +263,8 @@ class ride_parameters():
                 self.units["track"] = ""
 
                 #Allowed units - user can switch between those when editing value
+                # FIXME switch to mi when mi/h are set for speed
+                # FIXME switch to mi/h when mi are set for odometer
                 self.units_allowed["odometer"] = ["km", "mi"]
                 self.units_allowed["riderweight"] = ["kg", "st", "lb"]
                 #self.units_allowed["slope"] = ["%", degC]
@@ -681,6 +683,8 @@ class ride_parameters():
                 self.update_param("temperature_max")
 
         def calculate_cadence(self):
+                # FIXME - this is cadence simulation. Real timestamp should come from a sensor.
+                # If sensor provides direct value there will be no need for calculation.
                 self.cadence_timestamp = time.time()
                 if self.cadence_timestamp_old is not None:
                         dt = self.cadence_timestamp - self.cadence_timestamp_old
