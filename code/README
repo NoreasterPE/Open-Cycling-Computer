@@ -1,7 +1,7 @@
 Run the code with:
 
-sudo python src/occ.py
+python src/occ.py
 
-I take no responsibility for anything, but it should be failry safe.
+I take no responsibility for anything, but it should be fairly safe.
 
 Try to drag screen sidewise to switch views or down for settings. Drag sidewise in Settings to access User Preferences screen. 
