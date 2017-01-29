@@ -683,8 +683,6 @@ class ride_parameters():
                 self.update_param("temperature_max")
 
         def calculate_cadence(self):
-                # FIXME - this is cadence simulation. Real timestamp should come from a sensor.
-                # If sensor provides direct value there will be no need for calculation.
                 self.cadence_timestamp = time.time()
                 if self.cadence_timestamp_old is not None:
                         dt = self.cadence_timestamp - self.cadence_timestamp_old

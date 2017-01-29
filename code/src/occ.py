@@ -27,12 +27,12 @@ SWIPE_LENGTH = 30  # pixels of swipe
 
 EV_UPDATE_VALUES = USEREVENT + 1
 EV_SAVE_CONFIG = USEREVENT + 2
-#FIXME To be removed when bluetooth sensor goes live
+#FIXME Cadence simulation to be removed when bluetooth sensor goes live
 EV_CADENCE_EMUL = USEREVENT + 3
 
 REFRESH_TIME = 1000
 CONFIG_SAVE_TIME = 15000
-#FIXME To be removed when bluetooth sensor goes live
+#FIXME Cadence simulation to be removed when bluetooth sensor goes live
 CADENCE_EMUL = 650
 
 
