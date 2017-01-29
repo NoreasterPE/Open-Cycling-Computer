@@ -209,6 +209,10 @@
 			<button x0="0" y0="79" w="240" h="80"/>
 			<text_center x="120" y="120" size="2">Reboot</text_center>
 		</field>
+		<field function="quit">
+			<button x0="0" y0="159" w="240" h="80"/>
+			<text_center x="120" y="200" size="2">Quit</text_center>
+		</field>
 	</page>
 	<page name="Settings 2" id="settings_2" background="images/occ_settings_2_background.png" buttons="images/occ_settings_2_buttons.png" font="" fg_colour="FFFFFF">
 		<field function="load_current_layout">
@@ -219,9 +223,9 @@
 			<button x0="0" y0="79" w="240" h="80"/>
 			<text_center x="120" y="120" size="2">Load default layout</text_center>
 		</field>
-		<field function="quit">
+		<field function="">
 			<button x0="0" y0="159" w="240" h="80"/>
-			<text_center x="120" y="200" size="2">QUIT!</text_center>
+			<text_center x="120" y="200" size="2"></text_center>
 		</field>
 		<field function="debug_level">
 			<button x0="0" y0="239" w="240" h="80"/>
