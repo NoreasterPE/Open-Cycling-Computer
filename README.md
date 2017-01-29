@@ -9,7 +9,7 @@ https://github.com/adafruit/Adafruit-PiTFT-2.8-inch-Display-PCB
 Code can be run with
 ```
 cd code
-sudo python src/occ.py
+python src/occ.py
 ```
 but it is highly experimental!
 
