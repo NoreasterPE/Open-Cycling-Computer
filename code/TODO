@@ -11,3 +11,16 @@
 51. Add backlight control
 52. Add easy option to finish simulation on non RPI hardware
 53. Is it possible to read date/time from GPS chip with no fix or a separate clock is needed?
+54. Crash on rider weight unit change when there is a leading zero - remove leading zero immediately when not needed?
+$ python src/occ.py
+Exception in thread Thread-3:
+Traceback (most recent call last):
+  File "/usr/lib64/python2.7/threading.py", line 804, in __bootstrap_inner
+    self.run()
+  File "/home/przemo/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/rendering.py", line 23, in run
+    self.layout.render_page()
+  File "/home/przemo/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 158, in render_page
+    self.render(self.screen)
+  File "/home/przemo/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 227, in render
+    rv2 = uv[i]
+IndexError: string index out of range
