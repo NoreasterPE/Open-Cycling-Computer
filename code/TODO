@@ -24,3 +24,20 @@ Traceback (most recent call last):
   File "/home/przemo/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 227, in render
     rv2 = uv[i]
 IndexError: string index out of range
+55. Crash when no config/config.xml file
+[DEBUG] [OCC] Reading config. Path = config/config.xml
+[DEBUG] [OCC][F] read_config
+[ERROR] [OCC] I/O Error when trying to parse config file. Falling back to default config
+Traceback (most recent call last):
+  File "src/occ.py", line 101, in read_config
+    config_tree = eltree.parse(self.config_path)
+  File "src/lxml/lxml.etree.pyx", line 3310, in lxml.etree.parse (src/lxml/lxml.etree.c:77675)
+  File "src/lxml/parser.pxi", line 1791, in lxml.etree._parseDocument (src/lxml/lxml.etree.c:114029)
+  File "src/lxml/parser.pxi", line 1817, in lxml.etree._parseDocumentFromURL (src/lxml/lxml.etree.c:114379)
+  File "src/lxml/parser.pxi", line 1721, in lxml.etree._parseDocFromFile (src/lxml/lxml.etree.c:113267)
+  File "src/lxml/parser.pxi", line 1122, in lxml.etree._BaseParser._parseDocFromFile (src/lxml/lxml.etree.c:107784)
+  File "src/lxml/parser.pxi", line 580, in lxml.etree._ParserContext._handleParseResultDoc (src/lxml/lxml.etree.c:101258)
+  File "src/lxml/parser.pxi", line 690, in lxml.etree._handleParseResult (src/lxml/lxml.etree.c:102912)
+  File "src/lxml/parser.pxi", line 618, in lxml.etree._raiseParseError (src/lxml/lxml.etree.c:101778)
+IOError: Error reading file 'config/config.xml': failed to load external entity "config/config.xml"
+
