@@ -43,3 +43,4 @@ IOError: Error reading file 'config/config.xml': failed to load external entity 
 56. Button maps with colour images
 57. Make libaray for layout design?
 58. Explore python-osmgpsmap
+59. Setting time from GPS for the first time breaks delta (trip time)
