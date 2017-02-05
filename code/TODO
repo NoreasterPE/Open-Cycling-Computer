@@ -40,4 +40,6 @@ Traceback (most recent call last):
   File "src/lxml/parser.pxi", line 690, in lxml.etree._handleParseResult (src/lxml/lxml.etree.c:102912)
   File "src/lxml/parser.pxi", line 618, in lxml.etree._raiseParseError (src/lxml/lxml.etree.c:101778)
 IOError: Error reading file 'config/config.xml': failed to load external entity "config/config.xml"
-
+56. Button maps with colour images
+57. Make libaray for layout design?
+58. Explore python-osmgpsmap
