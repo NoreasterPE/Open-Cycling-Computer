@@ -93,8 +93,8 @@ class mma8451(threading.Thread):
         while i < 10:
             ret = self.read_byte_data(self.REG_WHOAMI)
             if ret == self.DEVICE_ID:
-                return
-            print 'Sensor mmt8451 not found. Trying again [{}] in 1 s...'.format(i)
+		return
+            print 'ret=', ret, ' Expected:', self.DEVICE_ID, ' Sensor mmt8451 not found. Trying again [{}] in 1 s...'.format(i)
             time.sleep(1)
             i += 1
 

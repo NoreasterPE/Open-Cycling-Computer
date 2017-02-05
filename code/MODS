@@ -376,5 +376,5 @@ diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf
 --- /dev/null	2017-02-05 20:50:36.320000000 +0000
 +++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
 @@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
++options i2c_bcm2708 combined=1
 
