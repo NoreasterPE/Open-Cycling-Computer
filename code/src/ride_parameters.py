@@ -136,6 +136,7 @@ class ride_parameters():
                 self.params["epx"] = "-"
                 self.params["dtime"] = 0
                 self.params["gpsfix"] = "-"
+                self.params["gpsfix_time"] = "-"
                 self.params["heartrate"] = "-"
                 self.params["latitude"] = "-"
                 self.params["longitude"] = "-"
@@ -198,6 +199,7 @@ class ride_parameters():
                 self.p_format["ept"] = "%.4f"
                 self.p_format["dtime"] = "%.2f"
                 self.p_format["gpsfix"] = ""
+                self.p_format["gpsfix_time"] = ""
                 self.p_format["heartrate"] = "%.0f"
                 self.p_format["latitude"] = "%.4f"
                 self.p_format["longitude"] = "%.4f"
@@ -243,6 +245,7 @@ class ride_parameters():
                 self.units["ept"] = ""
                 self.units["dtime"] = "s"
                 self.units["gpsfix"] = ""
+                self.units["gpsfix_time"] = ""
                 self.units["heartrate"] = "BPM"
                 self.units["latitude"] = ""
                 self.units["longitude"] = ""
@@ -460,6 +463,7 @@ class ride_parameters():
                 self.p_raw["epx"] = self.clean_value(data[11])
                 self.p_raw["epv"] = self.clean_value(data[12])
                 self.p_raw["ept"] = self.clean_value(data[13])
+                self.p_raw["gpsfix_time"] = data[14]
 
                 gps_str = self.p_raw["satellitesused"] - 3
                 if gps_str < 0:
@@ -484,6 +488,7 @@ class ride_parameters():
 
         def update_gpsfix(self):
                 self.params["gpsfix"] = self.p_raw["gpsfix"]
+                self.params["gpsfix_time"] = self.p_raw["gpsfix_time"]
 
         def set_max(self, param):
                 self.p_raw[param + "_max"] = max(self.p_raw[param], self.p_raw[param + "_max"])

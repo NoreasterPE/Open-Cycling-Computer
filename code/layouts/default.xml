@@ -120,16 +120,16 @@
 	</page>
 	<page name="GPS" id="page_2" background="images/occ_page_2_background.png" buttons="images/occ_page_2_buttons.png" font="" fg_colour="FFFFFF">
 		<field function="latitude">
-			<text_center x="60" y="25" size="4"/>
+			<text_center x="60" y="25" size="3"/>
 		</field>
 		<field function="longitude">
-			<text_center x="60" y="60" size="4"/>
+			<text_center x="60" y="60" size="3"/>
 		</field>
-		<field function="altitude_gps">
-			<text_center x="60" y="95" size="4"/>
+		<field function="gpsfix_time">
+			<text_center x="60" y="95" size="3"/>
 		</field>
 		<field function="gpsfix">
-			<text_center x="60" y="130" size="4"/>
+			<text_center x="60" y="130" size="3"/>
 		</field>
 		<field function="time">
 			<text_center x="180" y="25" size="3"/>

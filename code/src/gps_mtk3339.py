@@ -34,6 +34,7 @@ class gps_mtk3339(threading.Thread):
                 self.altitude = NaN
                 self.climb = NaN
                 self.fix_mode = ""
+                self.fix_time = ""
                 self.latitude = NaN
                 self.longitude = NaN
                 self.present = False
@@ -91,6 +92,7 @@ class gps_mtk3339(threading.Thread):
                                 self.satellites = 10
                                 self.satellitesused = 4
                                 self.fix_mode = fix_mode[2]
+                                self.fix_time = "N/A"
                                 time.sleep(1)
 
         def process_gps(self):
@@ -176,7 +178,8 @@ class gps_mtk3339(threading.Thread):
                         self.satellites, self.fix_mode,  # 6, 7
                         self.climb, self.track,          # 8,9
                         self.eps, self.epx,              # 10, 11
-                        self.epv, self.ept)              # 12, 13
+                        self.epv, self.ept,              # 12, 13
+                        self.fix_time)                   # 14
 
         def __del__(self):
                 self.stop()
