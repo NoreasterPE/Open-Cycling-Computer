@@ -598,6 +598,7 @@ class ride_parameters():
                 self.p_raw[param_name] = 0
                 if param_name == "ridetime" or param_name == "distance":
                         self.reset_ride()
+                self.force_refresh()
 
         def update_param(self, param_name):
                 if param_name in self.p_format:
