@@ -141,6 +141,9 @@
 			<button x0="0" y0="240" w="119" h="80"/>
 			<text_center x="50" y="290" size="7"/>
 		</field>
+		<field function="cadence_min">
+			<text_center x="20" y="255" size="2">-</text_center>
+		</field>
 		<field function="cadence_avg">
 			<text_center x="60" y="255" size="2"/>
 		</field>
