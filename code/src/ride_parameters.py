@@ -83,6 +83,7 @@ class ride_parameters():
                 self.p_raw["temperature_max"] = INF_MIN
                 self.p_raw["temperature_min"] = INF
                 self.p_raw["timeon"] = 0.0001  # Avoid DIV/0
+                self.p_raw["time_cadence_reset"] = 0.0001
                 self.p_raw["track"] = 0
                 self.p_raw["utc"] = ""
 
@@ -115,6 +116,7 @@ class ride_parameters():
                 self.p_raw_units["speed"] = "m/s"
                 self.p_raw_units["temperature"] = degC
                 self.p_raw_units["timeon"] = "s"
+                self.p_raw_units["time_cadence_reset"] = "s"
                 #FIXME degrees
                 self.p_raw_units["track"] = ""
 
@@ -167,6 +169,7 @@ class ride_parameters():
                 self.params["temperature_min"] = ""
                 self.params["timeon"] = ""
                 self.params["timeon_hms"] = ""
+                self.params["time_cadence_reset"] = ""
                 self.params["track"] = "-"
                 self.params["utc"] = ""
 
@@ -230,6 +233,7 @@ class ride_parameters():
                 self.p_format["temperature_min"] = "%.0f"
                 self.p_format["timeon"] = "%.0f"
                 self.p_format["timeon_hms"] = ""
+                self.p_format["time_cadence_reset"] = "%.0f"
                 self.p_format["track"] = "%.1f"
                 self.p_format["utc"] = ""
 
@@ -263,6 +267,7 @@ class ride_parameters():
                 self.units["temperature"] = degC
                 self.units["timeon"] = "s"
                 self.units["timeon_hms"] = ""
+                self.units["time_cadence_reset"] = "s"
                 self.units["track"] = ""
 
                 #Allowed units - user can switch between those when editing value
@@ -300,6 +305,9 @@ class ride_parameters():
                 self.p_resettable["odometer"] = 1
                 self.p_resettable["ridetime"] = 1
                 self.p_resettable["speed_max"] = 1
+                self.p_resettable["cadence"] = 1
+                self.p_resettable["cadence_avg"] = 1
+                self.p_resettable["cadence_max"] = 1
                 #Do not record any speed below 2.5 m/s
                 self.speed_gps_low = 2.5
                 self.l.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
@@ -508,7 +516,7 @@ class ride_parameters():
                 dt = self.p_raw["dtime"]
                 c = self.p_raw["cadence"]
                 ca = self.p_raw["cadence_avg"]
-                tt = self.p_raw["timeon"]
+                tt = self.p_raw["timeon"] - self.p_raw["time_cadence_reset"]
                 ca_new = (c * dt + ca * tt) / (tt + dt)
                 self.p_raw["cadence_avg"] = ca_new
 
@@ -593,11 +601,19 @@ class ride_parameters():
                 self.p_raw["distance"] = 0
                 self.p_raw["ridetime"] = 0
 
+        def reset_cadence(self):
+                self.p_raw["cadence"] = 0
+                self.p_raw["cadence_avg"] = 0
+                self.p_raw["cadence_max"] = INF_MIN
+                self.p_raw["time_cadence_reset"] = self.p_raw["timeon"]
+
         def reset_param(self, param_name):
                 self.l.debug("[RP] Resetting {}".format(param_name))
                 self.p_raw[param_name] = 0
                 if param_name == "ridetime" or param_name == "distance":
                         self.reset_ride()
+                if param_name == "cadence":
+                        self.reset_cadence()
                 self.force_refresh()
 
         def update_param(self, param_name):
