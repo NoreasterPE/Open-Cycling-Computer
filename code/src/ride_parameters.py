@@ -508,6 +508,7 @@ class ride_parameters():
                 dt = self.p_raw["dtime"]
                 t = self.p_raw["temperature"]
                 ta = self.p_raw["temperature_avg"]
+                #FIXME Add and use time since reset not timeon
                 tt = self.p_raw["timeon"]
                 ta_new = (t * dt + ta * tt) / (tt + dt)
                 self.p_raw["temperature_avg"] = ta_new
