@@ -55,7 +55,7 @@ class CSC_Delegate(DefaultDelegate):
         self.crank_rpm = 0
 
     def handleNotification(self, cHandle, data):
-        #print "Notification received from :", hex(cHandle)
+        # print "Notification received from :", hex(cHandle)
 
         # CSC Measurement from BLE standard
         # https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.csc_measurement.xml
@@ -78,7 +78,8 @@ class CSC_Delegate(DefaultDelegate):
             # cr - cumularive revolutions
             # le - last event time
             # dt - time delta
-            wh_cr = 0xff0000 * data_b[4] + 0xff00 * data_b[3] + 0xff * data_b[2] + data_b[1]
+            wh_cr = 0xff0000 * data_b[4] + 0xff00 * \
+                data_b[3] + 0xff * data_b[2] + data_b[1]
             wh_le = (1.0 / 1024) * (0xff * data_b[6] + data_b[5])
             wh_dt = wh_le - self.wheel_last_time_event
 
@@ -94,10 +95,10 @@ class CSC_Delegate(DefaultDelegate):
                 self.wheel_rev_time = rt
                 self.wheel_cumul = wh_cr
 
-                #print "Wheel: cumul revs: {:5d}".format(wh_cr),
-                #print "| last time: {:10.3f}".format(self.wheel_last_time_event),
-                #print "| last time dt: {:10.3f}".format(self.wheel_last_time_delta),
-                #print "| rev time: {:10.3f}".format(self.wheel_rev_time),
+                # print "Wheel: cumul revs: {:5d}".format(wh_cr),
+                # print "| last time: {:10.3f}".format(self.wheel_last_time_event),
+                # print "| last time dt: {:10.3f}".format(self.wheel_last_time_delta),
+                # print "| rev time: {:10.3f}".format(self.wheel_rev_time),
 
         if (data_b[0] & self.CRANK_REV_DATA_PRESENT):
             # cr - cumularive revolutions
@@ -106,7 +107,7 @@ class CSC_Delegate(DefaultDelegate):
             cr_cr = 0xff * data_b[8] + data_b[7]
             cr_le = (1.0 / 1024) * (0xff * data_b[10] + data_b[9])
             cr_dt = cr_le - self.crank_last_time_event
-            #FIXME - there seems to be some accuracy loss on timer overflow?
+            # FIXME - there seems to be some accuracy loss on timer overflow?
             if cr_dt < 0:
                 cr_dt = 64 + cr_le - self.crank_last_time_event
             if (self.crank_cumul != cr_cr) and (self.crank_last_time_event != cr_le):
@@ -119,10 +120,10 @@ class CSC_Delegate(DefaultDelegate):
                 self.crank_cumul = cr_cr
                 self.crank_rpm = 60.0 / rt
 
-                #print "Crank: cumul revs: {:5d}".format(cr_cr),
-                #print "| last time: {:10.3f}".format(self.crank_last_time_event),
-                #print "| last time dt: {:10.3f}".format(self.crank_last_time_delta),
-                #print "| rev time: {:10.3f}".format(self.crank_rev_time),
+                # print "Crank: cumul revs: {:5d}".format(cr_cr),
+                # print "| last time: {:10.3f}".format(self.crank_last_time_event),
+                # print "| last time dt: {:10.3f}".format(self.crank_last_time_delta),
+                # print "| rev time: {:10.3f}".format(self.crank_rev_time),
 
                 #rpm = 60 / rt
-                #print "| RPM: {:10.3f}".format(rpm)
+                # print "| RPM: {:10.3f}".format(rpm)

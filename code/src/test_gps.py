@@ -30,11 +30,11 @@ if __name__ == '__main__':
             total_sat_used = 0
             total_sat_visi = 0
             for i in sat:
-                    print i
-                    if i.used:
-                            total_sat_used += 1
-                    if i.ss > 0:
-                            total_sat_visi += 1
+                print i
+                if i.used:
+                    total_sat_used += 1
+                if i.ss > 0:
+                    total_sat_visi += 1
 
             print
             print "No of satellites: {} / {} / {}".format(total_sat_used, total_sat_visi, l)
@@ -42,6 +42,6 @@ if __name__ == '__main__':
             time.sleep(1)
 
     except (KeyboardInterrupt, SystemExit):
-        #FIXME possibly required on shutdown
+        # FIXME possibly required on shutdown
         gps.stop()
         gps.join()

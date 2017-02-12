@@ -74,7 +74,8 @@ class mma8451(threading.Thread):
         self.write_byte_data(self.REG_XYZ_DATA_CFG, self.REG_XYZ_RANGE_2_G)
         self.step = 0.00025
         self.sensor_range = self.REG_XYZ_RANGE_2_G
-        self.write_byte_data(self.REG2_CTRL, self.REG2_ACTIVE_OS_HIGH_RESOLUTION)
+        self.write_byte_data(
+            self.REG2_CTRL, self.REG2_ACTIVE_OS_HIGH_RESOLUTION)
         self.write_byte_data(self.REG1_CTRL, self.REG1_LOW_NOISE)
         self.write_byte_data(self.REG1_CTRL, self.REG1_ACTIVE)
         self.acceleration = (0, 0, 0)
@@ -93,7 +94,7 @@ class mma8451(threading.Thread):
         while i < 10:
             ret = self.read_byte_data(self.REG_WHOAMI)
             if ret == self.DEVICE_ID:
-		return
+                return
             print 'ret=', ret, ' Expected:', self.DEVICE_ID, ' Sensor mmt8451 not found. Trying again [{}] in 1 s...'.format(i)
             time.sleep(1)
             i += 1
@@ -126,9 +127,12 @@ class mma8451(threading.Thread):
         return v
 
     def set_high_pass_filter(self):
-        self.bus.write_byte_data(self.DEVICE_ADDR, self.REG1_CTRL, self.REG1_STANDBY)
-        self.bus.write_byte_data(self.DEVICE_ADDR, self.REG_XYZ_DATA_CFG, self.REG_XYZ_HPF)
-        self.bus.write_byte_data(self.DEVICE_ADDR, self.REG1_CTRL, self.REG1_ACTIVE)
+        self.bus.write_byte_data(
+            self.DEVICE_ADDR, self.REG1_CTRL, self.REG1_STANDBY)
+        self.bus.write_byte_data(
+            self.DEVICE_ADDR, self.REG_XYZ_DATA_CFG, self.REG_XYZ_HPF)
+        self.bus.write_byte_data(
+            self.DEVICE_ADDR, self.REG1_CTRL, self.REG1_ACTIVE)
         return 0
 
     def set_range(self, value):
@@ -144,8 +148,10 @@ class mma8451(threading.Thread):
         else:
             raise Exception('MMA8451: Invalid range: {}'.format(value))
         self.bus.write_byte_data(self.DEVICE_ADDR, self.REG1_CTRL, 0)
-        self.bus.write_byte_data(self.DEVICE_ADDR, self.REG_XYZ_DATA_CFG, sensor_range)
-        self.bus.write_byte_data(self.DEVICE_ADDR, self.REG1_CTRL, self.REG1_ACTIVE)
+        self.bus.write_byte_data(
+            self.DEVICE_ADDR, self.REG_XYZ_DATA_CFG, sensor_range)
+        self.bus.write_byte_data(
+            self.DEVICE_ADDR, self.REG1_CTRL, self.REG1_ACTIVE)
 
     def get_data_rate_in_hz(self):
         r1 = self.read_byte_data(self.REG1_CTRL)
@@ -167,7 +173,8 @@ class mma8451(threading.Thread):
         elif r == self.REG1_ODR_800_HZ:
             rate = 800
         else:
-            raise Exception('MMA8451: Unknown output data rate returned by hardware: {}').format(r)
+            raise Exception(
+                'MMA8451: Unknown output data rate returned by hardware: {}').format(r)
         return rate
 
     def set_data_rate(self, rate):
@@ -178,7 +185,8 @@ class mma8451(threading.Thread):
             self.bus.write_byte_data(self.DEVICE_ADDR, self.REG1_CTRL, 0)
             self.bus.write_byte_data(self.DEVICE_ADDR, self.REG1_CTRL, r1_new)
         else:
-            raise Exception('MMA8451: Invalid output data rate: {}').format(rate)
+            raise Exception(
+                'MMA8451: Invalid output data rate: {}').format(rate)
 
     def calibrate(self):
         self.set_range(2)

@@ -25,8 +25,9 @@ if __name__ == '__main__':
                 print "TS: {}".format(time.time())
                 if (time.time() - val.wheel_time_stamp) > NOTIFICATION_EXPIRY_TIME:
                     print "[EXPIRED] ",
-                speed = 3.6 * WHEEL_PERIM_700x25 / (val.wheel_rev_time + 0.00001)
-                #print "Speed / RPM: {:10.3f}".format(speed / val.crank_rpm)
+                speed = 3.6 * WHEEL_PERIM_700x25 / \
+                    (val.wheel_rev_time + 0.00001)
+                # print "Speed / RPM: {:10.3f}".format(speed / val.crank_rpm)
                 print "TS: {}, speed: {:10.3f}".format(val.wheel_time_stamp, speed)
                 if (time.time() - val.crank_time_stamp) > NOTIFICATION_EXPIRY_TIME:
                     print "[EXPIRED] ",
