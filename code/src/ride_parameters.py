@@ -124,17 +124,16 @@ class ride_parameters():
 
         # Do not record any speed below 2.5 m/s
         self.speed_gps_low = 2.5
-        self.l.info("[RP] speed_gps_low treshold set to {}".format(
-            self.speed_gps_low))
+        self.l.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
+
         # Do not show speed below 1 m/s
         self.speed_gps_noise = 1
-        self.l.info("[RP] speed_gps_noise treshold set to {}".format(
-            self.speed_gps_noise))
+        self.l.info("[RP] speed_gps_noise treshold set to {}".format(self.speed_gps_noise))
+
         self.update_param("speed_max")
         self.split_speed("speed_max")
         self.update_param("altitude_home")
-        self.l.info("[RP] altitude_home set to {}".format(
-            self.params["altitude_home"]))
+        self.l.info("[RP] altitude_home set to {}".format(self.params["altitude_home"]))
         self.cadence_timestamp = None
         self.cadence_timestamp_old = None
         # Temporary
@@ -187,8 +186,8 @@ class ride_parameters():
             self.l.info("[RP] dtime adjusted by {}".format(dt_adjustment))
             self.occ.rp.gps.time_adjustment_delta = 0
             # FIXME Correct other parameters like ridetime
-        self.l.debug("[RP] timestamp: {} dtime {}".format(
-            t, self.p_raw["dtime"]))
+        self.l.debug("[RP] timestamp: {} dtime {}".format(t, self.p_raw["dtime"]))
+        self.read_bt_csc_data()
         self.read_bmp183_data()
         self.calculate_altitude()
         self.calculate_time_related_parameters()
