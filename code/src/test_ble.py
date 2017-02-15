@@ -1,6 +1,6 @@
 import time
 from bluepy.btle import BTLEException
-import bt_csc
+import ble
 
 if __name__ == '__main__':
     try:
@@ -9,7 +9,7 @@ if __name__ == '__main__':
         connected = False
         while not connected:
             try:
-                lez = bt_csc.bt_csc("fd:df:0e:4e:76:cf")
+                lez = ble.ble("fd:df:0e:4e:76:cf")
                 print "Battery level: ", lez.get_battery_level()
                 lez.set_notifications()
                 val = lez.delegate

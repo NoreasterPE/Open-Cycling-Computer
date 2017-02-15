@@ -6,7 +6,7 @@ from bluepy.btle import Peripheral
 from bluepy.btle import DefaultDelegate
 
 
-class bt_csc(Peripheral, threading.Thread):
+class ble(Peripheral, threading.Thread):
     # FIXME - replace with proper service & characteristic scan
     CSC_HANDLE = 0x000f  # FIXME - explain
     CSC_ENABLE = "10"    # FIXME - explain

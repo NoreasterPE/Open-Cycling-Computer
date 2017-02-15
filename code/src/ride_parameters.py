@@ -1,6 +1,6 @@
 from bmp183 import bmp183
 from gps_mtk3339 import gps_mtk3339
-from bt_csc import bt_csc
+from ble import ble
 from time import strftime
 from units import units
 import logging
@@ -21,7 +21,7 @@ class ride_parameters():
         self.uc = units()
         self.l.info("[RP] Initialising GPS")
         self.gps = gps_mtk3339(simulate)
-        self.bt_csc = bt_csc(simulate, "fd:df:0e:4e:76:cf")
+        self.ble = ble(simulate, "fd:df:0e:4e:76:cf")
         self.l.info("[RP] Initialising bmp183 sensor")
         self.bmp183_sensor = bmp183(self.occ, simulate)
         self.bmp183_first_run = True
@@ -130,8 +130,8 @@ class ride_parameters():
         self.gps.start()
         self.l.info("[RP] Starting BMP thread")
         self.bmp183_sensor.start()
-        self.l.info("[RP] Starting BL_CSC thread")
-        self.bt_csc.start()
+        self.l.info("[RP] Starting BLE thread")
+        self.ble.start()
 
     def setup_ridelog(self):
         ride_log_filename = "log/ride." + \
@@ -158,7 +158,7 @@ class ride_parameters():
         self.l.info("[RP] Stopping BMP thread")
         self.bmp183_sensor.stop()
         self.l.info("[RP] Stopping BL_CSC thread")
-        self.bt_csc.stop()
+        self.ble.stop()
 
     def __del__(self):
         self.stop()
@@ -179,7 +179,7 @@ class ride_parameters():
             self.occ.rp.gps.time_adjustment_delta = 0
             # FIXME Correct other parameters like ridetime
         self.l.debug("[RP] timestamp: {} dtime {}".format(t, self.p_raw["dtime"]))
-        self.read_bt_csc_data()
+        self.read_ble_data()
         self.read_bmp183_data()
         self.calculate_altitude()
         self.calculate_time_related_parameters()
@@ -270,8 +270,8 @@ class ride_parameters():
         else:
             return empty
 
-    def read_bt_csc_data(self):
-        data = self.bt_csc.get_data()
+    def read_ble_data(self):
+        data = self.ble.get_data()
         # FIXME - add more params
         self.p_raw["cadence"] = self.clean_value(data[3])
 
