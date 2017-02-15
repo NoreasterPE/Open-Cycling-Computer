@@ -26,15 +26,6 @@ class ride_parameters():
         self.bmp183_sensor = bmp183(self.occ, simulate)
         self.bmp183_first_run = True
 
-        self.p_desc = {}
-        self.p_editable = {}
-        self.p_format = {}
-        self.p_raw = {}
-        self.p_raw_units = {}
-        self.p_resettable = {}
-        self.params = {}
-        self.units = {}
-        self.units_allowed = {}
         self.suffixes = ("_digits", "_tenths", "_hms")
 
         self.p_raw = dict(time_stamp=time.time(),
