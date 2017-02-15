@@ -179,6 +179,7 @@ class gps_mtk3339(threading.Thread):
             self.ept = NaN
 
     def get_data(self):
+        #FIXME switch to dict instead of indexed tuple
         return (self.latitude, self.longitude,   # 0, 1
                 self.altitude, self.speed,       # 2, 3
                 self.utc,                        # 4
