@@ -1,26 +1,25 @@
 #! /usr/bin/python
 import time
+import threading
 from bluepy.btle import AssignedNumbers
 from bluepy.btle import Peripheral
 from bluepy.btle import DefaultDelegate
 
 
-class bt_csc(Peripheral):
+class bt_csc(Peripheral, threading.Thread):
     # FIXME - replace with proper service & characteristic scan
     CSC_HANDLE = 0x000f  # FIXME - explain
     CSC_ENABLE = "10"    # FIXME - explain
 
-    def __init__(self, addr):
-
-        print('Connecting to ' + addr)
-        Peripheral.__init__(self, addr, addrType='random')
-        self.connected = True
-        print ".....connected to ", self.get_device_name()
-
-        # Set notification handler
-        self.delegate = CSC_Delegate()
-        self.withDelegate(self.delegate)
+    def __init__(self, simulate, addr):
+        threading.Thread.__init__(self)
+        self.simulate = simulate
         self.notifications_enabled = False
+        self.connected = False
+        self.wheel_time_stamp = 0
+        self.wheel_rev_time = 0
+        self.crank_time_stamp = 0
+        self.crank_rpm = 0
 
     def set_notifications(self, enable=True):
         # Enable/disable notifications
@@ -34,9 +33,56 @@ class bt_csc(Peripheral):
         b = self.getCharacteristics(uuid=AssignedNumbers.batteryLevel)
         return ord(b[0].read())
 
+    def run(self):
+        while not self.connected:
+            try:
+                if not self.simulate:
+                    print('Connecting to ' + self.addr)
+                    Peripheral.__init__(self, self.addr, addrType='random')
+                    self.connected = True
+                    print ".....connected to ", self.get_device_name()
+                    # Set notification handler
+                    print "Enabling notifiations.."
+                    self.delegate = CSC_Delegate()
+                    self.withDelegate(self.delegate)
+                    self.set_notifications()
+                else:
+                    print "Connection simulated"
+                self.connected = True
+            except:
+                print "BLE connection failed. Retrying in 5s"
+                time.sleep(5)
+        while self.connected:
+            if not self.simulate:
+                if self.waitForNotifications(0.3):
+                    self.wheel_time_stamp = self.delegate.wheel_time_stamp
+                    self.wheel_rev_time = self.delegate.wheel_rev_time
+                    self.crank_time_stamp = self.delegate.crank_time_stamp
+                    self.crank_rpm = self.delegate.crank_rpm
+            else:
+                    time.sleep(0.3)
+                    self.wheel_time_stamp = time.time()
+                    self.wheel_rev_time = 1.0
+                    self.crank_time_stamp = time.time()
+                    self.crank_rpm = 96.0
+
+    def get_data(self):
+        return (self.wheel_time_stamp,
+                self.wheel_rev_time,
+                self.crank_time_stamp,
+                self.crank_rpm)
+
+    def __del__(self):
+        self.stop()
+
+    def stop(self):
+        if not self.simulate:
+            self.set_notifications(enable=False)
+            self.disconnect()
+        self.connected = False
+
 
 class CSC_Delegate(DefaultDelegate):
-    DATA_EXPIRY_TIME = 1.0  # sensor data expiry time
     WHEEL_REV_DATA_PRESENT = 0x01
     CRANK_REV_DATA_PRESENT = 0x02
 
