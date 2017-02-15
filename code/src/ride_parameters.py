@@ -35,147 +35,45 @@ class ride_parameters():
         self.units_allowed = {}
         self.suffixes = ("_digits", "_tenths", "_hms")
 
-        # Internal params of the ride.
-        self.p_raw["time_stamp"] = time.time()
-        # Time delta since last p_raw update
-        self.p_raw["dtime"] = 1
-
-        self.p_raw["Q"] = 0
-        self.p_raw["altitude"] = 0
-        self.p_raw["altitude_gps"] = 0
-        self.p_raw["altitude_home"] = 0
-        self.p_raw["altitude_max"] = INF_MIN
-        self.p_raw["altitude_min"] = INF
-        self.p_raw["altitude_previous"] = 0
-        self.p_raw["cadence"] = 0
-        self.p_raw["cadence_avg"] = 0
-        self.p_raw["cadence_max"] = INF_MIN
-        self.p_raw["climb"] = 0
-        self.p_raw["daltitude"] = 0
-        self.p_raw["daltitude_cumulative"] = 0
-        self.p_raw["ddistance"] = 0
-        self.p_raw["ddistance_cumulative"] = 0
-        self.p_raw["distance"] = 0
-        self.p_raw["eps"] = 0
-        self.p_raw["ept"] = 0
-        self.p_raw["epv"] = 0
-        self.p_raw["epx"] = 0
-        self.p_raw["gps_strength"] = 0
-        self.p_raw["gpsfix"] = ""
-        self.p_raw["heartrate"] = 0
-        self.p_raw["latitude"] = 0
-        self.p_raw["longitude"] = 0
-        self.p_raw["odometer"] = 0
-        self.p_raw["pressure"] = 0
-        self.p_raw["pressure_at_sea_level"] = 0
-        self.p_raw["riderweight"] = 0
-        self.p_raw["ridetime"] = 0
-        self.p_raw["ridetime_total"] = 0
-        self.p_raw["rtc"] = ""
-        self.p_raw["satellites"] = 0
-        self.p_raw["satellitesused"] = 0
-        self.p_raw["slope"] = 0
-        self.p_raw["speed"] = 0
-        self.p_raw["speed_avg"] = 0
-        self.p_raw["speed_gps"] = 0
-        self.p_raw["speed_max"] = 0
-        self.p_raw["temperature"] = 0
-        self.p_raw["temperature_avg"] = 0
-        self.p_raw["temperature_max"] = INF_MIN
-        self.p_raw["temperature_min"] = INF
-        self.p_raw["timeon"] = 0.0001  # Avoid DIV/0
-        self.p_raw["time_cadence_reset"] = 0.0001
-        self.p_raw["track"] = 0
-        self.p_raw["utc"] = ""
-
-        # System params
-        # Maximum allowable temperature change between measurements. If
-        # measurement differ more than delta they are ignored.
-        self.p_raw["temperature_max_delta"] = 10  # degC
+        self.p_raw = dict(time_stamp=time.time(),
+                          # Time delta since last p_raw update
+                          dtime=1,
+                          altitude=0, altitude_gps=0, altitude_home=0, altitude_max=INF_MIN, altitude_min=INF, altitude_previous=0,
+                          pressure=0, pressure_at_sea_level=0,
+                          climb=0, daltitude=0, daltitude_cumulative=0,
+                          odometer=0, ddistance=0, ddistance_cumulative=0, distance=0,
+                          eps=0, ept=0, epv=0, epx=0, gps_strength=0, gpsfix='', latitude=0, longitude=0, satellites=0, satellitesused=0,
+                          Q=0, cadence=0, cadence_avg=0, cadence_max=INF_MIN,
+                          heartrate=0,
+                          riderweight=0,
+                          ridetime=0, ridetime_total=0,
+                          slope=0,
+                          speed=0, speed_avg=0, speed_gps=0, speed_max=0,
+                          temperature=0, temperature_avg=0, temperature_max=INF_MIN, temperature_min=INF,
+                          # Maximum allowable temperature change between measurements. If measurement differ more than delta they are ignored.
+                          temperature_max_delta=10,
+                          track=0,
+                          timeon=0.0001, utc='', rtc='', time_cadence_reset=0.0001)
 
         # Internal units
-        self.p_raw_units["Q"] = ""
-        self.p_raw_units["altitude"] = "m"
-        self.p_raw_units["cadence"] = "RPM"
-        self.p_raw_units["climb"] = "m/s"
-        self.p_raw_units["distance"] = "m"
-        self.p_raw_units["eps"] = ""
-        self.p_raw_units["ept"] = ""
-        self.p_raw_units["epv"] = ""
-        self.p_raw_units["epx"] = ""
-        self.p_raw_units["dtime"] = "s"
-        self.p_raw_units["gpsfix"] = ""
-        self.p_raw_units["latitude"] = ""
-        self.p_raw_units["longitude"] = ""
-        self.p_raw_units["odometer"] = "m"
-        self.p_raw_units["pressure"] = "Pa"
-        self.p_raw_units["riderweight"] = "kg"
-        self.p_raw_units["ridetime"] = "s"
-        self.p_raw_units["ridetime_total"] = "s"
-        self.p_raw_units["satellites"] = ""
-        self.p_raw_units["satellitesused"] = ""
-        self.p_raw_units["slope"] = "m/m"
-        self.p_raw_units["speed"] = "m/s"
-        self.p_raw_units["temperature"] = degC
-        self.p_raw_units["timeon"] = "s"
-        self.p_raw_units["time_cadence_reset"] = "s"
-        # FIXME degrees
-        self.p_raw_units["track"] = ""
+        self.p_raw_units = dict(Q='', altitude='m', cadence='RPM', climb='m/s', distance='m', eps='', ept='', epv='', epx='',
+                                dtime='s', gpsfix='', latitude='', longitude='', odometer='m', pressure='Pa', riderweight='kg',
+                                ridetime='s', ridetime_total='s', satellites='', satellitesused='', slope='m/m', speed='m/s',
+                                temperature=degC, timeon='s', time_cadence_reset='s',
+                                # FIXME degrees, what is track? Nomber of tracked sats?
+                                track='')
 
         # Params of the ride ready for rendering.
-        self.params["Q"] = "-"
-        self.params["altitude"] = "-"
-        self.params["altitude_gps"] = "-"
-        self.params["altitude_home"] = "-"
-        self.params["altitude_max"] = "-"
-        self.params["altitude_min"] = "-"
-        self.params["cadence"] = "-"
-        self.params["cadence_avg"] = "-"
-        self.params["cadence_max"] = "-"
-        self.params["climb"] = "-"
-        self.params["distance"] = 0
-        self.params["eps"] = "-"
-        self.params["ept"] = "-"
-        self.params["epv"] = "-"
-        self.params["epx"] = "-"
-        self.params["dtime"] = 0
-        self.params["gpsfix"] = "-"
-        self.params["gpsfix_time"] = "-"
-        self.params["heartrate"] = "-"
-        self.params["latitude"] = "-"
-        self.params["longitude"] = "-"
-        self.params["odometer"] = 0.0
-        self.params["pressure"] = "-"
-        self.params["pressure_at_sea_level"] = "-"
-        self.params["riderweight"] = 0.0
-        self.params["ridetime"] = ""
-        self.params["ridetime_hms"] = ""
-        self.params["ridetime_total"] = ""
-        self.params["ridetime_total_hms"] = ""
-        self.params["rtc"] = ""
-        self.params["satellites"] = "-"
-        self.params["satellitesused"] = "-"
-        self.params["slope"] = "-"
-        self.params["speed"] = "-"
-        self.params["speed_avg"] = "-"
-        self.params["speed_avg_digits"] = "-"
-        self.params["speed_avg_tenths"] = "-"
-        self.params["speed_digits"] = "-"
-        self.params["speed_max"] = "-"
-        self.params["speed_max_digits"] = "-"
-        self.params["speed_max_tenths"] = "-"
-        self.params["speed_tenths"] = "-"
-        self.params["temperature"] = ""
-        self.params["temperature_avg"] = ""
-        self.params["temperature_max"] = ""
-        self.params["temperature_min"] = ""
-        self.params["timeon"] = ""
-        self.params["timeon_hms"] = ""
-        self.params["time_cadence_reset"] = ""
-        self.params["track"] = "-"
-        self.params["utc"] = ""
+        self.params = dict(Q='-', altitude='-', altitude_gps='-', altitude_home='-', altitude_max='-', altitude_min='-',
+                           cadence='-', cadence_avg='-', cadence_max='-', climb='-', distance=0, eps='-', ept='-', epv='-', epx='-',
+                           dtime=0, gpsfix='-', gpsfix_time='-', heartrate='-', latitude='-', longitude='-', odometer=0.0,
+                           pressure='-', pressure_at_sea_level='-', riderweight=0.0, ridetime='', ridetime_hms='', ridetime_total='',
+                           ridetime_total_hms='', rtc='', satellites='-', satellitesused='-', slope='-', speed='-', speed_avg='-',
+                           speed_avg_digits='-', speed_avg_tenths='-', speed_digits='-', speed_max='-', speed_max_digits='-',
+                           speed_max_tenths='-', speed_tenths='-', temperature='', temperature_avg='', temperature_max='',
+                           temperature_min='', timeon='', timeon_hms='', time_cadence_reset='', track='-', utc='')
 
-        # System params
+        # System params - shoud be in raw or new category: system
         self.params["debug_level"] = ""
         # Editor params
         self.params["editor_index"] = 0
@@ -187,129 +85,43 @@ class ride_parameters():
         self.params["variable_value"] = None
 
         # Formatting strings for params.
-        self.p_format["Q"] = "%.3f"
-        self.p_format["altitude"] = "%.0f"
-        self.p_format["altitude_gps"] = "%.0f"
-        self.p_format["altitude_home"] = "%.0f"
-        self.p_format["altitude_max"] = "%.0f"
-        self.p_format["altitude_min"] = "%.0f"
-        self.p_format["cadence"] = "%.0f"
-        self.p_format["cadence_avg"] = "%.0f"
-        self.p_format["cadence_max"] = "%.0f"
-        self.p_format["climb"] = "%.1f"
-        self.p_format["distance"] = "%.1f"
-        self.p_format["eps"] = "%.4f"
-        self.p_format["epx"] = "%.4f"
-        self.p_format["epv"] = "%.4f"
-        self.p_format["ept"] = "%.4f"
-        self.p_format["dtime"] = "%.2f"
-        self.p_format["gpsfix"] = ""
-        self.p_format["gpsfix_time"] = ""
-        self.p_format["heartrate"] = "%.0f"
-        self.p_format["latitude"] = "%.4f"
-        self.p_format["longitude"] = "%.4f"
-        self.p_format["odometer"] = "%.0f"
-        self.p_format["pressure"] = "%.0f"
-        self.p_format["pressure_at_sea_level"] = "%.0f"
-        self.p_format["riderweight"] = "%.1f"
-        self.p_format["ridetime"] = "%.0f"
-        self.p_format["ridetime_hms"] = ""
-        self.p_format["ridetime_total"] = ".0f"
-        self.p_format["ridetime_total_hms"] = ""
-        self.p_format["rtc"] = ""
-        self.p_format["satellites"] = "%.0f"
-        self.p_format["satellitesused"] = "%.0f"
-        self.p_format["slope"] = "%.0f"
-        self.p_format["speed"] = "%.1f"
-        self.p_format["speed_avg"] = "%.1f"
-        self.p_format["speed_avg_digits"] = "%.0f"
-        self.p_format["speed_avg_tenths"] = "%.0f"
-        self.p_format["speed_digits"] = "%.0f"
-        self.p_format["speed_max"] = "%.1f"
-        self.p_format["speed_max_digits"] = "%.0f"
-        self.p_format["speed_max_tenths"] = "%.0f"
-        self.p_format["speed_tenths"] = "%.0f"
-        self.p_format["temperature"] = "%.0f"
-        self.p_format["temperature_avg"] = "%.1f"
-        self.p_format["temperature_max"] = "%.0f"
-        self.p_format["temperature_min"] = "%.0f"
-        self.p_format["timeon"] = "%.0f"
-        self.p_format["timeon_hms"] = ""
-        self.p_format["time_cadence_reset"] = "%.0f"
-        self.p_format["track"] = "%.1f"
-        self.p_format["utc"] = ""
+        self.p_format = dict(Q='%.3f', altitude='%.0f', altitude_gps='%.0f', altitude_home='%.0f', altitude_max='%.0f', altitude_min='%.0f',
+                             cadence='%.0f', cadence_avg='%.0f', cadence_max='%.0f', climb='%.1f', distance='%.1f', eps='%.4f', epx='%.4f', epv='%.4f', ept='%.4f',
+                             dtime='%.2f', gpsfix='', gpsfix_time='', heartrate='%.0f', latitude='%.4f', longitude='%.4f', odometer='%.0f',
+                             pressure='%.0f', pressure_at_sea_level='%.0f', riderweight='%.1f', ridetime='%.0f', ridetime_hms='', ridetime_total='.0f',
+                             ridetime_total_hms='', rtc='', satellites='%.0f', satellitesused='%.0f', slope='%.0f', speed='%.1f', speed_avg='%.1f',
+                             speed_avg_digits='%.0f', speed_avg_tenths='%.0f', speed_digits='%.0f', speed_max='%.1f', speed_max_digits='%.0f', speed_max_tenths='%.0f',
+                             speed_tenths='%.0f', temperature='%.0f', temperature_avg='%.1f', temperature_max='%.0f', temperature_min='%.0f',
+                             timeon='%.0f', timeon_hms='', time_cadence_reset='%.0f', track='%.1f', utc='')
 
         # Units - name has to be identical as in params
-        self.units["Q"] = ""
-        self.units["altitude"] = "m"
-        self.units["cadence"] = "RPM"
-        self.units["climb"] = "m/s"
-        self.units["distance"] = "km"
-        self.units["eps"] = ""
-        self.units["epx"] = ""
-        self.units["epv"] = ""
-        self.units["ept"] = ""
-        self.units["dtime"] = "s"
-        self.units["gpsfix"] = ""
-        self.units["gpsfix_time"] = ""
-        self.units["heartrate"] = "BPM"
-        self.units["latitude"] = ""
-        self.units["longitude"] = ""
-        self.units["odometer"] = "km"
-        self.units["pressure"] = "hPa"
-        self.units["riderweight"] = "kg"
-        self.units["ridetime"] = "s"
-        self.units["ridetime_hms"] = ""
-        self.units["ridetime_total"] = "s"
-        self.units["ridetime_total_hms"] = ""
-        self.units["satellites"] = ""
-        self.units["satellitesused"] = ""
-        self.units["slope"] = "%"
-        self.units["speed"] = "km/h"
-        self.units["temperature"] = degC
-        self.units["timeon"] = "s"
-        self.units["timeon_hms"] = ""
-        self.units["time_cadence_reset"] = "s"
-        self.units["track"] = ""
+        self.units = dict(Q='', altitude='m', cadence='RPM', climb='m/s', distance='km', eps='', epx='', epv='', ept='',
+                          dtime='s', gpsfix='', gpsfix_time='', heartrate='BPM', latitude='', longitude='', odometer='km', pressure='hPa',
+                          riderweight='kg', ridetime='s', ridetime_hms='', ridetime_total='s', ridetime_total_hms='', satellites='',
+                          satellitesused='', slope='%', speed='km/h', temperature=degC, timeon='s', timeon_hms='', time_cadence_reset='s',
+                          track='')
 
         # Allowed units - user can switch between those when editing value
         # FIXME switch to mi when mi/h are set for speed
         # FIXME switch to mi/h when mi are set for odometer
-        self.units_allowed["odometer"] = ["km", "mi"]
-        self.units_allowed["riderweight"] = ["kg", "st", "lb"]
-        #self.units_allowed["slope"] = ["%", degC]
-        self.units_allowed["speed"] = ["km/h", "m/s", "mi/h"]
-        self.units_allowed["temperature"] = [degC, "F", "K"]
+        self.units_allowed = dict(odometer=['km', 'mi'], riderweight=['kg', 'st', 'lb'], slope=['%', degC],
+                                  speed=['km/h', 'm/s', 'mi/h'], temperature=[degC, 'F', 'K'])
 
         # Params description FIXME localisation
-        self.p_desc["altitude_home"] = "Home altitude"
-        self.p_desc["odometer"] = "Odometer"
-        self.p_desc["odometer_units"] = "Odometer units"
-        self.p_desc["riderweight"] = "Rider weight"
-        self.p_desc["riderweight_units"] = "Rider weight units"
-        self.p_desc["speed_units"] = "Speed units"
-        self.p_desc["temperature_units"] = "Temp. unit"
+        self.p_desc = dict(altitude_home='Home altitude', odometer='Odometer', odometer_units='Odometer units',
+                           riderweight='Rider weight', riderweight_units='Rider weight units', speed_units='Speed units',
+                           temperature_units='Temp. unit')
 
         # Define id a param is editable FIXME editor type - number, calendar, unit, etc.
         # 0 - unit editor
         # 1 - number editor
         # Params that can be changed in Settings by user
-        self.p_editable["Q"] = 1
-        self.p_editable["altitude_home"] = 1
-        self.p_editable["odometer"] = 1
-        self.p_editable["odometer_units"] = 0
-        self.p_editable["riderweight"] = 1
-        self.p_editable["riderweight_units"] = 0
-        self.p_editable["speed_units"] = 0
-        self.p_editable["temperature_units"] = 0
+        self.p_editable = dict(Q=1, altitude_home=1, odometer=1, odometer_units=0,
+                               riderweight=1, riderweight_units=0, speed_units=0, temperature_units=0)
 
-        self.p_resettable["distance"] = 1
-        self.p_resettable["odometer"] = 1
-        self.p_resettable["ridetime"] = 1
-        self.p_resettable["speed_max"] = 1
-        self.p_resettable["cadence"] = 1
-        self.p_resettable["cadence_avg"] = 1
-        self.p_resettable["cadence_max"] = 1
+        self.p_resettable = dict(distance=1, odometer=1, ridetime=1, speed_max=1,
+                                 cadence=1, cadence_avg=1, cadence_max=1)
+
         # Do not record any speed below 2.5 m/s
         self.speed_gps_low = 2.5
         self.l.info("[RP] speed_gps_low treshold set to {}".format(
