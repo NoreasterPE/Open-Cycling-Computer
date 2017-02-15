@@ -113,7 +113,7 @@ class open_cycling_computer():
         try:
             log_level = self.config.find("log_level").text
             self.switch_log_level(log_level)
-            self.rp.params["debug_level"] = log_level
+            self.rp.sysvar["debug_level"] = log_level
         except AttributeError:
             pass
         try:

@@ -224,7 +224,7 @@ class layout():
                 else:
                     font_l = pygame.font.Font(self.font, font_size_large)
                     self.font_list[font_size_large] = font_l
-                i = self.occ.rp.params["editor_index"]
+                i = self.occ.rp.sysvar["editor_index"]
                 rv1 = uv[:i]
                 ren1 = font_s.render(rv1, 1, self.fg_colour)
                 w1 = ren1.get_rect().width
@@ -300,18 +300,18 @@ class layout():
 
     def open_editor_page(self, param_name):
         # FIXME move to RP
-        self.occ.rp.params["variable"] = param_name
+        self.occ.rp.sysvar["variable"] = param_name
         self.occ.rp.params[
             "variable_raw_value"] = self.occ.rp.get_raw_val(param_name)
-        self.occ.rp.params["variable_value"] = self.occ.rp.get_val(param_name)
-        self.occ.rp.params["variable_unit"] = self.occ.rp.get_unit(param_name)
+        self.occ.rp.sysvar["variable_value"] = self.occ.rp.get_val(param_name)
+        self.occ.rp.sysvar["variable_unit"] = self.occ.rp.get_unit(param_name)
         self.occ.rp.params[
             "variable_description"] = self.occ.rp.get_description(param_name)
-        self.occ.rp.params["editor_index"] = 0
+        self.occ.rp.sysvar["editor_index"] = 0
 
         # FIXME Make it mory pythonic
-        if self.occ.rp.params["editor_type"] == 0:
-            name = self.occ.rp.params["variable"]
+        if self.occ.rp.sysvar["editor_type"] == 0:
+            name = self.occ.rp.sysvar["variable"]
             # FIXME make a stripping function
             na = name.find("_")
             if na > -1:
@@ -319,11 +319,11 @@ class layout():
             else:
                 n = name
             unit = self.occ.rp.get_unit(n)
-            self.occ.rp.params["variable"] = n
-            self.occ.rp.params["variable_unit"] = unit
-            self.occ.rp.params["variable_value"] = 0
+            self.occ.rp.sysvar["variable"] = n
+            self.occ.rp.sysvar["variable_unit"] = unit
+            self.occ.rp.sysvar["variable_value"] = 0
             self.use_page("editor_units")
-        if self.occ.rp.params["editor_type"] == 1:
+        if self.occ.rp.sysvar["editor_type"] == 1:
             self.use_page("editor_numbers")
 
     def run_function(self, name):
@@ -365,33 +365,33 @@ class layout():
         self.use_main_page()
 
     def ed_decrease(self):
-        u = unicode(self.occ.rp.params["variable_value"])
-        i = self.occ.rp.params["editor_index"]
+        u = unicode(self.occ.rp.sysvar["variable_value"])
+        i = self.occ.rp.sysvar["editor_index"]
         ui = u[i]
         if ui == "0":
             ui = "9"
         else:
             ui = unicode(int(ui) - 1)
         un = u[:i] + ui + u[i + 1:]
-        self.occ.rp.params["variable_value"] = un
+        self.occ.rp.sysvar["variable_value"] = un
         self.force_refresh()
 
     def ed_increase(self):
-        u = unicode(self.occ.rp.params["variable_value"])
-        i = self.occ.rp.params["editor_index"]
+        u = unicode(self.occ.rp.sysvar["variable_value"])
+        i = self.occ.rp.sysvar["editor_index"]
         ui = u[i]
         if ui == "9":
             ui = "0"
         else:
             ui = unicode(int(ui) + 1)
         un = u[:i] + ui + u[i + 1:]
-        self.occ.rp.params["variable_value"] = un
+        self.occ.rp.sysvar["variable_value"] = un
         self.force_refresh()
 
     def ed_next(self):
-        u = unicode(self.occ.rp.params["variable_value"])
+        u = unicode(self.occ.rp.sysvar["variable_value"])
         l = len(u) - 1
-        i = self.occ.rp.params["editor_index"]
+        i = self.occ.rp.sysvar["editor_index"]
         i += 1
         if i > l:
             i = l
@@ -400,30 +400,30 @@ class layout():
             # FIXME localisation points to be used here
             if (ui == ".") or (ui == ","):
                 i += 1
-        self.occ.rp.params["editor_index"] = i
+        self.occ.rp.sysvar["editor_index"] = i
         self.force_refresh()
 
     def ed_prev(self):
-        u = unicode(self.occ.rp.params["variable_value"])
-        i = self.occ.rp.params["editor_index"]
+        u = unicode(self.occ.rp.sysvar["variable_value"])
+        i = self.occ.rp.sysvar["editor_index"]
         i -= 1
         if i < 0:
             i = 0
             uv = "0" + u
-            self.occ.rp.params["variable_value"] = uv
+            self.occ.rp.sysvar["variable_value"] = uv
         else:
             ui = u[i]
             # FIXME localisation points to be used here
             if (ui == ".") or (ui == ","):
                 i -= 1
-        self.occ.rp.params["editor_index"] = i
+        self.occ.rp.sysvar["editor_index"] = i
         self.force_refresh()
 
     def ed_change_unit(self, direction):
         # direction to be 1 (next) or 0 (previous)
-        variable = self.occ.rp.params["variable"]
-        variable_unit = self.occ.rp.params["variable_unit"]
-        variable_value = self.occ.rp.params["variable_raw_value"]
+        variable = self.occ.rp.sysvar["variable"]
+        variable_unit = self.occ.rp.sysvar["variable_unit"]
+        variable_value = self.occ.rp.sysvar["variable_raw_value"]
         current_unit_index = self.occ.rp.units_allowed[
             variable].index(variable_unit)
         if direction == 1:
@@ -446,8 +446,8 @@ class layout():
             self.occ.l.warning(
                 "[LY] Formatting not available: param_name ={}".format(variable))
             f = "%.1f"
-        self.occ.rp.params["variable_value"] = float(f % float(variable_value))
-        self.occ.rp.params["variable_unit"] = next_unit
+        self.occ.rp.sysvar["variable_value"] = float(f % float(variable_value))
+        self.occ.rp.sysvar["variable_unit"] = next_unit
 
     def ed_next_unit(self):
         self.ed_change_unit(1)
@@ -458,19 +458,19 @@ class layout():
         self.force_refresh()
 
     def accept_edit(self):
-        variable = self.occ.rp.params["variable"]
-        variable_unit = self.occ.rp.params["variable_unit"]
-        variable_raw_value = self.occ.rp.params["variable_raw_value"]
-        variable_value = self.occ.rp.params["variable_value"]
-        if self.occ.rp.params["editor_type"] == 0:
+        variable = self.occ.rp.sysvar["variable"]
+        variable_unit = self.occ.rp.sysvar["variable_unit"]
+        variable_raw_value = self.occ.rp.sysvar["variable_raw_value"]
+        variable_value = self.occ.rp.sysvar["variable_value"]
+        if self.occ.rp.sysvar["editor_type"] == 0:
             self.occ.rp.units[variable] = variable_unit
-        if self.occ.rp.params["editor_type"] == 1:
+        if self.occ.rp.sysvar["editor_type"] == 1:
             unit_raw = self.occ.rp.get_internal_unit(variable)
             value = variable_value
             if unit_raw != variable_unit:
                 value = self.uc.convert(variable_raw_value, variable_unit)
             self.occ.rp.p_raw[variable] = float(value)
-            self.occ.rp.units[variable] = self.occ.rp.params["variable_unit"]
+            self.occ.rp.units[variable] = self.occ.rp.sysvar["variable_unit"]
             if variable == "altitude_home":
                 # Force recalculation
                 self.occ.rp.p_raw["pressure_at_sea_level"] = 0
@@ -547,4 +547,4 @@ class layout():
             log_level = 40
         log_level_name = logging.getLevelName(log_level)
         self.occ.switch_log_level(log_level_name)
-        self.occ.rp.params["debug_level"] = log_level_name
+        self.occ.rp.sysvar["debug_level"] = log_level_name
