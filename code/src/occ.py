@@ -27,13 +27,9 @@ SWIPE_LENGTH = 30  # pixels of swipe
 
 EV_UPDATE_VALUES = USEREVENT + 1
 EV_SAVE_CONFIG = USEREVENT + 2
-# FIXME Cadence simulation to be removed when bluetooth sensor goes live
-EV_CADENCE_EMUL = USEREVENT + 3
 
 REFRESH_TIME = 1000
 CONFIG_SAVE_TIME = 15000
-# FIXME Cadence simulation to be removed when bluetooth sensor goes live
-CADENCE_EMUL = 650
 
 
 class open_cycling_computer():
@@ -53,9 +49,6 @@ class open_cycling_computer():
         self.l.debug("[OCC] EV_SAVE_CONFIG to be generated every {} s".format(
             CONFIG_SAVE_TIME / 1000))
         pygame.time.set_timer(EV_SAVE_CONFIG, CONFIG_SAVE_TIME)
-        self.l.debug(
-            "[OCC] Cadence event emulation every {} ms".format(CADENCE_EMUL))
-        pygame.time.set_timer(EV_CADENCE_EMUL, CADENCE_EMUL)
         self.width = width
         self.height = height
         self.l.debug("[OCC] Screen size is {} x {}".format(
@@ -263,9 +256,6 @@ class open_cycling_computer():
         elif event.type == EV_UPDATE_VALUES:
             self.l.debug("[OCC] calling update_values {}".format(time_now))
             self.rp.update_values()
-        elif event.type == EV_CADENCE_EMUL:
-            self.l.debug("[OCC] calling calculate_cadence {}".format(time_now))
-            self.rp.calculate_cadence()
         elif event.type == EV_SAVE_CONFIG:
             self.l.debug("[OCC] calling write_config {}".format(time_now))
             self.write_config()
