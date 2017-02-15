@@ -1,17 +1,26 @@
-10. Consider scroll-over-the-edge to switch pages
-12. Control rounding errors when switching units in editor
-13. Fix inconsistent naming: func, function, param_name
-14. Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
-27. Review & avoid try/catch. It's too expensive
-28. Speed filtering or max speed will be false sooner or later. Average from 2/3 samples?
-31. New editor layout. Current is confusing.
-38. Threads write to log aftred log end
-42. Use sprites to make smooth page switching?
-47. Click to switch value i.e. click on temperature to cycle over min/average/max
-51. Add backlight control
-52. Add easy option to finish simulation on non RPI hardware
-53. Is it possible to read date/time from GPS chip with no fix or a separate clock is needed?
-54. Crash on rider weight unit change when there is a leading zero - remove leading zero immediately when not needed?
+UI
+1. Consider scroll-over-the-edge to switch pages
+2. Use sprites to make smooth page switching?
+3. Control rounding errors when switching units in editor
+4. New editor layout. Current is confusing.
+5. Click to switch value i.e. click on temperature to cycle over min/average/max
+6. Button maps with colour images
+
+CODING STYLE:
+1. Fix inconsistent naming: func, function, param_name
+2. Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
+3. Review & avoid try/catch. It's too expensive
+4. Add a standard parent class for hardware module running in a separate thread (init, start, run, stop, get_data)
+5. Use dict for ride_parameters.py parameters
+6. Add new params from modules to ride parameters? Modules to give ready for use values? Help standarisation, but makes splitting code into libs harder.
+
+REAL WORLD PROBLEMS:
+1. Speed filtering or max speed will be false sooner or later. Average from 2/3 samples? Kalman?
+2. Average cadence to be calculated for ride time (reset with ride time?)
+
+CODE ERRORS:
+1. Threads write to log aftred log end [ERROR]
+2. Crash on rider weight unit change when there is a leading zero - remove leading zero immediately when not needed?
 $ python src/occ.py
 Exception in thread Thread-3:
 Traceback (most recent call last):
@@ -24,7 +33,7 @@ Traceback (most recent call last):
   File "/home/przemo/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 227, in render
     rv2 = uv[i]
 IndexError: string index out of range
-55. Crash when no config/config.xml file
+3. Crash when no config/config.xml file
 [DEBUG] [OCC] Reading config. Path = config/config.xml
 [DEBUG] [OCC][F] read_config
 [ERROR] [OCC] I/O Error when trying to parse config file. Falling back to default config
@@ -40,8 +49,82 @@ Traceback (most recent call last):
   File "src/lxml/parser.pxi", line 690, in lxml.etree._handleParseResult (src/lxml/lxml.etree.c:102912)
   File "src/lxml/parser.pxi", line 618, in lxml.etree._raiseParseError (src/lxml/lxml.etree.c:101778)
 IOError: Error reading file 'config/config.xml': failed to load external entity "config/config.xml"
-56. Button maps with colour images
-57. Make libaray for layout design?
-58. Explore python-osmgpsmap
-59. Setting time from GPS for the first time breaks delta (trip time)
-60. Fix lost should be marked in log?
+4. Setting time from GPS for the first time breaks delta (trip time)
+
+HARDWARE:
+1. Add backlight control
+2. Is it possible to read date/time from GPS chip with no fix or a separate clock is needed?
+3. Fix lost should be marked in log?
+
+FUTURE
+1. Make libaray for layout design?
+2. Explore python-osmgpsmap
+3. Add parent class for BLE to solve locking during initialisation
+
+[DONE]
+1. [DONE] Saving setting (i.e. current layout)
+2. [DONE] Split module tests from main part and use consistent naming
+3. [DONE] When bmp183 is not connected Ctrl-C doesn't quit occ.py 
+4. [DONE] Add visualisation of clickable areas for easy debugging
+5. [DONE] Editing units (selection list)
+6. [DONE] Conversion table for units, start with basic km <-> mph
+7. [DONE] Editing single digits in numbers
+8. [DONE] Avoid highlighting when sweeping (MOUSEMOTION should be OK for that)
+9. [DONE] Find a solutin to black square under hidden cursor. pygame.mouse.set_pos() ? - Solved with 90dbdfc0eb8f1b7ce115eee0e0f942bcdadb1c97
+11. [DONE] Use this for rel_movement: >>> from operator import add >>> map(add, list1, list2)
+15. [DONE] Allow for changing units of non-editable params like speed or temperature. Block edit in editor but leave unit switching?
+16. [DISCARDED] Reading time since boot from gps? - there is no need fo this
+17. [DONE] Logging to file to debug field test crashes
+18. [DONE] Setup formatting for logger as per https://docs.python.org/2/library/logging.html
+19. [DONE] Add more logging, dump ride params to log?
+20. [DONE] Cut down logging without losing information
+21. [IN TESTING - see MOD[20] Rare error on start
+	Exception in thread Thread-1:
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/threading.py", line 552, in __bootstrap_inner
+	    self.run()
+	  File "/home/pi/OpenCyclingComputer/src/gps_mtk3339.py", line 51, in run
+	    self.data.next()
+	  File "/usr/lib/python2.7/dist-packages/gps/gps.py", line 311, in next
+	    if self.read() == -1:
+	  File "/usr/lib/python2.7/dist-packages/gps/gps.py", line 302, in read
+	    self.__oldstyle_shim()
+	  File "/usr/lib/python2.7/dist-packages/gps/gps.py", line 267, in __oldstyle_shim
+	    self.fix.time = isotime(self.utc.encode("ascii"))
+	  File "/usr/lib/python2.7/dist-packages/gps/misc.py", line 97, in isotime
+	    return calendar.timegm(time.strptime(date, "%Y-%m-%dT%H:%M:%S")) + float("0." + msec)
+	ImportError: Failed to import _strptime because the import lockis held by another thread.
+	Update: twice same error showed up in my code
+22. [DONE] Use for exceptions logging: Logger.exception(msg, *args, **kwargs)
+23. [DONE] Add option for easy rendering icons, like a small image that is overlapped on top of background.
+24. [DONE] Units switching for non-editable parameters
+25. [DONE] Saving preferred units to config file
+26. [DONE - text file] Database setup + full ride logging. Or just text file and normal logging?
+	http://bytes.com/topic/python/answers/44055-logging-two-files
+29. [DONE] Read time from GPS when it will be battery powered
+30. [DONE] Read config_base if there is no config.xml file
+32. [DONE] Resetting records
+33. [DONE] Add total_time (no speed trigger)
+34. [DONE] Speed gets stuck when loosing fix at speed != 0
+35. [DONE] for pressure] Kalman for altitude
+36. [DONE] [in settings] Unit editor for non-editabl parameters like speed. Long click to trigger. Or units in Settings?
+37. [DONE] Mousemove turn off highlight
+39. [DONE] Resetng speed_max doesn't wrk
+40. [DONE] Setting home altitude has to trigger sea level pressure recalculation
+41. [DONE] Icons with different states, i.e. to show gps signal strength
+43. [DONE] Error after stopping gpsd:
+	Exception in thread Thread-1:
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/threading.py", line 552, in __bootstrap_inner
+	    self.run()
+	  File "/home/pi/OpenCyclingComputer/src/gps_mtk3339.py", line 112, in run
+	    self.fix_mode = fix_mode[0]
+	KeyError: 0
+44. [DONE] Setting time from gps is breaking distance calculations. (time shift * speed is added to distance). Record time shift and make correction?
+45. [TESTING] Replace speed_gps_noise with hardware option
+46. [DONE] Remove oversampling of pressure when Kalman filter is in place
+48. [TESTING] Ridetime, ridetime_total, odometer  are affected by time shift
+49. [DONE] Altitude goes crazy in simulation mode and stabilises on 2052m
+50. [DONE] GPS doesn't come back after gpsd restart
+51. [DONE] Add easy option to finish simulation on non RPI hardware
+
