@@ -2,11 +2,12 @@
 
 import threading
 import logging
-import time
+#import time
 #from gps import gps
 #from bmp183 import bmp183
 #from gps_mtk3339 import gps_mtk3339
 from ble import ble
+from bluepy.btle import BTLEException
 
 
 class sensors(threading.Thread):
@@ -17,19 +18,19 @@ class sensors(threading.Thread):
         self.l = logging.getLogger('system')
         self.simulate = simulate
         self.connected = {'ble': False}
-        if not self.simulate:
-            print "Init called..."
 
     def run(self):
         if not self.simulate:
             while not self.connected['ble']:
                 self.l.info("[RP] Initialising BLE sensor")
                 #FIXME Hardcoded address
-                self.ble = ble(self.simulate, "fd:df:0e:4e:76:cf")
-                self.l.info("[RP] Starting BLE thread")
-                self.ble.start()
-                time.sleep(2)
-            self.connected['ble'] = True
+                try:
+                    self.ble = ble(self.simulate, "fd:df:0e:4e:76:cf")
+                    self.l.info("[RP] Starting BLE thread")
+                    self.ble.start()
+                    self.connected['ble'] = True
+                except BTLEException:
+                    self.l.info("[RP] Connecion to BLE sensor failed")
 
     def get_sensor(self, name):
         #FIXME Currnetly only ble

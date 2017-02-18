@@ -179,8 +179,7 @@ class ride_parameters():
             self.occ.rp.gps.time_adjustment_delta = 0
             # FIXME Correct other parameters like ridetime
         self.l.debug("[RP] timestamp: {} dtime {}".format(t, self.p_raw["dtime"]))
-        #FIXME get BLE data
-        #self.read_ble_data()
+        self.read_ble_data()
         self.read_bmp183_data()
         self.calculate_altitude()
         self.calculate_time_related_parameters()
@@ -274,13 +273,13 @@ class ride_parameters():
     def read_ble_data(self):
         if self.ble:
             data = self.ble.get_data()
-            print data
+            self.p_raw['cadence'] = self.clean_value(data['cadence'])
+            self.p_raw['wheel_time_stamp'] = self.clean_value(data['wheel_time_stamp'])
+            self.p_raw['wheel_rev_time'] = self.clean_value(data['wheel_rev_time'])
+            self.p_raw['crank_time_stamp'] = self.clean_value(data['crank_time_stamp'])
         else:
+            self.l.info('[RP] BLE sensor not set, trying to set it...')
             self.ble = self.sensors.get_sensor('ble')
-        self.p_raw['cadence'] = self.clean_value(data['cadence'])
-        self.p_raw['wheel_time_stamp'] = self.clean_value(data['wheel_time_stamp'])
-        self.p_raw['wheel_rev_time'] = self.clean_value(data['wheel_rev_time'])
-        self.p_raw['crank_time_stamp'] = self.clean_value(data['crank_time_stamp'])
 
     def read_gps_data(self):
         data = self.gps.get_data()
