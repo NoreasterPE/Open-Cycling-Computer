@@ -435,6 +435,7 @@ class ride_parameters():
     def reset_ride(self):
         self.p_raw["distance"] = 0
         self.p_raw["ridetime"] = 0
+        self.reset_cadence()
 
     def reset_cadence(self):
         self.p_raw["cadence"] = 0
