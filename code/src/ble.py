@@ -1,6 +1,7 @@
 #! /usr/bin/python
 import time
 import threading
+from bluepy.btle import BTLEException
 from bluepy.btle import AssignedNumbers
 from bluepy.btle import Peripheral
 from bluepy.btle import DefaultDelegate
@@ -13,13 +14,31 @@ class ble(Peripheral, threading.Thread):
 
     def __init__(self, simulate, addr):
         threading.Thread.__init__(self)
-        self.simulate = simulate
-        self.notifications_enabled = False
+        print('Connecting to ' + addr)
         self.connected = False
+        self.simulate = simulate
+        self.connected = True
+        self.addr = addr
+        self.notifications_enabled = False
         self.wheel_time_stamp = 0
         self.wheel_rev_time = 0
         self.crank_time_stamp = 0
         self.crank_rpm = 0
+        Peripheral.__init__(self, addr, addrType='random')
+        try:
+            if not self.simulate:
+                print ".....connected to ", self.get_device_name()
+                # Set notification handler
+                #print "Enabling notifiations.."
+                self.delegate = CSC_Delegate()
+                self.withDelegate(self.delegate)
+                self.set_notifications()
+                print "Notification enabled!"
+            else:
+                print "Connection simulated"
+        except BTLEException:
+            print "BLE connection failed. Retrying in 30 s"
+            time.sleep(30)
 
     def set_notifications(self, enable=True):
         # Enable/disable notifications
@@ -34,24 +53,6 @@ class ble(Peripheral, threading.Thread):
         return ord(b[0].read())
 
     def run(self):
-        while not self.connected:
-            try:
-                if not self.simulate:
-                    print('Connecting to ' + self.addr)
-                    Peripheral.__init__(self, self.addr, addrType='random')
-                    self.connected = True
-                    print ".....connected to ", self.get_device_name()
-                    # Set notification handler
-                    print "Enabling notifiations.."
-                    self.delegate = CSC_Delegate()
-                    self.withDelegate(self.delegate)
-                    self.set_notifications()
-                else:
-                    print "Connection simulated"
-                self.connected = True
-            except:
-                print "BLE connection failed. Retrying in 5s"
-                time.sleep(5)
         while self.connected:
             if not self.simulate:
                 if self.waitForNotifications(0.3):
@@ -76,10 +77,11 @@ class ble(Peripheral, threading.Thread):
         self.stop()
 
     def stop(self):
-        if not self.simulate:
+        if not self.simulate and self.connected:
+            self.connected = False
+            time.sleep(1)
             self.set_notifications(enable=False)
             self.disconnect()
-        self.connected = False
 
 
 class CSC_Delegate(DefaultDelegate):

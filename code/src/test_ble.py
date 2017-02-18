@@ -1,45 +1,46 @@
 import time
+from ble import ble
 from bluepy.btle import BTLEException
-import ble
+from wheel import wheel as w
 
 if __name__ == '__main__':
     try:
-
-        WHEEL_PERIM_700x25 = 2.112
+        wheel = w()
+        WHEEL_CIRC_700x25 = wheel.get_size("700x25C") / 1000.0
         connected = False
         while not connected:
             try:
-                lez = ble.ble("fd:df:0e:4e:76:cf")
+                #print "Initialising BLE device..."
+                lez = ble(False, "fd:df:0e:4e:76:cf")
+                #print "Starting BLE thread..."
                 print "Battery level: ", lez.get_battery_level()
-                lez.set_notifications()
-                val = lez.delegate
-                connected = True
+                lez.start()
+                time.sleep(1)
+                connected = lez.connected
             except BTLEException:
-                print ".....sensor is not on? Retrying."
+                print ".....sensor is not on? Waiting..."
 
+        print ".....sensor started!"
         counter = 0
         NOTIFICATION_EXPIRY_TIME = 1.0
         while True:
-            if lez.waitForNotifications(0.01):
+                wheel_time_stamp, wheel_rev_time, crank_time_stamp, crank_rpm = lez.get_data()
                 # handleNotification() was called
                 print "TS: {}".format(time.time())
-                if (time.time() - val.wheel_time_stamp) > NOTIFICATION_EXPIRY_TIME:
+                if (time.time() - wheel_time_stamp) > NOTIFICATION_EXPIRY_TIME:
                     print "[EXPIRED] ",
-                speed = 3.6 * WHEEL_PERIM_700x25 / \
-                    (val.wheel_rev_time + 0.00001)
+                speed = 3.6 * WHEEL_CIRC_700x25 / (wheel_rev_time + 0.00001)
                 # print "Speed / RPM: {:10.3f}".format(speed / val.crank_rpm)
-                print "TS: {}, speed: {:10.3f}".format(val.wheel_time_stamp, speed)
-                if (time.time() - val.crank_time_stamp) > NOTIFICATION_EXPIRY_TIME:
+                print "TS: {}, speed: {:10.3f} km/h".format(wheel_time_stamp, speed)
+                if (time.time() - crank_time_stamp) > NOTIFICATION_EXPIRY_TIME:
                     print "[EXPIRED] ",
-                print "TS: {}, RPM: {:10.3f}".format(val.crank_time_stamp, val.crank_rpm)
+                print "TS: {}, RPM: {:10.3f}".format(crank_time_stamp, crank_rpm)
+                time.sleep(1)
 
     except (KeyboardInterrupt, SystemExit):
         if connected:
             try:
-                lez.set_notifications(enable=False)
-            except:
-                pass
-            try:
-                lez.disconnect()
+                print ("Lez stop")
+                lez.stop()
             except:
                 pass
