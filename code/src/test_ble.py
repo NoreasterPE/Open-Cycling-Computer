@@ -22,9 +22,14 @@ if __name__ == '__main__':
 
         print ".....sensor started!"
         counter = 0
-        NOTIFICATION_EXPIRY_TIME = 1.0
+        NOTIFICATION_EXPIRY_TIME = 2.0
         while True:
-                wheel_time_stamp, wheel_rev_time, crank_time_stamp, crank_rpm = lez.get_data()
+                data = lez.get_data()
+                wheel_time_stamp = data['wheel_time_stamp']
+                wheel_rev_time = data['wheel_rev_time']
+                crank_time_stamp = data['crank_time_stamp']
+                cadence = data['cadence']
+
                 # handleNotification() was called
                 print "TS: {}".format(time.time())
                 if (time.time() - wheel_time_stamp) > NOTIFICATION_EXPIRY_TIME:
@@ -34,7 +39,7 @@ if __name__ == '__main__':
                 print "TS: {}, speed: {:10.3f} km/h".format(wheel_time_stamp, speed)
                 if (time.time() - crank_time_stamp) > NOTIFICATION_EXPIRY_TIME:
                     print "[EXPIRED] ",
-                print "TS: {}, RPM: {:10.3f}".format(crank_time_stamp, crank_rpm)
+                print "TS: {}, RPM: {:10.3f}".format(crank_time_stamp, cadence)
                 time.sleep(1)
 
     except (KeyboardInterrupt, SystemExit):

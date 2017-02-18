@@ -67,10 +67,11 @@ class ble(Peripheral, threading.Thread):
                     self.cadence = 96.0
 
     def get_data(self):
-        return (dict(wheel_time_stamp=self.wheel_time_stamp,
-                     wheel_rev_time=self.wheel_rev_time,
-                     crank_time_stamp=self.crank_time_stamp,
-                     cadence=self.cadence))
+        r = dict(wheel_time_stamp=self.wheel_time_stamp,
+                 wheel_rev_time=self.wheel_rev_time,
+                 crank_time_stamp=self.crank_time_stamp,
+                 cadence=self.cadence)
+        return r
 
     def __del__(self):
         self.stop()
