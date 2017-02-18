@@ -14,11 +14,10 @@ class ble(Peripheral, threading.Thread):
     WAIT_TIME = 0.3      # Time of waiting for notifications or time between simulations. Can we wait for notifications longer?
 
     def __init__(self, simulate, addr):
+        self.connected = False
         threading.Thread.__init__(self)
         print('Connecting to ' + addr)
-        self.connected = False
         self.simulate = simulate
-        self.connected = True
         self.addr = addr
         self.notifications_enabled = False
         self.wheel_time_stamp = 0
@@ -26,15 +25,14 @@ class ble(Peripheral, threading.Thread):
         self.crank_time_stamp = 0
         self.cadence = 0
         Peripheral.__init__(self, addr, addrType='random')
+        self.connected = True
         try:
             if not self.simulate:
                 print ".....connected to ", self.get_device_name()
                 # Set notification handler
-                #print "Enabling notifiations.."
                 self.delegate = CSC_Delegate()
                 self.withDelegate(self.delegate)
                 self.set_notifications()
-                print "Notification enabled!"
             else:
                 print "Connection simulated"
         except BTLEException:
