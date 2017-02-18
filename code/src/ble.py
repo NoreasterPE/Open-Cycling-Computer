@@ -11,6 +11,7 @@ class ble(Peripheral, threading.Thread):
     # FIXME - replace with proper service & characteristic scan
     CSC_HANDLE = 0x000f  # FIXME - explain
     CSC_ENABLE = "10"    # FIXME - explain
+    WAIT_TIME = 0.3      # Time of waiting for notifications or time between simulations. Can we wait for notifications longer?
 
     def __init__(self, simulate, addr):
         threading.Thread.__init__(self)
@@ -55,13 +56,13 @@ class ble(Peripheral, threading.Thread):
     def run(self):
         while self.connected:
             if not self.simulate:
-                if self.waitForNotifications(0.3):
+                if self.waitForNotifications(self.WAIT_TIME):
                     self.wheel_time_stamp = self.delegate.wheel_time_stamp
                     self.wheel_rev_time = self.delegate.wheel_rev_time
                     self.crank_time_stamp = self.delegate.crank_time_stamp
                     self.crank_rpm = self.delegate.crank_rpm
             else:
-                    time.sleep(0.3)
+                    time.sleep(self.WAIT_TIME)
                     self.wheel_time_stamp = time.time()
                     self.wheel_rev_time = 1.0
                     self.crank_time_stamp = time.time()
