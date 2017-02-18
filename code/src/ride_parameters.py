@@ -278,6 +278,7 @@ class ride_parameters():
             self.p_raw['wheel_rev_time'] = self.clean_value(data['wheel_rev_time'])
             self.p_raw['crank_time_stamp'] = self.clean_value(data['crank_time_stamp'])
         else:
+            #FIXME Add time check to avoid too many messages
             self.l.info('[RP] BLE sensor not set, trying to set it...')
             self.ble = self.sensors.get_sensor('ble')
 
