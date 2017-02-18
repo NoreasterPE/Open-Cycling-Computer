@@ -21,6 +21,7 @@ class ride_parameters():
         self.uc = units()
         self.l.info("[RP] Initialising sensors")
         self.sensors = sensors(simulate)
+        self.ble = None
         self.l.info("[RP] Initialising GPS")
         self.gps = gps_mtk3339(simulate)
         self.l.info("[RP] Initialising bmp183 sensor")
@@ -269,11 +270,17 @@ class ride_parameters():
             return variable
         else:
             return empty
-#FIXME Get BLE data
-#    def read_ble_data(self):
-#        data = self.ble.get_data()
-#        # FIXME - add more params
-#        self.p_raw["cadence"] = self.clean_value(data[3])
+
+    def read_ble_data(self):
+        if self.ble:
+            data = self.ble.get_data()
+            print data
+        else:
+            self.ble = self.sensors.get_sensor('ble')
+        self.p_raw['cadence'] = self.clean_value(data['cadence'])
+        self.p_raw['wheel_time_stamp'] = self.clean_value(data['wheel_time_stamp'])
+        self.p_raw['wheel_rev_time'] = self.clean_value(data['wheel_rev_time'])
+        self.p_raw['crank_time_stamp'] = self.clean_value(data['crank_time_stamp'])
 
     def read_gps_data(self):
         data = self.gps.get_data()

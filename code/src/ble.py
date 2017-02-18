@@ -24,7 +24,7 @@ class ble(Peripheral, threading.Thread):
         self.wheel_time_stamp = 0
         self.wheel_rev_time = 0
         self.crank_time_stamp = 0
-        self.crank_rpm = 0
+        self.cadence = 0
         Peripheral.__init__(self, addr, addrType='random')
         try:
             if not self.simulate:
@@ -60,19 +60,19 @@ class ble(Peripheral, threading.Thread):
                     self.wheel_time_stamp = self.delegate.wheel_time_stamp
                     self.wheel_rev_time = self.delegate.wheel_rev_time
                     self.crank_time_stamp = self.delegate.crank_time_stamp
-                    self.crank_rpm = self.delegate.crank_rpm
+                    self.cadence = self.delegate.cadence
             else:
                     time.sleep(self.WAIT_TIME)
                     self.wheel_time_stamp = time.time()
                     self.wheel_rev_time = 1.0
                     self.crank_time_stamp = time.time()
-                    self.crank_rpm = 96.0
+                    self.cadence = 96.0
 
     def get_data(self):
-        return (self.wheel_time_stamp,
-                self.wheel_rev_time,
-                self.crank_time_stamp,
-                self.crank_rpm)
+        return (dict(wheel_time_stamp=self.wheel_time_stamp,
+                     wheel_rev_time=self.wheel_rev_time,
+                     crank_time_stamp=self.crank_time_stamp,
+                     cadence=self.cadence))
 
     def __del__(self):
         self.stop()
@@ -101,7 +101,7 @@ class CSC_Delegate(DefaultDelegate):
         self.crank_last_time_event = 0
         self.crank_last_time_delta = 0
         self.crank_rev_time = 0
-        self.crank_rpm = 0
+        self.cadence = 0
 
     def handleNotification(self, cHandle, data):
         # print "Notification received from :", hex(cHandle)
@@ -167,7 +167,7 @@ class CSC_Delegate(DefaultDelegate):
                 self.wheel_last_time_delta = cr_dt
                 self.crank_rev_time = rt
                 self.crank_cumul = cr_cr
-                self.crank_rpm = 60.0 / rt
+                self.cadence = 60.0 / rt
 
                 # print "Crank: cumul revs: {:5d}".format(cr_cr),
                 # print "| last time: {:10.3f}".format(self.crank_last_time_event),
