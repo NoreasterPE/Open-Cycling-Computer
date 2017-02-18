@@ -351,7 +351,7 @@ class ride_parameters():
         dt = self.p_raw["dtime"]
         c = self.p_raw["cadence"]
         ca = self.p_raw["cadence_avg"]
-        tt = self.p_raw["timeon"] - self.p_raw["time_cadence_reset"]
+        tt = self.p_raw["ridetime"] - self.p_raw["time_cadence_reset"]
         ca_new = (c * dt + ca * tt) / (tt + dt)
         self.p_raw["cadence_avg"] = ca_new
 
