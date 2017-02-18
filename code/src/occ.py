@@ -2,13 +2,13 @@
 
 from layout import layout
 from operator import add
-from pygame.locals import USEREVENT
 from pygame.locals import NOEVENT
+from pygame.locals import USEREVENT
 from rendering import rendering
 from ride_parameters import ride_parameters
+from shutil import copyfile
 from time import sleep
 from time import strftime
-from shutil import copyfile
 import logging
 import logging.handlers
 import lxml.etree as eltree
