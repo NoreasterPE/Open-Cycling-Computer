@@ -38,7 +38,9 @@ class ride_parameters():
                           climb=0, daltitude=0, daltitude_cumulative=0,
                           odometer=0, ddistance=0, ddistance_cumulative=0, distance=0,
                           eps=0, ept=0, epv=0, epx=0, gps_strength=0, gpsfix='', latitude=0, longitude=0, satellites=0, satellitesused=0,
-                          Q=0, cadence=0, cadence_avg=0, cadence_max=INF_MIN,
+                          Q=0,
+                          cadence=0, cadence_avg=0, cadence_max=INF_MIN,
+                          cadence_time_stamp=time.time(), cadence_expiry_time=1.5, time_cadence_reset=0.0001,
                           heartrate=0,
                           riderweight=0,
                           ridetime=0, ridetime_total=0,
@@ -48,7 +50,7 @@ class ride_parameters():
                           # Maximum allowable temperature change between measurements. If measurement differ more than delta they are ignored.
                           temperature_max_delta=10,
                           track=0,
-                          timeon=0.0001, utc='', rtc='', time_cadence_reset=0.0001)
+                          timeon=0.0001, utc='', rtc='')
 
         # Internal units
         self.p_raw_units = dict(Q='', altitude='m', cadence='RPM', climb='m/s', distance='m', eps='', ept='', epv='', epx='',
@@ -122,8 +124,6 @@ class ride_parameters():
         self.split_speed("speed_max")
         self.update_param("altitude_home")
         self.l.info("[RP] altitude_home set to {}".format(self.params["altitude_home"]))
-        self.cadence_timestamp = None
-        self.cadence_timestamp_old = None
         # Temporary
         self.p_raw["Q"] = self.bmp183_sensor.Q
 
@@ -273,10 +273,13 @@ class ride_parameters():
     def read_ble_data(self):
         if self.ble:
             data = self.ble.get_data()
-            self.p_raw['cadence'] = self.clean_value(data['cadence'])
             self.p_raw['wheel_time_stamp'] = self.clean_value(data['wheel_time_stamp'])
             self.p_raw['wheel_rev_time'] = self.clean_value(data['wheel_rev_time'])
             self.p_raw['cadence_time_stamp'] = self.clean_value(data['cadence_time_stamp'])
+            if (time.time() - self.p_raw['cadence_time_stamp']) < self.p_raw['cadence_expiry_time']:
+                self.p_raw['cadence'] = self.clean_value(data['cadence'])
+            else:
+                self.p_raw["cadence"] = 0
         else:
             #FIXME Add time check to avoid too many messages
             self.l.info('[RP] BLE sensor not set, trying to set it...')
@@ -538,13 +541,6 @@ class ride_parameters():
         self.update_param("temperature_avg")
         self.update_param("temperature_min")
         self.update_param("temperature_max")
-
-    def calculate_cadence(self):
-        self.cadence_timestamp = time.time()
-        if self.cadence_timestamp_old is not None:
-            dt = self.cadence_timestamp - self.cadence_timestamp_old
-            self.p_raw["cadence"] = 60 / dt
-        self.cadence_timestamp_old = self.cadence_timestamp
 
     def update_cadence(self):
         self.calculate_avg_cadence()
