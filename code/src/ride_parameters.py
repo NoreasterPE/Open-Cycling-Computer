@@ -20,7 +20,7 @@ class ride_parameters():
         self.r = self.setup_ridelog()
         self.uc = units()
         self.l.info("[RP] Initialising sensors")
-        self.sensors = sensors(simulate)
+        self.sensors = sensors(False)
         self.ble = None
         self.l.info("[RP] Initialising GPS")
         self.gps = gps_mtk3339(simulate)
@@ -276,7 +276,7 @@ class ride_parameters():
             self.p_raw['cadence'] = self.clean_value(data['cadence'])
             self.p_raw['wheel_time_stamp'] = self.clean_value(data['wheel_time_stamp'])
             self.p_raw['wheel_rev_time'] = self.clean_value(data['wheel_rev_time'])
-            self.p_raw['crank_time_stamp'] = self.clean_value(data['crank_time_stamp'])
+            self.p_raw['cadence_time_stamp'] = self.clean_value(data['cadence_time_stamp'])
         else:
             #FIXME Add time check to avoid too many messages
             self.l.info('[RP] BLE sensor not set, trying to set it...')

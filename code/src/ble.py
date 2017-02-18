@@ -24,7 +24,7 @@ class ble(Peripheral, threading.Thread):
         self.notifications_enabled = False
         self.wheel_time_stamp = 0
         self.wheel_rev_time = 0
-        self.crank_time_stamp = 0
+        self.cadence_time_stamp = 0
         self.cadence = 0
         Peripheral.__init__(self, addr, addrType='random')
         self.connected = True
@@ -62,19 +62,19 @@ class ble(Peripheral, threading.Thread):
                 if self.waitForNotifications(self.WAIT_TIME):
                     self.wheel_time_stamp = self.delegate.wheel_time_stamp
                     self.wheel_rev_time = self.delegate.wheel_rev_time
-                    self.crank_time_stamp = self.delegate.crank_time_stamp
+                    self.cadence_time_stamp = self.delegate.cadence_time_stamp
                     self.cadence = self.delegate.cadence
             else:
                     time.sleep(self.WAIT_TIME)
                     self.wheel_time_stamp = time.time()
                     self.wheel_rev_time = 1.0
-                    self.crank_time_stamp = time.time()
+                    self.cadence_time_stamp = time.time()
                     self.cadence = 96.0
 
     def get_data(self):
         r = dict(wheel_time_stamp=self.wheel_time_stamp,
                  wheel_rev_time=self.wheel_rev_time,
-                 crank_time_stamp=self.crank_time_stamp,
+                 cadence_time_stamp=self.cadence_time_stamp,
                  cadence=self.cadence)
         return r
 
@@ -105,7 +105,7 @@ class CSC_Delegate(DefaultDelegate):
         self.wheel_last_time_event = 0
         self.wheel_last_time_delta = 0
         self.wheel_rev_time = 0
-        self.crank_time_stamp = time.time()
+        self.cadence_time_stamp = time.time()
         self.crank_cumul = 0
         self.crank_last_time_event = 0
         self.crank_last_time_delta = 0
@@ -170,7 +170,7 @@ class CSC_Delegate(DefaultDelegate):
             if (self.crank_cumul != cr_cr) and (self.crank_last_time_event != cr_le):
                 rt = cr_dt / (cr_cr - self.crank_cumul)
 
-                self.crank_time_stamp = ts
+                self.cadence_time_stamp = ts
                 self.crank_last_time_event = cr_le
                 self.wheel_last_time_delta = cr_dt
                 self.crank_rev_time = rt

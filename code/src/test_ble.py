@@ -27,7 +27,7 @@ if __name__ == '__main__':
                 data = lez.get_data()
                 wheel_time_stamp = data['wheel_time_stamp']
                 wheel_rev_time = data['wheel_rev_time']
-                crank_time_stamp = data['crank_time_stamp']
+                cadence_time_stamp = data['cadence_time_stamp']
                 cadence = data['cadence']
 
                 # handleNotification() was called
@@ -37,9 +37,9 @@ if __name__ == '__main__':
                 speed = 3.6 * WHEEL_CIRC_700x25 / (wheel_rev_time + 0.00001)
                 # print "Speed / RPM: {:10.3f}".format(speed / val.crank_rpm)
                 print "TS: {}, speed: {:10.3f} km/h".format(wheel_time_stamp, speed)
-                if (time.time() - crank_time_stamp) > NOTIFICATION_EXPIRY_TIME:
+                if (time.time() - cadence_time_stamp) > NOTIFICATION_EXPIRY_TIME:
                     print "[EXPIRED] ",
-                print "TS: {}, RPM: {:10.3f}".format(crank_time_stamp, cadence)
+                print "TS: {}, RPM: {:10.3f}".format(cadence_time_stamp, cadence)
                 time.sleep(1)
 
     except (KeyboardInterrupt, SystemExit):
