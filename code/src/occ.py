@@ -8,6 +8,7 @@ from rendering import rendering
 from ride_parameters import ride_parameters
 from time import sleep
 from time import strftime
+from shutil import copyfile
 import logging
 import logging.handlers
 import lxml.etree as eltree
@@ -101,8 +102,9 @@ class open_cycling_computer():
             config_tree = eltree.parse(self.config_path)
         except IOError:
             self.l.exception(
-                "[OCC] I/O Error when trying to parse config file. Falling back to default config")
-            self.config_path = "config/config_base.xml"
+                "[OCC] I/O Error when trying to parse config file. Making copy of base_config")
+            copyfile('config/config_base.xml', 'config/config.xml')
+            self.config_path = "config/config.xml"
             try:
                 config_tree = eltree.parse(self.config_path)
             except IOError:
