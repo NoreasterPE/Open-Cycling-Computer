@@ -155,6 +155,8 @@ class ride_parameters():
         return ride_logger
 
     def stop(self):
+        self.l.info("[RP] Stopping sensors thread")
+        self.sensors.stop()
         self.l.info("[RP] Stopping GPS thread")
         self.gps.stop()
         self.l.info("[RP] Stopping BMP thread")
