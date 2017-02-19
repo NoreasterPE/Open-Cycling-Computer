@@ -1,6 +1,4 @@
 from sensors import sensors
-from bmp183 import bmp183
-from gps_mtk3339 import gps_mtk3339
 from time import strftime
 from units import units
 from wheel import wheel
@@ -22,11 +20,9 @@ class ride_parameters():
         self.uc = units()
         self.l.info("[RP] Initialising sensors")
         self.sensors = sensors(False)
-        self.ble = None
-        self.l.info("[RP] Initialising GPS")
-        self.gps = gps_mtk3339(simulate)
-        self.l.info("[RP] Initialising bmp183 sensor")
-        self.bmp183_sensor = bmp183(self.occ, simulate)
+        self.ble = self.sensors.get_sensor('ble')
+        self.gps = self.sensors.get_sensor('gps')
+        self.bmp183 = self.sensors.get_sensor('bmp183')
 
         self.suffixes = ("_digits", "_tenths", "_hms")
 
@@ -281,6 +277,9 @@ class ride_parameters():
             w = wheel()
             wheel_circ = w.get_size("700x25C") / 1000.0
             self.p_raw['speed'] = wheel_circ / self.p_raw['wheel_rev_time']
+        else:
+            self.l.info('[RP] BLE sensor not set, trying to set it...')
+            self.ble = self.sensors.get_sensor('ble')
 
     def read_gps_data(self):
         data = self.gps.get_data()
@@ -486,7 +485,7 @@ class ride_parameters():
         self.params["rtc"] = self.params["date"] + " " + self.params["time"]
 
     def read_bmp183_data(self):
-        data = self.bmp183_sensor.get_data()
+        data = self.bmp183.get_data()
         self.p_raw['pressure'] = data['pressure']
         self.p_raw['temperature'] = data['temperature']
 
