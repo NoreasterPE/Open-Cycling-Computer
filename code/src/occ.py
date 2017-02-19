@@ -44,26 +44,21 @@ class open_cycling_computer():
         if not self.simulate:
             pygame.event.set_grab(True)
             pygame.mouse.set_visible(0)
-        self.l.debug(
-            "[OCC] EV_UPDATE_VALUES to be generated every {} ms".format(REFRESH_TIME))
+        self.l.debug("[OCC] EV_UPDATE_VALUES to be generated every {} ms".format(REFRESH_TIME))
         pygame.time.set_timer(EV_UPDATE_VALUES, REFRESH_TIME)
-        self.l.debug("[OCC] EV_SAVE_CONFIG to be generated every {} s".format(
-            CONFIG_SAVE_TIME / 1000))
+        self.l.debug("[OCC] EV_SAVE_CONFIG to be generated every {} s".format(CONFIG_SAVE_TIME / 1000))
         pygame.time.set_timer(EV_SAVE_CONFIG, CONFIG_SAVE_TIME)
         self.width = width
         self.height = height
-        self.l.debug("[OCC] Screen size is {} x {}".format(
-            self.width, self.height))
+        self.l.debug("[OCC] Screen size is {} x {}".format(self.width, self.height))
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.clock = pygame.time.Clock()
         self.l.debug("[OCC] Calling ride_parameters")
         self.rp = ride_parameters(self, simulate)
         self.config_path = "config/config.xml"
-        self.l.debug(
-            "[OCC] Reading config. Path = {}".format(self.config_path))
+        self.l.debug("[OCC] Reading config. Path = {}".format(self.config_path))
         self.read_config()
-        self.l.debug(
-            "[OCC] Setting layout. Path = {}".format(self.layout_path))
+        self.l.debug("[OCC] Setting layout. Path = {}".format(self.layout_path))
         self.layout = layout(self, self.layout_path)
         self.l.debug("[OCC] Starting RP sensors")
         self.rp.start_sensors()
@@ -362,8 +357,7 @@ if __name__ == "__main__":
         simulate = False
     else:
         simulate = True
-        sys_logger.warning(
-            "Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
+        sys_logger.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
     main_window = open_cycling_computer(simulate)
     sys_logger.debug("[OCC] simulate = {}".format(simulate))
     main_window.main_loop()

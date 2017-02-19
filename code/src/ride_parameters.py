@@ -213,12 +213,10 @@ class ride_parameters():
             self.p_raw["odometer"] += d
             self.p_raw["ridetime"] += dt
             self.p_raw["ridetime_total"] += dt
-            self.p_raw["speed_avg"] = self.p_raw[
-                "distance"] / self.p_raw["ridetime"]
+            self.p_raw["speed_avg"] = self.p_raw["distance"] / self.p_raw["ridetime"]
             self.update_param("speed_avg")
             self.split_speed("speed_avg")
-            self.l.debug("[RP] speed_gps: {}, distance: {}, odometer: {}".
-                         format(s, self.p_raw["distance"], self.p_raw["odometer"]))
+            self.l.debug("[RP] speed_gps: {}, distance: {}, odometer: {}".format(s, self.p_raw["distance"], self.p_raw["odometer"]))
         else:
             self.p_raw["ddistance"] = 0
             self.l.debug("[RP] speed_gps: below speed_gps_low treshold")
@@ -331,12 +329,10 @@ class ride_parameters():
         self.params["gpsfix_time"] = self.p_raw["gpsfix_time"]
 
     def set_max(self, param):
-        self.p_raw[
-            param + "_max"] = max(self.p_raw[param], self.p_raw[param + "_max"])
+        self.p_raw[param + "_max"] = max(self.p_raw[param], self.p_raw[param + "_max"])
 
     def set_min(self, param):
-        self.p_raw[
-            param + "_min"] = min(self.p_raw[param], self.p_raw[param + "_min"])
+        self.p_raw[param + "_min"] = min(self.p_raw[param], self.p_raw[param + "_min"])
 
     def calculate_avg_temperature(self):
         dt = self.p_raw["dtime"]
@@ -521,8 +517,7 @@ class ride_parameters():
         else:
             self.p_raw["altitude_previous"] = self.p_raw["altitude"]
             self.p_raw["altitude"] = calc_alt()
-            self.p_raw["daltitude"] = self.p_raw[
-                "altitude"] - self.p_raw["altitude_previous"]
+            self.p_raw["daltitude"] = self.p_raw["altitude"] - self.p_raw["altitude_previous"]
         self.l.debug("[RP] altitude: {}, daltitude {}".format(
             self.p_raw["altitude"], self.p_raw["daltitude"]))
 
@@ -531,10 +526,8 @@ class ride_parameters():
         pressure = self.p_raw["pressure"]
         altitude_home = self.p_raw["altitude_home"]
         if altitude_home < 43300:
-            self.p_raw["pressure_at_sea_level"] = float(
-                pressure / pow((1 - altitude_home / 44330), 5.255))
-        self.l.debug("[RP] pressure_at_sea_level: {}".format(
-            self.p_raw["pressure_at_sea_level"]))
+            self.p_raw["pressure_at_sea_level"] = float(pressure / pow((1 - altitude_home / 44330), 5.255))
+        self.l.debug("[RP] pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]))
 
     def update_temperatures(self):
         self.set_min("temperature")
