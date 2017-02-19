@@ -287,21 +287,21 @@ class ride_parameters():
 
     def read_gps_data(self):
         data = self.gps.get_data()
+        self.p_raw['altitude_gps'] = self.clean_value(data['altitude_gps'])
+        self.p_raw['climb_gps'] = self.clean_value(data['climb_gps'])
+        self.p_raw['eps'] = self.clean_value(data['eps'])
+        self.p_raw['ept'] = self.clean_value(data['ept'])
+        self.p_raw['epv'] = self.clean_value(data['epv'])
+        self.p_raw['epx'] = self.clean_value(data['epx'])
+        self.p_raw['fix_mode_gps'] = data['fix_mode_gps']
+        self.p_raw['fix_time_gps'] = data['fix_time_gps']
         self.p_raw['latitude'] = self.clean_value(data['latitude'])
         self.p_raw['longitude'] = self.clean_value(data['longitude'])
-        self.p_raw['altitude_gps'] = self.clean_value(data['altitude_gps'])
-        self.p_raw['speed_gps'] = self.clean_value(data['speed_gps'])
-        self.p_raw['utc'] = data['utc']
-        self.p_raw['satellitesused'] = self.clean_value(data['satellitesused'])
         self.p_raw['satellites'] = self.clean_value(data['satellites'])
-        self.p_raw['fix_mode_gps'] = data['fix_mode_gps']
-        self.p_raw['climb_gps'] = self.clean_value(data['climb_gps'])
+        self.p_raw['satellitesused'] = self.clean_value(data['satellitesused'])
+        self.p_raw['speed_gps'] = self.clean_value(data['speed_gps'])
         self.p_raw['track_gps'] = self.clean_value(data['track_gps'])
-        self.p_raw['eps'] = self.clean_value(data['eps'])
-        self.p_raw['epx'] = self.clean_value(data['epx'])
-        self.p_raw['epv'] = self.clean_value(data['epv'])
-        self.p_raw['ept'] = self.clean_value(data['ept'])
-        self.p_raw['fix_time_gps'] = data['fix_time_gps']
+        self.p_raw['utc'] = data['utc']
 
         gps_str = self.p_raw["satellitesused"] - 3
         if gps_str < 0:
