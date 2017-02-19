@@ -97,8 +97,7 @@ class gps_mtk3339(threading.Thread):
 
     def process_gps(self):
         timestamp = time.time()
-        self.l.debug("[GPS] timestamp: {}, running: {},".format(
-            timestamp, self.running))
+        self.l.debug("[GPS] timestamp: {}, running: {},".format(timestamp, self.running))
         gps_data_available = False
         try:
             # FIXME Fails sometimes with ImportError from gps.py - see TODO 21
@@ -140,8 +139,7 @@ class gps_mtk3339(threading.Thread):
                     self.fix_time = time.mktime(time.strptime(
                         data.fix.time, '%Y-%m-%dT%H:%M:%S.%fZ'))
                 except ImportError:
-                    self.l.critical(
-                        "[GPS] self.fix_time {}".format(self.fix_time))
+                    self.l.critical("[GPS] self.fix_time {}".format(self.fix_time))
                     pass
             if self.set_time:
                 if (self.utc is not None):

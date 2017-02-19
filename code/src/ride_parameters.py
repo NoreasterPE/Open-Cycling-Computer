@@ -109,8 +109,7 @@ class ride_parameters():
         self.p_editable = dict(Q=1, altitude_home=1, odometer=1, odometer_units=0,
                                riderweight=1, riderweight_units=0, speed_units=0, temperature_units=0)
 
-        self.p_resettable = dict(distance=1, odometer=1, ridetime=1, speed_max=1,
-                                 cadence=1, cadence_avg=1, cadence_max=1)
+        self.p_resettable = dict(distance=1, odometer=1, ridetime=1, speed_max=1, cadence=1, cadence_avg=1, cadence_max=1)
 
         # Do not record any speed below 2.5 m/s
         self.speed_gps_low = 2.5
@@ -192,8 +191,7 @@ class ride_parameters():
         # FIXME make proper param for tunnig. Calculate slope if the distance
         # delta was grater than 8,4m
         elif self.p_raw["ddistance_cumulative"] > 8.4:
-            self.p_raw["slope"] = self.p_raw[
-                "daltitude_cumulative"] / self.p_raw["ddistance_cumulative"]
+            self.p_raw["slope"] = self.p_raw["daltitude_cumulative"] / self.p_raw["ddistance_cumulative"]
             self.l.debug("[RP] daltitude_cumulative: {} ddistance_cumulative: {}".
                          format(self.p_raw["daltitude_cumulative"], self.p_raw["ddistance_cumulative"]))
             self.p_raw["daltitude_cumulative"] = 0
@@ -260,8 +258,7 @@ class ride_parameters():
         if param_name in self.p_desc:
             return self.p_desc[param_name]
         else:
-            self.l.error(
-                "[RP] {} has no description defined".format(param_name))
+            self.l.error("[RP] {} has no description defined".format(param_name))
             return "No description"
 
     def clean_value(self, variable, empty=0):
@@ -452,8 +449,7 @@ class ride_parameters():
         if param_name in self.p_format:
             f = self.p_format[param_name]
         else:
-            self.l.error(
-                "[RP] Formatting not available: param_name = {}".format(param_name))
+            self.l.error("[RP] Formatting not available: param_name = {}".format(param_name))
             f = "%.1f"
 
         if self.p_raw[param_name] != "-":
