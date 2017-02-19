@@ -103,8 +103,7 @@ class open_cycling_computer():
             try:
                 config_tree = eltree.parse(self.config_path)
             except IOError:
-                self.l.exception(
-                    "[OCC] I/O Error when trying to parse to default config. Quitting!!")
+                self.l.exception("[OCC] I/O Error when trying to parse to default config. Quitting!!")
                 self.cleanup()
         self.config = config_tree.getroot()
         try:
@@ -117,8 +116,7 @@ class open_cycling_computer():
             self.layout_path = self.config.find("layout_path").text
         except AttributeError:
             self.layout_path = "layouts/default.xml"
-            self.l.error(
-                "[OCC] Missing layout path, falling back to default.xml")
+            self.l.error("[OCC] Missing layout path, falling back to default.xml")
         error_list = []
         try:
             self.rp.p_raw["riderweight"] = float(
@@ -164,8 +162,7 @@ class open_cycling_computer():
         except AttributeError:
             error_list.append("speed")
         try:
-            self.rp.units["temperature"] = self.config.find(
-                "temperature_units").text
+            self.rp.units["temperature"] = self.config.find("temperature_units").text
         except AttributeError:
             error_list.append("temperature")
         self.rp.update_param("speed_max")
@@ -184,41 +181,27 @@ class open_cycling_computer():
         log_level = logging.getLevelName(self.l.getEffectiveLevel())
         config_tree = eltree.Element("config")
         eltree.SubElement(config_tree, "log_level").text = log_level
-        eltree.SubElement(
-            config_tree, "layout_path").text = self.layout.layout_path
-        eltree.SubElement(config_tree, "riderweight").text = unicode(
-            self.rp.p_raw["riderweight"])
-        eltree.SubElement(config_tree, "riderweight_units").text = unicode(
-            self.rp.units["riderweight"])
-        eltree.SubElement(config_tree, "altitude_home").text = unicode(
-            self.rp.p_raw["altitude_home"])
-        eltree.SubElement(config_tree, "altitude_home_units").text = unicode(
-            self.rp.units["altitude_home"])
-        eltree.SubElement(config_tree, "odometer").text = unicode(
-            self.rp.p_raw["odometer"])
-        eltree.SubElement(config_tree, "odometer_units").text = unicode(
-            self.rp.units["odometer"])
-        eltree.SubElement(config_tree, "ridetime_total").text = unicode(
-            self.rp.p_raw["ridetime_total"])
-        eltree.SubElement(config_tree, "speed_max").text = unicode(
-            self.rp.p_raw["speed_max"])
-        eltree.SubElement(config_tree, "speed_units").text = unicode(
-            self.rp.units["speed"])
-        eltree.SubElement(config_tree, "temperature_units").text = unicode(
-            self.rp.units["temperature"])
+        eltree.SubElement(config_tree, "layout_path").text = self.layout.layout_path
+        eltree.SubElement(config_tree, "riderweight").text = unicode(self.rp.p_raw["riderweight"])
+        eltree.SubElement(config_tree, "riderweight_units").text = unicode(self.rp.units["riderweight"])
+        eltree.SubElement(config_tree, "altitude_home").text = unicode(self.rp.p_raw["altitude_home"])
+        eltree.SubElement(config_tree, "altitude_home_units").text = unicode(self.rp.units["altitude_home"])
+        eltree.SubElement(config_tree, "odometer").text = unicode(self.rp.p_raw["odometer"])
+        eltree.SubElement(config_tree, "odometer_units").text = unicode(self.rp.units["odometer"])
+        eltree.SubElement(config_tree, "ridetime_total").text = unicode(self.rp.p_raw["ridetime_total"])
+        eltree.SubElement(config_tree, "speed_max").text = unicode(self.rp.p_raw["speed_max"])
+        eltree.SubElement(config_tree, "speed_units").text = unicode(self.rp.units["speed"])
+        eltree.SubElement(config_tree, "temperature_units").text = unicode(self.rp.units["temperature"])
         # FIXME error handling for file operation
-        eltree.ElementTree(config_tree).write(
-            self.config_path, encoding="UTF-8", pretty_print=True)
+        eltree.ElementTree(config_tree).write(self.config_path, encoding="UTF-8", pretty_print=True)
 
     def screen_touched_handler(self, time_now):
         if (time_now - self.pressed_t) > LONG_CLICK:
-            self.l.debug("[OCC] LONG CLICK : {} {} {}".format(
-                time_now, self.pressed_t, self.pressed_pos))
+            self.l.debug("[OCC] LONG CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
             self.layout.check_click(self.pressed_pos, 1)
             self.reset_motion()
         if self.released_t != 0:
-            self.l.debug("[OCC] SHORT CLICK : {} {} {}".format(
-                time_now, self.pressed_t, self.pressed_pos))
+            self.l.debug("[OCC] SHORT CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
             self.layout.check_click(self.pressed_pos, 0)
             self.reset_motion()
         dx = self.rel_movement[0]
@@ -263,8 +246,7 @@ class open_cycling_computer():
             pressed_rel = pygame.mouse.get_rel()
             self.add_rel_motion = True
             self.layout.render_button = self.pressed_pos
-            self.l.debug("[OCC] DOWN:{} {} {}".format(
-                self.pressed_t, self.released_t, self.pressed_pos))
+            self.l.debug("[OCC] DOWN:{} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
         elif event.type == pygame.MOUSEBUTTONUP:
             # That check prevents setting release_x after long click
             if (self.pressed_t != 0):
@@ -277,8 +259,7 @@ class open_cycling_computer():
         elif event.type == pygame.MOUSEMOTION:
             pressed_rel = pygame.mouse.get_rel()
             if self.add_rel_motion:
-                self.rel_movement = tuple(
-                    map(add, self.rel_movement, pressed_rel))
+                self.rel_movement = tuple(map(add, self.rel_movement, pressed_rel))
             self.l.debug("[OCC] MOTION: {}".format(self.rel_movement))
         # self.l.debug("[OCC] ticking:time_now:{} pressed_t:{} pressed_pos:{} released_t:{} released_pos:{}". \
         # format(time_now, self.pressed_t, self.pressed_pos, self.released_t,
