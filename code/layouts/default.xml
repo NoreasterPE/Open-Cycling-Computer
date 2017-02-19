@@ -125,10 +125,10 @@
 		<field function="longitude">
 			<text_center x="60" y="60" size="3"/>
 		</field>
-		<field function="gpsfix_time">
+		<field function="fix_time_gps">
 			<text_center x="60" y="95" size="3"/>
 		</field>
-		<field function="gpsfix">
+		<field function="fix_gps">
 			<text_center x="60" y="130" size="3"/>
 		</field>
 		<field function="time">

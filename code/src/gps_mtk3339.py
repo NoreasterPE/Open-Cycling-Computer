@@ -31,17 +31,17 @@ class gps_mtk3339(threading.Thread):
             ser.set_nmea_update_rate(1000)
             #ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 5, gsa = 5, gsv = 5)
             ser.set_nmea_output(gll=0, rmc=1, vtg=0, gga=1, gsa=5, gsv=5)
-        self.altitude = NaN
-        self.climb = NaN
-        self.fix_mode = ""
-        self.fix_time = ""
+        self.altitude_gps = NaN
+        self.climb_gps = NaN
+        self.fix_mode_gps = ""
+        self.fix_time_gps = ""
         self.latitude = NaN
         self.longitude = NaN
         self.present = False
         self.satellites = 0
         self.satellitesused = 0
-        self.speed = NaN
-        self.track = NaN
+        self.speed_gps = NaN
+        self.track_gps = NaN
         self.eps = NaN
         self.epx = NaN
         self.epv = NaN
@@ -86,13 +86,13 @@ class gps_mtk3339(threading.Thread):
                 self.latitude = 52.0001
                 self.longitude = -8.0001
                 self.utc = "utc"
-                self.climb = 0.2
-                self.speed = 9.99
-                self.altitude = 50.0
+                self.climb_gps = 0.2
+                self.speed_gps = 9.99
+                self.altitude_gps = 50.0
                 self.satellites = 10
                 self.satellitesused = 4
-                self.fix_mode = fix_mode[2]
-                self.fix_time = "N/A"
+                self.fix_mode_gps = fix_mode[2]
+                self.fix_time_gps = "N/A"
                 time.sleep(1)
 
     def process_gps(self):
@@ -118,11 +118,11 @@ class gps_mtk3339(threading.Thread):
             self.latitude = data.fix.latitude
             self.longitude = data.fix.longitude
             self.utc = data.utc
-            self.climb = data.fix.climb
-            self.speed = data.fix.speed
-            self.track = data.fix.track
-            self.altitude = data.fix.altitude
-            self.fix_mode = fix_mode[data.fix.mode]
+            self.climb_gps = data.fix.climb
+            self.speed_gps = data.fix.speed
+            self.track_gps = data.fix.track
+            self.altitude_gps = data.fix.altitude
+            self.fix_mode_gps = fix_mode[data.fix.mode]
             self.eps = data.fix.eps
             self.epx = data.fix.epx
             self.epv = data.fix.epv
@@ -153,40 +153,35 @@ class gps_mtk3339(threading.Thread):
                 self.l.error("[GPS] AttributeError exception in GPS")
                 pass
             self.l.debug("[GPS] timestamp: {}, fix time: {}, UTC: {}, Satellites: {}, Used: {}"
-                         .format(timestamp, self.fix_time, self.utc, self.satellites,
-                                 self.satellitesused))
+                         .format(timestamp, self.fix_time, self.utc, self.satellites, self.satellitesused))
             self.l.debug("[GPS] Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"
-                         .format(self.fix_mode, self.latitude, self.longitude,
-                                 self.speed, self.altitude, self.climb))
+                         .format(self.fix_mode, self.latitude, self.longitude, self.speed, self.altitude, self.climb))
         else:
             self.l.debug("[GPS] Setting null values to GPS params")
             self.latitude = NaN
             self.longitude = NaN
             self.utc = None
-            self.climb = NaN
-            self.speed = NaN
-            self.altitude = NaN
-            self.fix_mode = fix_mode[1]
-            self.fix_time = NaN
+            self.climb_gps = NaN
+            self.speed_gps = NaN
+            self.altitude_gps = NaN
+            self.fix_mode_gps = fix_mode[1]
+            self.fix_time_gps = NaN
             self.satellites = 0
             self.satellitesused = 0
-            self.track = NaN
+            self.track_gps = NaN
             self.eps = NaN
             self.epx = NaN
             self.epv = NaN
             self.ept = NaN
 
     def get_data(self):
-        #FIXME switch to dict instead of indexed tuple
-        return (self.latitude, self.longitude,   # 0, 1
-                self.altitude, self.speed,       # 2, 3
-                self.utc,                        # 4
-                self.satellitesused,             # 5
-                self.satellites, self.fix_mode,  # 6, 7
-                self.climb, self.track,          # 8,9
-                self.eps, self.epx,              # 10, 11
-                self.epv, self.ept,              # 12, 13
-                self.fix_time)                   # 14
+        r = dict(latitude=self.latitude, longitude=self.longitude,
+                 altitude_gps=self.altitude_gps, speed_gps=self.speed_gps, utc=self.utc,
+                 satellitesused=self.satellitesused, satellites=self.satellites,
+                 fix_mode_gps=self.fix_mode_gps, climb_gps=self.climb_gps, track_gps=self.track_gps,
+                 eps=self.eps, epx=self.epx, epv=self.epv, ept=self.ept,
+                 fix_time_gps=self.fix_time_gps)
+        return r
 
     def __del__(self):
         self.stop()

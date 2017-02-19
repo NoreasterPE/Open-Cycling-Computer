@@ -37,7 +37,7 @@ class ride_parameters():
                           pressure=0, pressure_at_sea_level=0,
                           climb=0, daltitude=0, daltitude_cumulative=0,
                           odometer=0, ddistance=0, ddistance_cumulative=0, distance=0,
-                          eps=0, ept=0, epv=0, epx=0, gps_strength=0, gpsfix='', latitude=0, longitude=0, satellites=0, satellitesused=0,
+                          eps=0, ept=0, epv=0, epx=0, gps_strength=0, fix_gps='', latitude=0, longitude=0, satellites=0, satellitesused=0,
                           Q=0,
                           cadence=0, cadence_avg=0, cadence_max=INF_MIN,
                           cadence_time_stamp=time.time(), cadence_expiry_time=1.5, time_cadence_reset=0.0001,
@@ -54,7 +54,7 @@ class ride_parameters():
 
         # Internal units
         self.p_raw_units = dict(Q='', altitude='m', cadence='RPM', climb='m/s', distance='m', eps='', ept='', epv='', epx='',
-                                dtime='s', gpsfix='', latitude='', longitude='', odometer='m', pressure='Pa', riderweight='kg',
+                                dtime='s', fix_gps='', latitude='', longitude='', odometer='m', pressure='Pa', riderweight='kg',
                                 ridetime='s', ridetime_total='s', satellites='', satellitesused='', slope='m/m', speed='m/s',
                                 temperature=degC, timeon='s', time_cadence_reset='s',
                                 # FIXME degrees, what is track? Nomber of tracked sats?
@@ -63,7 +63,7 @@ class ride_parameters():
         # Params of the ride ready for rendering.
         self.params = dict(Q='-', altitude='-', altitude_gps='-', altitude_home='-', altitude_max='-', altitude_min='-',
                            cadence='-', cadence_avg='-', cadence_max='-', climb='-', distance=0, eps='-', ept='-', epv='-', epx='-',
-                           dtime=0, gpsfix='-', gpsfix_time='-', heartrate='-', latitude='-', longitude='-', odometer=0.0,
+                           dtime=0, fix_gps='-', fix_gps_time='-', heartrate='-', latitude='-', longitude='-', odometer=0.0,
                            pressure='-', pressure_at_sea_level='-', riderweight=0.0, ridetime='', ridetime_hms='', ridetime_total='',
                            ridetime_total_hms='', rtc='', satellites='-', satellitesused='-', slope='-', speed='-', speed_avg='-',
                            speed_avg_digits='-', speed_avg_tenths='-', speed_digits='-', speed_max='-', speed_max_digits='-',
@@ -77,7 +77,7 @@ class ride_parameters():
         # Formatting strings for params.
         self.p_format = dict(Q='%.3f', altitude='%.0f', altitude_gps='%.0f', altitude_home='%.0f', altitude_max='%.0f', altitude_min='%.0f',
                              cadence='%.0f', cadence_avg='%.0f', cadence_max='%.0f', climb='%.1f', distance='%.1f', eps='%.4f', epx='%.4f', epv='%.4f', ept='%.4f',
-                             dtime='%.2f', gpsfix='', gpsfix_time='', heartrate='%.0f', latitude='%.4f', longitude='%.4f', odometer='%.0f',
+                             dtime='%.2f', fix_gps='', fix_gps_time='', heartrate='%.0f', latitude='%.4f', longitude='%.4f', odometer='%.0f',
                              pressure='%.0f', pressure_at_sea_level='%.0f', riderweight='%.1f', ridetime='%.0f', ridetime_hms='', ridetime_total='.0f',
                              ridetime_total_hms='', rtc='', satellites='%.0f', satellitesused='%.0f', slope='%.0f', speed='%.1f', speed_avg='%.1f',
                              speed_avg_digits='%.0f', speed_avg_tenths='%.0f', speed_digits='%.0f', speed_max='%.1f', speed_max_digits='%.0f', speed_max_tenths='%.0f',
@@ -86,7 +86,7 @@ class ride_parameters():
 
         # Units - name has to be identical as in params
         self.units = dict(Q='', altitude='m', cadence='RPM', climb='m/s', distance='km', eps='', epx='', epv='', ept='',
-                          dtime='s', gpsfix='', gpsfix_time='', heartrate='BPM', latitude='', longitude='', odometer='km', pressure='hPa',
+                          dtime='s', fix_gps='', fix_gps_time='', heartrate='BPM', latitude='', longitude='', odometer='km', pressure='hPa',
                           riderweight='kg', ridetime='s', ridetime_hms='', ridetime_total='s', ridetime_total_hms='', satellites='',
                           satellitesused='', slope='%', speed='km/h', temperature=degC, timeon='s', timeon_hms='', time_cadence_reset='s',
                           track='')
@@ -203,7 +203,7 @@ class ride_parameters():
         dt = self.p_raw["dtime"]
         self.p_raw["timeon"] += dt
         # FIXME calculate with speed not speed_gps when bt sensors are set up
-        s = self.p_raw["speed_gps"]
+        s = self.p_raw["speed"]
         if (s > self.speed_gps_low):
             d = float(dt * s)
             self.p_raw["ddistance"] = d
@@ -277,28 +277,28 @@ class ride_parameters():
                 self.p_raw['cadence'] = self.clean_value(data['cadence'])
             else:
                 self.p_raw["cadence"] = 0
-        else:
-            #FIXME Add time check to avoid too many messages
-            self.l.info('[RP] BLE sensor not set, trying to set it...')
-            self.ble = self.sensors.get_sensor('ble')
+            #FIXME - wheel size definition should be on the config page
+            w = wheel()
+            wheel_circ = w.get_size("700x25C") / 1000.0
+            self.p_raw['speed'] = wheel_circ / self.p_raw['wheel_rev_time']
 
     def read_gps_data(self):
         data = self.gps.get_data()
-        self.p_raw["latitude"] = self.clean_value(data[0])
-        self.p_raw["longitude"] = self.clean_value(data[1])
-        self.p_raw["altitude_gps"] = self.clean_value(data[2])
-        self.p_raw["speed_gps"] = self.clean_value(data[3])
-        self.p_raw["utc"] = data[4]
-        self.p_raw["satellitesused"] = self.clean_value(data[5])
-        self.p_raw["satellites"] = self.clean_value(data[6])
-        self.p_raw["gpsfix"] = data[7]
-        self.p_raw["climb"] = self.clean_value(data[8])
-        self.p_raw["track"] = self.clean_value(data[9])
-        self.p_raw["eps"] = self.clean_value(data[10])
-        self.p_raw["epx"] = self.clean_value(data[11])
-        self.p_raw["epv"] = self.clean_value(data[12])
-        self.p_raw["ept"] = self.clean_value(data[13])
-        self.p_raw["gpsfix_time"] = data[14]
+        self.p_raw['latitude'] = self.clean_value(data['latitude'])
+        self.p_raw['longitude'] = self.clean_value(data['longitude'])
+        self.p_raw['altitude_gps'] = self.clean_value(data['altitude_gps'])
+        self.p_raw['speed_gps'] = self.clean_value(data['speed_gps'])
+        self.p_raw['utc'] = data['utc']
+        self.p_raw['satellitesused'] = self.clean_value(data['satellitesused'])
+        self.p_raw['satellites'] = self.clean_value(data['satellites'])
+        self.p_raw['fix_mode_gps'] = data['fix_mode_gps']
+        self.p_raw['climb_gps'] = self.clean_value(data['climb_gps'])
+        self.p_raw['track_gps'] = self.clean_value(data['track_gps'])
+        self.p_raw['eps'] = self.clean_value(data['eps'])
+        self.p_raw['epx'] = self.clean_value(data['epx'])
+        self.p_raw['epv'] = self.clean_value(data['epv'])
+        self.p_raw['ept'] = self.clean_value(data['ept'])
+        self.p_raw['fix_time_gps'] = data['fix_time_gps']
 
         gps_str = self.p_raw["satellitesused"] - 3
         if gps_str < 0:
@@ -306,11 +306,9 @@ class ride_parameters():
         if gps_str > 3:
             gps_str = 3
         self.p_raw["gps_strength"] = gps_str
-        self.p_raw["speed"] = self.clean_value(self.p_raw["speed_gps"])
-        if self.p_raw["speed"] < self.speed_gps_noise:
-            self.p_raw["speed"] = 0
-        # FIXME That will have to be changed with bluetooth speed sensor
-        self.p_raw["speed_gps"] = self.p_raw["speed"]
+        self.p_raw["speed_gps"] = self.clean_value(self.p_raw["speed_gps"])
+        if self.p_raw["speed_gps"] < self.speed_gps_noise:
+            self.p_raw["speed_gps"] = 0
 
     def split_speed(self, speed_name):
         self.params[speed_name + "_digits"] = self.params[speed_name][:-2]
@@ -321,9 +319,9 @@ class ride_parameters():
             self.p_raw["speed_max"] = self.p_raw["speed"]
         self.split_speed("speed_max")
 
-    def update_gpsfix(self):
-        self.params["gpsfix"] = self.p_raw["gpsfix"]
-        self.params["gpsfix_time"] = self.p_raw["gpsfix_time"]
+    def update_fix_gps(self):
+        self.params["fix_mode_gps"] = self.p_raw["fix_mode_gps"]
+        self.params["fix_time_gps"] = self.p_raw["fix_time_gps"]
 
     def set_max(self, param):
         self.p_raw[param + "_max"] = max(self.p_raw[param], self.p_raw[param + "_max"])
@@ -359,7 +357,7 @@ class ride_parameters():
 
     def update_params(self):
         self.update_rtc()
-        self.update_gpsfix()
+        self.update_fix_gps()
         self.update_param("dtime")
         self.update_param("latitude")
         self.update_param("longitude")
