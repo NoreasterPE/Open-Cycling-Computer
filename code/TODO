@@ -5,6 +5,7 @@ UI
 4. New editor layout. Current is confusing.
 5. Click to switch value i.e. click on temperature to cycle over min/average/max
 6. Button maps with colour images
+7. Add icon showing BLE connection status
 
 CODING STYLE:
 1. Fix inconsistent naming: func, function, param_name
