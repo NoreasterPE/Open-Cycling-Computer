@@ -3,6 +3,7 @@ from bmp183 import bmp183
 from gps_mtk3339 import gps_mtk3339
 from time import strftime
 from units import units
+from wheel import wheel
 import logging
 import math
 import time
@@ -112,10 +113,12 @@ class ride_parameters():
         self.p_resettable = dict(distance=1, odometer=1, ridetime=1, speed_max=1, cadence=1, cadence_avg=1, cadence_max=1)
 
         # Do not record any speed below 2.5 m/s
+        #FIXME Move to dict
         self.speed_gps_low = 2.5
         self.l.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
 
         # Do not show speed below 1 m/s
+        #FIXME Move to dict
         self.speed_gps_noise = 1
         self.l.info("[RP] speed_gps_noise treshold set to {}".format(self.speed_gps_noise))
 
@@ -311,6 +314,7 @@ class ride_parameters():
             self.p_raw["speed_gps"] = 0
 
     def split_speed(self, speed_name):
+        #FIXME No hardcoded formatting, move to dict
         self.params[speed_name + "_digits"] = self.params[speed_name][:-2]
         self.params[speed_name + "_tenths"] = self.params[speed_name][-1:]
 
