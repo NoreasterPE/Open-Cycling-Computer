@@ -76,9 +76,12 @@ class bmp183(threading.Thread):
         self.simulate = simulate
         self.sensor_ready = False
         self.running = False
+        self.first_run = True
         # Delay between measurements in [s]
         self.measurement_delay = 0.45
         self.temperature = 0
+        # Maximum allowable temperature change between measurements. If measurement differ more than delta they are ignored.
+        self.temperature_max_delta = 10
         self.pressure = 0
         self.pressure_unfiltered = 0
         # Setup Raspberry PINS, as numbered on BOARD
@@ -102,6 +105,10 @@ class bmp183(threading.Thread):
                 # Proceed with initial pressure/temperature measurement
         self.measure_pressure()
         self.kalman_setup()
+
+    def get_data(self):
+        r = dict(pressure=self.pressure, temperature=self.temperature)
+        return r
 
     def stop(self):
         self.l.debug("[BMP] stop")
@@ -214,7 +221,7 @@ class bmp183(threading.Thread):
         self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD['TEMP'])
         # Wait
         time.sleep(self.BMP183_CMD['TEMP_WAIT'])
-        # Read uncmpensated temperature
+        # Read uncompensated temperature
         self.UT = numpy.int32(self.read_word(self.BMP183_REG['DATA']))
         self.calculate_temperature()
 
@@ -258,7 +265,14 @@ class bmp183(threading.Thread):
         X2 = self.MC * 2 ** 11 / (X1 + self.MD)
         self.B5 = X1 + X2
         self.T = (self.B5 + 8) / 2 ** 4
-        self.temperature = self.T / 10.0
+        temperature = self.T / 10.0
+        if not self.first_run:
+            dtemperature = abs(temperature - self.temperature)
+        else:
+            dtemperature = 0
+            self.first_run = False
+        if dtemperature < self.temperature_max_delta:
+            self.temperature = temperature
 
     def stop_measurement(self):
         self.l.debug("[BMP] stop_measurement")
@@ -270,12 +284,11 @@ class bmp183(threading.Thread):
         while (self.running is True):
             self.measure_pressure()
             self.kalman_update()
-            self.l.debug("[BMP] pressure = {} Pa, temperature = {} degC"
-                         .format(self.pressure, self.temperature))
+            self.l.debug("[BMP] pressure = {} Pa, temperature = {} degC".format(self.pressure, self.temperature))
             time.sleep(self.measurement_delay)
 
     def kalman_setup(self):
-        # FIXME Add detailed commants
+        # FIXME Add detailed comments
         # FIXME that will depend on max descend/ascend speed.  calculate from max +/- 1.5m/s
         # R makes no difference, R/Q is what matters
         # P and K are self tuning

@@ -27,7 +27,6 @@ class ride_parameters():
         self.gps = gps_mtk3339(simulate)
         self.l.info("[RP] Initialising bmp183 sensor")
         self.bmp183_sensor = bmp183(self.occ, simulate)
-        self.bmp183_first_run = True
 
         self.suffixes = ("_digits", "_tenths", "_hms")
 
@@ -48,8 +47,6 @@ class ride_parameters():
                           slope=0,
                           speed=0, speed_avg=0, speed_gps=0, speed_max=0,
                           temperature=0, temperature_avg=0, temperature_max=INF_MIN, temperature_min=INF,
-                          # Maximum allowable temperature change between measurements. If measurement differ more than delta they are ignored.
-                          temperature_max_delta=10,
                           track=0,
                           timeon=0.0001, utc='', rtc='')
 
@@ -334,6 +331,7 @@ class ride_parameters():
         self.p_raw[param + "_min"] = min(self.p_raw[param], self.p_raw[param + "_min"])
 
     def calculate_avg_temperature(self):
+        #FIXME Average is broken afeert start in simulation mode
         dt = self.p_raw["dtime"]
         t = self.p_raw["temperature"]
         ta = self.p_raw["temperature_avg"]
@@ -488,16 +486,9 @@ class ride_parameters():
         self.params["rtc"] = self.params["date"] + " " + self.params["time"]
 
     def read_bmp183_data(self):
-        self.p_raw["pressure"] = self.bmp183_sensor.pressure
-        temperature = self.bmp183_sensor.temperature
-        if not self.bmp183_first_run:
-            dtemperature = abs(temperature - self.p_raw["temperature"])
-        else:
-            dtemperature = 0
-            self.bmp183_first_run = False
-        # FIXME Kalman filter in bmp183 module will obsolete this code
-        if dtemperature < self.p_raw["temperature_max_delta"]:
-            self.p_raw["temperature"] = temperature
+        data = self.bmp183_sensor.get_data()
+        self.p_raw['pressure'] = data['pressure']
+        self.p_raw['temperature'] = data['temperature']
 
     def calculate_altitude(self):
         def calc_alt():
