@@ -60,7 +60,6 @@ class gps_mtk3339(threading.Thread):
         time.sleep(3)
 
     def run(self):
-        # FIXME split it into functions - lines are too long
         if self.present:
             self.running = True
             if not self.simulate:
