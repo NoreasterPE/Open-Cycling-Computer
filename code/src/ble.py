@@ -1,10 +1,10 @@
 #! /usr/bin/python
-import time
-import threading
-import logging
 from bluepy.btle import AssignedNumbers
-from bluepy.btle import Peripheral
 from bluepy.btle import DefaultDelegate
+from bluepy.btle import Peripheral
+import logging
+import threading
+import time
 
 
 class ble(Peripheral, threading.Thread):
@@ -17,8 +17,8 @@ class ble(Peripheral, threading.Thread):
         self.l = logging.getLogger('system')
         self.l.debug('[BLE] WAIT_TIME {}'.format(self.WAIT_TIME))
         self.connected = False
+        self.l.info('[BLE] Starting ble thread')
         threading.Thread.__init__(self)
-        self.l.info('[BLE] Connecting to {}'.format(addr))
         self.simulate = simulate
         self.addr = addr
         self.notifications_enabled = False
@@ -26,15 +26,17 @@ class ble(Peripheral, threading.Thread):
         self.wheel_rev_time = 0
         self.cadence_time_stamp = 0
         self.cadence = 0
+        self.l.info('[BLE] Connecting to {}'.format(addr))
         Peripheral.__init__(self, addr, addrType='random')
         self.connected = True
         if not self.simulate:
             self.name = self.get_device_name()
             self.l.info('[BLE] Connected to {}'.format(self.name))
-            # Set notification handler
             self.l.debug('[BLE] Setting notification handler')
             self.delegate = CSC_Delegate()
+            self.l.debug('[BLE] Setting delegate')
             self.withDelegate(self.delegate)
+            self.l.debug('[BLE] Enabling notifications')
             self.set_notifications()
         else:
             self.l.info('[BLE] Connection simulated')
@@ -72,10 +74,8 @@ class ble(Peripheral, threading.Thread):
                     self.cadence = 96.0
 
     def get_data(self):
-        r = dict(wheel_time_stamp=self.wheel_time_stamp,
-                 wheel_rev_time=self.wheel_rev_time,
-                 cadence_time_stamp=self.cadence_time_stamp,
-                 cadence=self.cadence)
+        r = dict(wheel_time_stamp=self.wheel_time_stamp, wheel_rev_time=self.wheel_rev_time,
+                 cadence_time_stamp=self.cadence_time_stamp, cadence=self.cadence)
         return r
 
     def __del__(self):
@@ -84,9 +84,9 @@ class ble(Peripheral, threading.Thread):
     def stop(self):
         self.l.debug('[BLE] Stop called')
         if not self.simulate and self.connected:
-            self.l.debug('[BLE] Disabling notifications')
             self.connected = False
             time.sleep(1)
+            self.l.debug('[BLE] Disabling notifications')
             self.set_notifications(enable=False)
             self.l.debug('[BLE] Disconnecting..')
             self.disconnect()
