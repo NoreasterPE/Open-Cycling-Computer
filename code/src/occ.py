@@ -6,10 +6,10 @@ from pygame.locals import NOEVENT
 from pygame.locals import USEREVENT
 from rendering import rendering
 from ride_parameters import ride_parameters
+from sensors import sensors
 from shutil import copyfile
 from time import sleep
 from time import strftime
-from sensors import sensors
 import logging
 import logging.handlers
 import lxml.etree as eltree
@@ -54,6 +54,7 @@ class open_cycling_computer():
         self.l.debug("[OCC] Screen size is {} x {}".format(self.width, self.height))
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.clock = pygame.time.Clock()
+        self.l.debug("[OCC] Calling sensors")
         self.sensors = sensors(self, simulate)
         self.l.debug("[OCC] Calling ride_parameters")
         self.rp = ride_parameters(self, simulate)
@@ -94,7 +95,6 @@ class open_cycling_computer():
 
     def read_config(self):
         self.l.debug("[OCC][F] read_config")
-        # FIXME error handling and emergency config read if main is corrupted
         try:
             config_tree = eltree.parse(self.config_path)
         except IOError:

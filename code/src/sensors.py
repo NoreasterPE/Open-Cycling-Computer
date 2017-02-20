@@ -1,13 +1,11 @@
 #! /usr/bin/python
 
-import threading
-import logging
-#import time
-#from gps import gps
-from bmp183 import bmp183
-from gps_mtk3339 import gps_mtk3339
 from ble import ble
 from bluepy.btle import BTLEException
+from bmp183 import bmp183
+from gps_mtk3339 import gps_mtk3339
+import logging
+import threading
 
 
 class sensors(threading.Thread):
@@ -53,13 +51,10 @@ class sensors(threading.Thread):
         self.stop()
 
     def stop(self):
-        self.connected['ble'] = False
         self.running = False
-        self.l.info("[SE] Stopping BLE thread")
-        if self.sensors['ble']:
-            self.sensors['ble'].stop()
-        self.sensors['ble'] = None
-        self.l.info("[RP] Stopping GPS thread")
-        self.sensors['gps'].stop()
-        self.l.info("[RP] Stopping BMP thread")
-        self.sensors['bmp183'].stop()
+        for s in self.sensors:
+            if self.sensors[s]:
+                self.connected[s] = False
+                self.l.debug("[SE] Stopping {} thread".format(s))
+                self.sensors[s].stop()
+                self.sensors[s] = None
