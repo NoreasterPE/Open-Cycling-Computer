@@ -13,6 +13,7 @@ CODING STYLE:
 3. Review & avoid try/catch. It's too expensive
 4. Add a standard parent class for hardware module running in a separate thread (init, start, run, stop, get_data)
 6. Add new params from modules to ride parameters? Modules to give ready for use values? Help standarisation, but makes splitting code into libs harder.
+7. Move wheel size to config
 
 REAL WORLD PROBLEMS:
 1. Speed filtering or max speed will be false sooner or later. Average from 2/3 samples? Kalman?
@@ -34,6 +35,29 @@ Traceback (most recent call last):
     rv2 = uv[i]
 IndexError: string index out of range
 4. Setting time from GPS for the first time breaks delta (trip time)
+5. BLE Notifications re-enabled on quit??
+[DEBUG] [BLE] Notification received from : 0xe
+[DEBUG] [BMP] pressure = 101300.0 Pa, temperature = 19.8 degC
+[DEBUG] [BMP] pressure = 101300.0 Pa, temperature = 19.8 degC
+[INFO ] [RP] Stopping sensors thread
+[DEBUG] [SE] Stopping ble thread
+[DEBUG] [BLE] Stop called
+[DEBUG] [BMP] pressure = 101300.0 Pa, temperature = 19.8 degC
+[DEBUG] [BMP] pressure = 101300.0 Pa, temperature = 19.8 degC
+[DEBUG] [BLE] Disabling notifications
+[DEBUG] [BLE] Enabling notifications <------------------------------
+[DEBUG] [BLE] Notification received from : 0xe
+[DEBUG] [BLE] Notification received from : 0xe
+[DEBUG] [BLE] Disconnecting..
+[DEBUG] [BLE] Disconnected
+[DEBUG] [SE] Stopping bmp183 thread
+[DEBUG] [BMP] stop
+[DEBUG] [BMP] __del__
+[DEBUG] [BMP] stop
+[DEBUG] [SE] Stopping gps thread
+[DEBUG] [OCC] Writing config file
+[DEBUG] [OCC] Log end
+
 
 HARDWARE:
 1. Add backlight control
