@@ -12,7 +12,6 @@ CODING STYLE:
 2. Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
 3. Review & avoid try/catch. It's too expensive
 4. Add a standard parent class for hardware module running in a separate thread (init, start, run, stop, get_data)
-5. Use dict for ride_parameters.py parameters
 6. Add new params from modules to ride parameters? Modules to give ready for use values? Help standarisation, but makes splitting code into libs harder.
 
 REAL WORLD PROBLEMS:
@@ -34,22 +33,6 @@ Traceback (most recent call last):
   File "/home/przemo/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 227, in render
     rv2 = uv[i]
 IndexError: string index out of range
-3. Crash when no config/config.xml file
-[DEBUG] [OCC] Reading config. Path = config/config.xml
-[DEBUG] [OCC][F] read_config
-[ERROR] [OCC] I/O Error when trying to parse config file. Falling back to default config
-Traceback (most recent call last):
-  File "src/occ.py", line 101, in read_config
-    config_tree = eltree.parse(self.config_path)
-  File "src/lxml/lxml.etree.pyx", line 3310, in lxml.etree.parse (src/lxml/lxml.etree.c:77675)
-  File "src/lxml/parser.pxi", line 1791, in lxml.etree._parseDocument (src/lxml/lxml.etree.c:114029)
-  File "src/lxml/parser.pxi", line 1817, in lxml.etree._parseDocumentFromURL (src/lxml/lxml.etree.c:114379)
-  File "src/lxml/parser.pxi", line 1721, in lxml.etree._parseDocFromFile (src/lxml/lxml.etree.c:113267)
-  File "src/lxml/parser.pxi", line 1122, in lxml.etree._BaseParser._parseDocFromFile (src/lxml/lxml.etree.c:107784)
-  File "src/lxml/parser.pxi", line 580, in lxml.etree._ParserContext._handleParseResultDoc (src/lxml/lxml.etree.c:101258)
-  File "src/lxml/parser.pxi", line 690, in lxml.etree._handleParseResult (src/lxml/lxml.etree.c:102912)
-  File "src/lxml/parser.pxi", line 618, in lxml.etree._raiseParseError (src/lxml/lxml.etree.c:101778)
-IOError: Error reading file 'config/config.xml': failed to load external entity "config/config.xml"
 4. Setting time from GPS for the first time breaks delta (trip time)
 
 HARDWARE:
@@ -128,4 +111,5 @@ FUTURE
 49. [DONE] Altitude goes crazy in simulation mode and stabilises on 2052m
 50. [DONE] GPS doesn't come back after gpsd restart
 51. [DONE] Add easy option to finish simulation on non RPI hardware
-
+52. [DONE] Use dict for ride_parameters.py parameters
+53. [DONE] Crash when no config/config.xml file
