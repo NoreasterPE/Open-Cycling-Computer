@@ -31,22 +31,8 @@ class gps_mtk3339(threading.Thread):
             ser.set_nmea_update_rate(1000)
             #ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 5, gsa = 5, gsv = 5)
             ser.set_nmea_output(gll=0, rmc=1, vtg=0, gga=1, gsa=5, gsv=5)
-        self.altitude_gps = NaN
-        self.climb_gps = NaN
-        self.fix_mode_gps = ""
-        self.fix_time_gps = ""
-        self.latitude = NaN
-        self.longitude = NaN
+        self.reset_gps_data()
         self.present = False
-        self.satellites = 0
-        self.satellitesused = 0
-        self.speed_gps = NaN
-        self.track_gps = NaN
-        self.eps = NaN
-        self.epx = NaN
-        self.epv = NaN
-        self.ept = NaN
-        self.utc = None
         self.set_time = True
         self.time_adjustment_delta = 0
         if not self.simulate:
@@ -157,6 +143,9 @@ class gps_mtk3339(threading.Thread):
             self.l.debug("[GPS] Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"
                          .format(self.fix_mode, self.latitude, self.longitude, self.speed, self.altitude, self.climb))
         else:
+            self.reset_gps_data()
+
+    def reset_gps_data(self):
             self.l.debug("[GPS] Setting null values to GPS params")
             self.latitude = NaN
             self.longitude = NaN
