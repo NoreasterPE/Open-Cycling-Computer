@@ -24,6 +24,9 @@ class ride_parameters():
         self.bmp183 = self.sensors.get_sensor('bmp183')
 
         self.suffixes = ("_digits", "_tenths", "_hms")
+        #FIXME - wheel size definition should be on the config page
+        w = wheel()
+        self.wheel_circ = w.get_size("700x25C") / 1000.0
 
         self.p_raw = dict(time_stamp=time.time(),
                           # Time delta since last p_raw update
@@ -34,7 +37,7 @@ class ride_parameters():
                           odometer=0, ddistance=0, ddistance_cumulative=0, distance=0,
                           eps=0, ept=0, epv=0, epx=0, gps_strength=0, fix_mode_gps='', fix_time_gps=0, latitude=0, longitude=0, satellites=0, satellitesused=0,
                           cadence=0, cadence_avg=0, cadence_max=INF_MIN,
-                          cadence_time_stamp=time.time(), cadence_expiry_time=1.5, time_cadence_reset=0.0001,
+                          cadence_time_stamp=time.time(), ble_data_expiry_time=1.5, time_cadence_reset=0.0001,
                           heartrate=0,
                           riderweight=0,
                           ridetime=0, ridetime_total=0,
@@ -252,17 +255,19 @@ class ride_parameters():
     def read_ble_data(self):
         if self.ble:
             data = self.ble.get_data()
+            tt = time.time()
             self.p_raw['wheel_time_stamp'] = self.clean_value(data['wheel_time_stamp'])
-            self.p_raw['wheel_rev_time'] = self.clean_value(data['wheel_rev_time'])
+            if (tt - self.p_raw['wheel_time_stamp']) < self.p_raw['ble_data_expiry_time']:
+                self.p_raw['wheel_rev_time'] = self.clean_value(data['wheel_rev_time'])
+            else:
+                self.p_raw["wheel_rev_time"] = INF
+            if self.p_raw['wheel_rev_time']:
+                self.p_raw['speed'] = self.wheel_circ / self.p_raw['wheel_rev_time']
             self.p_raw['cadence_time_stamp'] = self.clean_value(data['cadence_time_stamp'])
-            if (time.time() - self.p_raw['cadence_time_stamp']) < self.p_raw['cadence_expiry_time']:
+            if (tt - self.p_raw['cadence_time_stamp']) < self.p_raw['ble_data_expiry_time']:
                 self.p_raw['cadence'] = self.clean_value(data['cadence'])
             else:
                 self.p_raw["cadence"] = 0
-            #FIXME - wheel size definition should be on the config page
-            w = wheel()
-            wheel_circ = w.get_size("700x25C") / 1000.0
-            self.p_raw['speed'] = wheel_circ / self.p_raw['wheel_rev_time']
         else:
             self.l.info('[RP] BLE sensor not set, trying to set it...')
             self.ble = self.sensors.get_sensor('ble')

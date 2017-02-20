@@ -28,17 +28,16 @@ class sensors(threading.Thread):
         self.sensors['gps'].start()
         self.l.info("[RP] Starting bmp183 thread")
         self.sensors['bmp183'].start()
-        if not self.simulate:
-            while not self.connected['ble'] and self.running:
-                self.l.info("[SE] Initialising BLE sensor")
-                #FIXME Hardcoded address
-                try:
-                    self.sensors['ble'] = ble(self.simulate, "fd:df:0e:4e:76:cf")
-                    self.l.info("[SE] Starting BLE thread")
-                    self.sensors['ble'].start()
-                    self.connected['ble'] = True
-                except BTLEException:
-                    self.l.info("[SE] Connecion to BLE sensor failed")
+        while not self.connected['ble'] and self.running:
+            self.l.info("[SE] Initialising BLE sensor")
+            #FIXME Hardcoded address
+            try:
+                self.sensors['ble'] = ble(self.simulate, "fd:df:0e:4e:76:cf")
+                self.l.info("[SE] Starting BLE thread")
+                self.sensors['ble'].start()
+                self.connected['ble'] = True
+            except BTLEException:
+                self.l.info("[SE] Connecion to BLE sensor failed")
 
     def get_sensor(self, name):
         if name in self.sensors and self.connected[name]:
