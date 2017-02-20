@@ -38,15 +38,24 @@
 		<field function="slope_units">
 			<text_center x="100" y="220" size="2"/>
 		</field>
-		<field function="altitude_gps">
-			<button x0="120" y0="240" w="119" h="80"/>
+		<field function="cadence">
+			<button x0="0" y0="240" w="119" h="80"/>
 			<text_center x="50" y="290" size="7"/>
 		</field>
-		<field function="altitude_units">
-			<text_center x="110" y="310" size="2"/>
+		<field function="cadence_min">
+			<text_center x="20" y="255" size="2">-</text_center>
 		</field>
-		<field function="altitude_gps_icon">
-			<text_center x="97" y="267" file="images/altitude_icon_20x32.png"/>
+		<field function="cadence_avg">
+			<text_center x="60" y="255" size="2"/>
+		</field>
+		<field function="cadence_max">
+			<text_center x="100" y="255" size="2"/>
+		</field>
+		<field function="cadence_units">
+			<text_center x="105" y="310" size="1"/>
+		</field>
+		<field function="cadence_icon">
+			<text_center x="98" y="267" file="images/cadence_icon_20x32.png"/>
 		</field>
 		<field function="altitude">
 			<button x0="120" y0="240" w="119" h="80"/>
@@ -137,24 +146,15 @@
 		<field function="date">
 			<text_center x="180" y="60" size="3"/>
 		</field>
-		<field function="cadence">
-			<button x0="0" y0="240" w="119" h="80"/>
+		<field function="altitude_gps">
+			<button x0="120" y0="240" w="119" h="80"/>
 			<text_center x="50" y="290" size="7"/>
 		</field>
-		<field function="cadence_min">
-			<text_center x="20" y="255" size="2">-</text_center>
+		<field function="altitude_units">
+			<text_center x="110" y="310" size="2"/>
 		</field>
-		<field function="cadence_avg">
-			<text_center x="60" y="255" size="2"/>
-		</field>
-		<field function="cadence_max">
-			<text_center x="100" y="255" size="2"/>
-		</field>
-		<field function="cadence_units">
-			<text_center x="105" y="310" size="1"/>
-		</field>
-		<field function="cadence_icon">
-			<text_center x="98" y="267" file="images/cadence_icon_20x32.png"/>
+		<field function="altitude_gps_icon">
+			<text_center x="97" y="267" file="images/altitude_gps_icon_20x32.png"/>
 		</field>
 		<field function="heartrate_icon">
 			<text_center x="218" y="267" file="images/heartrate_icon_20x32.png"/>
