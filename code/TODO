@@ -6,6 +6,8 @@ UI
 5. Click to switch value i.e. click on temperature to cycle over min/average/max
 6. Button maps with colour images
 7. Add icon showing BLE connection status
+8. Add BLE icons
+9. Indicate BLE connection on screen
 
 CODING STYLE:
 1. Fix inconsistent naming: func, function, param_name
