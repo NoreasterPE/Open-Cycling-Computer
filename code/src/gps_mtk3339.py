@@ -180,7 +180,7 @@ class gps_mtk3339(threading.Thread):
                  satellitesused=self.satellitesused, satellites=self.satellites,
                  fix_mode_gps=self.fix_mode_gps, climb_gps=self.climb_gps, track_gps=self.track_gps,
                  eps=self.eps, epx=self.epx, epv=self.epv, ept=self.ept,
-                 fix_time_gps=self.fix_time_gps)
+                 fix_time_gps=self.fix_time_gps, time_adjustment_delta=self.time_adjustment_delta)
         return r
 
     def __del__(self):
@@ -191,8 +191,8 @@ class gps_mtk3339(threading.Thread):
 
     def set_system_time(self):
         tt_before = time.time()
-        self.l.error("[GPS] time.time before {}".format(tt_before))
-        self.l.debug("[GPS] Setting UTC system time to {}".format(self.utc))
+        self.l.info("[GPS] time.time before {}".format(tt_before))
+        self.l.info("[GPS] Setting UTC system time to {}".format(self.utc))
         command = 'date -u --set={} "+%Y-%m-%dT%H:%M:%S.000Z" 2>&1 > /dev/null'.format(
             self.utc)
         ret = os.system(command)
@@ -200,6 +200,5 @@ class gps_mtk3339(threading.Thread):
             self.set_time = False
             tt_after = time.time()
             self.time_adjustment_delta = tt_before - tt_after
-            self.l.error("[GPS] time.time after {}".format(tt_after))
-            self.l.error("[GPS] time.time delta {}".format(
-                self.time_adjustment_delta))
+            self.l.info("[GPS] time.time after {}".format(tt_after))
+            self.l.info("[GPS] time.time delta {}".format(self.time_adjustment_delta))

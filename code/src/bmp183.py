@@ -67,10 +67,10 @@ class bmp183(threading.Thread):
         'OVERSAMPLE_3_WAIT': 0.0255,
     }
 
-    def __init__(self, occ, simulate=False):
+    def __init__(self, simulate=False):
         # Run init for super class
         super(bmp183, self).__init__()
-        self.occ = occ
+        #self.rp = occ.rp
         self.l = logging.getLogger('system')
         self.l.debug("[BMP] __init__")
         self.simulate = simulate
@@ -281,7 +281,7 @@ class bmp183(threading.Thread):
     def run(self):
         self.l.debug("[BMP] run")
         self.running = True
-        while (self.running is True):
+        while self.running:
             self.measure_pressure()
             self.kalman_update()
             self.l.debug("[BMP] pressure = {} Pa, temperature = {} degC".format(self.pressure, self.temperature))
@@ -293,7 +293,6 @@ class bmp183(threading.Thread):
         # R makes no difference, R/Q is what matters
         # P and K are self tuning
         self.Q = 0.02
-        #self.Q = 0.08
         # First estimate
         self.pressure_estimate = self.pressure_unfiltered
         # Error
@@ -308,8 +307,6 @@ class bmp183(threading.Thread):
         self.R = 1.0
 
     def kalman_update(self):
-        # Temporary: get Q from RP
-        self.Q = float(self.occ.rp.p_raw["Q"])
         # FIXME Add detailed commants
         z = self.pressure_unfiltered
         # Save previous value

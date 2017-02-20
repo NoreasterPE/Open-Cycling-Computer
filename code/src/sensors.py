@@ -13,19 +13,23 @@ from bluepy.btle import BTLEException
 class sensors(threading.Thread):
     # Class for handling starting/stopping sensors in separate threads
 
-    def __init__(self, simulate=False):
+    def __init__(self, occ, simulate=False):
         threading.Thread.__init__(self)
         self.l = logging.getLogger('system')
-        self.sensors = dict(ble=None)
+        self.sensors = dict(ble=None, gps=None, bmp183=None)
         self.simulate = simulate
-        self.connected = {'ble': False}
-        self.running = True
+        self.connected = dict(ble=False, gps=False, bmp183=False)
         self.l.info("[SE] Initialising GPS")
         self.sensors['gps'] = gps_mtk3339(simulate)
         self.l.info("[SE] Initialising bmp183 sensor")
-        self.sensor['bmp183'] = bmp183(self.occ, simulate)
+        self.sensors['bmp183'] = bmp183(simulate)
+        self.running = True
 
     def run(self):
+        self.l.info("[RP] Starting GPS thread")
+        self.sensors['gps'].start()
+        self.l.info("[RP] Starting bmp183 thread")
+        self.sensors['bmp183'].start()
         if not self.simulate:
             while not self.connected['ble'] and self.running:
                 self.l.info("[SE] Initialising BLE sensor")
@@ -39,11 +43,10 @@ class sensors(threading.Thread):
                     self.l.info("[SE] Connecion to BLE sensor failed")
 
     def get_sensor(self, name):
-        #FIXME Currnetly only ble
         if name in self.sensors and self.connected[name]:
             return self.sensors[name]
         else:
-            self.l.debug("[SE] Sensor {} not ready or doesn't exist").format(name)
+            self.l.debug("[SE] Sensor {} not ready or doesn't exist".format(name))
             return None
 
     def __del__(self):
@@ -56,3 +59,7 @@ class sensors(threading.Thread):
         if self.sensors['ble']:
             self.sensors['ble'].stop()
         self.sensors['ble'] = None
+        self.l.info("[RP] Stopping GPS thread")
+        self.sensors['gps'].stop()
+        self.l.info("[RP] Stopping BMP thread")
+        self.sensors['bmp183'].stop()
