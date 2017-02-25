@@ -27,7 +27,8 @@ class ble(Peripheral, threading.Thread):
         #  - present (state 0, currently always present)
         #  - scanning (state 1 and 2,3,4 as animation)
         #  - connecting (state 5)
-        #  - connected (state 6)
+        #  - connected 1 device (state 6)
+        #  - connected 2 devices (state 7)
         self.notifications_enabled = False
         self.wheel_time_stamp = 0
         self.wheel_rev_time = 0
