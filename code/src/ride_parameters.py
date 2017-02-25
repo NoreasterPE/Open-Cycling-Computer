@@ -36,6 +36,7 @@ class ride_parameters():
                           climb=0, daltitude=0, daltitude_cumulative=0,
                           odometer=0, ddistance=0, ddistance_cumulative=0, distance=0,
                           eps=0, ept=0, epv=0, epx=0, gps_strength=0, fix_mode_gps='', fix_time_gps=0, latitude=0, longitude=0, satellites=0, satellitesused=0,
+                          ble_state=0,
                           cadence=0, cadence_avg=0, cadence_max=INF_MIN,
                           cadence_time_stamp=time.time(), ble_data_expiry_time=1.5, time_cadence_reset=0.0001,
                           heartrate=0,
@@ -256,6 +257,7 @@ class ride_parameters():
         if self.ble:
             data = self.ble.get_data()
             tt = time.time()
+            self.p_raw['ble_state'] = data['ble_state']
             self.p_raw['wheel_time_stamp'] = self.clean_value(data['wheel_time_stamp'])
             if (tt - self.p_raw['wheel_time_stamp']) < self.p_raw['ble_data_expiry_time']:
                 self.p_raw['wheel_rev_time'] = self.clean_value(data['wheel_rev_time'])
@@ -271,6 +273,8 @@ class ride_parameters():
         else:
             self.l.info('[RP] BLE sensor not set, trying to set it...')
             self.ble = self.sensors.get_sensor('ble')
+            #FIXME - what if no BLE device present?
+            self.p_raw['ble_state'] = 0  # BLE state 0 - not active
 
     def read_gps_data(self):
         if self.gps:

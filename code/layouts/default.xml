@@ -13,6 +13,9 @@
 		<field function="gps_icon">
 			<text_center x="205" y="5" variable="gps_strength" frames="3" file="images/gps_icon_32x32.png"/>
 		</field>
+		<field function="ble_icon">
+			<text_center x="175" y="5" variable="ble_state" frames="6" file="images/ble_icon_32x32.png"/>
+		</field>
 		<field function="distance">
 			<button x0="120" y0="150" w="119" h="90"/>
 			<text_center x="170" y="175" size="4"/>

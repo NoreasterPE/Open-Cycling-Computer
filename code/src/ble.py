@@ -17,18 +17,26 @@ class ble(Peripheral, threading.Thread):
         self.l = logging.getLogger('system')
         self.l.debug('[BLE] WAIT_TIME {}'.format(self.WAIT_TIME))
         self.connected = False
+        self.state = 0
         self.l.info('[BLE] Starting ble thread')
         threading.Thread.__init__(self)
         self.simulate = simulate
         self.addr = addr
+        #  FIXME BLE states in documentation:
+        #  - present (state 0, currently always present)
+        #  - scanning (state 1 and 2,3,4 as animation)
+        #  - connecting (state 5)
+        #  - connected (state 6)
         self.notifications_enabled = False
         self.wheel_time_stamp = 0
         self.wheel_rev_time = 0
         self.cadence_time_stamp = 0
         self.cadence = 0
         self.l.info('[BLE] Connecting to {}'.format(addr))
+        self.state = 5
         Peripheral.__init__(self, addr, addrType='random')
         self.connected = True
+        self.state = 6
         if not self.simulate:
             self.name = self.get_device_name()
             self.l.info('[BLE] Connected to {}'.format(self.name))
@@ -74,7 +82,7 @@ class ble(Peripheral, threading.Thread):
                     self.cadence = 96.0
 
     def get_data(self):
-        r = dict(wheel_time_stamp=self.wheel_time_stamp, wheel_rev_time=self.wheel_rev_time,
+        r = dict(ble_state=self.state, wheel_time_stamp=self.wheel_time_stamp, wheel_rev_time=self.wheel_rev_time,
                  cadence_time_stamp=self.cadence_time_stamp, cadence=self.cadence)
         return r
 
@@ -90,6 +98,7 @@ class ble(Peripheral, threading.Thread):
             self.set_notifications(enable=False)
             self.l.debug('[BLE] Disconnecting..')
             self.disconnect()
+            self.state = 0
             self.l.debug('[BLE] Disconnected')
 
 
