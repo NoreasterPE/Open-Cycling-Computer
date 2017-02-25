@@ -18,6 +18,7 @@ class ble(Peripheral, threading.Thread):
         self.l.debug('[BLE] WAIT_TIME {}'.format(self.WAIT_TIME))
         self.connected = False
         self.state = 0
+        self.l.info('[BLE] State = {}'.format(self.state))
         self.l.info('[BLE] Starting ble thread')
         threading.Thread.__init__(self)
         self.simulate = simulate
@@ -34,9 +35,11 @@ class ble(Peripheral, threading.Thread):
         self.cadence = 0
         self.l.info('[BLE] Connecting to {}'.format(addr))
         self.state = 5
+        self.l.info('[BLE] State = {}'.format(self.state))
         Peripheral.__init__(self, addr, addrType='random')
         self.connected = True
         self.state = 6
+        self.l.info('[BLE] State = {}'.format(self.state))
         if not self.simulate:
             self.name = self.get_device_name()
             self.l.info('[BLE] Connected to {}'.format(self.name))
@@ -99,6 +102,7 @@ class ble(Peripheral, threading.Thread):
             self.l.debug('[BLE] Disconnecting..')
             self.disconnect()
             self.state = 0
+            self.l.info('[BLE] State = {}'.format(self.state))
             self.l.debug('[BLE] Disconnected')
 
 

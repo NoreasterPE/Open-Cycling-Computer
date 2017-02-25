@@ -275,6 +275,7 @@ class ride_parameters():
             self.ble = self.sensors.get_sensor('ble')
             #FIXME - what if no BLE device present?
             self.p_raw['ble_state'] = 0  # BLE state 0 - not active
+            self.l.info('[RP] BLE state = 0')
 
     def read_gps_data(self):
         if self.gps:
