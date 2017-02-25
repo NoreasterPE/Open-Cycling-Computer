@@ -1,0 +1,7 @@
+Changelog next:
+- BLE icons shows connection status (no scanning animation yet)
+- Added more BLE icons
+
+Changelog v0.01:
+- BLE connectivity to speed & cadence sensor (initial version, hardcoded address)
+- various bug fixes & code cleaning
