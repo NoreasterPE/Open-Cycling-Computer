@@ -59,6 +59,7 @@ IndexError: string index out of range
 [DEBUG] [SE] Stopping gps thread
 [DEBUG] [OCC] Writing config file
 [DEBUG] [OCC] Log end
+6. Editing Rider weight doesn't work - missing value.
 
 
 HARDWARE:
