@@ -129,18 +129,20 @@ class layout():
                     image.set_colorkey(self.colorkey)
                     image.set_alpha(self.alpha)
                     self.current_image_list[image_path_for_frame] = image
+                    self.occ.l.debug("[LY] Image {} loaded".format(image_path_for_frame))
                 except:
-                    self.occ.l.error(
-                        "[LY] Cannot load image {}".format(image_path_for_frame))
+                    self.occ.l.error("[LY] Cannot load image {}".format(image_path_for_frame))
+                    self.current_image_list[image_path_for_frame] = None
         else:
             try:
                 image = pygame.image.load(image_path).convert()
                 image.set_colorkey(self.colorkey)
                 image.set_alpha(self.alpha)
                 self.current_image_list[image_path] = image
+                self.occ.l.debug("[LY] Image {} loaded".format(image_path))
             except:
-                self.occ.l.error(
-                    "[LY] Cannot load image {}".format(image_path))
+                self.occ.l.error("[LY] Cannot load image {}".format(image_path))
+                self.current_image_list[image_path] = None
 
     def use_main_page(self):
         self.use_page()
