@@ -60,6 +60,19 @@ IndexError: string index out of range
 [DEBUG] [OCC] Writing config file
 [DEBUG] [OCC] Log end
 6. Editing Rider weight doesn't work - missing value.
+7. Missing image causes hard crash
+$ python src/occ.py 
+Exception in thread Thread-4:
+Traceback (most recent call last):
+  File "/usr/lib64/python2.7/threading.py", line 804, in __bootstrap_inner
+    self.run()
+  File "/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/rendering.py", line 23, in run
+    self.layout.render_page()
+  File "/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 165, in render_page
+    self.render(self.screen)
+  File "/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 199, in render
+    screen.blit(image, [text_center_x, text_center_y])
+TypeError: argument 1 must be pygame.Surface, not None
 
 
 HARDWARE:
