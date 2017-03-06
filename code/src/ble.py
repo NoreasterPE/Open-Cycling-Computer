@@ -35,11 +35,11 @@ class ble(Peripheral, threading.Thread):
         self.cadence_time_stamp = 0
         self.cadence = 0
         self.l.info('[BLE] Connecting to {}'.format(addr))
-        self.state = 5
+        self.state = 2
         self.l.info('[BLE] State = {}'.format(self.state))
         Peripheral.__init__(self, addr, addrType='random')
         self.connected = True
-        self.state = 6
+        self.state = 4
         self.l.info('[BLE] State = {}'.format(self.state))
         if not self.simulate:
             self.name = self.get_device_name()
