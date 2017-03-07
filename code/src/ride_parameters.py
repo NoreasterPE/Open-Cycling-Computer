@@ -208,18 +208,18 @@ class ride_parameters():
     def force_refresh(self):
         self.occ.force_refresh()
 
-    def get_raw_val(self, func):
-        if func.endswith("_units"):
+    def get_raw_val(self, param):
+        if param.endswith("_units"):
             return 0
         else:
-            return self.p_raw[func]
+            return self.p_raw[param]
 
-    def get_val(self, func):
-        if func.endswith("_units"):
-            value = self.get_unit(func[:-6])
+    def get_val(self, param):
+        if param.endswith("_units"):
+            value = self.get_unit(param[:-6])
         else:
-            if func in self.params:
-                value = self.params[func]
+            if param in self.params:
+                value = self.params[param]
             else:
                 value = None
         return value

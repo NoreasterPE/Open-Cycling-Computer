@@ -38,8 +38,7 @@ class layout():
             self.layout_tree = eltree.parse(layout_path)
             self.layout_path = layout_path
         except:
-            self.occ.l.error("{} Loading layout {} failed, falling back to default.xml".format(
-                __name__, layout_path))
+            self.occ.l.error("{} Loading layout {} failed, falling back to default.xml".format(__name__, layout_path))
             sys_info = "Error details: {}".format(sys.exc_info()[0])
             self.occ.l.error(sys_info)
             # Fallback to default layout
@@ -64,8 +63,7 @@ class layout():
         self.write_layout()
 
     def write_layout(self, layout_path="layouts/current.xml"):
-        self.layout_tree.write(
-            layout_path, encoding="UTF-8", pretty_print=True)
+        self.layout_tree.write(layout_path, encoding="UTF-8", pretty_print=True)
 
     def use_page(self, page_id="page_0"):
         self.occ.l.debug("[LY][F] use_page {}".format(page_id))
@@ -279,10 +277,8 @@ class layout():
                         # FIXME I's dirty way of getting value - add some
                         # helper function
                         if param_name in self.occ.rp.p_editable:
-                            self.occ.l.debug(
-                                "[LY] LONG CLICK on {}".format(param_name))
-                            self.occ.rp.params[
-                                "editor_type"] = self.occ.rp.p_editable[param_name]
+                            self.occ.l.debug("[LY] LONG CLICK on {}".format(param_name))
+                            self.occ.rp.params["editor_type"] = self.occ.rp.p_editable[param_name]
                             self.open_editor_page(param_name)
                             break
                         p = self.occ.rp.strip_end(param_name)
@@ -303,15 +299,18 @@ class layout():
     def open_editor_page(self, param_name):
         # FIXME move to RP
         self.occ.rp.sysvar["variable"] = param_name
-        self.occ.rp.params[
-            "variable_raw_value"] = self.occ.rp.get_raw_val(param_name)
+        self.occ.rp.params["variable_raw_value"] = self.occ.rp.get_raw_val(param_name)
         self.occ.rp.sysvar["variable_value"] = self.occ.rp.get_val(param_name)
         self.occ.rp.sysvar["variable_unit"] = self.occ.rp.get_unit(param_name)
-        self.occ.rp.params[
-            "variable_description"] = self.occ.rp.get_description(param_name)
+        self.occ.rp.params["variable_description"] = self.occ.rp.get_description(param_name)
         self.occ.rp.sysvar["editor_index"] = 0
+        #print ("open_editor_page {}".format(self.occ.rp.sysvar["variable"]))
+        #print ("open_editor_page {}".format(self.occ.rp.params["variable_raw_value"]))
+        #print ("open_editor_page {}".format(self.occ.rp.sysvar["variable_value"]))
+        #print ("open_editor_page {}".format(self.occ.rp.sysvar["variable_unit"]))
+        #print ("open_editor_page {}".format(self.occ.rp.params["variable_description"]))
 
-        # FIXME Make it mory pythonic
+        # FIXME Make it more pythonic
         if self.occ.rp.sysvar["editor_type"] == 0:
             name = self.occ.rp.sysvar["variable"]
             # FIXME make a stripping function
@@ -426,8 +425,12 @@ class layout():
         variable = self.occ.rp.sysvar["variable"]
         variable_unit = self.occ.rp.sysvar["variable_unit"]
         variable_value = self.occ.rp.sysvar["variable_raw_value"]
-        current_unit_index = self.occ.rp.units_allowed[
-            variable].index(variable_unit)
+        current_unit_index = self.occ.rp.units_allowed[variable].index(variable_unit)
+        print (variable)
+        print (variable_unit)
+        print (variable_value)
+        print (current_unit_index)
+        print (self.occ.rp.units_allowed)
         if direction == 1:
             try:
                 next_unit = self.occ.rp.units_allowed[

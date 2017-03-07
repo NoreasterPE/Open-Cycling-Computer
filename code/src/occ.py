@@ -121,23 +121,19 @@ class open_cycling_computer():
             self.l.error("[OCC] Missing layout path, falling back to default.xml")
         error_list = []
         try:
-            self.rp.p_raw["riderweight"] = float(
-                self.config.find("riderweight").text)
+            self.rp.p_raw["riderweight"] = float(self.config.find("riderweight").text)
         except AttributeError:
             error_list.append("riderweight")
         try:
-            self.rp.units["riderweight"] = self.config.find(
-                "riderweight_units").text
+            self.rp.units["riderweight"] = self.config.find("riderweight_units").text
         except AttributeError:
             error_list.append("riderweight_units")
         try:
-            self.rp.p_raw["altitude_home"] = float(
-                self.config.find("altitude_home").text)
+            self.rp.p_raw["altitude_home"] = float(self.config.find("altitude_home").text)
         except AttributeError:
             error_list.append("")
         try:
-            self.rp.units["altitude_home"] = self.config.find(
-                "altitude_home_units").text
+            self.rp.units["altitude_home"] = self.config.find("altitude_home_units").text
         except AttributeError:
             error_list.append("altitude_home")
         try:
@@ -150,13 +146,11 @@ class open_cycling_computer():
         except AttributeError:
             error_list.append("odometer")
         try:
-            self.rp.p_raw["ridetime_total"] = float(
-                self.config.find("ridetime_total").text)
+            self.rp.p_raw["ridetime_total"] = float(self.config.find("ridetime_total").text)
         except AttributeError:
             error_list.append("ridetime_total")
         try:
-            self.rp.p_raw["speed_max"] = float(
-                self.config.find("speed_max").text)
+            self.rp.p_raw["speed_max"] = float(self.config.find("speed_max").text)
         except AttributeError:
             error_list.append("speed_max")
         try:
