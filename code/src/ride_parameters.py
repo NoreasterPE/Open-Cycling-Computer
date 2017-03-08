@@ -67,8 +67,15 @@ class ride_parameters():
                            temperature_min='', timeon='', timeon_hms='', time_cadence_reset='', track='-', utc='')
 
         # System params - shoud be in raw or new category: system
-        self.sysvar = dict(debug_level='', editor_index=0, editor_type=0, variable=None,
-                           variable_description=None, variable_raw_value=None, variable_unit=None, variable_value=None)
+        self.params["debug_level"] = ""
+        # Editor params
+        self.params["editor_index"] = 0
+        self.params["editor_type"] = 0
+        self.params["variable"] = None
+        self.params["variable_description"] = None
+        self.params["variable_raw_value"] = None
+        self.params["variable_unit"] = None
+        self.params["variable_value"] = None
 
         # Formatting strings for params.
         self.p_format = dict(altitude='%.0f', altitude_gps='%.0f', altitude_home='%.0f', altitude_max='%.0f', altitude_min='%.0f',
