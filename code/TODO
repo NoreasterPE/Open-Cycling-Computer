@@ -59,7 +59,6 @@ IndexError: string index out of range
 [DEBUG] [SE] Stopping gps thread
 [DEBUG] [OCC] Writing config file
 [DEBUG] [OCC] Log end
-6. Editing Rider weight doesn't work - missing value.
 7. Missing image causes hard crash
 $ python src/occ.py 
 Exception in thread Thread-4:
@@ -153,3 +152,4 @@ FUTURE
 51. [DONE] Add easy option to finish simulation on non RPI hardware
 52. [DONE] Use dict for ride_parameters.py parameters
 53. [DONE] Crash when no config/config.xml file
+54. [DONE] Editing Rider weight doesn't work - missing value.
