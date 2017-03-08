@@ -88,15 +88,13 @@ if __name__ == '__main__':
     print "C {} F {} K {}".format(tC, u.convert(tC, "F"), u.convert(tC, "K"))
 
     dist = 1854.3
-    print "m {} km {} mi {} yd {}".format(dist, u.convert(dist, "km"),
-                                          u.convert(dist, "mi"), u.convert(dist, "yd"))
+    print "m {} km {} mi {} yd {}".format(dist, u.convert(dist, "km"), u.convert(dist, "mi"), u.convert(dist, "yd"))
 
     mass = 79.5
     print "kg {} pd {}".format(mass, u.convert(mass, "pd"))
 
     speed = 10
-    print "m/s {} km/h {} mph {}".format(speed, u.convert(speed, "km/h"),
-                                         u.convert(speed, "mi/h"))
+    print "m/s {} km/h {} mph {}".format(speed, u.convert(speed, "km/h"), u.convert(speed, "mi/h"))
 
     slope = 0.013
     print "m/m {} % {}".format(slope, u.convert(slope, "%"))
