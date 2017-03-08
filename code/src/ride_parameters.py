@@ -90,7 +90,8 @@ class ride_parameters():
         # Allowed units - user can switch between those when editing value
         # FIXME switch to mi when mi/h are set for speed
         # FIXME switch to mi/h when mi are set for odometer
-        self.units_allowed = dict(odometer=['km', 'mi'], riderweight=['kg', 'st', 'lb'], slope=['%', degC],
+        self.units_allowed = dict(odometer=['km', 'mi'], riderweight=['kg', 'st', 'lb'],
+                                  # slope=['%', degC],
                                   speed=['km/h', 'm/s', 'mi/h'], temperature=[degC, 'F', 'K'])
 
         # Params description FIXME localisation
