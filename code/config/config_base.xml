@@ -1,5 +1,5 @@
 <config>
-  <log_level>ERROR</log_level>
+  <log_level>DEBUG</log_level>
   <layout_path>layouts/default.xml</layout_path>
   <riderweight>80.0</riderweight>
   <riderweight_units>kg</riderweight_units>

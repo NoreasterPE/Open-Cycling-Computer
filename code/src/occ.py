@@ -98,8 +98,7 @@ class open_cycling_computer():
         try:
             config_tree = eltree.parse(self.config_path)
         except IOError:
-            self.l.exception(
-                "[OCC] I/O Error when trying to parse config file. Making copy of base_config")
+            self.l.exception("[OCC] I/O Error when trying to parse config file. Making copy of base_config")
             copyfile('config/config_base.xml', 'config/config.xml')
             self.config_path = "config/config.xml"
             try:
