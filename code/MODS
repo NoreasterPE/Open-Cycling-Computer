@@ -1,4 +1,4 @@
-1. /boot/commandline added for splashscreen:
+1. [OK] /boot/commandline added for splashscreen:
 quiet
 
 modified for PiTFT in portrait mode:
@@ -103,7 +103,7 @@ esac
 cd /etc/rc2.d
 sudo ln -s ../init.d/asplashscreen S01asplashscreen
 
-8. sudo apt-get remove wolfram-engine
+8. [NOT REQIRED] sudo apt-get remove wolfram-engine
 9. Install font Segment14 in ~/.fonts
 http://openfontlibrary.org/en/font/segment14#Segment14-Regular
 10. Calibrated touchscreen using 
@@ -123,8 +123,8 @@ sudo TSLIB_FBDEVICE=/dev/fb1 TSLIB_TSDEVICE=/dev/input/touchscreen ts_test
 
 15. Reconfigure gpsd config file to run gpsd by default
 16. sudo apt-get install python3-tz
-17. Install tzwhere for python from https://github.com/pegler/pytzwhere
-18. sudo apt-get install python-quantities
+17. [NOT YET REQUIRED] Install tzwhere for python from https://github.com/pegler/pytzwhere
+18. [NOT REQUIRED] sudo apt-get install python-quantities
 19. add to etc/rc.local:
 fi
 
@@ -378,3 +378,4 @@ diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf
 @@ -0,0 +1 @@
 +options i2c_bcm2708 combined=1
 
+26. sudo apt-get install python-setuptools
