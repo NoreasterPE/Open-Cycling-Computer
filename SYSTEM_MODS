@@ -1,0 +1,9 @@
+1. /boot/cmdline added for splashscreen: quiet
+
+2. sudo apt-get install fbi omxplayer vim mc i2c-tools python-lxml python-pygame bluepy python-pip libglib2.0-dev python-gps python-serial git
+
+3. pip install bluepy
+
+4. Add i2c-dev to /etc/modules
+
+
