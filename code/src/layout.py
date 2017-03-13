@@ -368,7 +368,10 @@ class layout():
         if ui == "0":
             ui = "9"
         else:
-            ui = unicode(int(ui) - 1)
+            try:
+                ui = unicode(int(ui) - 1)
+            except ValueError:
+                pass
         un = u[:i] + ui + u[i + 1:]
         self.occ.rp.params["variable_value"] = un
         self.force_refresh()
@@ -380,7 +383,10 @@ class layout():
         if ui == "9":
             ui = "0"
         else:
-            ui = unicode(int(ui) + 1)
+            try:
+                ui = unicode(int(ui) + 1)
+            except ValueError:
+                pass
         un = u[:i] + ui + u[i + 1:]
         self.occ.rp.params["variable_value"] = un
         self.force_refresh()
@@ -468,23 +474,26 @@ class layout():
                 value = self.uc.convert(variable_raw_value, variable_unit)
             self.occ.rp.p_raw[variable] = float(value)
             self.occ.rp.units[variable] = self.occ.rp.params["variable_unit"]
+            #FIXME - find a better place for it
             if variable == "altitude_home":
                 # Force recalculation
                 self.occ.rp.p_raw["pressure_at_sea_level"] = 0
+            #FIXME - remove
             if variable == "Q":
                 self.occ.rp.bmp183_sensor.Q = float(value)
                 print "after edit"
                 print float(value)
+        if self.occ.rp.params["editor_type"] == 2:
+            self.occ.rp.p_raw[variable] = variable_value
+            self.occ.rp.params[variable] = variable_value
         self.force_refresh()
 
     def next_page(self):
-        self.occ.l.debug("[LY][F] next_page")
-        #cp = self.current_page_id
-        no = int(self.current_page_id[-1:])
-        name = self.current_page_id[:-1]
-        # Editor is a special page - it cannot be switched, only cancel or
-        # accept
-        if self.current_page_id is not "editor":
+        # Editor is a special page - it cannot be switched, only cancel or accept
+        if not self.current_page_id.startswith("editor"):
+            no = int(self.current_page_id[-1:])
+            name = self.current_page_id[:-1]
+            self.occ.l.debug("[LY][F] next_page {}{}".format(name, no))
             try:
                 next_page_name = name + unicode(no + 1)
                 self.use_page(next_page_name)
@@ -494,13 +503,11 @@ class layout():
                 # self.use_page(cp)
 
     def prev_page(self):
-        self.occ.l.debug("[LY][F] prev_page")
-        #cp = self.current_page_id
-        no = int(self.current_page_id[-1:])
-        name = self.current_page_id[:-1]
-        # Editor is a special page - it cannot be switched, only cancel or
-        # accept
-        if self.current_page_id is not "editor":
+        # Editor is a special page - it cannot be switched, only cancel or accept
+        if not self.current_page_id.startswith("editor"):
+            no = int(self.current_page_id[-1:])
+            name = self.current_page_id[:-1]
+            self.occ.l.debug("[LY][F] prev_page {}{}".format(name, no))
             try:
                 prev_page_name = name + unicode(no - 1)
                 self.use_page(prev_page_name)
