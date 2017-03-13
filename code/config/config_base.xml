@@ -3,6 +3,7 @@
   <layout_path>layouts/default.xml</layout_path>
   <riderweight>80.0</riderweight>
   <riderweight_units>kg</riderweight_units>
+  <wheel_size>700x25C</wheel_size>
   <altitude_home>0.0</altitude_home>
   <altitude_home_units>m</altitude_home_units>
   <odometer>0.0</odometer>

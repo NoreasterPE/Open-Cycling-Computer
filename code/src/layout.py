@@ -322,6 +322,8 @@ class layout():
             self.use_page("editor_units")
         if self.occ.rp.params["editor_type"] == 1:
             self.use_page("editor_numbers")
+        if self.occ.rp.params["editor_type"] == 2:
+            self.use_page("editor_list")
 
     def run_function(self, name):
         functions = {"page_0": self.load_page_0,

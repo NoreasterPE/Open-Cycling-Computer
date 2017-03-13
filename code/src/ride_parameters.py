@@ -1,6 +1,5 @@
 from time import strftime
 from units import units
-from wheel import wheel
 import logging
 import math
 import time
@@ -24,9 +23,6 @@ class ride_parameters():
         self.bmp183 = self.sensors.get_sensor('bmp183')
 
         self.suffixes = ("_digits", "_tenths", "_hms")
-        #FIXME - wheel size definition should be on the config page
-        w = wheel()
-        self.wheel_circ = w.get_size("700x25C") / 1000.0
 
         self.p_raw = dict(time_stamp=time.time(),
                           # Time delta since last p_raw update
@@ -50,7 +46,7 @@ class ride_parameters():
 
         # Internal units
         self.p_raw_units = dict(altitude='m', cadence='RPM', climb='m/s', distance='m', eps='', ept='', epv='', epx='',
-                                dtime='s', fix_gps='', latitude='', longitude='', odometer='m', pressure='Pa', riderweight='kg',
+                                dtime='s', fix_gps='', latitude='', longitude='', odometer='m', pressure='Pa', riderweight='kg', wheel_size='',
                                 ridetime='s', ridetime_total='s', satellites='', satellitesused='', slope='m/m', speed='m/s',
                                 temperature=degC, timeon='s', time_cadence_reset='s',
                                 # FIXME degrees, what is track? Nomber of tracked sats?
@@ -60,7 +56,7 @@ class ride_parameters():
         self.params = dict(altitude='-', altitude_gps='-', altitude_home='-', altitude_max='-', altitude_min='-',
                            cadence='-', cadence_avg='-', cadence_max='-', climb='-', distance=0, eps='-', ept='-', epv='-', epx='-',
                            dtime=0, fix_gps='-', fix_gps_time='-', heartrate='-', latitude='-', longitude='-', odometer=0.0,
-                           pressure='-', pressure_at_sea_level='-', riderweight=0.0, ridetime='', ridetime_hms='', ridetime_total='',
+                           pressure='-', pressure_at_sea_level='-', riderweight=0.0, wheel_size='', wheel_circ='', ridetime='', ridetime_hms='', ridetime_total='',
                            ridetime_total_hms='', rtc='', satellites='-', satellitesused='-', slope='-', speed='-', speed_avg='-',
                            speed_avg_digits='-', speed_avg_tenths='-', speed_digits='-', speed_max='-', speed_max_digits='-',
                            speed_max_tenths='-', speed_tenths='-', temperature='', temperature_avg='', temperature_max='',
@@ -90,7 +86,7 @@ class ride_parameters():
         # Units - name has to be identical as in params
         self.units = dict(altitude='m', cadence='RPM', climb='m/s', distance='km', eps='', epx='', epv='', ept='',
                           dtime='s', fix_gps='', fix_gps_time='', heartrate='BPM', latitude='', longitude='', odometer='km', pressure='hPa',
-                          riderweight='kg', ridetime='s', ridetime_hms='', ridetime_total='s', ridetime_total_hms='', satellites='',
+                          riderweight='kg', wheel_size='', ridetime='s', ridetime_hms='', ridetime_total='s', ridetime_total_hms='', satellites='',
                           satellitesused='', slope='%', speed='km/h', temperature=degC, timeon='s', timeon_hms='', time_cadence_reset='s',
                           track='')
 
@@ -99,19 +95,21 @@ class ride_parameters():
         # FIXME switch to mi/h when mi are set for odometer
         self.units_allowed = dict(odometer=['km', 'mi'], riderweight=['kg', 'st', 'lb'],
                                   # slope=['%', degC],
+                                  wheel_size=[''],
                                   speed=['km/h', 'm/s', 'mi/h'], temperature=[degC, 'F', 'K'])
 
         # Params description FIXME localisation
         self.p_desc = dict(altitude_home='Home altitude', odometer='Odometer', odometer_units='Odometer units',
-                           riderweight='Rider weight', riderweight_units='Rider weight units', speed_units='Speed units',
+                           riderweight='Rider weight', riderweight_units='Rider weight units', wheel_size='Wheel size', speed_units='Speed units',
                            temperature_units='Temp. unit')
 
         # Define id a param is editable FIXME editor type - number, calendar, unit, etc.
         # 0 - unit editor
         # 1 - number editor
+        # 2 - list selection FIXME
         # Params that can be changed in Settings by user
         self.p_editable = dict(altitude_home=1, odometer=1, odometer_units=0,
-                               riderweight=1, riderweight_units=0, speed_units=0, temperature_units=0)
+                               riderweight=1, riderweight_units=0, wheel_size=2, speed_units=0, temperature_units=0)
 
         self.p_resettable = dict(distance=1, odometer=1, ridetime=1, speed_max=1, cadence=1, cadence_avg=1, cadence_max=1)
 
@@ -272,7 +270,7 @@ class ride_parameters():
             else:
                 self.p_raw["wheel_rev_time"] = INF
             if self.p_raw['wheel_rev_time']:
-                self.p_raw['speed'] = self.wheel_circ / self.p_raw['wheel_rev_time']
+                self.p_raw['speed'] = self.p_raw['wheel_circ'] / self.p_raw['wheel_rev_time']
             self.p_raw['cadence_time_stamp'] = self.clean_value(data['cadence_time_stamp'])
             if (tt - self.p_raw['cadence_time_stamp']) < self.p_raw['ble_data_expiry_time']:
                 self.p_raw['cadence'] = self.clean_value(data['cadence'])

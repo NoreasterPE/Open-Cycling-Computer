@@ -10,6 +10,7 @@ from sensors import sensors
 from shutil import copyfile
 from time import sleep
 from time import strftime
+from wheel import wheel
 import logging
 import logging.handlers
 import lxml.etree as eltree
@@ -124,6 +125,17 @@ class open_cycling_computer():
         except AttributeError:
             error_list.append("riderweight")
         try:
+            self.rp.p_raw["wheel_size"] = self.config.find("wheel_size").text
+            self.rp.params["wheel_size"] = self.rp.p_raw["wheel_size"]
+            w = wheel()
+            try:
+                self.rp.p_raw["wheel_circ"] = w.get_size(self.rp.p_raw["wheel_size"])
+            except KeyError:
+                error_list.append("wheel_circ")
+            self.rp.params["wheel_circ"] = self.rp.p_raw["wheel_circ"]
+        except AttributeError:
+            error_list.append("wheel_size")
+        try:
             self.rp.units["riderweight"] = self.config.find("riderweight_units").text
         except AttributeError:
             error_list.append("riderweight_units")
@@ -179,6 +191,7 @@ class open_cycling_computer():
         eltree.SubElement(config_tree, "layout_path").text = self.layout.layout_path
         eltree.SubElement(config_tree, "riderweight").text = unicode(self.rp.p_raw["riderweight"])
         eltree.SubElement(config_tree, "riderweight_units").text = unicode(self.rp.units["riderweight"])
+        eltree.SubElement(config_tree, "wheel_size").text = self.rp.p_raw["wheel_size"]
         eltree.SubElement(config_tree, "altitude_home").text = unicode(self.rp.p_raw["altitude_home"])
         eltree.SubElement(config_tree, "altitude_home_units").text = unicode(self.rp.units["altitude_home"])
         eltree.SubElement(config_tree, "odometer").text = unicode(self.rp.p_raw["odometer"])
