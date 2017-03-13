@@ -199,11 +199,11 @@
 			<text_center x="180" y="130" size="4"/>
 		</field>
 		<field function="text5">
-			<text_center x="60" y="170" size="2">Wheel size</text_center>
+			<text_center x="60" y="175" size="2">Wheel size</text_center>
 		</field>
 		<field function="wheel_size">
 			<button x0="0" y0="160" w="120" h="80"/>
-			<text_center x="60" y="210" size="3"/>
+			<text_center x="60" y="215" size="3"/>
 		</field>
 	</page>
 	<page name="Settings 1" id="settings_1" background="images/occ_settings_1_background.png" buttons="images/occ_settings_1_buttons.png" font="" fg_colour="FFFFFF">
