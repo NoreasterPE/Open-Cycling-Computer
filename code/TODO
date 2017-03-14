@@ -15,7 +15,6 @@ CODING STYLE:
 3. Review & avoid try/catch. It's too expensive
 4. Add a standard parent class for hardware module running in a separate thread (init, start, run, stop, get_data)
 6. Add new params from modules to ride parameters? Modules to give ready for use values? Help standarisation, but makes splitting code into libs harder.
-7. Move wheel size to config
 
 REAL WORLD PROBLEMS:
 1. Speed filtering or max speed will be false sooner or later. Average from 2/3 samples? Kalman?
@@ -154,3 +153,4 @@ FUTURE
 52. [DONE] Use dict for ride_parameters.py parameters
 53. [DONE] Crash when no config/config.xml file
 54. [DONE] Editing Rider weight doesn't work - missing value.
+55. [DONE] Move wheel size to config
