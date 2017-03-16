@@ -1,6 +1,11 @@
-RPI
-Weight:		42 g
-Dimensions:	85.60 x 56 x 21 mm
+RPI Zero W
+Weight:		9 g (TBC)
+DimensionsA:	65 mm × 30 mm × 5 mm
+Current:	120 mA
+
+[OBSOLETE] RPI A+
+Weight:		23 g
+DimensionsA:	65 mm × 56.5 mm × 10 mm 
 Current:	120 mA
 
 PiTFT
@@ -31,7 +36,7 @@ Dimensions:	18 × 18 × 2 mm
 Weight: 	1 g
 Current:	1 mA
 
-Buetooth Low Energy Module
+[OBSOLETE] Buetooth Low Energy Module
 http://www.adafruit.com/products/1697
 Weight:		1.8 g
 Dimensions:	29 x 28 x 0.8 mm
@@ -42,3 +47,8 @@ TBD
 
 Connectors:
 TBD
+
+Pimoroni Lipo-Zero:
+https://shop.pimoroni.com/products/zero-lipo
+https://pinout.xyz/pinout/zero_lipo#
+
