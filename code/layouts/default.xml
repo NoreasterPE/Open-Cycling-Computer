@@ -159,6 +159,22 @@
 		<field function="altitude_gps_icon">
 			<text_center x="97" y="267" file="images/altitude_gps_icon_20x32.png"/>
 		</field>
+		<field function="heart_rate">
+			<button x0="120" y0="240" w="119" h="80"/>
+			<text_center x="170" y="290" size="7"/>
+		</field>
+		<field function="heart_rate_units">
+			<text_center x="220" y="310" size="2"/>
+		</field>
+		<field function="heart_rate_min">
+			<text_center x="140" y="255" size="2"/>
+		</field>
+		<field function="heart_rate_avg">
+			<text_center x="180" y="255" size="2"/>
+		</field>
+		<field function="heart_rate_max">
+			<text_center x="220" y="255" size="2"/>
+		</field>
 		<field function="heartrate_icon">
 			<text_center x="218" y="267" file="images/heartrate_icon_20x32.png"/>
 		</field>

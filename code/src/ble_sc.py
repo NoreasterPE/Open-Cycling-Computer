@@ -1,5 +1,6 @@
 #! /usr/bin/python
 from bluepy.btle import AssignedNumbers
+from bluepy.btle import BTLEException
 from bluepy.btle import DefaultDelegate
 from bluepy.btle import Peripheral
 import logging
@@ -7,86 +8,97 @@ import threading
 import time
 
 
-class ble(Peripheral, threading.Thread):
+class ble_sc(Peripheral, threading.Thread):
     # FIXME - replace with proper service & characteristic scan
     CSC_HANDLE = 0x000f  # FIXME - explain
-    CSC_ENABLE = "10"    # FIXME - explain
-    WAIT_TIME = 0.3      # Time of waiting for notifications or time between simulations. Can we wait for notifications longer?
+    CSC_ENABLE_SC = "10"    # FIXME - explain
+    WAIT_TIME = 0.3      # Time of waiting for notifications
+    EXCEPTION_WAIT_TIME = 10      # Time of waiting after an exception has been raies
 
-    def __init__(self, simulate, addr):
+    def __init__(self, addr):
         self.l = logging.getLogger('system')
-        self.l.debug('[BLE] WAIT_TIME {}'.format(self.WAIT_TIME))
+        self.l.debug('[BLE_SC] WAIT_TIME {}'.format(self.WAIT_TIME))
         self.connected = False
         self.state = 0
-        self.l.info('[BLE] State = {}'.format(self.state))
-        self.l.info('[BLE] Starting ble thread')
+        self.l.info('[BLE_SC] State = {}'.format(self.state))
         threading.Thread.__init__(self)
-        self.simulate = simulate
         self.addr = addr
-        #  FIXME BLE states in documentation:
-        #  - present (state 0, currently always present)
-        #  - scanning (state 1 and 2,3,4 as animation)
-        #  - connecting (state 5)
-        #  - connected 1 device (state 6)
-        #  - connected 2 devices (state 7)
         self.notifications_enabled = False
-        self.wheel_time_stamp = 0
+        self.wheel_time_stamp = time.time()
         self.wheel_rev_time = 0
-        self.cadence_time_stamp = 0
+        self.cadence_time_stamp = time.time()
         self.cadence = 0
-        self.l.info('[BLE] Connecting to {}'.format(addr))
-        self.state = 2
-        self.l.info('[BLE] State = {}'.format(self.state))
+        self.l.info('[BLE_SC] Connecting to {}'.format(addr))
+        self.state = 1
+        self.l.info('[BLE_SC] State = {}'.format(self.state))
         Peripheral.__init__(self, addr, addrType='random')
         self.connected = True
-        self.state = 4
-        self.l.info('[BLE] State = {}'.format(self.state))
-        if not self.simulate:
-            self.name = self.get_device_name()
-            self.l.info('[BLE] Connected to {}'.format(self.name))
-            self.l.debug('[BLE] Setting notification handler')
-            self.delegate = CSC_Delegate()
-            self.l.debug('[BLE] Setting delegate')
-            self.withDelegate(self.delegate)
-            self.l.debug('[BLE] Enabling notifications')
-            self.set_notifications()
-        else:
-            self.l.info('[BLE] Connection simulated')
+        self.state = 2
+        self.l.info('[BLE_SC] State = {}'.format(self.state))
+        self.name = self.get_device_name()
+        self.l.info('[BLE_SC] Connected to {}'.format(self.name))
+        self.l.debug('[BLE_SC] Setting notification handler')
+        self.delegate = CSC_Delegate()
+        self.l.debug('[BLE_SC] Setting delegate')
+        self.withDelegate(self.delegate)
+        self.l.debug('[BLE_SC] Enabling notifications')
+        self.set_notifications()
 
     def set_notifications(self, enable=True):
         # Enable/disable notifications
-        self.l.debug('[BLE] Enabling notifications')
-        self.writeCharacteristic(self.CSC_HANDLE, self.CSC_ENABLE, enable)
+        self.l.debug('[BLE_HR] Set notifications {}'.format(enable))
+        try:
+            self.writeCharacteristic(self.CSC_HANDLE, self.CSC_ENABLE_SC, enable)
+        except BTLEException, e:
+            if str(e) == "Helper not started (did you call connect()?)":
+                self.l.error('[BLE_HR] Set notifications failed: {}'.format(e))
+            else:
+                self.l.critical('[BLE_HR] Set notifications failed with uncontrolled error: {}'.format(e))
+                raise
 
     def get_device_name(self):
         c = self.getCharacteristics(uuid=AssignedNumbers.deviceName)
         name = c[0].read()
-        self.l.debug('[BLE] Device name: {}'.format(name))
+        self.l.debug('[BLE_SC] Device name: {}'.format(name))
         return name
 
     def get_battery_level(self):
         b = self.getCharacteristics(uuid=AssignedNumbers.batteryLevel)
         level = ord(b[0].read())
-        self.l.debug('[BLE] Battery lavel: {}'.format(level))
+        self.l.debug('[BLE_SC] Battery lavel: {}'.format(level))
         return level
+
+    def get_state(self):
+        return self.state
 
     def run(self):
         while self.connected:
-            if not self.simulate:
+            try:
                 if self.waitForNotifications(self.WAIT_TIME):
                     self.wheel_time_stamp = self.delegate.wheel_time_stamp
                     self.wheel_rev_time = self.delegate.wheel_rev_time
                     self.cadence_time_stamp = self.delegate.cadence_time_stamp
                     self.cadence = self.delegate.cadence
-            else:
-                    time.sleep(self.WAIT_TIME)
-                    self.wheel_time_stamp = time.time()
-                    self.wheel_rev_time = 1.0
-                    self.cadence_time_stamp = time.time()
-                    self.cadence = 96.0
+            except BTLEException, e:
+                if str(e) == 'Device disconnected':
+                    self.l.info('[BLE_SC] Device disconnected: {}'.format(self.name))
+                    self.connected = False
+                    self.state = 0
+                    self.l.debug('[BLE_SC] State = {}'.format(self.state))
+                    # We don't want to call waitForNotifications and fail too often
+                    time.sleep(self.EXCEPTION_WAIT_TIME)
+                else:
+                    raise
+            except AttributeError, e:
+                if str(e) == "'NoneType' object has no attribute 'poll'":
+                    self.l.debug('[BLE_SC] btle raised AttributeError exception {}'.format(e))
+                    # We don't want to call waitForNotifications and fail too often
+                    time.sleep(self.EXCEPTION_WAIT_TIME)
+                else:
+                    raise
 
     def get_data(self):
-        r = dict(ble_state=self.state, wheel_time_stamp=self.wheel_time_stamp, wheel_rev_time=self.wheel_rev_time,
+        r = dict(state=self.state, wheel_time_stamp=self.wheel_time_stamp, wheel_rev_time=self.wheel_rev_time,
                  cadence_time_stamp=self.cadence_time_stamp, cadence=self.cadence)
         return r
 
@@ -94,17 +106,17 @@ class ble(Peripheral, threading.Thread):
         self.stop()
 
     def stop(self):
-        self.l.debug('[BLE] Stop called')
-        if not self.simulate and self.connected:
+        self.l.debug('[BLE_SC] Stop called')
+        if self.connected:
             self.connected = False
             time.sleep(1)
-            self.l.debug('[BLE] Disabling notifications')
+            self.l.debug('[BLE_SC] Disabling notifications')
             self.set_notifications(enable=False)
-            self.l.debug('[BLE] Disconnecting..')
+            self.l.debug('[BLE_SC] Disconnecting..')
             self.disconnect()
             self.state = 0
-            self.l.info('[BLE] State = {}'.format(self.state))
-            self.l.debug('[BLE] Disconnected')
+            self.l.info('[BLE_SC] State = {}'.format(self.state))
+            self.l.debug('[BLE_SC] Disconnected')
 
 
 class CSC_Delegate(DefaultDelegate):
@@ -127,9 +139,9 @@ class CSC_Delegate(DefaultDelegate):
         self.cadence = 0
 
     def handleNotification(self, cHandle, data):
-        self.l.debug('[BLE] Notification received from : {}'.format(hex(cHandle)))
+        self.l.debug('[BLE_SC] Notification received from : {}'.format(hex(cHandle)))
 
-        # CSC Measurement from BLE standard
+        # CSC Measurement from BLE_SC standard
         # https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.csc_measurement.xml
         #
         # 03|02 00 00 00|88 11|02 00|30 08
@@ -167,9 +179,9 @@ class CSC_Delegate(DefaultDelegate):
                 self.wheel_rev_time = rt
                 self.wheel_cumul = wh_cr
 
-                self.l.debug('[BLE] Last wheel event time: {:10.3f}, delta {:10.3f}'.format(self.wheel_last_time_event, self.wheel_last_time_delta))
-                self.l.debug('[BLE] Wheel cumul revs: {:5d}'.format(wh_cr))
-                self.l.debug('[BLE] Last wheel rev time: {:10.3f}'.format(self.wheel_rev_time))
+                self.l.debug('[BLE_SC] Last wheel event time: {:10.3f}, delta {:10.3f}'.format(self.wheel_last_time_event, self.wheel_last_time_delta))
+                self.l.debug('[BLE_SC] Wheel cumul revs: {:5d}'.format(wh_cr))
+                self.l.debug('[BLE_SC] Last wheel rev time: {:10.3f}'.format(self.wheel_rev_time))
 
         if (data_b[0] & self.CRANK_REV_DATA_PRESENT):
             # cr - cumularive revolutions
@@ -191,7 +203,7 @@ class CSC_Delegate(DefaultDelegate):
                 self.crank_cumul = cr_cr
                 self.cadence = 60.0 / rt
 
-                self.l.debug('[BLE] Last crank event time: {:10.3f}, delta {:10.3f}'.format(self.crank_last_time_event, self.crank_last_time_delta))
-                self.l.debug('[BLE] Crank cumul revs: {:5d}'.format(cr_cr))
-                self.l.debug('[BLE] Last crank rev time: {:10.3f}'.format(self.crank_rev_time))
-                self.l.debug('[BLE] Cadence: {:10.3f}'.format(60.0 / rt))
+                self.l.debug('[BLE_SC] Last crank event time: {:10.3f}, delta {:10.3f}'.format(self.crank_last_time_event, self.crank_last_time_delta))
+                self.l.debug('[BLE_SC] Crank cumul revs: {:5d}'.format(cr_cr))
+                self.l.debug('[BLE_SC] Last crank rev time: {:10.3f}'.format(self.crank_rev_time))
+                self.l.debug('[BLE_SC] Cadence: {:10.3f}'.format(60.0 / rt))
