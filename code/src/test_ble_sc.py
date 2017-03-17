@@ -21,7 +21,6 @@ if __name__ == '__main__':
                 print ".....sensor is not on? Waiting..."
 
         print ".....sensor started!"
-        counter = 0
         NOTIFICATION_EXPIRY_TIME = 2.0
         while True:
                 data = lez.get_data()

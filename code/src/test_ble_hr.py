@@ -15,17 +15,17 @@ if __name__ == '__main__':
                 ble_hr.start()
                 time.sleep(1)
                 connected = ble_hr.connected
-            except BTLEException:
-                print ".....sensor is not on? Waiting..."
+            except BTLEException, e:
+                print ("Error: {}".format(e))
+                print (".....sensor is not on? Waiting... ")
+            time.sleep(1)
 
         print ".....sensor started!"
-        counter = 0
-        NOTIFICATION_EXPIRY_TIME = 2.0
         while True:
                 time.sleep(0.1)
                 data = ble_hr.get_data()
-                print "{}".format(data['ble_hr_state']),
-                print " TS: {}".format(data['ble_hr_ts']),
+                print "{}".format(data['state']),
+                print " TS: {}".format(data['time_stamp']),
                 print " HR: {}".format(data['heart_rate'])
 
     except (KeyboardInterrupt, SystemExit):
