@@ -12,4 +12,8 @@
   <speed_max>0.0</speed_max>
   <speed_units>km/h</speed_units>
   <temperature_units>°C</temperature_units>
+  <ble_hr_name></ble_hr_name>
+  <ble_hr_addr>D6:90:A8:08:F0:E4</ble_hr_addr>
+  <ble_sc_name></ble_sc_name>
+  <ble_sc_addr>FD:DF:0E:4E:76:CF</ble_sc_addr>
 </config>

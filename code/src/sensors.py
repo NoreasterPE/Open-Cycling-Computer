@@ -33,7 +33,10 @@ class sensors(threading.Thread):
     def __init__(self, occ, simulate=False):
         threading.Thread.__init__(self)
         self.l = logging.getLogger('system')
+        self.occ = occ
         self.sensors = dict(ble_sc=None, ble_hr=None, gps=None, bmp183=None)
+        self.names = dict(ble_sc='', ble_hr='', gps='', bmp183='')
+        self.addrs = dict(ble_sc='', ble_hr='', gps='', bmp183='')
         self.simulate = simulate
         self.ble_state = 0
         self.no_of_connected = 0
@@ -49,7 +52,14 @@ class sensors(threading.Thread):
         self.connected['bmp183'] = True
         self.running = True
 
+    def init_data_from_config(self):
+        self.names['ble_hr'] = self.occ.rp.p_raw['ble_hr_name']
+        self.names['ble_sc'] = self.occ.rp.p_raw['ble_sc_name']
+        self.addrs['ble_hr'] = self.occ.rp.p_raw['ble_hr_addr']
+        self.addrs['ble_sc'] = self.occ.rp.p_raw['ble_sc_addr']
+
     def run(self):
+        self.init_data_from_config()
         self.l.info("[SE] Starting GPS thread")
         self.sensors['gps'].start()
         self.l.info("[SE] Starting bmp183 thread")
@@ -60,7 +70,8 @@ class sensors(threading.Thread):
                 self.l.info("[SE] Initialising BLE heart rate sensor")
                 #FIXME Hardcoded address
                 try:
-                    self.sensors['ble_hr'] = ble_hr("D6:90:A8:08:F0:E4")
+                    self.sensors['ble_hr'] = ble_hr(self.addrs['ble_hr'])
+                    self.names['ble_hr'] = self.sensors['ble_hr'].get_device_name()
                     self.l.info("[SE] Starting BLE heart rate thread")
                     self.sensors['ble_hr'].start()
                 except BTLEException:
@@ -72,7 +83,8 @@ class sensors(threading.Thread):
                 self.l.info("[SE] Initialising BLE speed & cadence sensor")
                 #FIXME Hardcoded address
                 try:
-                    self.sensors['ble_sc'] = ble_sc("fd:df:0e:4e:76:cf")
+                    self.sensors['ble_sc'] = ble_sc(self.addrs['ble_sc'])
+                    self.names['ble_sc'] = self.sensors['ble_sc'].get_device_name()
                     self.l.info("[SE] Starting BLE speed & cadence thread")
                     self.sensors['ble_sc'].start()
                 except BTLEException, e:

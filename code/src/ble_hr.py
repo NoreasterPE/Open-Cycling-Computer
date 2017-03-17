@@ -94,7 +94,7 @@ class ble_hr(Peripheral, threading.Thread):
                     raise
 
     def get_data(self):
-        r = dict(name=self.name, state=self.state, time_stamp=self.time_stamp, heart_rate=self.heart_rate)
+        r = dict(name=self.name, addr=self.addr, state=self.state, time_stamp=self.time_stamp, heart_rate=self.heart_rate)
         return r
 
     def __del__(self):

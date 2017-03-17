@@ -98,7 +98,7 @@ class ble_sc(Peripheral, threading.Thread):
                     raise
 
     def get_data(self):
-        r = dict(state=self.state, wheel_time_stamp=self.wheel_time_stamp, wheel_rev_time=self.wheel_rev_time,
+        r = dict(name=self.name, addr=self.addr, state=self.state, wheel_time_stamp=self.wheel_time_stamp, wheel_rev_time=self.wheel_rev_time,
                  cadence_time_stamp=self.cadence_time_stamp, cadence=self.cadence)
         return r
 

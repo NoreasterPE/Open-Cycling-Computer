@@ -148,8 +148,7 @@ class open_cycling_computer():
         except AttributeError:
             error_list.append("altitude_home")
         try:
-            self.rp.p_raw["odometer"] = float(
-                self.config.find("odometer").text)
+            self.rp.p_raw["odometer"] = float(self.config.find("odometer").text)
         except AttributeError:
             error_list.append("odometer")
         try:
@@ -172,6 +171,22 @@ class open_cycling_computer():
             self.rp.units["temperature"] = self.config.find("temperature_units").text
         except AttributeError:
             error_list.append("temperature")
+        try:
+            self.rp.p_raw["ble_hr_name"] = self.config.find("ble_hr_name").text
+        except AttributeError:
+            error_list.append("ble_hr_name")
+        try:
+            self.rp.p_raw["ble_hr_addr"] = self.config.find("ble_hr_addr").text
+        except AttributeError:
+            error_list.append("ble_hr_addr")
+        try:
+            self.rp.p_raw["ble_sc_name"] = self.config.find("ble_sc_name").text
+        except AttributeError:
+            error_list.append("ble_sc_name")
+        try:
+            self.rp.p_raw["ble_sc_addr"] = self.config.find("ble_sc_addr").text
+        except AttributeError:
+            error_list.append("ble_sc_addr")
         self.rp.update_param("speed_max")
         self.rp.split_speed("speed_max")
         if len(error_list) > 0:
@@ -200,6 +215,10 @@ class open_cycling_computer():
         eltree.SubElement(config_tree, "speed_max").text = unicode(self.rp.p_raw["speed_max"])
         eltree.SubElement(config_tree, "speed_units").text = unicode(self.rp.units["speed"])
         eltree.SubElement(config_tree, "temperature_units").text = unicode(self.rp.units["temperature"])
+        eltree.SubElement(config_tree, "ble_hr_name").text = self.rp.p_raw["ble_hr_name"]
+        eltree.SubElement(config_tree, "ble_hr_addr").text = self.rp.p_raw["ble_hr_addr"]
+        eltree.SubElement(config_tree, "ble_sc_name").text = self.rp.p_raw["ble_sc_name"]
+        eltree.SubElement(config_tree, "ble_sc_addr").text = self.rp.p_raw["ble_sc_addr"]
         # FIXME error handling for file operation
         eltree.ElementTree(config_tree).write(self.config_path, encoding="UTF-8", pretty_print=True)
 
