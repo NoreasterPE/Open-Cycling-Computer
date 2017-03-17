@@ -99,6 +99,7 @@ class bmp183(threading.Thread):
             if ret != self.BMP183_CMD['ID_VALUE']:
                 self.l.error("[BMP] Communication witn bmp183 failed")
                 self.sensor_ready = False
+                #FIXME Quit here?
             else:
                 self.sensor_ready = True
                 self.read_calibration_data()
