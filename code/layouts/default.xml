@@ -55,7 +55,7 @@
 			<text_center x="100" y="255" size="2"/>
 		</field>
 		<field function="cadence_units">
-			<text_center x="105" y="310" size="1"/>
+			<text_center x="105" y="310" size="1.2"/>
 		</field>
 		<field function="cadence_icon">
 			<text_center x="98" y="267" file="images/cadence_icon_20x32.png"/>
@@ -71,7 +71,7 @@
 			<text_center x="220" y="255" size="2"/>
 		</field>
 		<field function="altitude_units">
-			<text_center x="230" y="310" size="2"/>
+			<text_center x="230" y="310" size="1.2"/>
 		</field>
 		<field function="altitude_icon">
 			<text_center x="217" y="267" file="images/altitude_icon_20x32.png"/>
@@ -154,7 +154,7 @@
 			<text_center x="50" y="290" size="7"/>
 		</field>
 		<field function="altitude_units">
-			<text_center x="110" y="310" size="2"/>
+			<text_center x="110" y="310" size="1.2"/>
 		</field>
 		<field function="altitude_gps_icon">
 			<text_center x="97" y="267" file="images/altitude_gps_icon_20x32.png"/>
@@ -164,7 +164,7 @@
 			<text_center x="170" y="290" size="7"/>
 		</field>
 		<field function="heart_rate_units">
-			<text_center x="220" y="310" size="2"/>
+			<text_center x="225" y="310" size="1.2"/>
 		</field>
 		<field function="heart_rate_min">
 			<text_center x="140" y="255" size="2"/>
@@ -198,7 +198,7 @@
 			<text_center x="165" y="50" size="4"/>
 		</field>
 		<field function="altitude_home_units">
-			<text_center x="220" y="50" size="2"/>
+			<text_center x="220" y="50" size="1.2"/>
 		</field>
 		<field function="text3">
 			<text_center x="60" y="95" size="2">Speed</text_center>
