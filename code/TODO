@@ -72,6 +72,7 @@ Traceback (most recent call last):
   File "/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 199, in render
     screen.blit(image, [text_center_x, text_center_y])
 TypeError: argument 1 must be pygame.Surface, not None
+8. Average caddence and heart rate are invalid
 
 
 HARDWARE:
