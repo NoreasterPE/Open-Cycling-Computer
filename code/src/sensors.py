@@ -13,6 +13,19 @@ import time
 RECONNECT_DELAY = 2
 
 
+STATE_HOST = {'disabled': 0,
+              'enabled': 1,
+              'scanning_1': 2,
+              'scanning_2': 3,
+              'connected_1': 4,
+              'connected_2': 5,
+              'connected_3': 6,
+              'connected_4': 7}
+
+STATE_DEV = {'disconnected': 0,
+             'connecting': 1,
+             'connected': 2}
+
 #  FIXME BLE host states in documentation:
 #  - disabled (state 0)
 #  - present (state 1)
@@ -27,6 +40,7 @@ RECONNECT_DELAY = 2
 #  - connecting (state 1)
 #  - connected (state 2)
 
+
 class sensors(threading.Thread):
     # Class for handling starting/stopping sensors in separate threads
 
@@ -38,7 +52,7 @@ class sensors(threading.Thread):
         self.names = dict(ble_sc='', ble_hr='', gps='', bmp183='')
         self.addrs = dict(ble_sc='', ble_hr='', gps='', bmp183='')
         self.simulate = simulate
-        self.ble_state = 0
+        self.ble_state = STATE_HOST['enabled']
         self.no_of_connected = 0
         self.connecting = False
         self.connected = dict(ble_sc=False, ble_hr=None, gps=False, bmp183=False)
@@ -108,18 +122,18 @@ class sensors(threading.Thread):
             except:
                 pass
         if self.no_of_connected == 0:
-            self.ble_state = 1
+            self.ble_state = STATE_HOST['enabled']
         if self.no_of_connected == 1:
-            self.ble_state = 4
+            self.ble_state = STATE_HOST['connected_1']
         if self.no_of_connected == 2:
-            self.ble_state = 5
+            self.ble_state = STATE_HOST['connected_2']
         if self.no_of_connected == 3:
-            self.ble_state = 6
+            self.ble_state = STATE_HOST['connected_3']
         if self.no_of_connected == 4:
-            self.ble_state = 7
+            self.ble_state = STATE_HOST['connected_4']
         #FIXME Tidy it up - showing "connecting" state doesn't work (blocking call is the problem)
         if self.connecting:
-                self.ble_state = 2
+            self.ble_state = STATE_HOST['scanning_1']
 
     def get_ble_state(self):
         return self.ble_state
