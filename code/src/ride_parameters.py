@@ -611,4 +611,3 @@ class ride_parameters():
         self.update_param("heart_rate_min")
         self.update_param("heart_rate_avg")
         self.update_param("heart_rate_max")
-        # Add min/max/avg
