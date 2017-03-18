@@ -56,7 +56,9 @@ class open_cycling_computer(object):
         self.l.debug("[OCC] Calling ride_parameters")
         self.rp = ride_parameters(self, simulate)
         self.layout_path = ''
+        self.l.debug("[OCC] Initialising config")
         self.config = occ_config(self, "config/config.xml", "config/config_base.xml")
+        self.l.debug("[OCC] Reading config")
         self.config.read_config()
         self.layout = layout(self, self.layout_path)
         self.l.debug("[OCC] Starting RP sensors")
@@ -189,6 +191,7 @@ class open_cycling_computer(object):
         pygame.event.clear()
 
     def cleanup(self):
+        self.l.debug("[OCC] Cleaning...")
         sleep(1)
         self.rp.stop()
         try:
