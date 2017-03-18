@@ -196,11 +196,11 @@ class layout():
                 image = self.current_image_list[image_path]
                 screen.blit(image, [text_center_x, text_center_y])
             try:
-                fs = int(text_center.get('size'))
+                fs = float(text_center.get('size'))
             except:
                 fs = 0
             if function != "variable_value":
-                font_size = 12 * fs
+                font_size = int(12.0 * fs)
                 if font_size in self.font_list:
                     font = self.font_list[font_size]
                 else:
@@ -212,8 +212,8 @@ class layout():
                 y = ren.get_rect().centery
                 screen.blit(ren, (text_center_x - x, text_center_y - y))
             else:
-                font_size_small = 12 * (fs - 1)
-                font_size_large = 12 * (fs + 1)
+                font_size_small = int(12.0 * (fs - 1))
+                font_size_large = int(12.0 * (fs + 1))
                 if font_size_small in self.font_list:
                     font_s = self.font_list[font_size_small]
                 else:
