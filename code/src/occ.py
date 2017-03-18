@@ -38,7 +38,6 @@ class open_cycling_computer(object):
 
     def __init__(self, simulate=False, width=240, height=320):
         self.simulate = simulate
-        self.r = logging.getLogger('ride')
         self.l = logging.getLogger('system')
         pygame.init()
         if not self.simulate:
@@ -52,7 +51,6 @@ class open_cycling_computer(object):
         self.height = height
         self.l.debug("[OCC] Screen size is {} x {}".format(self.width, self.height))
         self.screen = pygame.display.set_mode((self.width, self.height))
-        self.clock = pygame.time.Clock()
         self.l.debug("[OCC] Calling sensors")
         self.sensors = sensors(self, simulate)
         self.l.debug("[OCC] Calling ride_parameters")
@@ -177,7 +175,6 @@ class open_cycling_computer(object):
                     break
                 if self.refresh:
                     self.refresh = False
-                    self.layout.layout_changed = 0
                     self.rendering.force_refresh()
 
     def reset_motion(self):
@@ -211,7 +208,7 @@ class open_cycling_computer(object):
         quit()
 
 
-def quit_handler(signal, frame):
+def quit_handler(signal):
     main_window.cleanup()
 
 if __name__ == "__main__":

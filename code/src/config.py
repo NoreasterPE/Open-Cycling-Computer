@@ -25,14 +25,14 @@ class occ_config(object):
         self.config = config_tree.getroot()
         try:
             log_level = self.config.find("log_level").text
-            self.switch_log_level(log_level)
+            self.occ.switch_log_level(log_level)
             self.rp.params["debug_level"] = log_level
         except AttributeError:
             pass
         try:
-            self.layout_path = self.config.find("layout_path").text
+            self.layout.layout_path = self.config.find("layout_path").text
         except AttributeError:
-            self.layout_path = "layouts/default.xml"
+            self.layout.layout_path = "layouts/default.xml"
             self.l.error("[OCC] Missing layout path, falling back to default.xml")
         error_list = []
         try:

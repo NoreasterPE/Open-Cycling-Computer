@@ -25,7 +25,6 @@ class ble_hr(Peripheral, threading.Thread):
         self.l.info('[BLE_HR] State = {}'.format(self.state))
         threading.Thread.__init__(self)
         self.addr = addr
-        self.notifications_enabled = False
         self.l.info('[BLE_HR] Connecting to {}'.format(addr))
         self.state = 1
         self.l.info('[BLE_HR] State = {}'.format(self.state))
@@ -36,7 +35,7 @@ class ble_hr(Peripheral, threading.Thread):
         self.name = self.get_device_name()
         self.l.info('[BLE_HR] Connected to {}'.format(self.name))
         self.l.debug('[BLE_HR] Setting notification handler')
-        self.delegate = CSC_Delegate()
+        self.delegate = HR_Delegate()
         self.l.debug('[BLE_HR] Setting delegate')
         self.withDelegate(self.delegate)
         self.l.debug('[BLE_HR] Enabling notifications')
@@ -114,7 +113,7 @@ class ble_hr(Peripheral, threading.Thread):
             self.l.info('[BLE_HR] {} disconnected'.format(self.name))
 
 
-class CSC_Delegate(DefaultDelegate):
+class HR_Delegate(DefaultDelegate):
 
     def __init__(self):
         self.l = logging.getLogger('system')

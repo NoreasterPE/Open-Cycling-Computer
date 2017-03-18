@@ -23,7 +23,6 @@ class ble_sc(Peripheral, threading.Thread):
         self.l.info('[BLE_SC] State = {}'.format(self.state))
         threading.Thread.__init__(self)
         self.addr = addr
-        self.notifications_enabled = False
         self.wheel_time_stamp = time.time()
         self.wheel_rev_time = 0
         self.cadence_time_stamp = time.time()

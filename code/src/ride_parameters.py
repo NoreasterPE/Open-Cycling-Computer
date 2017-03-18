@@ -127,6 +127,7 @@ class ride_parameters():
         #FIXME Move to dict
         self.speed_gps_low = 2.5
         self.l.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
+        #FIXME Use set_nav_speed_threshold(self, treshold=0) from gps module
 
         # Do not show speed below 1 m/s
         #FIXME Move to dict
