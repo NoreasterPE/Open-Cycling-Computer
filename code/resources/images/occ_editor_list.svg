@@ -12,9 +12,9 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.1"
    id="svg2"
-   width="320"
-   height="426.66666"
-   viewBox="0 0 320 426.66666"
+   width="239.99974"
+   height="320.00006"
+   viewBox="0 0 239.99974 320.00006"
    sodipodi:docname="occ_editor_list.svg"
    inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_2.png"
    inkscape:export-xdpi="72"
@@ -47,219 +47,144 @@
      inkscape:window-height="704"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="0.7822369"
-     inkscape:cx="41.593948"
-     inkscape:cy="197.14453"
+     inkscape:zoom="0.27656251"
+     inkscape:cx="22.416478"
+     inkscape:cy="-215.21948"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg2" />
-  <image
-     width="320"
-     height="426.66666"
-     preserveAspectRatio="none"
-     style="image-rendering:optimizeQuality"
-     xlink:href="data:image/png;base64,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
-Ah8AAAAASUVORK5CYII=
-"
-     id="image10"
-     x="-387.35068"
-     y="35.794785" />
+     inkscape:current-layer="svg2"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <rect
-     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1.98910761;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
      id="rect4487"
-     width="318.01089"
-     height="424.67166"
-     x="0.99456"
-     y="0.99750185"
-     ry="11.943891" />
-  <g
-     id="g4516"
-     transform="translate(0.00620985)">
-    <rect
-       ry="11.943891"
-       y="1.9928261"
-       x="1.988344"
-       height="79.625938"
-       width="157.01787"
-       id="rect4489"
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1.98910761;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
-       rx="11.943891" />
-    <rect
-       ry="11.943891"
-       y="1.9928261"
-       x="160.99379"
-       height="79.625938"
-       width="157.01787"
-       id="rect4489-3"
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1.98910761;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
-       rx="11.943891" />
-  </g>
-  <g
-     transform="translate(-8.3446503e-7,344.05334)"
-     id="g4516-6">
-    <rect
-       ry="11.943891"
-       y="1.9928261"
-       x="1.988344"
-       height="79.625938"
-       width="157.01787"
-       id="rect4489-7"
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1.98910761;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate" />
-    <rect
-       ry="11.943891"
-       y="1.9928261"
-       x="160.99379"
-       height="79.625938"
-       width="157.01787"
-       id="rect4489-3-5"
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1.98910761;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate" />
-  </g>
+     width="239"
+     height="319"
+     x="0.5"
+     y="0.50006104"
+     ry="2"
+     rx="2"
+     inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_1.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
   <rect
-     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1.98910761;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
-     id="rect4489-7-5"
-     width="157.01787"
-     height="79.625938"
-     x="1.9883431"
-     y="264.43112"
-     ry="11.943891" />
+     rx="1.9999999"
+     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+     id="rect4489"
+     width="118.99999"
+     height="59"
+     x="0.49999994"
+     y="0.50006098"
+     ry="2"
+     inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_1.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
   <rect
-     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1.98910761;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
-     id="rect4489-3-5-6"
-     width="157.01787"
-     height="79.625938"
-     x="160.99379"
-     y="264.43112"
-     ry="11.943891" />
+     rx="1.9999999"
+     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+     id="rect4489-3"
+     width="118.99999"
+     height="59"
+     x="120.49999"
+     y="0.50006098"
+     ry="2"
+     inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_1.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
   <rect
-     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1.98910761;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+     rx="2"
+     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+     id="rect4489-7"
+     width="118.99999"
+     height="59"
+     x="0.49999994"
+     y="260.50006"
+     ry="2"
+     inkscape:tile-cx="59.999996"
+     inkscape:tile-cy="290.00006"
+     inkscape:tile-w="119.99999"
+     inkscape:tile-h="60"
+     inkscape:tile-x0="-5.9604645e-08"
+     inkscape:tile-y0="260.00006"
+     inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_1.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <rect
+     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
      id="rect4489-7-5-2"
-     width="80.010895"
-     height="80.010895"
-     x="1.9945539"
-     y="183.66121"
-     ry="11.944001"
-     rx="12.000001" />
+     width="59"
+     height="59"
+     x="0.5"
+     y="140.50006"
+     ry="2"
+     rx="2"
+     inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_1.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
   <rect
-     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1.98910761;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
      id="rect4489-7-5-2-1"
-     width="80.010895"
-     height="80.010895"
-     x="238.99455"
-     y="183.66121"
-     ry="11.944001"
-     rx="12.000001" />
+     width="59"
+     height="59"
+     x="180.5"
+     y="140.50006"
+     ry="2"
+     rx="2"
+     inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_1.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
   <rect
-     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1.98910761;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
      id="rect4489-7-5-2-1-2"
-     width="154.01089"
-     height="53.66766"
-     x="83.384384"
-     y="210.00444"
-     ry="11.944002"
-     rx="12.000002" />
+     width="119"
+     height="39"
+     x="60.5"
+     y="160.50008"
+     ry="1.9999999"
+     rx="2"
+     inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_1.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#rect4489-7"
+     xlink:href="#rect4489-7"
+     id="use5363"
+     inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_1.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#rect4489-7"
+     xlink:href="#rect4489-7"
+     transform="matrix(1,0,0,-1,0,520.00012)"
+     id="use5365"
+     inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_1.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#rect4489-7"
+     xlink:href="#rect4489-7"
+     transform="matrix(-1,0,0,1,239.99998,0)"
+     id="use5367"
+     inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_1.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#rect4489-7"
+     xlink:href="#rect4489-7"
+     transform="rotate(180,119.99999,260.00006)"
+     id="use5369"
+     inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_1.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
 </svg>
