@@ -221,6 +221,28 @@
 			<button x0="0" y0="160" w="120" h="80"/>
 			<text_center x="60" y="215" size="3"/>
 		</field>
+		<field function="text6">
+			<text_center x="60" y="255" size="2">Heart rate</text_center>
+		</field>
+		<field function="ble_hr_name">
+			<button x0="0" y0="240" w="120" h="80"/>
+			<text_center x="60" y="280" size="1.5"/>
+		</field>
+		<field function="ble_hr_addr">
+			<button x0="0" y0="240" w="120" h="80"/>
+			<text_center x="60" y="300" size="1.5"/>
+		</field>
+		<field function="text7">
+			<text_center x="180" y="255" size="2">Spd/cadence</text_center>
+		</field>
+		<field function="ble_sc_name">
+			<button x0="120" y0="240" w="120" h="80"/>
+			<text_center x="180" y="280" size="1.5"/>
+		</field>
+		<field function="ble_sc_addr">
+			<button x0="120" y0="240" w="120" h="80"/>
+			<text_center x="180" y="300" size="1.5"/>
+		</field>
 	</page>
 	<page name="Settings 1" id="settings_1" background="images/occ_settings_1_background.png" buttons="images/occ_settings_1_buttons.png" font="" fg_colour="FFFFFF">
 		<field function="halt">
