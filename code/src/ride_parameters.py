@@ -66,8 +66,8 @@ class ride_parameters():
                            ridetime_total_hms='', rtc='', satellites='-', satellitesused='-', slope='-', speed='-', speed_avg='-',
                            speed_avg_digits='-', speed_avg_tenths='-', speed_digits='-', speed_max='-', speed_max_digits='-',
                            speed_max_tenths='-', speed_tenths='-', temperature='', temperature_avg='', temperature_max='',
-                           temperature_min='', timeon='', timeon_hms='', time_of_ride_reset='', track='-', utc='')
-
+                           temperature_min='', timeon='', timeon_hms='', time_of_ride_reset='', track='-', utc='',
+                           ble_hr_name='', ble_hr_addr='', ble_sc_name='', ble_sc_addr='')
         # System params - shoud be in raw or new category: system
         self.params["debug_level"] = ""
         # Editor params
@@ -275,8 +275,8 @@ class ride_parameters():
         if self.ble_sc:
             data = self.ble_sc.get_data()
             tt = time.time()
-            self.p_raw['ble_sc_name'] = data['name']
-            self.p_raw['ble_sc_addr'] = data['addr']
+            self.params['ble_sc_name'] = data['name']
+            self.params['ble_sc_addr'] = data['addr']
             self.p_raw['wheel_time_stamp'] = self.clean_value(data['wheel_time_stamp'])
             if (tt - self.p_raw['wheel_time_stamp']) < self.p_raw['ble_data_expiry_time']:
                 self.p_raw['wheel_rev_time'] = self.clean_value(data['wheel_rev_time'])
@@ -304,8 +304,8 @@ class ride_parameters():
         if self.ble_hr:
             data = self.ble_hr.get_data()
             tt = time.time()
-            self.p_raw['ble_hr_name'] = data['name']
-            self.p_raw['ble_hr_addr'] = data['addr']
+            self.params['ble_hr_name'] = data['name']
+            self.params['ble_hr_addr'] = data['addr']
             self.p_raw['ble_hr_ts'] = data['time_stamp']
             self.p_raw['heart_rate'] = data['heart_rate']
             self.l.debug('[RP] BLE HR = {} at {}'.format(self.p_raw['heart_rate'], self.p_raw['ble_hr_ts']))

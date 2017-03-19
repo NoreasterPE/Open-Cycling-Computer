@@ -199,7 +199,7 @@ class open_cycling_computer(object):
         except AttributeError:
             pass
         try:
-            self.write_config()
+            self.config.write_config()
         except AttributeError:
             pass
         try:

@@ -66,14 +66,14 @@ class sensors(threading.Thread):
         self.connected['bmp183'] = True
         self.running = True
 
-    def init_data_from_config(self):
-        self.names['ble_hr'] = self.occ.rp.p_raw['ble_hr_name']
-        self.names['ble_sc'] = self.occ.rp.p_raw['ble_sc_name']
-        self.addrs['ble_hr'] = self.occ.rp.p_raw['ble_hr_addr']
-        self.addrs['ble_sc'] = self.occ.rp.p_raw['ble_sc_addr']
+    def init_data_from_ride_parameters(self):
+        self.names['ble_hr'] = self.occ.rp.params['ble_hr_name']
+        self.names['ble_sc'] = self.occ.rp.params['ble_sc_name']
+        self.addrs['ble_hr'] = self.occ.rp.params['ble_hr_addr']
+        self.addrs['ble_sc'] = self.occ.rp.params['ble_sc_addr']
 
     def run(self):
-        self.init_data_from_config()
+        self.init_data_from_ride_parameters()
         self.l.info("[SE] Starting GPS thread")
         self.sensors['gps'].start()
         self.l.info("[SE] Starting bmp183 thread")
