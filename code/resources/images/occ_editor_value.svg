@@ -15,10 +15,10 @@
    width="239.99974"
    height="320.00006"
    viewBox="0 0 239.99974 320.00006"
-   sodipodi:docname="occ_editor_list.svg"
-   inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_list.png"
-   inkscape:export-xdpi="96"
-   inkscape:export-ydpi="96"
+   sodipodi:docname="occ_editor_value.svg"
+   inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_2.png"
+   inkscape:export-xdpi="72"
+   inkscape:export-ydpi="72"
    inkscape:version="0.92.0 r">
   <metadata
      id="metadata8">
@@ -28,7 +28,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -47,9 +47,9 @@
      inkscape:window-height="704"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="1.3468747"
-     inkscape:cx="119.99987"
-     inkscape:cy="160.00003"
+     inkscape:zoom="1.10625"
+     inkscape:cx="162.86486"
+     inkscape:cy="112.65507"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -109,6 +109,42 @@
      inkscape:tile-h="60"
      inkscape:tile-x0="-5.9604645e-08"
      inkscape:tile-y0="260.00006"
+     inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_1.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <rect
+     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+     id="rect4489-7-5-2"
+     width="59"
+     height="59"
+     x="0.5"
+     y="140.50006"
+     ry="2"
+     rx="2"
+     inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_1.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <rect
+     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+     id="rect4489-7-5-2-1"
+     width="59"
+     height="59"
+     x="180.5"
+     y="140.50006"
+     ry="2"
+     rx="2"
+     inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_1.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <rect
+     style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000dff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+     id="rect4489-7-5-2-1-2"
+     width="119"
+     height="39"
+     x="60.5"
+     y="160.50008"
+     ry="1.9999999"
+     rx="2"
      inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/images/occ_editor_1.png"
      inkscape:export-xdpi="96"
      inkscape:export-ydpi="96" />
