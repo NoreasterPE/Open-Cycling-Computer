@@ -395,9 +395,13 @@ class layout():
 
     def ed_next(self):
         u = unicode(self.occ.rp.params["variable_value"])
-        l = len(u) - 1
         i = self.occ.rp.params["editor_index"]
-        i += 1
+        if u[0] == '0':
+            u = u[1:]
+            self.occ.rp.params["variable_value"] = u
+        else:
+            i += 1
+        l = len(u) - 1
         if i > l:
             i = l
         else:
