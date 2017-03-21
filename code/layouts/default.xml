@@ -198,7 +198,7 @@
 			<text_center x="165" y="50" size="4"/>
 		</field>
 		<field function="altitude_home_units">
-			<text_center x="220" y="50" size="1.2"/>
+			<text_center x="220" y="50" size="2"/>
 		</field>
 		<field function="text3">
 			<text_center x="60" y="95" size="2">Speed</text_center>
