@@ -40,6 +40,7 @@ class open_cycling_computer(object):
         self.simulate = simulate
         self.l = logging.getLogger('system')
         pygame.init()
+        #pygame.display.init()
         if not self.simulate:
             pygame.event.set_grab(True)
             pygame.mouse.set_visible(0)

@@ -13,19 +13,19 @@ class occ_config(object):
         self.l = logging.getLogger('system')
         self.occ = occ
         self.rp = occ.rp
-        self.config_path = config_file_path
+        self.config_file_path = config_file_path
         self.base_config_file_path = base_config_file_path
 
     def read_config(self):
         self.l.debug("[CON][F] read_config")
         try:
-            config_tree = eltree.parse(self.config_path)
+            config_tree = eltree.parse(self.config_file_path)
         except IOError:
             self.l.error("[CON] I/O Error when trying to parse config file. Overwriting with copy of base_config")
             copyfile(self.base_config_file_path, self.config_file_path)
-            self.config_path = self.config_file_path
+            self.config_file_path = self.config_file_path
             try:
-                config_tree = eltree.parse(self.config_path)
+                config_tree = eltree.parse(self.config_file_path)
             except IOError:
                 self.l.exception("[CON] I/O Error when trying to parse overwritten config. Quitting!!")
                 self.cleanup()
@@ -139,9 +139,9 @@ class occ_config(object):
         eltree.SubElement(config_tree, "speed_max").text = unicode(self.rp.p_raw["speed_max"])
         eltree.SubElement(config_tree, "speed_units").text = unicode(self.rp.units["speed"])
         eltree.SubElement(config_tree, "temperature_units").text = unicode(self.rp.units["temperature"])
-        eltree.SubElement(config_tree, "ble_hr_name").text = self.rp.params["ble_hr_name"]
-        eltree.SubElement(config_tree, "ble_hr_addr").text = self.rp.params["ble_hr_addr"]
+	eltree.SubElement(config_tree, "ble_hr_name").text = self.rp.params["ble_hr_name"]
+	eltree.SubElement(config_tree, "ble_hr_addr").text = self.rp.params["ble_hr_addr"]
         eltree.SubElement(config_tree, "ble_sc_name").text = self.rp.params["ble_sc_name"]
-        eltree.SubElement(config_tree, "ble_sc_addr").text = self.rp.params["ble_sc_addr"]
+	eltree.SubElement(config_tree, "ble_sc_addr").text = self.rp.params["ble_sc_addr"]
         # FIXME error handling for file operation
-        eltree.ElementTree(config_tree).write(self.config_path, encoding="UTF-8", pretty_print=True)
+        eltree.ElementTree(config_tree).write(self.config_file_path, encoding="UTF-8", pretty_print=True)

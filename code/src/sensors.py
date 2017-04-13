@@ -57,10 +57,10 @@ class sensors(threading.Thread):
         self.connecting = False
         self.connected = dict(ble_sc=False, ble_hr=None, gps=False, bmp183=False)
         self.l.info("[SE] Initialising GPS")
-        self.sensors['gps'] = gps_mtk3339(simulate)
+        #self.sensors['gps'] = gps_mtk3339(simulate)
         # FIXME Real device will need a check
         self.connected['gps'] = True
-        self.l.info("[SE] Initialising bmp183 sensor")
+        #self.l.info("[SE] Initialising bmp183 sensor")
         self.sensors['bmp183'] = bmp183(simulate)
         # FIXME Real device will need a check
         self.connected['bmp183'] = True
@@ -74,10 +74,12 @@ class sensors(threading.Thread):
 
     def run(self):
         self.init_data_from_ride_parameters()
-        self.l.info("[SE] Starting GPS thread")
-        self.sensors['gps'].start()
-        self.l.info("[SE] Starting bmp183 thread")
-        self.sensors['bmp183'].start()
+	if not self.simulate:
+		#self.l.info("[SE] Starting GPS thread")
+		#self.sensors['gps'].start()
+		#self.l.info("[SE] Starting bmp183 thread")
+		#self.sensors['bmp183'].start()
+		pass
         while self.running:
             self.set_ble_state()
             if not self.connected['ble_hr']:
