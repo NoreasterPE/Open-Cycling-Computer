@@ -25,6 +25,7 @@ class gps_mtk3339(threading.Thread):
         self.simulate = simulate
         self.restart_gps = False
         if not self.simulate:
+            self.l.debug("[GPS] Initialising mtk3339")
             ser = mtk3339.mt3339("/dev/ttyAMA0")
             ser.set_baudrate(115200)
             ser.set_fix_update_rate(1000)
@@ -43,6 +44,7 @@ class gps_mtk3339(threading.Thread):
 
     def gpsd_link_init(self):
         try:
+            self.l.debug("[GPS] Trying to establich serial link")
             # FIXME Add check for running gpsd. Restart if missing. Consider watchdog thread to start gpsd
             # FIXME Check how that reacts for missing gps hardware
             self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
@@ -50,6 +52,7 @@ class gps_mtk3339(threading.Thread):
         except:
             self.l.error("[GPS] Cannot talk to GPS")
             self.present = False
+            raise IOError("Communication with GPS mtk3339 failed")
 
     def restart_gpsd(self):
         command = "service gpsd restart"
