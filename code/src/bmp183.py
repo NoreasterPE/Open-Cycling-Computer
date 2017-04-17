@@ -7,6 +7,7 @@ NaN = float('nan')
 
 
 class bmp183(threading.Thread):
+
     'Class for Bosch BMP183 pressure and temperature sensor with SPI interface as sold by Adafruit'
     # BMP183 registers
     BMP183_REG = {
@@ -70,7 +71,7 @@ class bmp183(threading.Thread):
     def __init__(self, simulate=False):
         # Run init for super class
         super(bmp183, self).__init__()
-        #self.rp = occ.rp
+        # self.rp = occ.rp
         self.l = logging.getLogger('system')
         self.l.debug("[BMP] __init__")
         self.simulate = simulate
@@ -80,7 +81,8 @@ class bmp183(threading.Thread):
         # Delay between measurements in [s]
         self.measurement_delay = 0.45
         self.temperature = 0
-        # Maximum allowable temperature change between measurements. If measurement differ more than delta they are ignored.
+        # Maximum allowable temperature change between measurements. If
+        # measurement differ more than delta they are ignored.
         self.temperature_max_delta = 10
         self.pressure = 0
         self.pressure_unfiltered = 0
@@ -212,7 +214,7 @@ class bmp183(threading.Thread):
         self.AC6 = numpy.uint16(self.read_word(self.BMP183_REG['CAL_AC6']))
         self.B1 = numpy.int16(self.read_word(self.BMP183_REG['CAL_B1']))
         self.B2 = numpy.int16(self.read_word(self.BMP183_REG['CAL_B2']))
-        #MB is not used
+        # MB is not used
         self.MB = numpy.int16(self.read_word(self.BMP183_REG['CAL_MB']))
         self.MC = numpy.int16(self.read_word(self.BMP183_REG['CAL_MC']))
         self.MD = numpy.int16(self.read_word(self.BMP183_REG['CAL_MD']))
@@ -285,7 +287,8 @@ class bmp183(threading.Thread):
         while self.running:
             self.measure_pressure()
             self.kalman_update()
-            self.l.debug("[BMP] pressure = {} Pa, temperature = {} degC".format(self.pressure, self.temperature))
+            self.l.debug(
+                "[BMP] pressure = {} Pa, temperature = {} degC".format(self.pressure, self.temperature))
             time.sleep(self.measurement_delay)
 
     def kalman_setup(self):

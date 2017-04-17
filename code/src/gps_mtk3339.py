@@ -29,7 +29,8 @@ class gps_mtk3339(threading.Thread):
             ser.set_baudrate(115200)
             ser.set_fix_update_rate(1000)
             ser.set_nmea_update_rate(1000)
-            #ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 5, gsa = 5, gsv = 5)
+            # ser.set_nmea_output(gll = 0, rmc = 1, vtg = 0, gga = 5, gsa = 5,
+            # gsv = 5)
             ser.set_nmea_output(gll=0, rmc=1, vtg=0, gga=1, gsa=5, gsv=5)
         self.reset_gps_data()
         self.present = False
@@ -82,7 +83,8 @@ class gps_mtk3339(threading.Thread):
 
     def process_gps(self):
         timestamp = time.time()
-        self.l.debug("[GPS] timestamp: {}, running: {},".format(timestamp, self.running))
+        self.l.debug(
+            "[GPS] timestamp: {}, running: {},".format(timestamp, self.running))
         gps_data_available = False
         try:
             # FIXME Fails sometimes with ImportError from gps.py - see TODO 21
@@ -124,7 +126,8 @@ class gps_mtk3339(threading.Thread):
                     self.fix_time = time.mktime(time.strptime(
                         data.fix.time, '%Y-%m-%dT%H:%M:%S.%fZ'))
                 except ImportError:
-                    self.l.critical("[GPS] self.fix_time {}".format(self.fix_time))
+                    self.l.critical(
+                        "[GPS] self.fix_time {}".format(self.fix_time))
                     pass
             if self.set_time:
                 if (self.utc is not None):
@@ -145,22 +148,22 @@ class gps_mtk3339(threading.Thread):
             self.reset_gps_data()
 
     def reset_gps_data(self):
-            self.l.debug("[GPS] Setting null values to GPS params")
-            self.latitude = NaN
-            self.longitude = NaN
-            self.utc = None
-            self.climb_gps = NaN
-            self.speed_gps = NaN
-            self.altitude_gps = NaN
-            self.fix_mode_gps = fix_mode[1]
-            self.fix_time_gps = NaN
-            self.satellites = 0
-            self.satellitesused = 0
-            self.track_gps = NaN
-            self.eps = NaN
-            self.epx = NaN
-            self.epv = NaN
-            self.ept = NaN
+        self.l.debug("[GPS] Setting null values to GPS params")
+        self.latitude = NaN
+        self.longitude = NaN
+        self.utc = None
+        self.climb_gps = NaN
+        self.speed_gps = NaN
+        self.altitude_gps = NaN
+        self.fix_mode_gps = fix_mode[1]
+        self.fix_time_gps = NaN
+        self.satellites = 0
+        self.satellitesused = 0
+        self.track_gps = NaN
+        self.eps = NaN
+        self.epx = NaN
+        self.epv = NaN
+        self.ept = NaN
 
     def get_data(self):
         r = dict(latitude=self.latitude, longitude=self.longitude,
@@ -189,4 +192,5 @@ class gps_mtk3339(threading.Thread):
             tt_after = time.time()
             self.time_adjustment_delta = tt_before - tt_after
             self.l.info("[GPS] time.time after {}".format(tt_after))
-            self.l.info("[GPS] time.time delta {}".format(self.time_adjustment_delta))
+            self.l.info(
+                "[GPS] time.time delta {}".format(self.time_adjustment_delta))

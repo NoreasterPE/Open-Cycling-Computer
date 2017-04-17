@@ -55,7 +55,8 @@ class sensors(threading.Thread):
         self.ble_state = STATE_HOST['enabled']
         self.no_of_connected = 0
         self.connecting = False
-        self.connected = dict(ble_sc=False, ble_hr=None, gps=False, bmp183=False)
+        self.connected = dict(
+            ble_sc=False, ble_hr=None, gps=False, bmp183=False)
         self.l.info("[SE] Initialising GPS")
         #self.sensors['gps'] = gps_mtk3339(simulate)
         # FIXME Real device will need a check
@@ -74,37 +75,42 @@ class sensors(threading.Thread):
 
     def run(self):
         self.init_data_from_ride_parameters()
-	if not self.simulate:
-		#self.l.info("[SE] Starting GPS thread")
-		#self.sensors['gps'].start()
-		#self.l.info("[SE] Starting bmp183 thread")
-		#self.sensors['bmp183'].start()
-		pass
+        if not self.simulate:
+            if self.sensors['gps']:
+                self.l.info("[SE] Starting GPS thread")
+                self.sensors['gps'].start()
+            if self.sensors['bmp183']:
+                self.l.info("[SE] Starting bmp183 thread")
+                self.sensors['bmp183'].start()
         while self.running:
             self.set_ble_state()
             if not self.connected['ble_hr']:
                 self.l.info("[SE] Initialising BLE heart rate sensor")
-                #FIXME Hardcoded address
+                # FIXME Hardcoded address
                 try:
                     self.sensors['ble_hr'] = ble_hr(self.addrs['ble_hr'])
-                    self.names['ble_hr'] = self.sensors['ble_hr'].get_device_name()
+                    self.names['ble_hr'] = self.sensors[
+                        'ble_hr'].get_device_name()
                     self.l.info("[SE] Starting BLE heart rate thread")
                     self.sensors['ble_hr'].start()
                 except BTLEException:
-                    self.l.info("[SE] Connecion to BLE heart rate sensor failed")
+                    self.l.info(
+                        "[SE] Connecion to BLE heart rate sensor failed")
                 else:
                     self.connected['ble_hr'] = True
             self.set_ble_state()
             if not self.connected['ble_sc']:
                 self.l.info("[SE] Initialising BLE speed & cadence sensor")
-                #FIXME Hardcoded address
+                # FIXME Hardcoded address
                 try:
                     self.sensors['ble_sc'] = ble_sc(self.addrs['ble_sc'])
-                    self.names['ble_sc'] = self.sensors['ble_sc'].get_device_name()
+                    self.names['ble_sc'] = self.sensors[
+                        'ble_sc'].get_device_name()
                     self.l.info("[SE] Starting BLE speed & cadence thread")
                     self.sensors['ble_sc'].start()
                 except BTLEException, e:
-                    self.l.info("[SE] Connecion to BLE speed & cadence sensor failed: {}".format(e))
+                    self.l.info(
+                        "[SE] Connecion to BLE speed & cadence sensor failed: {}".format(e))
                 else:
                     self.connected['ble_sc'] = True
 
@@ -133,7 +139,8 @@ class sensors(threading.Thread):
             self.ble_state = STATE_HOST['connected_3']
         if self.no_of_connected == 4:
             self.ble_state = STATE_HOST['connected_4']
-        #FIXME Tidy it up - showing "connecting" state doesn't work (blocking call is the problem)
+        # FIXME Tidy it up - showing "connecting" state doesn't work (blocking
+        # call is the problem)
         if self.connecting:
             self.ble_state = STATE_HOST['scanning_1']
 
@@ -145,7 +152,8 @@ class sensors(threading.Thread):
         if name in self.sensors and self.connected[name]:
             return self.sensors[name]
         else:
-            self.l.debug("[SE] Sensor {} not ready or doesn't exist".format(name))
+            self.l.debug(
+                "[SE] Sensor {} not ready or doesn't exist".format(name))
             return None
 
     def reconnect_sensor(self, name):
