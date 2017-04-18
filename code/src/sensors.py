@@ -4,7 +4,8 @@ from ble_sc import ble_sc
 from ble_hr import ble_hr
 from bluepy.btle import BTLEException
 from bmp183 import bmp183
-from gps_mtk3339 import gps_mtk3339
+# Disable GPS (temporary)
+# from gps_mtk3339 import gps_mtk3339
 import logging
 import threading
 import time
@@ -59,9 +60,11 @@ class sensors(threading.Thread):
             ble_sc=False, ble_hr=None, gps=False, bmp183=False)
         self.l.info("[SE] Initialising GPS")
         try:
-            self.l.info("[SE] Initialising GPS1")
-            self.sensors['gps'] = gps_mtk3339(simulate)
-            self.connected['gps'] = True
+            # Disable GPS (temporary)
+            # self.sensors['gps'] = gps_mtk3339(simulate)
+            # self.connected['gps'] = True
+            self.sensors['gps'] = None
+            self.connected['gps'] = False
         except IOError:
             self.sensors['gps'] = None
         self.l.info("[SE] Initialising bmp183 sensor")
