@@ -50,7 +50,8 @@ class ble_hr(Peripheral, threading.Thread):
             if str(e) == "Helper not started (did you call connect()?)":
                 self.l.error('[BLE_HR] Set notifications failed: {}'.format(e))
             else:
-                self.l.critical('[BLE_HR] Set notifications failed with uncontrolled error: {}'.format(e))
+                self.l.critical(
+                    '[BLE_HR] Set notifications failed with uncontrolled error: {}'.format(e))
                 raise
 
     def get_device_name(self):
@@ -93,7 +94,8 @@ class ble_hr(Peripheral, threading.Thread):
                     raise
 
     def get_data(self):
-        r = dict(name=self.name, addr=self.addr, state=self.state, time_stamp=self.time_stamp, heart_rate=self.heart_rate)
+        r = dict(name=self.name, addr=self.addr, state=self.state,
+                 time_stamp=self.time_stamp, heart_rate=self.heart_rate)
         return r
 
     def __del__(self):
@@ -140,15 +142,15 @@ class HR_Delegate(DefaultDelegate):
         HR_VALUE_FORMAT = 0b00000001  # 0 UINT8, 1 UINT16
         # 0   Heart Rate Value Format is set to UINT8. Units: beats per minute (bpm)
         # 1   Heart Rate Value Format is set to UINT16. Units: beats per minute (bpm)
-        #SENSOR_CONTACT_STATUS = 0b00000110
+        # SENSOR_CONTACT_STATUS = 0b00000110
         # 0   Sensor Contact feature is not supported in the current connection
         # 1   Sensor Contact feature is not supported in the current connection
         # 2   Sensor Contact feature is supported, but contact is not detected
         # 3   Sensor Contact feature is supported and contact is detected
-        #ENERGY_EXPENDED_STATUS = 0b00001000
+        # ENERGY_EXPENDED_STATUS = 0b00001000
         # 0   Energy Expended field is not present
         # 1   Energy Expended field is present. Units: kilo Joules
-        #RR_INTERVAL = 0b000100000
+        # RR_INTERVAL = 0b000100000
         # 0   RR-Interval values are not present.
         # 1   One or more RR-Interval values are present.
 

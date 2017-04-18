@@ -53,7 +53,7 @@ class units():
 
     def mass_kg_to_st(self, mass):
         m_st = mass * 0.15747
-        #m_lb = (mass - (m_st / 0.15747)) * 2.2046
+        # m_lb = (mass - (m_st / 0.15747)) * 2.2046
         # return (m_st, m_lb)
         return m_st
 

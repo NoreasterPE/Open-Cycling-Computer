@@ -34,19 +34,21 @@ CONFIG_SAVE_TIME = 15000
 
 
 class open_cycling_computer(object):
+
     'Class for PiTFT 2.8" 320x240 cycling computer'
 
     def __init__(self, simulate=False, width=240, height=320):
         self.simulate = simulate
         self.l = logging.getLogger('system')
         pygame.init()
-        #pygame.display.init()
+        # pygame.display.init()
         if not self.simulate:
             pygame.event.set_grab(True)
             pygame.mouse.set_visible(0)
         self.l.debug("[OCC] EV_UPDATE_VALUES to be generated every {} ms".format(REFRESH_TIME))
         pygame.time.set_timer(EV_UPDATE_VALUES, REFRESH_TIME)
-        self.l.debug("[OCC] EV_SAVE_CONFIG to be generated every {} s".format(CONFIG_SAVE_TIME / 1000))
+        self.l.debug(
+            "[OCC] EV_SAVE_CONFIG to be generated every {} s".format(CONFIG_SAVE_TIME / 1000))
         pygame.time.set_timer(EV_SAVE_CONFIG, CONFIG_SAVE_TIME)
         self.width = width
         self.height = height
@@ -96,11 +98,13 @@ class open_cycling_computer(object):
 
     def screen_touched_handler(self, time_now):
         if (time_now - self.pressed_t) > LONG_CLICK:
-            self.l.debug("[OCC] LONG CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
+            self.l.debug("[OCC] LONG CLICK : {} {} {}".format(
+                time_now, self.pressed_t, self.pressed_pos))
             self.layout.check_click(self.pressed_pos, 1)
             self.reset_motion()
         if self.released_t != 0:
-            self.l.debug("[OCC] SHORT CLICK : {} {} {}".format(time_now, self.pressed_t, self.pressed_pos))
+            self.l.debug("[OCC] SHORT CLICK : {} {} {}".format(
+                time_now, self.pressed_t, self.pressed_pos))
             self.layout.check_click(self.pressed_pos, 0)
             self.reset_motion()
         dx = self.rel_movement[0]
@@ -145,7 +149,8 @@ class open_cycling_computer(object):
             pressed_rel = pygame.mouse.get_rel()
             self.add_rel_motion = True
             self.layout.render_button = self.pressed_pos
-            self.l.debug("[OCC] DOWN:{} {} {}".format(self.pressed_t, self.released_t, self.pressed_pos))
+            self.l.debug("[OCC] DOWN:{} {} {}".format(
+                self.pressed_t, self.released_t, self.pressed_pos))
         elif event.type == pygame.MOUSEBUTTONUP:
             # That check prevents setting release_x after long click
             if (self.pressed_t != 0):
@@ -237,7 +242,8 @@ if __name__ == "__main__":
         simulate = False
     else:
         simulate = True
-        sys_logger.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
+        sys_logger.warning(
+            "Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
     main_window = open_cycling_computer(simulate)
     sys_logger.debug("[OCC] simulate = {}".format(simulate))
     main_window.main_loop()

@@ -2,6 +2,7 @@
 
 
 class wheel:
+
     def __init__(self):
         self.wheel_size = {}
         self.wheel_size['700x18C'] = 2.070

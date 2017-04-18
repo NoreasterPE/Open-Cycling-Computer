@@ -50,7 +50,8 @@ class ride_parameters():
                           timeon=0.0001, utc='', rtc='')
 
         # Internal units
-        self.p_raw_units = dict(altitude='m', cadence='RPM', climb='m/s', distance='m', eps='', ept='', epv='', epx='',
+        self.p_raw_units = dict(
+            altitude='m', cadence='RPM', climb='m/s', distance='m', eps='', ept='', epv='', epx='',
                                 dtime='s', fix_gps='', latitude='', longitude='', odometer='m', pressure='Pa', riderweight='kg', wheel_size='',
                                 ridetime='s', ridetime_total='s', satellites='', satellitesused='', slope='m/m', speed='m/s',
                                 temperature=degC, timeon='s', time_of_ride_reset='s', heart_rate='BPM',
@@ -58,7 +59,8 @@ class ride_parameters():
                                 track='')
 
         # Params of the ride ready for rendering.
-        self.params = dict(altitude='-', altitude_gps='-', altitude_home='-', altitude_max='-', altitude_min='-',
+        self.params = dict(
+            altitude='-', altitude_gps='-', altitude_home='-', altitude_max='-', altitude_min='-',
                            cadence='-', cadence_avg='-', cadence_max='-', heart_rate_min='-', heart_rate_avg='-', heart_rate_max='-',
                            climb='-', distance=0, eps='-', ept='-', epv='-', epx='-',
                            dtime=0, fix_gps='-', fix_gps_time='-', latitude='-', longitude='-', odometer=0.0,
@@ -80,7 +82,8 @@ class ride_parameters():
         self.params["variable_value"] = None
 
         # Formatting strings for params.
-        self.p_format = dict(altitude='%.0f', altitude_gps='%.0f', altitude_home='%.0f', altitude_max='%.0f', altitude_min='%.0f',
+        self.p_format = dict(
+            altitude='%.0f', altitude_gps='%.0f', altitude_home='%.0f', altitude_max='%.0f', altitude_min='%.0f',
                              cadence='%.0f', cadence_avg='%.0f', cadence_max='%.0f', climb='%.1f', distance='%.1f', eps='%.4f', epx='%.4f', epv='%.4f', ept='%.4f',
                              dtime='%.2f', fix_gps='', fix_gps_time='',
                              heart_rate='%.0f', heart_rate_min='%.0f', heart_rate_avg='%.0f', heart_rate_max='%.0f',
@@ -92,7 +95,8 @@ class ride_parameters():
                              timeon='%.0f', timeon_hms='', time_of_ride_reset='%.0f', track='%.1f', utc='')
 
         # Units - name has to be identical as in params
-        self.units = dict(altitude='m', cadence='RPM', climb='m/s', distance='km', eps='', epx='', epv='', ept='',
+        self.units = dict(
+            altitude='m', cadence='RPM', climb='m/s', distance='km', eps='', epx='', epv='', ept='',
                           dtime='s', fix_gps='', fix_gps_time='', heart_rate='BPM', latitude='', longitude='', odometer='km', pressure='hPa',
                           riderweight='kg', wheel_size='', ridetime='s', ridetime_hms='', ridetime_total='s', ridetime_total_hms='', satellites='',
                           satellitesused='', slope='%', speed='km/h', temperature=degC, timeon='s', timeon_hms='', time_of_ride_reset='s',
@@ -107,7 +111,8 @@ class ride_parameters():
                                   speed=['km/h', 'm/s', 'mi/h'], temperature=[degC, 'F', 'K'])
 
         # Params description FIXME localisation
-        self.p_desc = dict(altitude_home='Home altitude', odometer='Odometer', odometer_units='Odometer units',
+        self.p_desc = dict(
+            altitude_home='Home altitude', odometer='Odometer', odometer_units='Odometer units',
                            riderweight='Rider weight', riderweight_units='Rider weight units', wheel_size='Wheel size', speed_units='Speed units',
                            temperature_units='Temp. unit')
 
@@ -124,13 +129,13 @@ class ride_parameters():
                                  heart_rate_min=1, heart_rate_avg=1, heart_rate_max=1)
 
         # Do not record any speed below 2.5 m/s
-        #FIXME Move to dict
+        # FIXME Move to dict
         self.speed_gps_low = 2.5
         self.l.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
-        #FIXME Use set_nav_speed_threshold(self, treshold=0) from gps module
+        # FIXME Use set_nav_speed_threshold(self, treshold=0) from gps module
 
         # Do not show speed below 1 m/s
-        #FIXME Move to dict
+        # FIXME Move to dict
         self.speed_gps_noise = 1
         self.l.info("[RP] speed_gps_noise treshold set to {}".format(self.speed_gps_noise))
 
@@ -194,7 +199,8 @@ class ride_parameters():
         # FIXME make proper param for tunnig. Calculate slope if the distance
         # delta was grater than 8,4m
         elif self.p_raw["ddistance_cumulative"] > 8.4:
-            self.p_raw["slope"] = self.p_raw["daltitude_cumulative"] / self.p_raw["ddistance_cumulative"]
+            self.p_raw["slope"] = self.p_raw[
+                "daltitude_cumulative"] / self.p_raw["ddistance_cumulative"]
             self.l.debug("[RP] daltitude_cumulative: {} ddistance_cumulative: {}".
                          format(self.p_raw["daltitude_cumulative"], self.p_raw["ddistance_cumulative"]))
             self.p_raw["daltitude_cumulative"] = 0
@@ -217,7 +223,8 @@ class ride_parameters():
             self.p_raw["speed_avg"] = self.p_raw["distance"] / self.p_raw["ridetime"]
             self.update_param("speed_avg")
             self.split_speed("speed_avg")
-            self.l.debug("[RP] speed_gps: {}, distance: {}, odometer: {}".format(s, self.p_raw["distance"], self.p_raw["odometer"]))
+            self.l.debug("[RP] speed_gps: {}, distance: {}, odometer: {}".format(
+                s, self.p_raw["distance"], self.p_raw["odometer"]))
         else:
             self.p_raw["ddistance"] = 0
             self.l.debug("[RP] speed_gps: below speed_gps_low treshold")
@@ -291,15 +298,15 @@ class ride_parameters():
             else:
                 self.p_raw["cadence"] = 0
             if delay > BLE_RECONNECT_DELAY:
-                #Force reconnect
+                # Force reconnect
                 self.ble_sc = None
                 self.sensors.reconnect_sensor('ble_sc')
         else:
             self.l.info('[RP] BLE SC sensor not set, trying to get it...')
             self.ble_sc = self.sensors.get_sensor('ble_sc')
-            #FIXME - what if no BLE device present?
-            #self.p_raw['ble_sc_state'] = 0  # BLE state 0 - not active
-            #self.l.info('[RP] BLE SC state = 0')
+            # FIXME - what if no BLE device present?
+            # self.p_raw['ble_sc_state'] = 0  # BLE state 0 - not active
+            # self.l.info('[RP] BLE SC state = 0')
 
         if self.ble_hr:
             data = self.ble_hr.get_data()
@@ -308,18 +315,19 @@ class ride_parameters():
             self.params['ble_hr_addr'] = data['addr']
             self.p_raw['ble_hr_ts'] = data['time_stamp']
             self.p_raw['heart_rate'] = data['heart_rate']
-            self.l.debug('[RP] BLE HR = {} at {}'.format(self.p_raw['heart_rate'], self.p_raw['ble_hr_ts']))
+            self.l.debug('[RP] BLE HR = {} at {}'.format(
+                self.p_raw['heart_rate'], self.p_raw['ble_hr_ts']))
             delay = tt - self.p_raw['ble_hr_ts']
             if delay > BLE_RECONNECT_DELAY:
-                #Force reconnect
+                # Force reconnect
                 self.ble_hr = None
                 self.sensors.reconnect_sensor('ble_hr')
         else:
             self.l.info('[RP] BLE HR sensor not set, trying to get it...')
             self.ble_hr = self.sensors.get_sensor('ble_hr')
-            #FIXME - what if no BLE device present?
-            #self.p_raw['ble_hr_state'] = 0  # BLE state 0 - not active
-            #self.l.info('[RP] BLE HR state = 0')
+            # FIXME - what if no BLE device present?
+            # self.p_raw['ble_hr_state'] = 0  # BLE state 0 - not active
+            # self.l.info('[RP] BLE HR state = 0')
 
     def read_gps_data(self):
         if self.gps:
@@ -355,7 +363,7 @@ class ride_parameters():
             self.gps = self.sensors.get_sensor('gps')
 
     def split_speed(self, speed_name):
-        #FIXME No hardcoded formatting, move to dict
+        # FIXME No hardcoded formatting, move to dict
         self.params[speed_name + "_digits"] = self.params[speed_name][:-2]
         self.params[speed_name + "_tenths"] = self.params[speed_name][-1:]
 
@@ -375,7 +383,7 @@ class ride_parameters():
         self.p_raw[param + "_min"] = min(self.p_raw[param], self.p_raw[param + "_min"])
 
     def calculate_avg_temperature(self):
-        #FIXME Average is broken afeert start in simulation mode
+        # FIXME Average is broken afeert start in simulation mode
         dt = self.p_raw["dtime"]
         t = self.p_raw["temperature"]
         ta = self.p_raw["temperature_avg"]
@@ -580,7 +588,8 @@ class ride_parameters():
         pressure = self.p_raw["pressure"]
         altitude_home = self.p_raw["altitude_home"]
         if altitude_home < 43300:
-            self.p_raw["pressure_at_sea_level"] = float(pressure / pow((1 - altitude_home / 44330), 5.255))
+            self.p_raw["pressure_at_sea_level"] = float(
+                pressure / pow((1 - altitude_home / 44330), 5.255))
         self.l.debug("[RP] pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]))
 
     def update_temperatures(self):

@@ -4,6 +4,7 @@ import time
 
 # class mma8451(threading.Thread):
 class mma8451():
+
     'Class for MMA8451 Triple-Axis Accelerometer w/ 14-bit ADC with I2C interface as sold by Adafruit'
     # def __init__(self, occ, simulate = False):
 
@@ -16,7 +17,7 @@ class mma8451():
         self.delay = 1 / 100000.0
         # self.set_up_gpio()
     # def set_up_gpio(self):
-        #self.l.debug("[BMP] set_up_gpio")
+        # self.l.debug("[BMP] set_up_gpio")
         # GPIO initialisation
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.SCL, GPIO.OUT, initial=GPIO.HIGH,

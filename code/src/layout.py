@@ -38,7 +38,8 @@ class layout():
             self.layout_tree = eltree.parse(layout_path)
             self.layout_path = layout_path
         except:
-            self.occ.l.error("{} Loading layout {} failed, falling back to default.xml".format(__name__, layout_path))
+            self.occ.l.error(
+                "{} Loading layout {} failed, falling back to default.xml".format(__name__, layout_path))
             sys_info = "Error details: {}".format(sys.exc_info()[0])
             self.occ.l.error(sys_info)
             # Fallback to default layout
@@ -206,7 +207,7 @@ class layout():
                 else:
                     font = pygame.font.Font(self.font, font_size)
                     self.font_list[font_size] = font
-                #font = pygame.font.Font(self.font, font_size)
+                # font = pygame.font.Font(self.font, font_size)
                 ren = font.render(uv, 1, self.fg_colour)
                 x = ren.get_rect().centerx
                 y = ren.get_rect().centery
@@ -480,11 +481,11 @@ class layout():
                 value = self.uc.convert(variable_raw_value, variable_unit)
             self.occ.rp.p_raw[variable] = float(value)
             self.occ.rp.units[variable] = self.occ.rp.params["variable_unit"]
-            #FIXME - find a better place for it
+            # FIXME - find a better place for it
             if variable == "altitude_home":
                 # Force recalculation
                 self.occ.rp.p_raw["pressure_at_sea_level"] = 0
-            #FIXME - remove
+            # FIXME - remove
             if variable == "Q":
                 self.occ.rp.bmp183_sensor.Q = float(value)
                 print "after edit"

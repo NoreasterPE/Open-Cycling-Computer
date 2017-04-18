@@ -10,7 +10,7 @@ if __name__ == '__main__':
                 print "Initialising BLE device..."
                 ble_hr = ble_hr("D6:90:A8:08:F0:E4")
                 print "Starting BLE thread..."
-                #print "Device name: ", ble_hr.get_device_name()
+                # print "Device name: ", ble_hr.get_device_name()
                 print "Battery level: ", ble_hr.get_battery_level()
                 ble_hr.start()
                 time.sleep(1)

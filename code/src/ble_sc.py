@@ -52,7 +52,8 @@ class ble_sc(Peripheral, threading.Thread):
             if str(e) == "Helper not started (did you call connect()?)":
                 self.l.error('[BLE_HR] Set notifications failed: {}'.format(e))
             else:
-                self.l.critical('[BLE_HR] Set notifications failed with uncontrolled error: {}'.format(e))
+                self.l.critical(
+                    '[BLE_HR] Set notifications failed with uncontrolled error: {}'.format(e))
                 raise
 
     def get_device_name(self):
@@ -97,7 +98,8 @@ class ble_sc(Peripheral, threading.Thread):
                     raise
 
     def get_data(self):
-        r = dict(name=self.name, addr=self.addr, state=self.state, wheel_time_stamp=self.wheel_time_stamp, wheel_rev_time=self.wheel_rev_time,
+        r = dict(
+            name=self.name, addr=self.addr, state=self.state, wheel_time_stamp=self.wheel_time_stamp, wheel_rev_time=self.wheel_rev_time,
                  cadence_time_stamp=self.cadence_time_stamp, cadence=self.cadence)
         return r
 
@@ -178,7 +180,8 @@ class CSC_Delegate(DefaultDelegate):
                 self.wheel_rev_time = rt
                 self.wheel_cumul = wh_cr
 
-                self.l.debug('[BLE_SC] Last wheel event time: {:10.3f}, delta {:10.3f}'.format(self.wheel_last_time_event, self.wheel_last_time_delta))
+                self.l.debug('[BLE_SC] Last wheel event time: {:10.3f}, delta {:10.3f}'.format(
+                    self.wheel_last_time_event, self.wheel_last_time_delta))
                 self.l.debug('[BLE_SC] Wheel cumul revs: {:5d}'.format(wh_cr))
                 self.l.debug('[BLE_SC] Last wheel rev time: {:10.3f}'.format(self.wheel_rev_time))
 
@@ -202,7 +205,8 @@ class CSC_Delegate(DefaultDelegate):
                 self.crank_cumul = cr_cr
                 self.cadence = 60.0 / rt
 
-                self.l.debug('[BLE_SC] Last crank event time: {:10.3f}, delta {:10.3f}'.format(self.crank_last_time_event, self.crank_last_time_delta))
+                self.l.debug('[BLE_SC] Last crank event time: {:10.3f}, delta {:10.3f}'.format(
+                    self.crank_last_time_event, self.crank_last_time_delta))
                 self.l.debug('[BLE_SC] Crank cumul revs: {:5d}'.format(cr_cr))
                 self.l.debug('[BLE_SC] Last crank rev time: {:10.3f}'.format(self.crank_rev_time))
                 self.l.debug('[BLE_SC] Cadence: {:10.3f}'.format(60.0 / rt))

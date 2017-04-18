@@ -10,9 +10,9 @@ if __name__ == '__main__':
         connected = False
         while not connected:
             try:
-                #print "Initialising BLE device..."
+                # print "Initialising BLE device..."
                 lez = ble(False, "fd:df:0e:4e:76:cf")
-                #print "Starting BLE thread..."
+                # print "Starting BLE thread..."
                 print "Battery level: ", lez.get_battery_level()
                 lez.start()
                 time.sleep(1)

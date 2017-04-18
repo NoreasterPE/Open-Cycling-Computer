@@ -160,11 +160,11 @@ class mt3339():
         ser.close()
 
 # Example commands:
-#gps = mt3339("/dev/ttyAMA0")
+# gps = mt3339("/dev/ttyAMA0")
 # gps.cold_start()
 # gps.warm_start()
 # gps.hot_start()
 # gps.set_baudrate(115200)
 # gps.set_nmea_update_rate(1000)
 # gps.set_nav_speed_threshold(1.5)
-#gps.set_nmea_output(gll=0, rmc=1, vtg=0, gga=5, gsa=5, gsv=5)
+# gps.set_nmea_output(gll=0, rmc=1, vtg=0, gga=5, gsa=5, gsv=5)
