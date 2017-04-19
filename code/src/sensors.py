@@ -94,7 +94,6 @@ class sensors(threading.Thread):
             self.set_ble_state()
             if not self.connected['ble_hr']:
                 self.l.info("[SE] Initialising BLE heart rate sensor")
-                # FIXME Hardcoded address
                 try:
                     self.sensors['ble_hr'] = ble_hr(self.addrs['ble_hr'])
                     self.names['ble_hr'] = self.sensors[
@@ -109,7 +108,6 @@ class sensors(threading.Thread):
             self.set_ble_state()
             if not self.connected['ble_sc']:
                 self.l.info("[SE] Initialising BLE speed & cadence sensor")
-                # FIXME Hardcoded address
                 try:
                     self.sensors['ble_sc'] = ble_sc(self.addrs['ble_sc'])
                     self.names['ble_sc'] = self.sensors[

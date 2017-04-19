@@ -284,7 +284,8 @@ class ride_parameters():
             data = self.ble_sc.get_data()
             tt = time.time()
             self.params['ble_sc_name'] = data['name']
-            self.params['ble_sc_addr'] = data['addr']
+            if data['addr'] != "":
+                self.params['ble_sc_addr'] = data['addr']
             self.p_raw['wheel_time_stamp'] = self.clean_value(data['wheel_time_stamp'])
             if (tt - self.p_raw['wheel_time_stamp']) < self.p_raw['ble_data_expiry_time']:
                 self.p_raw['wheel_rev_time'] = self.clean_value(data['wheel_rev_time'])
@@ -313,7 +314,8 @@ class ride_parameters():
             data = self.ble_hr.get_data()
             tt = time.time()
             self.params['ble_hr_name'] = data['name']
-            self.params['ble_hr_addr'] = data['addr']
+            if data['addr'] != "":
+                self.params['ble_hr_addr'] = data['addr']
             self.p_raw['ble_hr_ts'] = data['time_stamp']
             self.p_raw['heart_rate'] = data['heart_rate']
             self.l.debug('[RP] BLE HR = {} at {}'.format(
