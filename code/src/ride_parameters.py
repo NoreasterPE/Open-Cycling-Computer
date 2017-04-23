@@ -28,25 +28,25 @@ class ride_parameters():
 
         self.p_raw = dict(time_stamp=time.time(),
                           # Time delta since last p_raw update
-                          dtime=1, time_adjustment_delta=0,
-                          altitude=0, altitude_gps=0, altitude_home=0, altitude_max=INF_MIN, altitude_min=INF, altitude_previous=0,
-                          pressure=0, pressure_at_sea_level=0,
-                          climb=0, daltitude=0, daltitude_cumulative=0,
-                          odometer=0, ddistance=0, ddistance_cumulative=0, distance=0,
-                          eps=0, ept=0, epv=0, epx=0, gps_strength=0, fix_mode_gps='', fix_time_gps=0, latitude=0, longitude=0, satellites=0, satellitesused=0,
+                          dtime=1, time_adjustment_delta=0.0,
+                          altitude=0.0, altitude_gps=0.0, altitude_home=0.0, altitude_max=INF_MIN, altitude_min=INF, altitude_previous=0.0,
+                          pressure=0.0, pressure_at_sea_level=0.0,
+                          climb=0.0, daltitude=0.0, daltitude_cumulative=0.0,
+                          odometer=0.0, ddistance=0.0, ddistance_cumulative=0.0, distance=0.0,
+                          eps=0.0, ept=0.0, epv=0.0, epx=0.0, gps_strength=0, fix_mode_gps='', fix_time_gps=0.0, latitude=0.0, longitude=0.0, satellites=0.0, satellitesused=0.0,
                           ble_state=0,
                           ble_hr_ts=0,
-                          heart_rate=0, heart_rate_min=0, heart_rate_avg=0, heart_rate_max=0,
-                          cadence=0, cadence_avg=0, cadence_max=INF_MIN,
+                          heart_rate=0.0, heart_rate_min=0.0, heart_rate_avg=0.0, heart_rate_max=0.0,
+                          cadence=0.0, cadence_avg=0.0, cadence_max=INF_MIN,
                           cadence_time_stamp=time.time(), ble_data_expiry_time=1.5, time_of_ride_reset=0.0001,
                           ble_hr_name='', ble_hr_addr='',
                           ble_sc_name='', ble_sc_addr='',
-                          riderweight=0,
-                          ridetime=0, ridetime_total=0,
-                          slope=0,
-                          speed=0, speed_avg=0, speed_gps=0, speed_max=0,
-                          temperature=0, temperature_avg=0, temperature_max=INF_MIN, temperature_min=INF,
-                          track=0,
+                          riderweight=0.0,
+                          ridetime=0.0, ridetime_total=0.0,
+                          slope=0.0,
+                          speed=0.0, speed_avg=0.0, speed_gps=0.0, speed_max=0.0,
+                          temperature=0.0, temperature_avg=0.0, temperature_max=INF_MIN, temperature_min=INF,
+                          track=0.0,
                           timeon=0.0001, utc='', rtc='')
 
         # Internal units
@@ -61,7 +61,7 @@ class ride_parameters():
         # Params of the ride ready for rendering.
         self.params = dict(
             altitude='-', altitude_gps='-', altitude_home='-', altitude_max='-', altitude_min='-',
-            cadence='-', cadence_avg='-', cadence_max='-', heart_rate_min='-', heart_rate_avg='-', heart_rate_max='-',
+            cadence='-', cadence_avg='-', cadence_max='-', heart_rate='-', heart_rate_min='-', heart_rate_avg='-', heart_rate_max='-',
             climb='-', distance=0, eps='-', ept='-', epv='-', epx='-',
             dtime=0, fix_gps='-', fix_gps_time='-', latitude='-', longitude='-', odometer=0.0,
             pressure='-', pressure_at_sea_level='-', riderweight=0.0, wheel_size='', wheel_circ='', ridetime='', ridetime_hms='', ridetime_total='',
@@ -606,22 +606,29 @@ class ride_parameters():
         self.update_param("temperature_min")
         self.update_param("temperature_max")
 
+    def no_zero(self, param_name):
+        if self.params[param_name] == '0' or self.params[param_name] == '-0':
+            self.params[param_name] = '-'
+
     def update_cadence(self):
         self.calculate_avg_cadence()
         self.set_max("cadence")
         self.update_param("cadence")
+        self.no_zero("cadence")
         self.update_param("cadence_avg")
+        self.no_zero("cadence_avg")
         self.update_param("cadence_max")
+        self.no_zero("cadence_max")
 
     def update_heart_rate(self):
-        hr = self.p_raw["heart_rate_min"]
         self.set_min("heart_rate")
-        # Do not allow to set 0 as minimum heart rate
-        if self.p_raw["heart_rate_min"] == 0:
-            self.p_raw["heart_rate_min"] = hr
         self.set_max("heart_rate")
         self.calculate_avg_heart_rate()
         self.update_param("heart_rate")
+        self.no_zero("heart_rate")
         self.update_param("heart_rate_min")
+        self.no_zero("heart_rate_min")
         self.update_param("heart_rate_avg")
+        self.no_zero("heart_rate_avg")
         self.update_param("heart_rate_max")
+        self.no_zero("heart_rate_max")
