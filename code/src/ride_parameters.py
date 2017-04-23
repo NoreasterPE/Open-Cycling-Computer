@@ -129,7 +129,7 @@ class ride_parameters():
                                  cadence=1, cadence_avg=1, cadence_max=1,
                                  heart_rate_min=1, heart_rate_avg=1, heart_rate_max=1)
 
-        # Do not record any speed below 2.5 m/s
+        # Do not record any gps speed below 2.5 m/s
         # FIXME Move to dict
         self.speed_gps_low = 2.5
         self.l.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
@@ -139,6 +139,10 @@ class ride_parameters():
         # FIXME Move to dict
         self.speed_gps_noise = 1
         self.l.info("[RP] speed_gps_noise treshold set to {}".format(self.speed_gps_noise))
+
+        # Do not record any speed below 1 m/s
+        self.speed_low = 1
+        self.l.info("[RP] speed_low treshold set to {}".format(self.speed_low))
 
         self.update_param("speed_max")
         self.split_speed("speed_max")
@@ -212,9 +216,8 @@ class ride_parameters():
     def calculate_time_related_parameters(self):
         dt = self.p_raw["dtime"]
         self.p_raw["timeon"] += dt
-        # FIXME calculate with speed not speed_gps when bt sensors are set up
         s = self.p_raw["speed"]
-        if (s > self.speed_gps_low):
+        if (s > self.speed_low):
             d = float(dt * s)
             self.p_raw["ddistance"] = d
             self.p_raw["distance"] += d
@@ -228,7 +231,7 @@ class ride_parameters():
                 s, self.p_raw["distance"], self.p_raw["odometer"]))
         else:
             self.p_raw["ddistance"] = 0
-            self.l.debug("[RP] speed_gps: below speed_gps_low treshold")
+            self.l.debug("[RP] speed_gps: below speed_low treshold")
 
     def force_refresh(self):
         self.occ.force_refresh()
