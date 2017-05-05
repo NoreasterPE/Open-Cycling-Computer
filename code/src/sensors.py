@@ -169,10 +169,12 @@ class sensors(threading.Thread):
         self.stop()
 
     def stop(self):
+        self.l.debug("[SE] Stopping.. {}".format(__name__))
         self.running = False
         for s in self.sensors:
             if self.connected[s]:
                 self.connected[s] = False
                 self.l.debug("[SE] Stopping {} thread".format(s))
                 self.sensors[s].stop()
+                self.l.debug("[SE] Stopped {} thread".format(s))
                 self.sensors[s] = None

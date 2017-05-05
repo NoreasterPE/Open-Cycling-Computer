@@ -73,7 +73,7 @@ class bmp183(threading.Thread):
         super(bmp183, self).__init__()
         # self.rp = occ.rp
         self.l = logging.getLogger('system')
-        self.l.debug("[BMP] __init__")
+        self.l.debug("[BMP] Initialising..")
         self.simulate = simulate
         self.sensor_ready = False
         self.running = False
@@ -99,26 +99,28 @@ class bmp183(threading.Thread):
             # Check comunication / read ID
             ret = self.read_byte(self.BMP183_REG['ID'])
             if ret != self.BMP183_CMD['ID_VALUE']:
-                self.l.error("[BMP] Communication witn bmp183 failed")
+                self.l.error("[BMP] Communication with bmp183 failed")
                 self.sensor_ready = False
-                raise IOError("Communication witn bmp183 failed")
+                raise IOError("Communication with bmp183 failed")
             else:
                 self.sensor_ready = True
                 self.read_calibration_data()
                 # Proceed with initial pressure/temperature measurement
         self.measure_pressure()
         self.kalman_setup()
+        self.l.debug("[BMP] Initialised.")
 
     def get_data(self):
         r = dict(pressure=self.pressure, temperature=self.temperature)
         return r
 
     def stop(self):
-        self.l.debug("[BMP] stop")
+        self.l.debug("[BMP] Stopping {}".format(__name__))
         self.running = False
         time.sleep(1)
         if not self.simulate:
             self.cleanup_gpio()
+        self.l.debug("[BMP] Stopped {}".format(__name__))
 
     def __del__(self):
         self.l.debug("[BMP] __del__")

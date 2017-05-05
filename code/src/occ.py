@@ -203,15 +203,15 @@ class open_cycling_computer(object):
         try:
             self.rendering.stop()
         except AttributeError:
-            pass
+            self.l.debug("[OCC] self.rendering.stop() produced AttributeError")
         try:
             self.config.write_config()
         except AttributeError:
-            pass
+            self.l.debug("[OCC] self.config.write_config() produced AttributeError")
         try:
             self.layout.write_layout()
         except AttributeError:
-            pass
+            self.l.debug("[OCC] self.layout.write_layout() produced AttributeError")
         pygame.quit()
         self.l.debug("[OCC] Log end")
         quit()
