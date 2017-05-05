@@ -217,7 +217,7 @@ class open_cycling_computer(object):
         quit()
 
 
-def quit_handler(signal):
+def quit_handler(signal, frame):
     main_window.cleanup()
 
 if __name__ == "__main__":
