@@ -229,7 +229,6 @@
 			<text_center x="60" y="280" size="1.5"/>
 		</field>
 		<field function="ble_hr_addr">
-			<button x0="0" y0="240" w="120" h="80"/>
 			<text_center x="60" y="300" size="1.5"/>
 		</field>
 		<field function="text7">
@@ -240,7 +239,6 @@
 			<text_center x="180" y="280" size="1.5"/>
 		</field>
 		<field function="ble_sc_addr">
-			<button x0="120" y0="240" w="120" h="80"/>
 			<text_center x="180" y="300" size="1.5"/>
 		</field>
 	</page>
@@ -373,6 +371,32 @@
 		<field function="ed_next">
 			<button x0="120" y0="260" w="119" h="60"/>
 			<text_center x="180" y="290" size="3">Next</text_center>
+		</field>
+	</page>
+	<page name="List Picker" id="editor_list_picker" background="images/occ_editor_list_picker.png" buttons="images/occ_settings_2_buttons.png" font="" fg_colour="FFFFFF">
+		<field function="ble_scan">
+			<button x0="0" y0="0" w="119" h="60"/>
+			<text_center x="60" y="30" size="3">Scan</text_center>
+		</field>
+		<field function="ed_cancel">
+			<button x0="120" y0="0" w="119" h="60"/>
+			<text_center x="180" y="30" size="3">Cancel</text_center>
+		</field>
+		<field function="ble_dev_name_1">
+			<button x0="0" y0="64" w="240" h="63"/>
+			<text_center x="120" y="96" size="2">Device ?</text_center>
+		</field>
+		<field function="ble_dev_name_2">
+			<button x0="0" y0="128" w="240" h="63"/>
+			<text_center x="120" y="160" size="2">Device ?</text_center>
+		</field>
+		<field function="ble_dev_name_3">
+			<button x0="0" y0="192" w="240" h="63"/>
+			<text_center x="120" y="224" size="2">Device ?</text_center>
+		</field>
+		<field function="ble_dev_name_4">
+			<button x0="0" y0="256" w="240" h="63"/>
+			<text_center x="120" y="288" size="2">Device ?</text_center>
 		</field>
 	</page>
 </layout>

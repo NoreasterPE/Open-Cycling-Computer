@@ -66,6 +66,39 @@ class layout():
     def write_layout(self, layout_path="layouts/current.xml"):
         self.layout_tree.write(layout_path, encoding="UTF-8", pretty_print=True)
 
+    def ble_scan(self):
+        self.occ.l.debug("[LY] starting BLE scanning")
+        for i in range(5):
+            self.occ.rp.params['ble_dev_name_' + str(i)] = "Scanning.."
+        import ble_scanner
+        bs = ble_scanner.ble_scan()
+        bs.scan()
+        for i in range(5):
+            self.occ.rp.params['ble_dev_name_' + str(i)] = ""
+        i = 1
+        for dev in bs.get_dev_list():
+            self.occ.rp.params['ble_dev_name_' + str(i)] = dev['name']
+            self.occ.rp.params['ble_dev_addr_' + str(i)] = dev['addr']
+            i += 1
+        self.occ.l.debug("[LY] BLE scanning finished")
+
+    def ble_dev_helper(self, no):
+        name = self.occ.rp.params['ble_dev_name_' + str(no)]
+        addr = self.occ.rp.params['ble_dev_addr_' + str(no)]
+        self.occ.l.debug("[LY] Selected BLE device {} {}".format(name, addr))
+
+    def ble_dev_name_1(self):
+        self.ble_dev_helper(1)
+
+    def ble_dev_name_2(self):
+        self.ble_dev_helper(2)
+
+    def ble_dev_name_3(self):
+        self.ble_dev_helper(3)
+
+    def ble_dev_name_4(self):
+        self.ble_dev_helper(4)
+
     def use_page(self, page_id="page_0"):
         self.occ.l.debug("[LY][F] use_page {}".format(page_id))
         self.occ.force_refresh()
@@ -298,6 +331,7 @@ class layout():
             self.run_function("settings")
 
     def open_editor_page(self, param_name):
+        self.occ.l.debug("[LY] Opening editor for {}".format(param_name))
         # FIXME move to RP
         # FIXME Make it more pythonic
         self.occ.rp.params["variable"] = param_name
@@ -320,11 +354,19 @@ class layout():
             self.occ.rp.params["variable"] = n
             self.occ.rp.params["variable_unit"] = unit
             self.occ.rp.params["variable_value"] = 0
+            self.occ.l.debug("[LY] Opening editor: editor_units")
             self.use_page("editor_units")
         if self.occ.rp.params["editor_type"] == 1:
+            self.occ.l.debug("[LY] Opening editor: editor_numbers")
             self.use_page("editor_numbers")
         if self.occ.rp.params["editor_type"] == 2:
+            self.occ.l.debug("[LY] Opening editor: editor_list")
+            # FIXME Rename to string editor
             self.use_page("editor_list")
+        if self.occ.rp.params["editor_type"] == 3:
+            # FIXME Rename to BLE scanner/selector
+            self.occ.l.debug("[LY] Opening editor: editor_list_picker")
+            self.use_page('editor_list_picker')
 
     def run_function(self, name):
         functions = {"page_0": self.load_page_0,
@@ -345,6 +387,9 @@ class layout():
                      "prev_page": self.prev_page,
                      "reboot": self.reboot,
                      "write_layout": self.write_layout,
+                     "ble_scan": self.ble_scan,
+                     "ble_dev_name_1": self.ble_dev_name_1,
+                     "ble_dev_name_2": self.ble_dev_name_2,
                      "quit": self.quit}
         functions[name]()
 

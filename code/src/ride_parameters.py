@@ -36,7 +36,7 @@ class ride_parameters():
                           eps=0.0, ept=0.0, epv=0.0, epx=0.0, gps_strength=0, fix_mode_gps='', fix_time_gps=0.0, latitude=0.0, longitude=0.0, satellites=0.0, satellitesused=0.0,
                           ble_state=0,
                           ble_hr_ts=0,
-                          heart_rate=0.0, heart_rate_min=0.0, heart_rate_avg=0.0, heart_rate_max=0.0,
+                          heart_rate=0.0, heart_rate_min=INF, heart_rate_avg=0.0, heart_rate_max=INF_MIN,
                           cadence=0.0, cadence_avg=0.0, cadence_max=INF_MIN,
                           cadence_time_stamp=time.time(), ble_data_expiry_time=1.5, time_of_ride_reset=0.0001,
                           ble_hr_name='', ble_hr_addr='',
@@ -120,9 +120,10 @@ class ride_parameters():
         # Define id a param is editable FIXME editor type - number, calendar, unit, etc.
         # 0 - unit editor
         # 1 - number editor
-        # 2 - list selection FIXME
+        # 2 - string editor FIXME
+        # 3 - list selection FIXME
         # Params that can be changed in Settings by user
-        self.p_editable = dict(altitude_home=1, odometer=1, odometer_units=0,
+        self.p_editable = dict(altitude_home=1, odometer=1, odometer_units=0, ble_hr_name=3, ble_sc_name=3,
                                riderweight=1, riderweight_units=0, wheel_size=2, speed_units=0, temperature_units=0)
 
         self.p_resettable = dict(distance=1, odometer=1, ridetime=1, speed_max=1,
@@ -243,14 +244,16 @@ class ride_parameters():
             return self.p_raw[param]
 
     def get_val(self, param):
-        if param.endswith("_units"):
-            value = self.get_unit(param[:-6])
-        else:
-            if param in self.params:
+        value = None
+        try:
+            if param.endswith("_units"):
+                value = self.get_unit(param[:-6])
+            elif param in self.params:
                 value = self.params[param]
-            else:
-                value = None
-        return value
+        except KeyError:
+            self.l.debug("[RP] No unit for {}".format(param))
+        finally:
+            return value
 
     def get_unit(self, param_name):
         suffixes = ("_min", "_max", "_avg", "_gps", "_home")
@@ -258,7 +261,10 @@ class ride_parameters():
         if p.endswith("_units"):
             return None
         else:
-            return self.units[p]
+            try:
+                return self.units[p]
+            except KeyError:
+                return None
 
     def get_internal_unit(self, param_name):
         suffixes = ("_min", "_max", "_avg", "_gps", "_home")
@@ -391,12 +397,10 @@ class ride_parameters():
         self.p_raw[param + "_min"] = min(self.p_raw[param], self.p_raw[param + "_min"])
 
     def calculate_avg_temperature(self):
-        # FIXME Average is broken afeert start in simulation mode
         dt = self.p_raw["dtime"]
         t = self.p_raw["temperature"]
         ta = self.p_raw["temperature_avg"]
-        # FIXME Add and use time since reset not timeon
-        tt = self.p_raw["timeon"]
+        tt = self.p_raw["ridetime"]
         ta_new = (t * dt + ta * tt) / (tt + dt)
         self.p_raw["temperature_avg"] = ta_new
 
@@ -404,7 +408,7 @@ class ride_parameters():
         dt = self.p_raw["dtime"]
         c = self.p_raw["cadence"]
         ca = self.p_raw["cadence_avg"]
-        tt = self.p_raw["ridetime"] - self.p_raw["time_of_ride_reset"]
+        tt = self.p_raw["ridetime"]
         ca_new = (c * dt + ca * tt) / (tt + dt)
         self.p_raw["cadence_avg"] = ca_new
 
@@ -412,8 +416,8 @@ class ride_parameters():
         dt = self.p_raw["dtime"]
         hr = self.p_raw["heart_rate"]
         hra = self.p_raw["heart_rate_avg"]
-        # FIXME reset time
-        tt = self.p_raw["ridetime"] - self.p_raw["time_of_ride_reset"]
+        # FIXME ridetim doesn't seem to be right
+        tt = self.p_raw["ridetime"]
         hr_new = (hr * dt + hra * tt) / (tt + dt)
         self.p_raw["heart_rate_avg"] = hr_new
 
@@ -496,21 +500,21 @@ class ride_parameters():
         return param_name
 
     def reset_ride(self):
-        self.p_raw["distance"] = 0
-        self.p_raw["ridetime"] = 0
+        self.p_raw["distance"] = 0.0
+        self.p_raw["ridetime"] = 0.0
         self.reset_cadence()
         self.reset_heart_rate()
 
     def reset_cadence(self):
-        self.p_raw["cadence"] = 0
-        self.p_raw["cadence_avg"] = 0
+        self.p_raw["cadence"] = 0.0
+        self.p_raw["cadence_avg"] = 0.0
         self.p_raw["cadence_max"] = INF_MIN
         self.p_raw["time_of_ride_reset"] = time.time()
 
     def reset_heart_rate(self):
-        self.p_raw["heart_rate"] = 0
+        self.p_raw["heart_rate"] = 0.0
         self.p_raw["heart_rate_min"] = INF
-        self.p_raw["heart_rate_avg"] = 0
+        self.p_raw["heart_rate_avg"] = 0.0
         self.p_raw["heart_rate_max"] = INF_MIN
         self.p_raw["time_of_ride_reset"] = time.time()
 
