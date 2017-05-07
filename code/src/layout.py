@@ -77,27 +77,37 @@ class layout():
             self.occ.rp.params['ble_dev_name_' + str(i)] = ""
         i = 1
         for dev in bs.get_dev_list():
+            self.occ.l.debug("[LY] BLE device found {} {}".format(dev['name'], dev['addr']))
             self.occ.rp.params['ble_dev_name_' + str(i)] = dev['name']
             self.occ.rp.params['ble_dev_addr_' + str(i)] = dev['addr']
             i += 1
         self.occ.l.debug("[LY] BLE scanning finished")
 
-    def ble_dev_helper(self, no):
+    def ble_dev_helper(self, no, master):
+        if master == 'ble_hr_name':
+            dev_type = 'hr'
+        elif master == 'ble_sc_name':
+            dev_type = 'sc'
         name = self.occ.rp.params['ble_dev_name_' + str(no)]
         addr = self.occ.rp.params['ble_dev_addr_' + str(no)]
         self.occ.l.debug("[LY] Selected BLE device {} {}".format(name, addr))
+        self.occ.rp.params["variable_value"] = (name, addr, dev_type)
 
     def ble_dev_name_1(self):
-        self.ble_dev_helper(1)
+        self.ble_dev_helper(1, self.occ.rp.params["variable"])
+        self.ed_accept()
 
     def ble_dev_name_2(self):
-        self.ble_dev_helper(2)
+        self.ble_dev_helper(2, self.occ.rp.params["variable"])
+        self.ed_accept()
 
     def ble_dev_name_3(self):
-        self.ble_dev_helper(3)
+        self.ble_dev_helper(3, self.occ.rp.params["variable"])
+        self.ed_accept()
 
     def ble_dev_name_4(self):
-        self.ble_dev_helper(4)
+        self.ble_dev_helper(4, self.occ.rp.params["variable"])
+        self.ed_accept()
 
     def use_page(self, page_id="page_0"):
         self.occ.l.debug("[LY][F] use_page {}".format(page_id))
@@ -390,6 +400,8 @@ class layout():
                      "ble_scan": self.ble_scan,
                      "ble_dev_name_1": self.ble_dev_name_1,
                      "ble_dev_name_2": self.ble_dev_name_2,
+                     "ble_dev_name_3": self.ble_dev_name_3,
+                     "ble_dev_name_4": self.ble_dev_name_4,
                      "quit": self.quit}
         functions[name]()
 
@@ -538,6 +550,9 @@ class layout():
         if self.occ.rp.params["editor_type"] == 2:
             self.occ.rp.p_raw[variable] = variable_value
             self.occ.rp.params[variable] = variable_value
+        if self.occ.rp.params["editor_type"] == 3:
+            (name, addr, dev_type) = variable_value
+            self.occ.sensors.set_ble_device(name, addr, dev_type)
         self.force_refresh()
 
     def next_page(self):

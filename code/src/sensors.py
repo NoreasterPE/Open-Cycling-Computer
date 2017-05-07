@@ -81,6 +81,13 @@ class sensors(threading.Thread):
         self.addrs['ble_hr'] = self.occ.rp.params['ble_hr_addr']
         self.addrs['ble_sc'] = self.occ.rp.params['ble_sc_addr']
 
+    def set_ble_device(self, name, addr, dev_type):
+        self.names['ble_' + dev_type] = name
+        self.addrs['ble_' + dev_type] = addr
+        self.occ.rp.params['ble_' + dev_type + '_name'] = name
+        self.occ.rp.params['ble_' + dev_type + '_addr'] = addr
+        self.connected['ble_' + dev_type + '_addr'] = False
+
     def run(self):
         self.init_data_from_ride_parameters()
         if not self.simulate:
