@@ -48,17 +48,16 @@ class layout():
 
         self.pages = self.layout_tree.getroot()
         for page in self.pages:
-            # FIXME Pages cannot have the same name
-            self.page_list[page.get('name')] = page
             page_id = page.get('id')
+            self.page_list[page_id] = page
             self.page_index[page_id] = page.get('name')
-            # FIXME hardcoded page_ is bad
-            if page_id.startswith("page_"):
-                no = int(page_id[-1:])
+            page_type = page.get('type')
+            _no = page.get('no')
+            if page_type == 'normal':
+                no = int(_no)
                 self.max_page_id = max(self.max_page_id, no)
-            # FIXME hardcoded settings_ is bad
-            if page_id.startswith("settings_"):
-                no = int(page_id[-1:])
+            if page_type == 'settings':
+                no = int(_no)
                 self.max_settings_id = max(self.max_settings_id, no)
         self.use_page()
         self.write_layout()
@@ -114,9 +113,7 @@ class layout():
         self.occ.force_refresh()
         self.current_function_list = []
         self.current_button_list = []
-        self.current_page_name = self.page_index[page_id]
-        self.current_page_id = page_id
-        self.current_page = self.page_list[self.current_page_name]
+        self.current_page = self.page_list[page_id]
         try:
             bg_path = self.current_page.get('background')
             self.bg_image = pygame.image.load(bg_path).convert()
@@ -375,8 +372,8 @@ class layout():
             self.use_page("editor_list")
         if self.occ.rp.params["editor_type"] == 3:
             # FIXME Rename to BLE scanner/selector
-            self.occ.l.debug("[LY] Opening editor: editor_list_picker")
-            self.use_page('editor_list_picker')
+            self.occ.l.debug("[LY] Opening editor: ble_selector")
+            self.use_page('ble_selector')
 
     def run_function(self, name):
         functions = {"page_0": self.load_page_0,
@@ -555,37 +552,48 @@ class layout():
             self.occ.sensors.set_ble_device(name, addr, dev_type)
         self.force_refresh()
 
+    def get_page(self, page_type, page_no):
+        if page_type == 'normal':
+            if page_no == -1:
+                page_no = self.max_page_id
+            if page_no > self.max_page_id:
+                page_no = 0
+        elif page_type == 'settings':
+            if page_no == -1:
+                page_no = self.max_settings_id
+            if page_no > self.max_settings_id:
+                page_no = 0
+        for p in self.page_list:
+            t = self.page_list[p].get('type')
+            n = self.page_list[p].get('no')
+            if t == page_type and n == str(page_no):
+                return self.page_list[p].get('id')
+
     def next_page(self):
         # Editor is a special page - it cannot be switched, only cancel or accept
-        if not self.current_page_id.startswith("editor"):
-            no = int(self.current_page_id[-1:])
-            name = self.current_page_id[:-1]
-            self.occ.l.debug("[LY][F] next_page {}{}".format(name, no))
+        if not self.current_page.get('type') == 'editor':
+            no = int(self.current_page.get('no'))
+            page_id = self.current_page.get('id')
+            page_type = self.current_page.get('type')
+            self.occ.l.debug("[LY][F] next_page {} {} {}".format(page_id, page_type, no))
+            next_page_id = self.get_page(page_type, no + 1)
             try:
-                next_page_name = name + unicode(no + 1)
-                self.use_page(next_page_name)
+                self.use_page(next_page_id)
             except KeyError:
-                self.use_page(name + "0")
-                # FIXME Use cp to block circular page scrolling - it should be in options
-                # self.use_page(cp)
+                self.occ.l.critical("[LY][F] Page 0 of type {} not found!".format(page_type))
 
     def prev_page(self):
         # Editor is a special page - it cannot be switched, only cancel or accept
-        if not self.current_page_id.startswith("editor"):
-            no = int(self.current_page_id[-1:])
-            name = self.current_page_id[:-1]
-            self.occ.l.debug("[LY][F] prev_page {}{}".format(name, no))
+        if not self.current_page.get('type') == 'editor':
+            no = int(self.current_page.get('no'))
+            page_id = self.current_page.get('id')
+            page_type = self.current_page.get('type')
+            self.occ.l.debug("[LY][F] prev_page {} {} {}".format(page_id, page_type, no))
+            prev_page_id = self.get_page(page_type, no - 1)
             try:
-                prev_page_name = name + unicode(no - 1)
-                self.use_page(prev_page_name)
+                self.use_page(prev_page_id)
             except KeyError:
-                # FIXME Hardcoded string again...
-                if name.startswith("page"):
-                    self.use_page(name + unicode(self.max_page_id))
-                else:
-                    self.use_page(name + unicode(self.max_settings_id))
-                # FIXME Use cp to block circular page scrolling - it should be in options
-                # self.use_page(cp)
+                self.occ.l.critical("[LY][F] Page {} of type {} not found!".format(self.max_page_id, page_type))
 
     def load_layout_by_name(self, name):
         self.load_layout("layouts/" + name)

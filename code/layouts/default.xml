@@ -1,5 +1,5 @@
 <layout>
-	<page name="Main" id="page_0" background="images/occ_page_0_background.png" buttons="images/occ_page_0_buttons.png" font="" fg_colour="FFFFFF">
+	<page name="Main" id="page_0" no="0" type="normal" background="images/occ_page_0_background.png" buttons="images/occ_page_0_buttons.png" font="" fg_colour="FFFFFF">
 		<field function="speed_digits">
 			<button x0="0" y0="0" w="240" h="150"/>
 			<text_center x="95" y="75" size="19"/>
@@ -80,7 +80,7 @@
 			<text_center x="218" y="267" file="images/heartrate_icon_20x32.png"/>
 		</field>
 	</page>
-	<page name="Weather" id="page_1" background="images/occ_page_1_background.png" buttons="images/occ_page_1_buttons.png" font="" fg_colour="FFFFFF">
+	<page name="Weather" id="page_1" no="1" type="normal" background="images/occ_page_1_background.png" buttons="images/occ_page_1_buttons.png" font="" fg_colour="FFFFFF">
 		<field function="speed_max_label">
 			<text_center x="25" y="10" size="2">Max</text_center>
 		</field>
@@ -133,7 +133,7 @@
 			<text_center x="120" y="215" size="4"/>
 		</field>
 	</page>
-	<page name="GPS" id="page_2" background="images/occ_page_2_background.png" buttons="images/occ_page_2_buttons.png" font="" fg_colour="FFFFFF">
+	<page name="GPS" id="page_2" no="2" type="normal" background="images/occ_page_2_background.png" buttons="images/occ_page_2_buttons.png" font="" fg_colour="FFFFFF">
 		<field function="latitude">
 			<text_center x="60" y="25" size="3"/>
 		</field>
@@ -179,7 +179,7 @@
 			<text_center x="217" y="267" file="images/altitude_icon_20x32.png"/>
 		</field>
 	</page>
-	<page name="Settings 0" id="settings_0" background="images/occ_settings_0_background.png" buttons="images/occ_settings_0_buttons.png" font="" fg_colour="FFFFFF">
+	<page name="Settings 0" id="settings_0" no="0" type="settings" background="images/occ_settings_0_background.png" buttons="images/occ_settings_0_buttons.png" font="" fg_colour="FFFFFF">
 		<field function="text1">
 			<text_center x="60" y="15" size="2">Rider weight</text_center>
 		</field>
@@ -242,7 +242,7 @@
 			<text_center x="180" y="300" size="1.5"/>
 		</field>
 	</page>
-	<page name="Settings 1" id="settings_1" background="images/occ_settings_1_background.png" buttons="images/occ_settings_1_buttons.png" font="" fg_colour="FFFFFF">
+	<page name="Settings 1" id="settings_1" no="1" type="settings" background="images/occ_settings_1_background.png" buttons="images/occ_settings_1_buttons.png" font="" fg_colour="FFFFFF">
 		<field function="halt">
 			<button x0="0" y0="0" w="240" h="80"/>
 			<text_center x="120" y="40" size="2">Halt</text_center>
@@ -256,7 +256,7 @@
 			<text_center x="120" y="200" size="2">Quit</text_center>
 		</field>
 	</page>
-	<page name="Settings 2" id="settings_2" background="images/occ_settings_2_background.png" buttons="images/occ_settings_2_buttons.png" font="" fg_colour="FFFFFF">
+	<page name="Settings 2" id="settings_2" no="2" type="settings" background="images/occ_settings_2_background.png" buttons="images/occ_settings_2_buttons.png" font="" fg_colour="FFFFFF">
 		<field function="load_current_layout">
 			<button x0="0" y0="0" w="240" h="80"/>
 			<text_center x="120" y="40" size="2">Load current layout</text_center>
@@ -274,7 +274,7 @@
 			<text_center x="120" y="280" size="2"></text_center>
 		</field>
 	</page>
-	<page name="Editor Units" id="editor_units" background="images/occ_editor_background.png" buttons="images/occ_editor_buttons.png" font="" fg_colour="FFFFFF">
+	<page name="Editor Units" id="editor_units" no="" type="editor" background="images/occ_editor_background.png" buttons="images/occ_editor_buttons.png" font="" fg_colour="FFFFFF">
 		<field function="ed_accept">
 			<button x0="0" y0="0" w="119" h="60"/>
 			<text_center x="60" y="30" size="3">Accept</text_center>
@@ -298,7 +298,7 @@
 			<text_center x="200" y="130" size="3"/>
 		</field>
 	</page>
-	<page name="Editor Numbers" id="editor_numbers" background="images/occ_editor_background.png" buttons="images/occ_editor_buttons.png" font="" fg_colour="FFFFFF">
+	<page name="Editor Numbers" id="editor_numbers" no="" type="editor" background="images/occ_editor_background.png" buttons="images/occ_editor_buttons.png" font="" fg_colour="FFFFFF">
 		<field function="ed_accept">
 			<button x0="0" y0="0" w="119" h="60"/>
 			<text_center x="60" y="30" size="3">Accept</text_center>
@@ -341,7 +341,7 @@
 			<text_center x="180" y="290" size="3">Next</text_center>
 		</field>
 	</page>
-	<page name="Editor List" id="editor_list" background="images/occ_editor_list.png" buttons="images/occ_editor_buttons.png" font="" fg_colour="FFFFFF">
+	<page name="Editor List" id="editor_list" no="" type="editor" background="images/occ_editor_list.png" buttons="images/occ_editor_buttons.png" font="" fg_colour="FFFFFF">
 		<field function="ed_accept">
 			<button x0="0" y0="0" w="119" h="60"/>
 			<text_center x="60" y="30" size="3">Accept</text_center>
@@ -373,7 +373,7 @@
 			<text_center x="180" y="290" size="3">Next</text_center>
 		</field>
 	</page>
-	<page name="List Picker" id="editor_list_picker" background="images/occ_editor_list_picker.png" buttons="images/occ_settings_2_buttons.png" font="" fg_colour="FFFFFF">
+	<page name="List Picker" id="ble_selector" no="" type="editor" background="images/ble_selector.png" buttons="images/occ_settings_2_buttons.png" font="" fg_colour="FFFFFF">
 		<field function="ble_scan">
 			<button x0="0" y0="0" w="119" h="60"/>
 			<text_center x="60" y="30" size="3">Scan</text_center>
