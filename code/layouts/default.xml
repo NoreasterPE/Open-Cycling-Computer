@@ -341,7 +341,7 @@
 			<text_center x="180" y="290" size="3">Next</text_center>
 		</field>
 	</page>
-	<page name="Editor List" id="editor_list" no="" type="editor" background="images/occ_editor_list.png" buttons="images/occ_editor_buttons.png" font="" fg_colour="FFFFFF">
+	<page name="Editor List" id="editor_string" no="" type="editor" background="images/occ_editor_string.png" buttons="images/occ_editor_buttons.png" font="" fg_colour="FFFFFF">
 		<field function="ed_accept">
 			<button x0="0" y0="0" w="119" h="60"/>
 			<text_center x="60" y="30" size="3">Accept</text_center>

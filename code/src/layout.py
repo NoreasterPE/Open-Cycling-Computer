@@ -348,7 +348,7 @@ class layout():
         self.occ.rp.params["variable_description"] = self.occ.rp.get_description(param_name)
         self.occ.rp.params["editor_index"] = 0
 
-        # FIXME Make it mory pythonic
+        # FIXME Make it more pythonic
         if self.occ.rp.params["editor_type"] == 0:
             name = self.occ.rp.params["variable"]
             # FIXME make a stripping function
@@ -367,11 +367,9 @@ class layout():
             self.occ.l.debug("[LY] Opening editor: editor_numbers")
             self.use_page("editor_numbers")
         if self.occ.rp.params["editor_type"] == 2:
-            self.occ.l.debug("[LY] Opening editor: editor_list")
-            # FIXME Rename to string editor
-            self.use_page("editor_list")
+            self.occ.l.debug("[LY] Opening editor: editor_string")
+            self.use_page("editor_string")
         if self.occ.rp.params["editor_type"] == 3:
-            # FIXME Rename to BLE scanner/selector
             self.occ.l.debug("[LY] Opening editor: ble_selector")
             self.use_page('ble_selector')
 
@@ -539,11 +537,6 @@ class layout():
             if variable == "altitude_home":
                 # Force recalculation
                 self.occ.rp.p_raw["pressure_at_sea_level"] = 0
-            # FIXME - remove
-            if variable == "Q":
-                self.occ.rp.bmp183_sensor.Q = float(value)
-                print "after edit"
-                print float(value)
         if self.occ.rp.params["editor_type"] == 2:
             self.occ.rp.p_raw[variable] = variable_value
             self.occ.rp.params[variable] = variable_value
