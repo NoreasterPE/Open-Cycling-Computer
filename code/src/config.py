@@ -7,7 +7,7 @@ from shutil import copyfile
 from wheel import wheel
 
 
-class occ_config(object):
+class config(object):
 
     def __init__(self, occ, config_file_path, base_config_file_path):
         self.l = logging.getLogger('system')

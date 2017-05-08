@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from layout import layout
-from occ_config import occ_config
+from config import config
 from operator import add
 from pygame.locals import NOEVENT
 from pygame.locals import USEREVENT
@@ -60,7 +60,7 @@ class open_cycling_computer(object):
         self.rp = ride_parameters(self, simulate)
         self.layout_path = ''
         self.l.debug("[OCC] Initialising config")
-        self.config = occ_config(self, "config/config.xml", "config/config_base.xml")
+        self.config = config(self, "config/config.xml", "config/config_base.xml")
         self.l.debug("[OCC] Reading config")
         self.config.read_config()
         self.layout = layout(self, self.layout_path)
