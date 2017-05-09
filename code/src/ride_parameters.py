@@ -46,7 +46,7 @@ class ride_parameters():
                           slope=0.0,
                           speed=0.0, speed_avg=0.0, speed_gps=0.0, speed_max=0.0,
                           temperature=0.0, temperature_avg=0.0, temperature_max=INF_MIN, temperature_min=INF,
-                          track=0.0,
+                          track_gps=0,
                           timeon=0.0001, utc='', rtc='')
 
         # Internal units
@@ -54,9 +54,7 @@ class ride_parameters():
             altitude='m', cadence='RPM', climb='m/s', distance='m', eps='', ept='', epv='', epx='',
             dtime='s', fix_gps='', latitude='', longitude='', odometer='m', pressure='Pa', riderweight='kg', wheel_size='',
             ridetime='s', ridetime_total='s', satellites='', satellitesused='', slope='m/m', speed='m/s',
-            temperature=degC, timeon='s', time_of_ride_reset='s', heart_rate='BPM',
-            # FIXME degrees, what is track? Nomber of tracked sats?
-            track='')
+            temperature=degC, timeon='s', time_of_ride_reset='s', heart_rate='BPM', track_gps='')
 
         # Params of the ride ready for rendering.
         self.params = dict(
@@ -68,7 +66,7 @@ class ride_parameters():
             ridetime_total_hms='', rtc='', satellites='-', satellitesused='-', slope='-', speed='-', speed_avg='-',
             speed_avg_digits='-', speed_avg_tenths='-', speed_digits='-', speed_max='-', speed_max_digits='-',
             speed_max_tenths='-', speed_tenths='-', temperature='', temperature_avg='', temperature_max='',
-            temperature_min='', timeon='', timeon_hms='', time_of_ride_reset='', track='-', utc='',
+            temperature_min='', timeon='', timeon_hms='', time_of_ride_reset='', track_gps='-', utc='',
             ble_hr_name='', ble_hr_addr='', ble_sc_name='', ble_sc_addr='')
         # System params - shoud be in raw or new category: system
         self.params["debug_level"] = ""
@@ -92,7 +90,7 @@ class ride_parameters():
             ridetime_total_hms='', rtc='', satellites='%.0f', satellitesused='%.0f', slope='%.0f', speed='%.1f', speed_avg='%.1f',
             speed_avg_digits='%.0f', speed_avg_tenths='%.0f', speed_digits='%.0f', speed_max='%.1f', speed_max_digits='%.0f', speed_max_tenths='%.0f',
             speed_tenths='%.0f', temperature='%.0f', temperature_avg='%.1f', temperature_max='%.0f', temperature_min='%.0f',
-            timeon='%.0f', timeon_hms='', time_of_ride_reset='%.0f', track='%.1f', utc='')
+            timeon='%.0f', timeon_hms='', time_of_ride_reset='%.0f', track_gps='%.1f', utc='')
 
         # Units - name has to be identical as in params
         self.units = dict(
@@ -100,7 +98,7 @@ class ride_parameters():
             dtime='s', fix_gps='', fix_gps_time='', heart_rate='BPM', latitude='', longitude='', odometer='km', pressure='hPa',
             riderweight='kg', wheel_size='', ridetime='s', ridetime_hms='', ridetime_total='s', ridetime_total_hms='', satellites='',
             satellitesused='', slope='%', speed='km/h', temperature=degC, timeon='s', timeon_hms='', time_of_ride_reset='s',
-            track='')
+            track_gps='')
 
         # Allowed units - user can switch between those when editing value
         # FIXME switch to mi when mi/h are set for speed
@@ -160,7 +158,7 @@ class ride_parameters():
         logging.getLogger('ride').setLevel(logging.INFO)
         ride_log_handler = logging.handlers.RotatingFileHandler(
             ride_log_filename)
-        ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(cadence)-8s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(altitude_gps)-8s,%(distance)-8s,%(slope)-8s,%(climb)-8s,%(track)-8s,%(eps)-8s,%(epx)-8s,%(epv)-8s,%(ept)-8s'
+        ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(cadence)-8s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(altitude_gps)-8s,%(distance)-8s,%(slope)-8s,%(climb)-8s,%(track_gps)-8s,%(eps)-8s,%(epx)-8s,%(epv)-8s,%(ept)-8s'
         ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
         logging.getLogger('ride').addHandler(ride_log_handler)
         ride_logger = logging.getLogger('ride')
@@ -169,7 +167,7 @@ class ride_parameters():
                                     'pressure': "Pressure", 'temperature': "Temp",
                                     'altitude': "Altitude", 'altitude_gps': "Alt GPS",
                                     'distance': "Distance", 'slope': "Slope", 'climb': "Climb",
-                                    'track': "Track", 'eps': "eps", 'epx': "epx", 'epv': "epv",
+                                    'track_gps': "Track", 'eps': "eps", 'epx': "epx", 'epv': "epv",
                                     'ept': "ept"})
         return ride_logger
 
@@ -316,9 +314,6 @@ class ride_parameters():
         else:
             self.l.info('[RP] BLE SC sensor not set, trying to get it...')
             self.ble_sc = self.sensors.get_sensor('ble_sc')
-            # FIXME - what if no BLE device present?
-            # self.p_raw['ble_sc_state'] = 0  # BLE state 0 - not active
-            # self.l.info('[RP] BLE SC state = 0')
 
         if self.ble_hr:
             data = self.ble_hr.get_data()
@@ -339,9 +334,6 @@ class ride_parameters():
         else:
             self.l.info('[RP] BLE HR sensor not set, trying to get it...')
             self.ble_hr = self.sensors.get_sensor('ble_hr')
-            # FIXME - what if no BLE device present?
-            # self.p_raw['ble_hr_state'] = 0  # BLE state 0 - not active
-            # self.l.info('[RP] BLE HR state = 0')
 
     def read_gps_data(self):
         if self.gps:
@@ -478,7 +470,7 @@ class ride_parameters():
         alg = self.p_raw["altitude_gps"]
         dst = round(self.p_raw["distance"], 0)
         clb = self.p_raw["climb"]
-        trk = self.p_raw["track"]
+        trk = self.p_raw["track_gps"]
         eps = self.p_raw["eps"]
         epx = self.p_raw["epx"]
         epv = self.p_raw["epv"]
@@ -486,7 +478,7 @@ class ride_parameters():
         self.r.info('', extra={'time': tme, 'dtime': dte, 'speed': spd, 'cadence': cde,
                                'heart_rate': hrt, 'pressure': pre, 'temperature': tem,
                                'altitude': alt, 'altitude_gps': alg, 'distance': dst,
-                               'slope': slp, 'climb': clb, 'track': trk, 'eps': eps,
+                               'slope': slp, 'climb': clb, 'track_gps': trk, 'eps': eps,
                                'epx': epx, 'epv': epv, 'ept': ept})
 
     def strip_end(self, param_name, suffix=None):
