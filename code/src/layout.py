@@ -317,10 +317,10 @@ class layout():
                     if self.function_rect_list[param_name].collidepoint(position):
                         # FIXME I's dirty way of getting value - add some
                         # helper function
-                        if param_name in self.occ.rp.p_editable:
-                            self.occ.l.debug("[LY] LONG CLICK on {}".format(param_name))
-                            self.occ.rp.params["editor_type"] = self.occ.rp.p_editable[param_name]
-                            self.open_editor_page(param_name)
+                        self.occ.l.debug("[LY] LONG CLICK on {}".format(param_name))
+                        editor_name = self.occ.rp.get_editor_name(param_name)
+                        if editor_name:
+                            self.open_editor_page(editor_name, param_name)
                             break
                         p = self.occ.rp.strip_end(param_name)
                         if p in self.occ.rp.p_resettable:
@@ -337,10 +337,9 @@ class layout():
         elif click == 5:  # Swipe TOP to BOTTOM
             self.run_function("settings")
 
-    def open_editor_page(self, param_name):
-        self.occ.l.debug("[LY] Opening editor for {}".format(param_name))
+    def open_editor_page(self, editor_name, param_name):
+        self.occ.l.debug("[LY] Opening editor {} for {}".format(editor_name, param_name))
         # FIXME move to RP
-        # FIXME Make it more pythonic
         self.occ.rp.params["variable"] = param_name
         self.occ.rp.params["variable_raw_value"] = self.occ.rp.get_raw_val(param_name)
         self.occ.rp.params["variable_value"] = self.occ.rp.get_val(param_name)
@@ -348,8 +347,7 @@ class layout():
         self.occ.rp.params["variable_description"] = self.occ.rp.get_description(param_name)
         self.occ.rp.params["editor_index"] = 0
 
-        # FIXME Make it more pythonic
-        if self.occ.rp.params["editor_type"] == 0:
+        if editor_name == 'editor_units':
             name = self.occ.rp.params["variable"]
             # FIXME make a stripping function
             na = name.find("_")
@@ -361,17 +359,7 @@ class layout():
             self.occ.rp.params["variable"] = n
             self.occ.rp.params["variable_unit"] = unit
             self.occ.rp.params["variable_value"] = 0
-            self.occ.l.debug("[LY] Opening editor: editor_units")
-            self.use_page("editor_units")
-        if self.occ.rp.params["editor_type"] == 1:
-            self.occ.l.debug("[LY] Opening editor: editor_numbers")
-            self.use_page("editor_numbers")
-        if self.occ.rp.params["editor_type"] == 2:
-            self.occ.l.debug("[LY] Opening editor: editor_string")
-            self.use_page("editor_string")
-        if self.occ.rp.params["editor_type"] == 3:
-            self.occ.l.debug("[LY] Opening editor: ble_selector")
-            self.use_page('ble_selector')
+        self.use_page(editor_name)
 
     def run_function(self, name):
         functions = {"page_0": self.load_page_0,

@@ -115,14 +115,11 @@ class ride_parameters():
             riderweight='Rider weight', riderweight_units='Rider weight units', wheel_size='Wheel size', speed_units='Speed units',
             temperature_units='Temp. unit')
 
-        # Define id a param is editable FIXME editor type - number, calendar, unit, etc.
-        # 0 - unit editor
-        # 1 - number editor
-        # 2 - string editor FIXME
-        # 3 - list selection FIXME
         # Params that can be changed in Settings by user
-        self.p_editable = dict(altitude_home=1, odometer=1, odometer_units=0, ble_hr_name=3, ble_sc_name=3,
-                               riderweight=1, riderweight_units=0, wheel_size=2, speed_units=0, temperature_units=0)
+        self.editors = dict(editor_units=('odometer_units', 'riderweight_units', 'speed_units', 'temperature_units'),
+                            editor_numbers=('altitude_home', 'odometer', 'riderweight'),
+                            editor_string=('wheel_size',),
+                            ble_selector=('ble_hr_name', 'ble_sc_name'))
 
         self.p_resettable = dict(distance=1, odometer=1, ridetime=1, speed_max=1,
                                  cadence=1, cadence_avg=1, cadence_max=1,
@@ -631,3 +628,16 @@ class ride_parameters():
         self.no_zero("heart_rate_avg")
         self.update_param("heart_rate_max")
         self.no_zero("heart_rate_max")
+
+    def get_editor_name(self, parameter):
+        self.l.debug("[RP] get_editor_name searching for editor for parameter {}".format(parameter))
+        editor = None
+        for e in self.editors:
+            if parameter in self.editors[e]:
+                editor = e
+                break
+        if editor:
+            self.l.debug("[RP] get_editor_name found editor {} for parameter {}".format(editor, parameter))
+        else:
+            self.l.debug("[RP] get_editor_name didn't find any editor for parameter {}".format(parameter))
+        return editor
