@@ -339,13 +339,12 @@ class layout():
 
     def open_editor_page(self, editor_name, function):
         self.occ.l.debug("[LY] Opening editor {} for {}".format(editor_name, function))
-        # FIXME move to RP
-        self.occ.rp.params["variable"] = function
-        self.occ.rp.params["variable_raw_value"] = self.occ.rp.get_raw_val(function)
-        self.occ.rp.params["variable_value"] = self.occ.rp.get_val(function)
-        self.occ.rp.params["variable_unit"] = self.occ.rp.get_unit(function)
-        self.occ.rp.params["variable_description"] = self.occ.rp.get_description(function)
-        self.occ.rp.params["editor_index"] = 0
+        self.odd.rp.set_param('variable', function)
+        self.occ.rp.set_param('variable_raw_value', self.occ.rp.get_raw_val(function))
+        self.occ.rp.set_param('variable_value', self.occ.rp.get_val(function))
+        self.occ.rp.set_param('variable_unit', self.occ.rp.get_unit(function))
+        self.occ.rp.set_param('variable_description', self.occ.rp.get_description(function))
+        self.occ.rp.set_param('editor_index', 0)
 
         if editor_name == 'editor_units':
             name = self.occ.rp.params["variable"]
@@ -356,9 +355,9 @@ class layout():
             else:
                 n = name
             unit = self.occ.rp.get_unit(n)
-            self.occ.rp.params["variable"] = n
-            self.occ.rp.params["variable_unit"] = unit
-            self.occ.rp.params["variable_value"] = 0
+            self.occ.rp.set_param('variable', n)
+            self.occ.rp.set_param('variable_unit', unit)
+            self.occ.rp.set_param('variable_value', 0)
         self.use_page(editor_name)
 
     def run_function(self, name):
