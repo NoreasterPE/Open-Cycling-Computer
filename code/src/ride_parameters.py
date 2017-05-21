@@ -190,11 +190,10 @@ class ride_parameters():
         self.p_raw["ddistance_cumulative"] += self.p_raw["ddistance"]
         if self.p_raw["ddistance_cumulative"] == 0:
             self.p_raw["slope"] = 0
-        # FIXME make proper param for tunnig. Calculate slope if the distance
+        # FIXME make proper param for tunning. Calculate slope if the distance
         # delta was grater than 8,4m
         elif self.p_raw["ddistance_cumulative"] > 8.4:
-            self.p_raw["slope"] = self.p_raw[
-                "daltitude_cumulative"] / self.p_raw["ddistance_cumulative"]
+            self.p_raw["slope"] = self.p_raw["daltitude_cumulative"] / self.p_raw["ddistance_cumulative"]
             self.l.debug("[RP] daltitude_cumulative: {} ddistance_cumulative: {}".
                          format(self.p_raw["daltitude_cumulative"], self.p_raw["ddistance_cumulative"]))
             self.p_raw["daltitude_cumulative"] = 0
@@ -402,7 +401,7 @@ class ride_parameters():
         dt = self.p_raw["dtime"]
         hr = self.p_raw["heart_rate"]
         hra = self.p_raw["heart_rate_avg"]
-        # FIXME ridetim doesn't seem to be right
+        # FIXME ridetime doesn't seem to be right
         tt = self.p_raw["ridetime"]
         hr_new = (hr * dt + hra * tt) / (tt + dt)
         self.p_raw["heart_rate_avg"] = hr_new
