@@ -214,7 +214,7 @@ class layout():
         for field in self.current_page:
             function = field.get('function')
             text_center = field.find('text_center')
-            value = self.occ.rp.get_val(function)
+            value = self.occ.rp.get_param(function)
             if value is None:
                 value = text_center.text
             if value is None:
@@ -341,7 +341,7 @@ class layout():
         self.occ.l.debug("[LY] Opening editor {} for {}".format(editor_name, function))
         self.odd.rp.set_param('variable', function)
         self.occ.rp.set_param('variable_raw_value', self.occ.rp.get_raw_val(function))
-        self.occ.rp.set_param('variable_value', self.occ.rp.get_val(function))
+        self.occ.rp.set_param('variable_value', self.occ.rp.get_param(function))
         self.occ.rp.set_param('variable_unit', self.occ.rp.get_unit(function))
         self.occ.rp.set_param('variable_description', self.occ.rp.get_description(function))
         self.occ.rp.set_param('editor_index', 0)

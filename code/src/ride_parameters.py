@@ -242,7 +242,7 @@ class ride_parameters():
         else:
             return self.p_raw[param]
 
-    def get_val(self, param):
+    def get_param(self, param):
         value = None
         try:
             if param.endswith("_units"):
