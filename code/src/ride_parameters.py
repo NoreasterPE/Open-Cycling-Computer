@@ -139,7 +139,7 @@ class ride_parameters():
         self.l.info("[RP] altitude_home set to {}".format(self.params["altitude_home"]))
 
     def start_sensors(self):
-        self.l.info("[RP] Starting sensors thread")
+        self.l.debug("[RP] Starting sensors thread")
         self.sensors.start()
 
     def setup_ridelog(self):
@@ -162,7 +162,7 @@ class ride_parameters():
         return ride_logger
 
     def stop(self):
-        self.l.info("[RP] Stopping sensors thread")
+        self.l.debug("[RP] Stopping sensors thread")
         self.sensors.stop()
 
     def __del__(self):
