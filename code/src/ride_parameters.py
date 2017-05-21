@@ -45,6 +45,9 @@ class ride_parameters():
                           ridetime=0.0, ridetime_total=0.0,
                           slope=0.0,
                           speed=0.0, speed_avg=0.0, speed_gps=0.0, speed_max=0.0,
+                          # FIXME Currently now used
+                          # speed_gps_low=2.5,
+                          speed_gps_noise=1.0, speed_low=1.0,
                           temperature=0.0, temperature_avg=0.0, temperature_max=INF_MIN, temperature_min=INF,
                           track_gps=0,
                           timeon=0.0001, utc='', rtc='')
@@ -125,20 +128,10 @@ class ride_parameters():
                                  cadence=1, cadence_avg=1, cadence_max=1,
                                  heart_rate_min=1, heart_rate_avg=1, heart_rate_max=1)
 
-        # Do not record any gps speed below 2.5 m/s
-        # FIXME Move to dict
-        self.speed_gps_low = 2.5
-        self.l.info("[RP] speed_gps_low treshold set to {}".format(self.speed_gps_low))
         # FIXME Use set_nav_speed_threshold(self, treshold=0) from gps module
-
-        # Do not show speed below 1 m/s
-        # FIXME Move to dict
-        self.speed_gps_noise = 1
-        self.l.info("[RP] speed_gps_noise treshold set to {}".format(self.speed_gps_noise))
-
-        # Do not record any speed below 1 m/s
-        self.speed_low = 1
-        self.l.info("[RP] speed_low treshold set to {}".format(self.speed_low))
+        self.l.info("[RP] GPS low speed treshold preset to {} [NOT USED]".format(self.p_raw['speed_gps_low']))
+        self.l.info("[RP] GPS speed noise level treshold preset to {}".format(self.p_raw['speed_gps_noise']))
+        self.l.info("[RP] Speed below {} m/a treshold won't be recorded".format(self.p_raw['speed_low']))
 
         self.update_param("speed_max")
         self.split_speed("speed_max")
@@ -213,7 +206,7 @@ class ride_parameters():
         dt = self.p_raw["dtime"]
         self.p_raw["timeon"] += dt
         s = self.p_raw["speed"]
-        if (s > self.speed_low):
+        if (s > self.p_raw['speed_low']):
             d = float(dt * s)
             self.p_raw["ddistance"] = d
             self.p_raw["distance"] += d
@@ -227,7 +220,7 @@ class ride_parameters():
                 s, self.p_raw["distance"], self.p_raw["odometer"]))
         else:
             self.p_raw["ddistance"] = 0
-            self.l.debug("[RP] speed_gps: below speed_low treshold")
+            self.l.debug("[RP] speed_gps: below speed_low {} m/s treshold".format(self.p_raw['speed_low']))
 
     def force_refresh(self):
         self.occ.force_refresh()
@@ -363,7 +356,7 @@ class ride_parameters():
                 gps_str = 3
             self.p_raw["gps_strength"] = gps_str
             self.p_raw["speed_gps"] = self.clean_value(self.p_raw["speed_gps"])
-            if self.p_raw["speed_gps"] < self.speed_gps_noise:
+            if self.p_raw["speed_gps"] < self.p_raw['speed_gps_noise']:
                 self.p_raw["speed_gps"] = 0
         else:
             self.l.info('[RP] GPS sensor not set, trying to set it...')
