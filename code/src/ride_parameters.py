@@ -175,10 +175,6 @@ class ride_parameters():
     def __del__(self):
         self.stop()
 
-    def set_param(self, param_name, value):
-        self.l.debug("[RP] Setting {} to {} ".format(param_name, value))
-        self.params[param_name] = value
-
     def update_values(self):
         self.read_bmp183_data()
         t = time.time()
@@ -241,6 +237,10 @@ class ride_parameters():
             return 0
         else:
             return self.p_raw[param]
+
+    def set_param(self, param_name, value):
+        self.l.debug("[RP] Setting {} to {} ".format(param_name, value))
+        self.params[param_name] = value
 
     def get_param(self, param):
         value = None
