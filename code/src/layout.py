@@ -301,33 +301,33 @@ class layout():
         if click == 0:
             # Short click
             # FIXME Search through function_rect_list directly? TBD
-            for param_name in self.current_button_list:
+            for function in self.current_button_list:
                 try:
-                    if self.function_rect_list[param_name].collidepoint(position):
-                        self.run_function(param_name)
+                    if self.function_rect_list[function].collidepoint(position):
+                        self.run_function(function)
                         break
                 except KeyError:
                     self.occ.l.debug(
-                        "[LY] CLICK on non-clickable {}".format(param_name))
+                        "[LY] CLICK on non-clickable {}".format(function))
         elif click == 1:
             # print self.function_rect_list
             # print self.current_button_list
-            for param_name in self.current_button_list:
+            for function in self.current_button_list:
                 try:
-                    if self.function_rect_list[param_name].collidepoint(position):
+                    if self.function_rect_list[function].collidepoint(position):
                         # FIXME I's dirty way of getting value - add some
                         # helper function
-                        self.occ.l.debug("[LY] LONG CLICK on {}".format(param_name))
-                        editor_name = self.occ.rp.get_editor_name(param_name)
+                        self.occ.l.debug("[LY] LONG CLICK on {}".format(function))
+                        editor_name = self.occ.rp.get_editor_name(function)
                         if editor_name:
-                            self.open_editor_page(editor_name, param_name)
+                            self.open_editor_page(editor_name, function)
                             break
-                        p = self.occ.rp.strip_end(param_name)
+                        p = self.occ.rp.strip_end(function)
                         if p in self.occ.rp.p_resettable:
                             self.occ.rp.reset_param(p)
                 except KeyError:
                     self.occ.l.debug(
-                        "[LY] LONG CLICK on non-clickable {}".format(param_name))
+                        "[LY] LONG CLICK on non-clickable {}".format(function))
         elif click == 2:  # Swipe RIGHT to LEFT
             self.run_function("next_page")
         elif click == 3:  # Swipe LEFT to RIGHT
@@ -337,14 +337,14 @@ class layout():
         elif click == 5:  # Swipe TOP to BOTTOM
             self.run_function("settings")
 
-    def open_editor_page(self, editor_name, param_name):
-        self.occ.l.debug("[LY] Opening editor {} for {}".format(editor_name, param_name))
+    def open_editor_page(self, editor_name, function):
+        self.occ.l.debug("[LY] Opening editor {} for {}".format(editor_name, function))
         # FIXME move to RP
-        self.occ.rp.params["variable"] = param_name
-        self.occ.rp.params["variable_raw_value"] = self.occ.rp.get_raw_val(param_name)
-        self.occ.rp.params["variable_value"] = self.occ.rp.get_val(param_name)
-        self.occ.rp.params["variable_unit"] = self.occ.rp.get_unit(param_name)
-        self.occ.rp.params["variable_description"] = self.occ.rp.get_description(param_name)
+        self.occ.rp.params["variable"] = function
+        self.occ.rp.params["variable_raw_value"] = self.occ.rp.get_raw_val(function)
+        self.occ.rp.params["variable_value"] = self.occ.rp.get_val(function)
+        self.occ.rp.params["variable_unit"] = self.occ.rp.get_unit(function)
+        self.occ.rp.params["variable_description"] = self.occ.rp.get_description(function)
         self.occ.rp.params["editor_index"] = 0
 
         if editor_name == 'editor_units':
@@ -494,7 +494,7 @@ class layout():
             f = self.occ.rp.p_format[variable]
         except KeyError:
             self.occ.l.warning(
-                "[LY] Formatting not available: param_name ={}".format(variable))
+                "[LY] Formatting not available: function ={}".format(variable))
             f = "%.1f"
         self.occ.rp.params["variable_value"] = float(f % float(variable_value))
         self.occ.rp.params["variable_unit"] = next_unit
