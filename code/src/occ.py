@@ -100,12 +100,12 @@ class open_cycling_computer(object):
         if (time_now - self.pressed_t) > LONG_CLICK:
             self.l.debug("[OCC] LONG CLICK : {} {} {}".format(
                 time_now, self.pressed_t, self.pressed_pos))
-            self.layout.check_click(self.pressed_pos, 1)
+            self.layout.check_click(self.pressed_pos, 'LONG')
             self.reset_motion()
         if self.released_t != 0:
             self.l.debug("[OCC] SHORT CLICK : {} {} {}".format(
                 time_now, self.pressed_t, self.pressed_pos))
-            self.layout.check_click(self.pressed_pos, 0)
+            self.layout.check_click(self.pressed_pos, 'SHORT')
             self.reset_motion()
         dx = self.rel_movement[0]
         dy = self.rel_movement[1]
@@ -113,23 +113,23 @@ class open_cycling_computer(object):
             if dx > 0:
                 self.l.debug("[OCC] SWIPE X RIGHT to LEFT : {} {} {} {} {} {}".
                              format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
-                self.layout.check_click(self.pressed_pos, 2)
+                self.layout.check_click(self.pressed_pos, 'R_TO_L')
                 self.reset_motion()
             else:
                 self.l.debug("[OCC] SWIPE X LEFT to RIGHT : {} {} {} {} {} {}".
                              format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
-                self.layout.check_click(self.pressed_pos, 3)
+                self.layout.check_click(self.pressed_pos, 'L_TO_R')
                 self.reset_motion()
         elif (abs(dy)) > SWIPE_LENGTH:
             if dy < 0:
                 self.l.debug("[OCC] SWIPE X BOTTOM to TOP : {} {} {} {} {} {}".
                              format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
-                self.layout.check_click(self.pressed_pos, 4)
+                self.layout.check_click(self.pressed_pos, 'B_TO_T')
                 self.reset_motion()
             else:
                 self.l.debug("[OCC] SWIPE X TOP to BOTTOM : {} {} {} {} {} {}".
                              format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
-                self.layout.check_click(self.pressed_pos, 5)
+                self.layout.check_click(self.pressed_pos, 'T_TO_B')
                 self.reset_motion()
 
     def event_handler(self, event, time_now):

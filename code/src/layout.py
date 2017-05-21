@@ -298,7 +298,7 @@ class layout():
     def check_click(self, position, click):
         # print "check_click: ", position, click
 
-        if click == 0:
+        if click == 'SHORT':
             # Short click
             # FIXME Search through function_rect_list directly? TBD
             for function in self.current_button_list:
@@ -309,7 +309,7 @@ class layout():
                 except KeyError:
                     self.occ.l.debug(
                         "[LY] CLICK on non-clickable {}".format(function))
-        elif click == 1:
+        elif click == 'LONG':
             # print self.function_rect_list
             # print self.current_button_list
             for function in self.current_button_list:
@@ -328,13 +328,13 @@ class layout():
                 except KeyError:
                     self.occ.l.debug(
                         "[LY] LONG CLICK on non-clickable {}".format(function))
-        elif click == 2:  # Swipe RIGHT to LEFT
+        elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
             self.run_function("next_page")
-        elif click == 3:  # Swipe LEFT to RIGHT
+        elif click == 'L_TO_R':  # Swipe LEFT to RIGHT
             self.run_function("prev_page")
-        elif click == 4:  # Swipe BOTTOM to TOP
+        elif click == 'B_TO_T':  # Swipe BOTTOM to TOP
             self.run_function("page_0")
-        elif click == 5:  # Swipe TOP to BOTTOM
+        elif click == 'T_TO_B':  # Swipe TOP to BOTTOM
             self.run_function("settings")
 
     def open_editor_page(self, editor_name, function):
