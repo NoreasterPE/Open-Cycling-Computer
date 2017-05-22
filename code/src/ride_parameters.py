@@ -45,9 +45,7 @@ class ride_parameters():
                           ridetime=0.0, ridetime_total=0.0,
                           slope=0.0,
                           speed=0.0, speed_avg=0.0, speed_gps=0.0, speed_max=0.0,
-                          # FIXME Currently now used
-                          # speed_gps_low=2.5,
-                          speed_gps_noise=1.0, speed_low=1.0,
+                          speed_gps_low=2.5, speed_gps_noise=1.0, speed_low=1.0,
                           temperature=0.0, temperature_avg=0.0, temperature_max=INF_MIN, temperature_min=INF,
                           track_gps=0,
                           timeon=0.0001, utc='', rtc='')
@@ -70,17 +68,12 @@ class ride_parameters():
             speed_avg_digits='-', speed_avg_tenths='-', speed_digits='-', speed_max='-', speed_max_digits='-',
             speed_max_tenths='-', speed_tenths='-', temperature='', temperature_avg='', temperature_max='',
             temperature_min='', timeon='', timeon_hms='', time_of_ride_reset='', track_gps='-', utc='',
-            ble_hr_name='', ble_hr_addr='', ble_sc_name='', ble_sc_addr='')
-        # System params - shoud be in raw or new category: system
-        self.params["debug_level"] = ""
-        # Editor params
-        self.params["editor_index"] = 0
-        self.params["editor_type"] = 0
-        self.params["variable"] = None
-        self.params["variable_description"] = None
-        self.params["variable_raw_value"] = None
-        self.params["variable_unit"] = None
-        self.params["variable_value"] = None
+            ble_hr_name='', ble_hr_addr='', ble_sc_name='', ble_sc_addr='',
+            # Editor params
+            editor_index=0, editor_type=0, variable=None,
+            variable_description=None, variable_raw_value=None, variable_unit=None, variable_value=None,
+            # System params
+            debug_level='')
 
         # Formatting strings for params.
         self.p_format = dict(
