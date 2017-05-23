@@ -37,6 +37,11 @@ class open_cycling_computer(object):
 
     'Class for PiTFT 2.8" 320x240 cycling computer'
 
+    ## The constructor
+    #  @param self The python object self
+    #  @param simulate Decides if OCC runs in simulation mode or real device mode. Simulation mode is useful for test on non-raspberry pi hardware. Default value is False.
+    #  @param width Width of screen or window. Default value is 240 pixels
+    #  @param height Height of screen or window.  Default value is 320 pixels
     def __init__(self, simulate=False, width=240, height=320):
         self.simulate = simulate
         self.l = logging.getLogger('system')
@@ -79,6 +84,8 @@ class open_cycling_computer(object):
         self.running = True
         self.refresh = False
 
+    ## Provides events from pygame system
+    #  @param self The python object self
     def event_iterator(self):
         while True:
             yield pygame.event.wait()
