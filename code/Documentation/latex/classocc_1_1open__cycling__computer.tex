@@ -1,0 +1,371 @@
+\hypertarget{classocc_1_1open__cycling__computer}{}\section{occ.\+open\+\_\+cycling\+\_\+computer Class Reference}
+\label{classocc_1_1open__cycling__computer}\index{occ.\+open\+\_\+cycling\+\_\+computer@{occ.\+open\+\_\+cycling\+\_\+computer}}
+
+
+Main O\+CC class.  
+
+
+Inheritance diagram for occ.\+open\+\_\+cycling\+\_\+computer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classocc_1_1open__cycling__computer}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{classocc_1_1open__cycling__computer_a1824c27f6e2c486c8b50f898db74d077}{\+\_\+\+\_\+init\+\_\+\+\_\+} (self, \hyperlink{classocc_1_1open__cycling__computer_a9bf952f2299899216b9adf8c382db024}{simulate}=False, \hyperlink{classocc_1_1open__cycling__computer_a56f3dab67d5bff0740ffbd8654d55582}{width}=240, \hyperlink{classocc_1_1open__cycling__computer_a2215795145291166265958493e692bab}{height}=320)
+\begin{DoxyCompactList}\small\item\em The constructor. \end{DoxyCompactList}\item 
+def \hyperlink{classocc_1_1open__cycling__computer_a4283facb6ffb6ed36e30bd9e3ed61871}{event\+\_\+iterator} (self)
+\begin{DoxyCompactList}\small\item\em Provides events from pygame system. \end{DoxyCompactList}\item 
+def \hyperlink{classocc_1_1open__cycling__computer_abff79cda8ca077b0bd319e08214dd6d3}{force\+\_\+refresh} (self)
+\item 
+def \hyperlink{classocc_1_1open__cycling__computer_a26649854452d1afcfebf0b3d17ac347d}{switch\+\_\+log\+\_\+level} (self, log\+\_\+level)
+\begin{DoxyCompactList}\small\item\em Switches logging level. \end{DoxyCompactList}\item 
+def \hyperlink{classocc_1_1open__cycling__computer_aea92ce48f815f4c3f3d56faab3ca025d}{screen\+\_\+touched\+\_\+handler} (self, time\+\_\+now)
+\item 
+def \hyperlink{classocc_1_1open__cycling__computer_a98a9ab4fb8dbd4df267ee216ef53d895}{event\+\_\+handler} (self, event, time\+\_\+now)
+\item 
+def \hyperlink{classocc_1_1open__cycling__computer_a6686554a1a2f2517d3ab46abb2bb35c2}{main\+\_\+loop} (self)
+\item 
+def \hyperlink{classocc_1_1open__cycling__computer_aa6adec92226434376a10fc852ebf6dc6}{reset\+\_\+motion} (self)
+\item 
+def \hyperlink{classocc_1_1open__cycling__computer_a1f6bf75367d3617a7b5c0e182c27e890}{cleanup} (self)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classocc_1_1open__cycling__computer_a9bf952f2299899216b9adf8c382db024}{simulate}
+\begin{DoxyCompactList}\small\item\em Stores simulate parameter from constructor call. \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_ae6203e191770e28dde9a508a4d818dba}{l}
+\begin{DoxyCompactList}\small\item\em Handle to system logger. \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_a56f3dab67d5bff0740ffbd8654d55582}{width}
+\begin{DoxyCompactList}\small\item\em Window/screen width. \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_a2215795145291166265958493e692bab}{height}
+\begin{DoxyCompactList}\small\item\em Window/screen height. \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_a6637c748b8ecbacd54bc36c504bfefaa}{screen}
+\begin{DoxyCompactList}\small\item\em Handle to pygame screen. \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_a7fb670e84da1971f5b34c5f10e0b0418}{sensors}
+\begin{DoxyCompactList}\small\item\em Handle to sensors instance. \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_afb5049a2519476feb5edd4fb6e4b2aea}{rp}
+\begin{DoxyCompactList}\small\item\em Handle to \hyperlink{namespaceride__parameters}{ride\+\_\+parameters} instance. \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_a49c34e270f0d29f25f8ddb6ca1ee5631}{layout\+\_\+path}
+\begin{DoxyCompactList}\small\item\em Path to layout file. \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_a9fcf030e68a44147a38f34d214572f44}{config}
+\begin{DoxyCompactList}\small\item\em Handle to config instance. \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_ac8c629c48b3fff8add28a1c7f7fc31ca}{layout}
+\begin{DoxyCompactList}\small\item\em Handle to layout instance. \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_a05f815f6c23686c9a9a7728b3808fc99}{rendering}
+\begin{DoxyCompactList}\small\item\em Handle to rendering instance. \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_a63a6b256728b0d8ced4fbace9f43791d}{released\+\_\+t}
+\begin{DoxyCompactList}\small\item\em Time stamp of pygame.\+M\+O\+U\+S\+E\+B\+U\+T\+T\+O\+N\+UP event (end of finger contact with touchscreen) \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_a1bbc11b7dd1d16fadc63aa7b6360f71d}{rel\+\_\+movement}
+\begin{DoxyCompactList}\small\item\em Vector since M\+O\+U\+S\+E\+B\+U\+T\+T\+O\+N\+D\+O\+WN event. \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_a1ea38b7c9655b557eacce7dc377a9ce6}{pressed\+\_\+t}
+\begin{DoxyCompactList}\small\item\em Time stamp of pygame.\+M\+O\+U\+S\+E\+B\+U\+T\+T\+O\+N\+D\+O\+WN event (start of finger contact with touchscreen) \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_aa57172c2a04bd0ff61e5dafdefe1554b}{pressed\+\_\+pos}
+\begin{DoxyCompactList}\small\item\em Position of pygame.\+M\+O\+U\+S\+E\+B\+U\+T\+T\+O\+N\+D\+O\+WN event (start of finger contact with touchscreen) \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_a430f81b58f8be50077ebaa317d487812}{released\+\_\+pos}
+\begin{DoxyCompactList}\small\item\em Position of pygame.\+M\+O\+U\+S\+E\+B\+U\+T\+T\+O\+N\+UP event (end of finger contact with touchscreen) \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_af56c12bbd4cf026b59578e22b922c846}{add\+\_\+rel\+\_\+motion}
+\begin{DoxyCompactList}\small\item\em Used to control if finger/mouse vectors should be tracked to determine total relative motion. \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_ace5191a9d73e79fdba4ed1d9a7379274}{running}
+\begin{DoxyCompactList}\small\item\em Variable controlling the main occ event loop. \end{DoxyCompactList}\item 
+\hyperlink{classocc_1_1open__cycling__computer_a76ee74edfd950f99f8a52ae4fdcc3ac6}{refresh}
+\begin{DoxyCompactList}\small\item\em Variable controlling if the screen need to be refreshed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Main O\+CC class. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a1824c27f6e2c486c8b50f898db74d077}\label{classocc_1_1open__cycling__computer_a1824c27f6e2c486c8b50f898db74d077}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!\+\_\+\+\_\+init\+\_\+\+\_\+@{\+\_\+\+\_\+init\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+init\+\_\+\+\_\+@{\+\_\+\+\_\+init\+\_\+\+\_\+}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+init\+\_\+\+\_\+()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily def occ.\+open\+\_\+cycling\+\_\+computer.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{simulate = {\ttfamily False},  }\item[{}]{width = {\ttfamily 240},  }\item[{}]{height = {\ttfamily 320} }\end{DoxyParamCaption})}
+
+
+
+The constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & The python object self \\
+\hline
+{\em simulate} & Decides if O\+CC runs in simulation mode or real device mode. Simulation mode is useful for test on non-\/raspberry pi hardware. Default value is False. \\
+\hline
+{\em width} & Width of screen or window. Default value is 240 pixels \\
+\hline
+{\em height} & Height of screen or window. Default value is 320 pixels \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a1f6bf75367d3617a7b5c0e182c27e890}\label{classocc_1_1open__cycling__computer_a1f6bf75367d3617a7b5c0e182c27e890}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!cleanup@{cleanup}}
+\index{cleanup@{cleanup}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{cleanup()}{cleanup()}}
+{\footnotesize\ttfamily def occ.\+open\+\_\+cycling\+\_\+computer.\+cleanup (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a98a9ab4fb8dbd4df267ee216ef53d895}\label{classocc_1_1open__cycling__computer_a98a9ab4fb8dbd4df267ee216ef53d895}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!event\+\_\+handler@{event\+\_\+handler}}
+\index{event\+\_\+handler@{event\+\_\+handler}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{event\+\_\+handler()}{event\_handler()}}
+{\footnotesize\ttfamily def occ.\+open\+\_\+cycling\+\_\+computer.\+event\+\_\+handler (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{event,  }\item[{}]{time\+\_\+now }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a4283facb6ffb6ed36e30bd9e3ed61871}\label{classocc_1_1open__cycling__computer_a4283facb6ffb6ed36e30bd9e3ed61871}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!event\+\_\+iterator@{event\+\_\+iterator}}
+\index{event\+\_\+iterator@{event\+\_\+iterator}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{event\+\_\+iterator()}{event\_iterator()}}
+{\footnotesize\ttfamily def occ.\+open\+\_\+cycling\+\_\+computer.\+event\+\_\+iterator (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+
+
+Provides events from pygame system. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & The python object self \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_abff79cda8ca077b0bd319e08214dd6d3}\label{classocc_1_1open__cycling__computer_abff79cda8ca077b0bd319e08214dd6d3}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!force\+\_\+refresh@{force\+\_\+refresh}}
+\index{force\+\_\+refresh@{force\+\_\+refresh}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{force\+\_\+refresh()}{force\_refresh()}}
+{\footnotesize\ttfamily def occ.\+open\+\_\+cycling\+\_\+computer.\+force\+\_\+refresh (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a6686554a1a2f2517d3ab46abb2bb35c2}\label{classocc_1_1open__cycling__computer_a6686554a1a2f2517d3ab46abb2bb35c2}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!main\+\_\+loop@{main\+\_\+loop}}
+\index{main\+\_\+loop@{main\+\_\+loop}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{main\+\_\+loop()}{main\_loop()}}
+{\footnotesize\ttfamily def occ.\+open\+\_\+cycling\+\_\+computer.\+main\+\_\+loop (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_aa6adec92226434376a10fc852ebf6dc6}\label{classocc_1_1open__cycling__computer_aa6adec92226434376a10fc852ebf6dc6}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!reset\+\_\+motion@{reset\+\_\+motion}}
+\index{reset\+\_\+motion@{reset\+\_\+motion}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{reset\+\_\+motion()}{reset\_motion()}}
+{\footnotesize\ttfamily def occ.\+open\+\_\+cycling\+\_\+computer.\+reset\+\_\+motion (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_aea92ce48f815f4c3f3d56faab3ca025d}\label{classocc_1_1open__cycling__computer_aea92ce48f815f4c3f3d56faab3ca025d}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!screen\+\_\+touched\+\_\+handler@{screen\+\_\+touched\+\_\+handler}}
+\index{screen\+\_\+touched\+\_\+handler@{screen\+\_\+touched\+\_\+handler}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{screen\+\_\+touched\+\_\+handler()}{screen\_touched\_handler()}}
+{\footnotesize\ttfamily def occ.\+open\+\_\+cycling\+\_\+computer.\+screen\+\_\+touched\+\_\+handler (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{time\+\_\+now }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a26649854452d1afcfebf0b3d17ac347d}\label{classocc_1_1open__cycling__computer_a26649854452d1afcfebf0b3d17ac347d}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!switch\+\_\+log\+\_\+level@{switch\+\_\+log\+\_\+level}}
+\index{switch\+\_\+log\+\_\+level@{switch\+\_\+log\+\_\+level}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{switch\+\_\+log\+\_\+level()}{switch\_log\_level()}}
+{\footnotesize\ttfamily def occ.\+open\+\_\+cycling\+\_\+computer.\+switch\+\_\+log\+\_\+level (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{log\+\_\+level }\end{DoxyParamCaption})}
+
+
+
+Switches logging level. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & The python object self \\
+\hline
+{\em log\+\_\+level} & Log level to be set. Allowed levels are in \hyperlink{namespaceocc_a46db66163eeb50234471c2f1f0bf4133}{L\+O\+G\+\_\+\+L\+E\+V\+EL} \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_af56c12bbd4cf026b59578e22b922c846}\label{classocc_1_1open__cycling__computer_af56c12bbd4cf026b59578e22b922c846}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!add\+\_\+rel\+\_\+motion@{add\+\_\+rel\+\_\+motion}}
+\index{add\+\_\+rel\+\_\+motion@{add\+\_\+rel\+\_\+motion}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{add\+\_\+rel\+\_\+motion}{add\_rel\_motion}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+add\+\_\+rel\+\_\+motion}
+
+
+
+Used to control if finger/mouse vectors should be tracked to determine total relative motion. 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a9fcf030e68a44147a38f34d214572f44}\label{classocc_1_1open__cycling__computer_a9fcf030e68a44147a38f34d214572f44}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!config@{config}}
+\index{config@{config}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{config}{config}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+config}
+
+
+
+Handle to config instance. 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a2215795145291166265958493e692bab}\label{classocc_1_1open__cycling__computer_a2215795145291166265958493e692bab}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!height@{height}}
+\index{height@{height}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{height}{height}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+height}
+
+
+
+Window/screen height. 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_ae6203e191770e28dde9a508a4d818dba}\label{classocc_1_1open__cycling__computer_ae6203e191770e28dde9a508a4d818dba}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!l@{l}}
+\index{l@{l}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{l}{l}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+l}
+
+
+
+Handle to system logger. 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_ac8c629c48b3fff8add28a1c7f7fc31ca}\label{classocc_1_1open__cycling__computer_ac8c629c48b3fff8add28a1c7f7fc31ca}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!layout@{layout}}
+\index{layout@{layout}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{layout}{layout}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+layout}
+
+
+
+Handle to layout instance. 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a49c34e270f0d29f25f8ddb6ca1ee5631}\label{classocc_1_1open__cycling__computer_a49c34e270f0d29f25f8ddb6ca1ee5631}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!layout\+\_\+path@{layout\+\_\+path}}
+\index{layout\+\_\+path@{layout\+\_\+path}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{layout\+\_\+path}{layout\_path}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+layout\+\_\+path}
+
+
+
+Path to layout file. 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_aa57172c2a04bd0ff61e5dafdefe1554b}\label{classocc_1_1open__cycling__computer_aa57172c2a04bd0ff61e5dafdefe1554b}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!pressed\+\_\+pos@{pressed\+\_\+pos}}
+\index{pressed\+\_\+pos@{pressed\+\_\+pos}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{pressed\+\_\+pos}{pressed\_pos}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+pressed\+\_\+pos}
+
+
+
+Position of pygame.\+M\+O\+U\+S\+E\+B\+U\+T\+T\+O\+N\+D\+O\+WN event (start of finger contact with touchscreen) 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a1ea38b7c9655b557eacce7dc377a9ce6}\label{classocc_1_1open__cycling__computer_a1ea38b7c9655b557eacce7dc377a9ce6}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!pressed\+\_\+t@{pressed\+\_\+t}}
+\index{pressed\+\_\+t@{pressed\+\_\+t}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{pressed\+\_\+t}{pressed\_t}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+pressed\+\_\+t}
+
+
+
+Time stamp of pygame.\+M\+O\+U\+S\+E\+B\+U\+T\+T\+O\+N\+D\+O\+WN event (start of finger contact with touchscreen) 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a76ee74edfd950f99f8a52ae4fdcc3ac6}\label{classocc_1_1open__cycling__computer_a76ee74edfd950f99f8a52ae4fdcc3ac6}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!refresh@{refresh}}
+\index{refresh@{refresh}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{refresh}{refresh}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+refresh}
+
+
+
+Variable controlling if the screen need to be refreshed. 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a1bbc11b7dd1d16fadc63aa7b6360f71d}\label{classocc_1_1open__cycling__computer_a1bbc11b7dd1d16fadc63aa7b6360f71d}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!rel\+\_\+movement@{rel\+\_\+movement}}
+\index{rel\+\_\+movement@{rel\+\_\+movement}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{rel\+\_\+movement}{rel\_movement}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+rel\+\_\+movement}
+
+
+
+Vector since M\+O\+U\+S\+E\+B\+U\+T\+T\+O\+N\+D\+O\+WN event. 
+
+Used to derermine swipe motion. \mbox{\Hypertarget{classocc_1_1open__cycling__computer_a430f81b58f8be50077ebaa317d487812}\label{classocc_1_1open__cycling__computer_a430f81b58f8be50077ebaa317d487812}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!released\+\_\+pos@{released\+\_\+pos}}
+\index{released\+\_\+pos@{released\+\_\+pos}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{released\+\_\+pos}{released\_pos}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+released\+\_\+pos}
+
+
+
+Position of pygame.\+M\+O\+U\+S\+E\+B\+U\+T\+T\+O\+N\+UP event (end of finger contact with touchscreen) 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a63a6b256728b0d8ced4fbace9f43791d}\label{classocc_1_1open__cycling__computer_a63a6b256728b0d8ced4fbace9f43791d}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!released\+\_\+t@{released\+\_\+t}}
+\index{released\+\_\+t@{released\+\_\+t}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{released\+\_\+t}{released\_t}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+released\+\_\+t}
+
+
+
+Time stamp of pygame.\+M\+O\+U\+S\+E\+B\+U\+T\+T\+O\+N\+UP event (end of finger contact with touchscreen) 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a05f815f6c23686c9a9a7728b3808fc99}\label{classocc_1_1open__cycling__computer_a05f815f6c23686c9a9a7728b3808fc99}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!rendering@{rendering}}
+\index{rendering@{rendering}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{rendering}{rendering}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+rendering}
+
+
+
+Handle to rendering instance. 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_afb5049a2519476feb5edd4fb6e4b2aea}\label{classocc_1_1open__cycling__computer_afb5049a2519476feb5edd4fb6e4b2aea}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!rp@{rp}}
+\index{rp@{rp}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{rp}{rp}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+rp}
+
+
+
+Handle to \hyperlink{namespaceride__parameters}{ride\+\_\+parameters} instance. 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_ace5191a9d73e79fdba4ed1d9a7379274}\label{classocc_1_1open__cycling__computer_ace5191a9d73e79fdba4ed1d9a7379274}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!running@{running}}
+\index{running@{running}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{running}{running}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+running}
+
+
+
+Variable controlling the main occ event loop. 
+
+pygame.\+Q\+U\+IT event triggers setting running to False \mbox{\Hypertarget{classocc_1_1open__cycling__computer_a6637c748b8ecbacd54bc36c504bfefaa}\label{classocc_1_1open__cycling__computer_a6637c748b8ecbacd54bc36c504bfefaa}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!screen@{screen}}
+\index{screen@{screen}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{screen}{screen}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+screen}
+
+
+
+Handle to pygame screen. 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a7fb670e84da1971f5b34c5f10e0b0418}\label{classocc_1_1open__cycling__computer_a7fb670e84da1971f5b34c5f10e0b0418}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!sensors@{sensors}}
+\index{sensors@{sensors}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{sensors}{sensors}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+sensors}
+
+
+
+Handle to sensors instance. 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a9bf952f2299899216b9adf8c382db024}\label{classocc_1_1open__cycling__computer_a9bf952f2299899216b9adf8c382db024}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!simulate@{simulate}}
+\index{simulate@{simulate}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{simulate}{simulate}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+simulate}
+
+
+
+Stores simulate parameter from constructor call. 
+
+\mbox{\Hypertarget{classocc_1_1open__cycling__computer_a56f3dab67d5bff0740ffbd8654d55582}\label{classocc_1_1open__cycling__computer_a56f3dab67d5bff0740ffbd8654d55582}} 
+\index{occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}!width@{width}}
+\index{width@{width}!occ\+::open\+\_\+cycling\+\_\+computer@{occ\+::open\+\_\+cycling\+\_\+computer}}
+\subsubsection{\texorpdfstring{width}{width}}
+{\footnotesize\ttfamily occ.\+open\+\_\+cycling\+\_\+computer.\+width}
+
+
+
+Window/screen width. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{occ_8py}{occ.\+py}\end{DoxyCompactItemize}

@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['u',['u',['../namespaceunits.html#a278004cb1c9566d5b92bae6dc0689bd2',1,'units']]],
+  ['uc',['uc',['../classlayout_1_1layout.html#a6e471177d664a814812f91fddef0b7d5',1,'layout.layout.uc()'],['../classride__parameters_1_1ride__parameters.html#aed39b68ae142d70d742284cdb893f4c2',1,'ride_parameters.ride_parameters.uc()']]],
+  ['units',['units',['../classunits_1_1units.html',1,'units.units'],['../namespaceunits.html',1,'units'],['../classride__parameters_1_1ride__parameters.html#a1ecc9f5743530c08e097c8289635fd5f',1,'ride_parameters.ride_parameters.units()']]],
+  ['units_2epy',['units.py',['../units_8py.html',1,'']]],
+  ['units_5fallowed',['units_allowed',['../classride__parameters_1_1ride__parameters.html#a73058a14ac0ceb9c97a8dab941eba75f',1,'ride_parameters::ride_parameters']]],
+  ['up',['UP',['../classbmp183_1_1bmp183.html#a5e0825f49b6206d3c4e201ad08e14ce1',1,'bmp183::bmp183']]],
+  ['update_5faltitude',['update_altitude',['../classride__parameters_1_1ride__parameters.html#ac43553319b5a7bf338055b4a4e7ad6f8',1,'ride_parameters::ride_parameters']]],
+  ['update_5fcadence',['update_cadence',['../classride__parameters_1_1ride__parameters.html#a53de3656e5b9ac567321d67563c94b7f',1,'ride_parameters::ride_parameters']]],
+  ['update_5ffix_5fgps',['update_fix_gps',['../classride__parameters_1_1ride__parameters.html#a9807fc1da341854145ce767ab5c30a03',1,'ride_parameters::ride_parameters']]],
+  ['update_5fheart_5frate',['update_heart_rate',['../classride__parameters_1_1ride__parameters.html#a1457499322e06e3cd08adcd6396dccaf',1,'ride_parameters::ride_parameters']]],
+  ['update_5fhms',['update_hms',['../classride__parameters_1_1ride__parameters.html#aa74512ad30be2ec2784970e652649e93',1,'ride_parameters::ride_parameters']]],
+  ['update_5fmax_5fspeed',['update_max_speed',['../classride__parameters_1_1ride__parameters.html#a18c56686f5b82a73482130fbaadc9bc7',1,'ride_parameters::ride_parameters']]],
+  ['update_5fparam',['update_param',['../classride__parameters_1_1ride__parameters.html#ab01d91e41b6d2941f3d00905d29d3d23',1,'ride_parameters::ride_parameters']]],
+  ['update_5fparams',['update_params',['../classride__parameters_1_1ride__parameters.html#ae69dbac396ca79bc9f00d68c5acd2150',1,'ride_parameters::ride_parameters']]],
+  ['update_5frate',['update_rate',['../classmtk3339_1_1mt3339.html#a3a9e6ffe9f3a8ae83316f3914d855494',1,'mtk3339::mt3339']]],
+  ['update_5frtc',['update_rtc',['../classride__parameters_1_1ride__parameters.html#a2b033c42e41b36aae293722ffc0cc6e8',1,'ride_parameters::ride_parameters']]],
+  ['update_5ftemperatures',['update_temperatures',['../classride__parameters_1_1ride__parameters.html#a837da94b5443d9ee3f2b4fe800f5e3d3',1,'ride_parameters::ride_parameters']]],
+  ['update_5fvalues',['update_values',['../classride__parameters_1_1ride__parameters.html#a0298eab61d08a06ce19b02a7a2017261',1,'ride_parameters::ride_parameters']]],
+  ['use_5fmain_5fpage',['use_main_page',['../classlayout_1_1layout.html#a915717bcd06193f482be2d3589f39d35',1,'layout::layout']]],
+  ['use_5fpage',['use_page',['../classlayout_1_1layout.html#af9d992ec7a77a1f8975d42e474085607',1,'layout::layout']]],
+  ['ut',['UT',['../classbmp183_1_1bmp183.html#a4ad4aeaa8cd60eebc072b8c6e42454b9',1,'bmp183::bmp183']]],
+  ['utc',['utc',['../classgps__mtk3339_1_1gps__mtk3339.html#aa7849c72105267400545a92f8bebc5a4',1,'gps_mtk3339::gps_mtk3339']]]
+];

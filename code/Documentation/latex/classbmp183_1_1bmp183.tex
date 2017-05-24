@@ -1,0 +1,588 @@
+\hypertarget{classbmp183_1_1bmp183}{}\section{bmp183.\+bmp183 Class Reference}
+\label{classbmp183_1_1bmp183}\index{bmp183.\+bmp183@{bmp183.\+bmp183}}
+Inheritance diagram for bmp183.\+bmp183\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classbmp183_1_1bmp183}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{classbmp183_1_1bmp183_abff9456bd2e262738b3d2bc8d75fb931}{\+\_\+\+\_\+init\+\_\+\+\_\+} (self, \hyperlink{classbmp183_1_1bmp183_af2e228fbb767e51461bc3b906c95e08a}{simulate}=False)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_a5e6acda0bca8df5d68f673959a75023a}{get\+\_\+data} (self)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_aa95ba9d2ee3ea621fa744e0084929065}{stop} (self)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_a07d23f8009ce9777dfe09ae86520d090}{\+\_\+\+\_\+del\+\_\+\+\_\+} (self)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_ac97968b3dac366872efb1c35a0075894}{set\+\_\+up\+\_\+gpio} (self)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_a7c318f9ad88f503eef530c5eb0bec53f}{cleanup\+\_\+gpio} (self)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_aebeb011deb88334ca6117f9c2c1e6a25}{read\+\_\+byte} (self, addr)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_acb489a2b4069a82181778661ab03a253}{read\+\_\+word} (self, addr, extra\+\_\+bits=0)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_a3a1505772511584be7c7c520d6401510}{write\+\_\+byte} (self, addr, value)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_aa9f341ec4f04763a41fa286a5e63ca25}{spi\+\_\+transfer} (self, addr, value, rw, length)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_a62162d8715be0b61e81e36ebcefb2a6c}{read\+\_\+calibration\+\_\+data} (self)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_aa22da0e9cc7ec3fad2a4df816dc29f27}{measure\+\_\+temperature} (self)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_ae2cd9be902c9da687f3cb80b6d041a21}{measure\+\_\+pressure} (self)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_ad3925b2b055181dde2f192861dc1214f}{calculate\+\_\+pressure} (self)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_ae9ff54fa23b6657aaf46acb662a8a1fc}{calculate\+\_\+temperature} (self)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_aabd7c1509c165bdb1433b3dcb4540da0}{stop\+\_\+measurement} (self)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_a1cd6a20d6910bd850cd98df4c0ddb7d7}{run} (self)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_a5eecb87615765a4614e670fbd8b3d015}{kalman\+\_\+setup} (self)
+\item 
+def \hyperlink{classbmp183_1_1bmp183_a97339b46ef50f4f8d870bdb84dcdea2e}{kalman\+\_\+update} (self)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classbmp183_1_1bmp183_ac87bb026ca991eff94a53cf63aa86e88}{l}
+\item 
+\hyperlink{classbmp183_1_1bmp183_af2e228fbb767e51461bc3b906c95e08a}{simulate}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a1d2933cf8ce9bbd7abf24bb1f28ab4ee}{sensor\+\_\+ready}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a4838c002f7a24208181603b7a7971153}{running}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a5f1d5197f3919e316f43334abbf79445}{first\+\_\+run}
+\item 
+\hyperlink{classbmp183_1_1bmp183_aaca2ad4c3eba2c305cbd3f971d85dcc2}{measurement\+\_\+delay}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a272d8d0103d7e896ec2e5ab9b5d9bf68}{temperature}
+\item 
+\hyperlink{classbmp183_1_1bmp183_ab5582d76691ab9fd6a6ae580be6db9a9}{temperature\+\_\+max\+\_\+delta}
+\item 
+\hyperlink{classbmp183_1_1bmp183_aa47a54b94ef26b77e7d0e139f9417871}{pressure}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a1b8e100aed6d3a6f3cfeb92b66a60af1}{pressure\+\_\+unfiltered}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a0d61f8d98e702bd5a9dd1f5f5a09727c}{S\+CK}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a6c1a17425e5f0a326f71017871ae3414}{S\+DO}
+\item 
+\hyperlink{classbmp183_1_1bmp183_aa659c8f1c1a30c0c165fe3f76b2ad5f2}{S\+DI}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a359725ee2f7c74747e696f9798edb73a}{CS}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a35cbcb30fbc22936680ab2f007f08c89}{delay}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a82d67582b79b80d138db18a07fb5d351}{A\+C1}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a85de00ba5a69ec2aef7d3b425d690671}{A\+C2}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a9975c3c482a0e3b428f7f425f3e5c461}{A\+C3}
+\item 
+\hyperlink{classbmp183_1_1bmp183_ab4d3b53ffef90a7d3cfc7f60d2704265}{A\+C4}
+\item 
+\hyperlink{classbmp183_1_1bmp183_ad88e001d0701dc7cf3a48729eb8150e5}{A\+C5}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a701bb46a4a32843305e0fd27aabaf43a}{A\+C6}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a2a42039ccc9ae970620b57b740003753}{B1}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a888b45737b8318b9d7a15e7a0cef4ce8}{B2}
+\item 
+\hyperlink{classbmp183_1_1bmp183_afb8d2d137be4de89c83dec10b2c40e80}{MB}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a8dfa9c55987e86febf9c0b470527c5ae}{MC}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a02b235142116033fcc0e854d2a2ebed8}{MD}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a4ad4aeaa8cd60eebc072b8c6e42454b9}{UT}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a5e0825f49b6206d3c4e201ad08e14ce1}{UP}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a9c2123df95d8752304b44fade6db4cbe}{B6}
+\item 
+\hyperlink{classbmp183_1_1bmp183_af82d03ff5a63a36141365fb1d9691e11}{B3}
+\item 
+\hyperlink{classbmp183_1_1bmp183_aec9db96888f829bf866e9f474d7cd6c3}{B4}
+\item 
+\hyperlink{classbmp183_1_1bmp183_ae3a6e214efff1d4bfe89bbcbf77d1624}{B7}
+\item 
+\hyperlink{classbmp183_1_1bmp183_aa058849b3003d9b05e7b74843ce79099}{B5}
+\item 
+\hyperlink{classbmp183_1_1bmp183_aab882410fdb59bd2da0b167da450dcd0}{T}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a207931f830d20f4da639ad0c6506ed3a}{Q}
+\item 
+\hyperlink{classbmp183_1_1bmp183_af45af8b2e2c5a21a54c0f257ec26b05e}{pressure\+\_\+estimate}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a3ae9e6b9a95f8ec27b99a0f4e67de35b}{P}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a287856d34cd623db00c2796699eae1cc}{pressure\+\_\+estimate\+\_\+previous}
+\item 
+\hyperlink{classbmp183_1_1bmp183_acff61d68ac312ea2bef1300aa3fbe0d3}{P\+\_\+previous}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a50f080ed87360a55dc316b4006576a8b}{K}
+\item 
+\hyperlink{classbmp183_1_1bmp183_a5d9d15ca620299f6046bce90b78b28ee}{R}
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+dictionary \hyperlink{classbmp183_1_1bmp183_ab907f6f3c1aef0a95df7f653c613f79f}{B\+M\+P183\+\_\+\+R\+EG}
+\item 
+dictionary \hyperlink{classbmp183_1_1bmp183_adfc4b0a2ebdb9b408e1fe027c94aae30}{B\+M\+P183\+\_\+\+C\+MD}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classbmp183_1_1bmp183_abff9456bd2e262738b3d2bc8d75fb931}\label{classbmp183_1_1bmp183_abff9456bd2e262738b3d2bc8d75fb931}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!\+\_\+\+\_\+init\+\_\+\+\_\+@{\+\_\+\+\_\+init\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+init\+\_\+\+\_\+@{\+\_\+\+\_\+init\+\_\+\+\_\+}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+init\+\_\+\+\_\+()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{simulate = {\ttfamily False} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a07d23f8009ce9777dfe09ae86520d090}\label{classbmp183_1_1bmp183_a07d23f8009ce9777dfe09ae86520d090}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!\+\_\+\+\_\+del\+\_\+\+\_\+@{\+\_\+\+\_\+del\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+del\+\_\+\+\_\+@{\+\_\+\+\_\+del\+\_\+\+\_\+}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+del\+\_\+\+\_\+()}{\_\_del\_\_()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+\_\+\+\_\+del\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classbmp183_1_1bmp183_ad3925b2b055181dde2f192861dc1214f}\label{classbmp183_1_1bmp183_ad3925b2b055181dde2f192861dc1214f}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!calculate\+\_\+pressure@{calculate\+\_\+pressure}}
+\index{calculate\+\_\+pressure@{calculate\+\_\+pressure}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{calculate\+\_\+pressure()}{calculate\_pressure()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+calculate\+\_\+pressure (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_ae9ff54fa23b6657aaf46acb662a8a1fc}\label{classbmp183_1_1bmp183_ae9ff54fa23b6657aaf46acb662a8a1fc}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!calculate\+\_\+temperature@{calculate\+\_\+temperature}}
+\index{calculate\+\_\+temperature@{calculate\+\_\+temperature}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{calculate\+\_\+temperature()}{calculate\_temperature()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+calculate\+\_\+temperature (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a7c318f9ad88f503eef530c5eb0bec53f}\label{classbmp183_1_1bmp183_a7c318f9ad88f503eef530c5eb0bec53f}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!cleanup\+\_\+gpio@{cleanup\+\_\+gpio}}
+\index{cleanup\+\_\+gpio@{cleanup\+\_\+gpio}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{cleanup\+\_\+gpio()}{cleanup\_gpio()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+cleanup\+\_\+gpio (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a5e6acda0bca8df5d68f673959a75023a}\label{classbmp183_1_1bmp183_a5e6acda0bca8df5d68f673959a75023a}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!get\+\_\+data@{get\+\_\+data}}
+\index{get\+\_\+data@{get\+\_\+data}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{get\+\_\+data()}{get\_data()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+get\+\_\+data (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a5eecb87615765a4614e670fbd8b3d015}\label{classbmp183_1_1bmp183_a5eecb87615765a4614e670fbd8b3d015}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!kalman\+\_\+setup@{kalman\+\_\+setup}}
+\index{kalman\+\_\+setup@{kalman\+\_\+setup}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{kalman\+\_\+setup()}{kalman\_setup()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+kalman\+\_\+setup (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a97339b46ef50f4f8d870bdb84dcdea2e}\label{classbmp183_1_1bmp183_a97339b46ef50f4f8d870bdb84dcdea2e}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!kalman\+\_\+update@{kalman\+\_\+update}}
+\index{kalman\+\_\+update@{kalman\+\_\+update}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{kalman\+\_\+update()}{kalman\_update()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+kalman\+\_\+update (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_ae2cd9be902c9da687f3cb80b6d041a21}\label{classbmp183_1_1bmp183_ae2cd9be902c9da687f3cb80b6d041a21}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!measure\+\_\+pressure@{measure\+\_\+pressure}}
+\index{measure\+\_\+pressure@{measure\+\_\+pressure}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{measure\+\_\+pressure()}{measure\_pressure()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+measure\+\_\+pressure (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_aa22da0e9cc7ec3fad2a4df816dc29f27}\label{classbmp183_1_1bmp183_aa22da0e9cc7ec3fad2a4df816dc29f27}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!measure\+\_\+temperature@{measure\+\_\+temperature}}
+\index{measure\+\_\+temperature@{measure\+\_\+temperature}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{measure\+\_\+temperature()}{measure\_temperature()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+measure\+\_\+temperature (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_aebeb011deb88334ca6117f9c2c1e6a25}\label{classbmp183_1_1bmp183_aebeb011deb88334ca6117f9c2c1e6a25}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!read\+\_\+byte@{read\+\_\+byte}}
+\index{read\+\_\+byte@{read\+\_\+byte}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{read\+\_\+byte()}{read\_byte()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+read\+\_\+byte (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{addr }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a62162d8715be0b61e81e36ebcefb2a6c}\label{classbmp183_1_1bmp183_a62162d8715be0b61e81e36ebcefb2a6c}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!read\+\_\+calibration\+\_\+data@{read\+\_\+calibration\+\_\+data}}
+\index{read\+\_\+calibration\+\_\+data@{read\+\_\+calibration\+\_\+data}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{read\+\_\+calibration\+\_\+data()}{read\_calibration\_data()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+read\+\_\+calibration\+\_\+data (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_acb489a2b4069a82181778661ab03a253}\label{classbmp183_1_1bmp183_acb489a2b4069a82181778661ab03a253}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!read\+\_\+word@{read\+\_\+word}}
+\index{read\+\_\+word@{read\+\_\+word}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{read\+\_\+word()}{read\_word()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+read\+\_\+word (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{addr,  }\item[{}]{extra\+\_\+bits = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a1cd6a20d6910bd850cd98df4c0ddb7d7}\label{classbmp183_1_1bmp183_a1cd6a20d6910bd850cd98df4c0ddb7d7}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!run@{run}}
+\index{run@{run}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{run()}{run()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+run (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_ac97968b3dac366872efb1c35a0075894}\label{classbmp183_1_1bmp183_ac97968b3dac366872efb1c35a0075894}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!set\+\_\+up\+\_\+gpio@{set\+\_\+up\+\_\+gpio}}
+\index{set\+\_\+up\+\_\+gpio@{set\+\_\+up\+\_\+gpio}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{set\+\_\+up\+\_\+gpio()}{set\_up\_gpio()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+set\+\_\+up\+\_\+gpio (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_aa9f341ec4f04763a41fa286a5e63ca25}\label{classbmp183_1_1bmp183_aa9f341ec4f04763a41fa286a5e63ca25}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!spi\+\_\+transfer@{spi\+\_\+transfer}}
+\index{spi\+\_\+transfer@{spi\+\_\+transfer}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{spi\+\_\+transfer()}{spi\_transfer()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+spi\+\_\+transfer (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{addr,  }\item[{}]{value,  }\item[{}]{rw,  }\item[{}]{length }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_aa95ba9d2ee3ea621fa744e0084929065}\label{classbmp183_1_1bmp183_aa95ba9d2ee3ea621fa744e0084929065}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!stop@{stop}}
+\index{stop@{stop}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+stop (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_aabd7c1509c165bdb1433b3dcb4540da0}\label{classbmp183_1_1bmp183_aabd7c1509c165bdb1433b3dcb4540da0}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!stop\+\_\+measurement@{stop\+\_\+measurement}}
+\index{stop\+\_\+measurement@{stop\+\_\+measurement}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{stop\+\_\+measurement()}{stop\_measurement()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+stop\+\_\+measurement (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a3a1505772511584be7c7c520d6401510}\label{classbmp183_1_1bmp183_a3a1505772511584be7c7c520d6401510}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!write\+\_\+byte@{write\+\_\+byte}}
+\index{write\+\_\+byte@{write\+\_\+byte}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{write\+\_\+byte()}{write\_byte()}}
+{\footnotesize\ttfamily def bmp183.\+bmp183.\+write\+\_\+byte (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{addr,  }\item[{}]{value }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a82d67582b79b80d138db18a07fb5d351}\label{classbmp183_1_1bmp183_a82d67582b79b80d138db18a07fb5d351}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!A\+C1@{A\+C1}}
+\index{A\+C1@{A\+C1}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{A\+C1}{AC1}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+A\+C1}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a85de00ba5a69ec2aef7d3b425d690671}\label{classbmp183_1_1bmp183_a85de00ba5a69ec2aef7d3b425d690671}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!A\+C2@{A\+C2}}
+\index{A\+C2@{A\+C2}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{A\+C2}{AC2}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+A\+C2}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a9975c3c482a0e3b428f7f425f3e5c461}\label{classbmp183_1_1bmp183_a9975c3c482a0e3b428f7f425f3e5c461}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!A\+C3@{A\+C3}}
+\index{A\+C3@{A\+C3}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{A\+C3}{AC3}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+A\+C3}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_ab4d3b53ffef90a7d3cfc7f60d2704265}\label{classbmp183_1_1bmp183_ab4d3b53ffef90a7d3cfc7f60d2704265}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!A\+C4@{A\+C4}}
+\index{A\+C4@{A\+C4}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{A\+C4}{AC4}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+A\+C4}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_ad88e001d0701dc7cf3a48729eb8150e5}\label{classbmp183_1_1bmp183_ad88e001d0701dc7cf3a48729eb8150e5}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!A\+C5@{A\+C5}}
+\index{A\+C5@{A\+C5}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{A\+C5}{AC5}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+A\+C5}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a701bb46a4a32843305e0fd27aabaf43a}\label{classbmp183_1_1bmp183_a701bb46a4a32843305e0fd27aabaf43a}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!A\+C6@{A\+C6}}
+\index{A\+C6@{A\+C6}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{A\+C6}{AC6}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+A\+C6}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a2a42039ccc9ae970620b57b740003753}\label{classbmp183_1_1bmp183_a2a42039ccc9ae970620b57b740003753}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!B1@{B1}}
+\index{B1@{B1}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{B1}{B1}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+B1}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a888b45737b8318b9d7a15e7a0cef4ce8}\label{classbmp183_1_1bmp183_a888b45737b8318b9d7a15e7a0cef4ce8}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!B2@{B2}}
+\index{B2@{B2}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{B2}{B2}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+B2}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_af82d03ff5a63a36141365fb1d9691e11}\label{classbmp183_1_1bmp183_af82d03ff5a63a36141365fb1d9691e11}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!B3@{B3}}
+\index{B3@{B3}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{B3}{B3}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+B3}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_aec9db96888f829bf866e9f474d7cd6c3}\label{classbmp183_1_1bmp183_aec9db96888f829bf866e9f474d7cd6c3}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!B4@{B4}}
+\index{B4@{B4}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{B4}{B4}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+B4}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_aa058849b3003d9b05e7b74843ce79099}\label{classbmp183_1_1bmp183_aa058849b3003d9b05e7b74843ce79099}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!B5@{B5}}
+\index{B5@{B5}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{B5}{B5}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+B5}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a9c2123df95d8752304b44fade6db4cbe}\label{classbmp183_1_1bmp183_a9c2123df95d8752304b44fade6db4cbe}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!B6@{B6}}
+\index{B6@{B6}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{B6}{B6}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+B6}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_ae3a6e214efff1d4bfe89bbcbf77d1624}\label{classbmp183_1_1bmp183_ae3a6e214efff1d4bfe89bbcbf77d1624}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!B7@{B7}}
+\index{B7@{B7}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{B7}{B7}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+B7}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_adfc4b0a2ebdb9b408e1fe027c94aae30}\label{classbmp183_1_1bmp183_adfc4b0a2ebdb9b408e1fe027c94aae30}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!B\+M\+P183\+\_\+\+C\+MD@{B\+M\+P183\+\_\+\+C\+MD}}
+\index{B\+M\+P183\+\_\+\+C\+MD@{B\+M\+P183\+\_\+\+C\+MD}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{B\+M\+P183\+\_\+\+C\+MD}{BMP183\_CMD}}
+{\footnotesize\ttfamily dictionary bmp183.\+bmp183.\+B\+M\+P183\+\_\+\+C\+MD\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+=  \{
+        \textcolor{comment}{#@ Chip ID Value fixed to 0x55. Useful to check if communication works}
+        \textcolor{stringliteral}{'ID\_VALUE'}: 0x55,
+
+        \textcolor{comment}{# SPI bit to indicate READ or WRITE operation}
+        \textcolor{stringliteral}{'READWRITE'}: 0x80,
+
+        \textcolor{comment}{# Read TEMPERATURE, Wait time 4.5 ms}
+        \textcolor{stringliteral}{'TEMP'}: 0x2E,
+        \textcolor{stringliteral}{'TEMP\_WAIT'}: 0.0045,
+
+        \textcolor{comment}{# Read PRESSURE}
+        \textcolor{stringliteral}{'PRESS'}: 0x34,  \textcolor{comment}{# 001}
+
+        \textcolor{comment}{# PRESSURE reading modes}
+        \textcolor{comment}{# Example usage: (PRESS || (OVERSAMPLE\_2 << 4)}
+        \textcolor{stringliteral}{'OVERSAMPLE\_0'}: 0x0,  \textcolor{comment}{# ultra low power, no oversampling, wait time 4.5 ms}
+        \textcolor{stringliteral}{'OVERSAMPLE\_0\_WAIT'}: 0.0045,
+        \textcolor{stringliteral}{'OVERSAMPLE\_1'}: 0x1,  \textcolor{comment}{# standard, 2 internal samples, wait time 7.5 ms}
+        \textcolor{stringliteral}{'OVERSAMPLE\_1\_WAIT'}: 0.0075,
+        \textcolor{stringliteral}{'OVERSAMPLE\_2'}: 0x2,  \textcolor{comment}{# high resolution, 4 internal samples, wait time 13.5 ms}
+        \textcolor{stringliteral}{'OVERSAMPLE\_2\_WAIT'}: 0.0135,
+        \textcolor{stringliteral}{'OVERSAMPLE\_3'}: 0x3,  \textcolor{comment}{# ultra high resolution, 8 internal samples, Wait time 25.5 ms}
+        \textcolor{stringliteral}{'OVERSAMPLE\_3\_WAIT'}: 0.0255,
+    \}
+\end{DoxyCode}
+\mbox{\Hypertarget{classbmp183_1_1bmp183_ab907f6f3c1aef0a95df7f653c613f79f}\label{classbmp183_1_1bmp183_ab907f6f3c1aef0a95df7f653c613f79f}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!B\+M\+P183\+\_\+\+R\+EG@{B\+M\+P183\+\_\+\+R\+EG}}
+\index{B\+M\+P183\+\_\+\+R\+EG@{B\+M\+P183\+\_\+\+R\+EG}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{B\+M\+P183\+\_\+\+R\+EG}{BMP183\_REG}}
+{\footnotesize\ttfamily dictionary bmp183.\+bmp183.\+B\+M\+P183\+\_\+\+R\+EG\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+=  \{
+        \textcolor{comment}{#@ Calibration data}
+        \textcolor{stringliteral}{'CAL\_AC1'}: 0xAA,
+        \textcolor{stringliteral}{'CAL\_AC2'}: 0xAC,
+        \textcolor{stringliteral}{'CAL\_AC3'}: 0xAE,
+        \textcolor{stringliteral}{'CAL\_AC4'}: 0xB0,
+        \textcolor{stringliteral}{'CAL\_AC5'}: 0xB2,
+        \textcolor{stringliteral}{'CAL\_AC6'}: 0xB4,
+        \textcolor{stringliteral}{'CAL\_B1'}: 0xB6,
+        \textcolor{stringliteral}{'CAL\_B2'}: 0xB8,
+        \textcolor{stringliteral}{'CAL\_MB'}: 0xBA,
+        \textcolor{stringliteral}{'CAL\_MC'}: 0xBC,
+        \textcolor{stringliteral}{'CAL\_MD'}: 0xBE,
+
+        \textcolor{comment}{#@ Chip ID. Value fixed to 0x55. Useful to check if communication works}
+        \textcolor{stringliteral}{'ID'}: 0xD0,
+        \textcolor{stringliteral}{'ID\_VALUE'}: 0x55,
+
+        \textcolor{comment}{#@ VER Undocumented}
+        \textcolor{stringliteral}{'VER'}: 0xD1,
+
+        \textcolor{comment}{#@ SOFT\_RESET Write only. If set to 0xB6, will perform the same sequence as power on reset.}
+        \textcolor{stringliteral}{'SOFT\_RESET'}: 0xE0,
+
+        \textcolor{comment}{#@ CTRL\_MEAS Controls measurements}
+        \textcolor{stringliteral}{'CTRL\_MEAS'}: 0xF4,
+
+        \textcolor{comment}{#@ DATA}
+        \textcolor{stringliteral}{'DATA'}: 0xF6,
+    \}
+\end{DoxyCode}
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a359725ee2f7c74747e696f9798edb73a}\label{classbmp183_1_1bmp183_a359725ee2f7c74747e696f9798edb73a}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!CS@{CS}}
+\index{CS@{CS}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{CS}{CS}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+CS}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a35cbcb30fbc22936680ab2f007f08c89}\label{classbmp183_1_1bmp183_a35cbcb30fbc22936680ab2f007f08c89}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!delay@{delay}}
+\index{delay@{delay}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{delay}{delay}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+delay}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a5f1d5197f3919e316f43334abbf79445}\label{classbmp183_1_1bmp183_a5f1d5197f3919e316f43334abbf79445}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!first\+\_\+run@{first\+\_\+run}}
+\index{first\+\_\+run@{first\+\_\+run}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{first\+\_\+run}{first\_run}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+first\+\_\+run}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a50f080ed87360a55dc316b4006576a8b}\label{classbmp183_1_1bmp183_a50f080ed87360a55dc316b4006576a8b}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!K@{K}}
+\index{K@{K}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{K}{K}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+K}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_ac87bb026ca991eff94a53cf63aa86e88}\label{classbmp183_1_1bmp183_ac87bb026ca991eff94a53cf63aa86e88}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!l@{l}}
+\index{l@{l}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{l}{l}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+l}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_afb8d2d137be4de89c83dec10b2c40e80}\label{classbmp183_1_1bmp183_afb8d2d137be4de89c83dec10b2c40e80}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!MB@{MB}}
+\index{MB@{MB}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{MB}{MB}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+MB}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a8dfa9c55987e86febf9c0b470527c5ae}\label{classbmp183_1_1bmp183_a8dfa9c55987e86febf9c0b470527c5ae}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!MC@{MC}}
+\index{MC@{MC}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{MC}{MC}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+MC}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a02b235142116033fcc0e854d2a2ebed8}\label{classbmp183_1_1bmp183_a02b235142116033fcc0e854d2a2ebed8}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!MD@{MD}}
+\index{MD@{MD}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{MD}{MD}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+MD}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_aaca2ad4c3eba2c305cbd3f971d85dcc2}\label{classbmp183_1_1bmp183_aaca2ad4c3eba2c305cbd3f971d85dcc2}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!measurement\+\_\+delay@{measurement\+\_\+delay}}
+\index{measurement\+\_\+delay@{measurement\+\_\+delay}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{measurement\+\_\+delay}{measurement\_delay}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+measurement\+\_\+delay}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a3ae9e6b9a95f8ec27b99a0f4e67de35b}\label{classbmp183_1_1bmp183_a3ae9e6b9a95f8ec27b99a0f4e67de35b}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!P@{P}}
+\index{P@{P}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{P}{P}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+P}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_acff61d68ac312ea2bef1300aa3fbe0d3}\label{classbmp183_1_1bmp183_acff61d68ac312ea2bef1300aa3fbe0d3}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!P\+\_\+previous@{P\+\_\+previous}}
+\index{P\+\_\+previous@{P\+\_\+previous}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{P\+\_\+previous}{P\_previous}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+P\+\_\+previous}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_aa47a54b94ef26b77e7d0e139f9417871}\label{classbmp183_1_1bmp183_aa47a54b94ef26b77e7d0e139f9417871}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!pressure@{pressure}}
+\index{pressure@{pressure}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{pressure}{pressure}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+pressure}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_af45af8b2e2c5a21a54c0f257ec26b05e}\label{classbmp183_1_1bmp183_af45af8b2e2c5a21a54c0f257ec26b05e}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!pressure\+\_\+estimate@{pressure\+\_\+estimate}}
+\index{pressure\+\_\+estimate@{pressure\+\_\+estimate}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{pressure\+\_\+estimate}{pressure\_estimate}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+pressure\+\_\+estimate}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a287856d34cd623db00c2796699eae1cc}\label{classbmp183_1_1bmp183_a287856d34cd623db00c2796699eae1cc}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!pressure\+\_\+estimate\+\_\+previous@{pressure\+\_\+estimate\+\_\+previous}}
+\index{pressure\+\_\+estimate\+\_\+previous@{pressure\+\_\+estimate\+\_\+previous}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{pressure\+\_\+estimate\+\_\+previous}{pressure\_estimate\_previous}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+pressure\+\_\+estimate\+\_\+previous}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a1b8e100aed6d3a6f3cfeb92b66a60af1}\label{classbmp183_1_1bmp183_a1b8e100aed6d3a6f3cfeb92b66a60af1}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!pressure\+\_\+unfiltered@{pressure\+\_\+unfiltered}}
+\index{pressure\+\_\+unfiltered@{pressure\+\_\+unfiltered}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{pressure\+\_\+unfiltered}{pressure\_unfiltered}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+pressure\+\_\+unfiltered}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a207931f830d20f4da639ad0c6506ed3a}\label{classbmp183_1_1bmp183_a207931f830d20f4da639ad0c6506ed3a}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!Q@{Q}}
+\index{Q@{Q}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{Q}{Q}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+Q}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a5d9d15ca620299f6046bce90b78b28ee}\label{classbmp183_1_1bmp183_a5d9d15ca620299f6046bce90b78b28ee}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!R@{R}}
+\index{R@{R}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{R}{R}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+R}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a4838c002f7a24208181603b7a7971153}\label{classbmp183_1_1bmp183_a4838c002f7a24208181603b7a7971153}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!running@{running}}
+\index{running@{running}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{running}{running}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+running}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a0d61f8d98e702bd5a9dd1f5f5a09727c}\label{classbmp183_1_1bmp183_a0d61f8d98e702bd5a9dd1f5f5a09727c}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!S\+CK@{S\+CK}}
+\index{S\+CK@{S\+CK}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{S\+CK}{SCK}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+S\+CK}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_aa659c8f1c1a30c0c165fe3f76b2ad5f2}\label{classbmp183_1_1bmp183_aa659c8f1c1a30c0c165fe3f76b2ad5f2}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!S\+DI@{S\+DI}}
+\index{S\+DI@{S\+DI}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{S\+DI}{SDI}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+S\+DI}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a6c1a17425e5f0a326f71017871ae3414}\label{classbmp183_1_1bmp183_a6c1a17425e5f0a326f71017871ae3414}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!S\+DO@{S\+DO}}
+\index{S\+DO@{S\+DO}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{S\+DO}{SDO}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+S\+DO}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a1d2933cf8ce9bbd7abf24bb1f28ab4ee}\label{classbmp183_1_1bmp183_a1d2933cf8ce9bbd7abf24bb1f28ab4ee}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!sensor\+\_\+ready@{sensor\+\_\+ready}}
+\index{sensor\+\_\+ready@{sensor\+\_\+ready}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{sensor\+\_\+ready}{sensor\_ready}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+sensor\+\_\+ready}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_af2e228fbb767e51461bc3b906c95e08a}\label{classbmp183_1_1bmp183_af2e228fbb767e51461bc3b906c95e08a}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!simulate@{simulate}}
+\index{simulate@{simulate}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{simulate}{simulate}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+simulate}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_aab882410fdb59bd2da0b167da450dcd0}\label{classbmp183_1_1bmp183_aab882410fdb59bd2da0b167da450dcd0}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!T@{T}}
+\index{T@{T}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{T}{T}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+T}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a272d8d0103d7e896ec2e5ab9b5d9bf68}\label{classbmp183_1_1bmp183_a272d8d0103d7e896ec2e5ab9b5d9bf68}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!temperature@{temperature}}
+\index{temperature@{temperature}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{temperature}{temperature}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+temperature}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_ab5582d76691ab9fd6a6ae580be6db9a9}\label{classbmp183_1_1bmp183_ab5582d76691ab9fd6a6ae580be6db9a9}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!temperature\+\_\+max\+\_\+delta@{temperature\+\_\+max\+\_\+delta}}
+\index{temperature\+\_\+max\+\_\+delta@{temperature\+\_\+max\+\_\+delta}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{temperature\+\_\+max\+\_\+delta}{temperature\_max\_delta}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+temperature\+\_\+max\+\_\+delta}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a5e0825f49b6206d3c4e201ad08e14ce1}\label{classbmp183_1_1bmp183_a5e0825f49b6206d3c4e201ad08e14ce1}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!UP@{UP}}
+\index{UP@{UP}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{UP}{UP}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+UP}
+
+\mbox{\Hypertarget{classbmp183_1_1bmp183_a4ad4aeaa8cd60eebc072b8c6e42454b9}\label{classbmp183_1_1bmp183_a4ad4aeaa8cd60eebc072b8c6e42454b9}} 
+\index{bmp183\+::bmp183@{bmp183\+::bmp183}!UT@{UT}}
+\index{UT@{UT}!bmp183\+::bmp183@{bmp183\+::bmp183}}
+\subsubsection{\texorpdfstring{UT}{UT}}
+{\footnotesize\ttfamily bmp183.\+bmp183.\+UT}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{bmp183_8py}{bmp183.\+py}\end{DoxyCompactItemize}

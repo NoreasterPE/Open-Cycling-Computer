@@ -1,0 +1,157 @@
+\hypertarget{namespaceocc}{}\section{occ Namespace Reference}
+\label{namespaceocc}\index{occ@{occ}}
+
+
+Open\+Cycling\+Compyter main file.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classocc_1_1open__cycling__computer}{open\+\_\+cycling\+\_\+computer}
+\begin{DoxyCompactList}\small\item\em Main O\+CC class. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespaceocc_aed13b1dbf264ee7a7f3a0fd08f9a054a}{quit\+\_\+handler} (signal, frame)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+dictionary \hyperlink{namespaceocc_a46db66163eeb50234471c2f1f0bf4133}{L\+O\+G\+\_\+\+L\+E\+V\+EL}
+\item 
+int \hyperlink{namespaceocc_a7e1cbc3e940d1e1447f10aa267089947}{L\+O\+N\+G\+\_\+\+C\+L\+I\+CK} = 800
+\item 
+int \hyperlink{namespaceocc_a3129ec9f4196c08eefb3ebab1c298ffd}{S\+W\+I\+P\+E\+\_\+\+L\+E\+N\+G\+TH} = 30
+\item 
+int \hyperlink{namespaceocc_a5a9a4be409ee0999eda56f0ce148acf1}{E\+V\+\_\+\+U\+P\+D\+A\+T\+E\+\_\+\+V\+A\+L\+U\+ES} = U\+S\+E\+R\+E\+V\+E\+NT + 1
+\item 
+int \hyperlink{namespaceocc_a410e34eedb9eafca04942daf36b23537}{E\+V\+\_\+\+S\+A\+V\+E\+\_\+\+C\+O\+N\+F\+IG} = U\+S\+E\+R\+E\+V\+E\+NT + 2
+\item 
+int \hyperlink{namespaceocc_a64c211a19dd3f0055e1fe6379aaf76e0}{R\+E\+F\+R\+E\+S\+H\+\_\+\+T\+I\+ME} = 1000
+\item 
+int \hyperlink{namespaceocc_a45404b440cc1788594e8a29a0c00d7fb}{C\+O\+N\+F\+I\+G\+\_\+\+S\+A\+V\+E\+\_\+\+T\+I\+ME} = 15000
+\item 
+\hyperlink{namespaceocc_a70d4872735664d1037ca459f09fe9084}{suffix} = strftime(\char`\"{}\%d-\/\%H\+:\%M\+:\%S\char`\"{})
+\item 
+string \hyperlink{namespaceocc_aa3d695ee6e11c0477ad1a3e231bc460b}{sys\+\_\+log\+\_\+filename} = \char`\"{}log/debug.\char`\"{} + suffix + \char`\"{}.log\char`\"{}
+\item 
+\hyperlink{namespaceocc_a348b24b53f259d2dd54db5baa553791b}{sys\+\_\+log\+\_\+handler} = logging.\+handlers.\+Rotating\+File\+Handler(\hyperlink{namespaceocc_aa3d695ee6e11c0477ad1a3e231bc460b}{sys\+\_\+log\+\_\+filename})
+\item 
+string \hyperlink{namespaceocc_a8ee3a0abd32118bdb574cf16a23630d3}{sys\+\_\+log\+\_\+format} = \textquotesingle{}\mbox{[}\%(levelname)-\/5s\mbox{]} \%(message)s\textquotesingle{}
+\item 
+\hyperlink{namespaceocc_ae0c6eddc92a2aa9a7c427fd9fbdc8a9f}{sys\+\_\+logger} = logging.\+get\+Logger(\textquotesingle{}system\textquotesingle{})
+\item 
+bool \hyperlink{namespaceocc_a35726e64f674d1e4e3a555cd0356d719}{simulate} = False
+\item 
+\hyperlink{namespaceocc_ac82cdb07f5273721cc906275db48fdea}{main\+\_\+window} = \hyperlink{classocc_1_1open__cycling__computer}{open\+\_\+cycling\+\_\+computer}(\hyperlink{namespaceocc_a35726e64f674d1e4e3a555cd0356d719}{simulate})
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Open\+Cycling\+Compyter main file. 
+
+\href{http://opencyclingcomputer.eu/}{\tt http\+://opencyclingcomputer.\+eu/} 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespaceocc_aed13b1dbf264ee7a7f3a0fd08f9a054a}\label{namespaceocc_aed13b1dbf264ee7a7f3a0fd08f9a054a}} 
+\index{occ@{occ}!quit\+\_\+handler@{quit\+\_\+handler}}
+\index{quit\+\_\+handler@{quit\+\_\+handler}!occ@{occ}}
+\subsubsection{\texorpdfstring{quit\+\_\+handler()}{quit\_handler()}}
+{\footnotesize\ttfamily def occ.\+quit\+\_\+handler (\begin{DoxyParamCaption}\item[{}]{signal,  }\item[{}]{frame }\end{DoxyParamCaption})}
+
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{namespaceocc_a45404b440cc1788594e8a29a0c00d7fb}\label{namespaceocc_a45404b440cc1788594e8a29a0c00d7fb}} 
+\index{occ@{occ}!C\+O\+N\+F\+I\+G\+\_\+\+S\+A\+V\+E\+\_\+\+T\+I\+ME@{C\+O\+N\+F\+I\+G\+\_\+\+S\+A\+V\+E\+\_\+\+T\+I\+ME}}
+\index{C\+O\+N\+F\+I\+G\+\_\+\+S\+A\+V\+E\+\_\+\+T\+I\+ME@{C\+O\+N\+F\+I\+G\+\_\+\+S\+A\+V\+E\+\_\+\+T\+I\+ME}!occ@{occ}}
+\subsubsection{\texorpdfstring{C\+O\+N\+F\+I\+G\+\_\+\+S\+A\+V\+E\+\_\+\+T\+I\+ME}{CONFIG\_SAVE\_TIME}}
+{\footnotesize\ttfamily int occ.\+C\+O\+N\+F\+I\+G\+\_\+\+S\+A\+V\+E\+\_\+\+T\+I\+ME = 15000}
+
+\mbox{\Hypertarget{namespaceocc_a410e34eedb9eafca04942daf36b23537}\label{namespaceocc_a410e34eedb9eafca04942daf36b23537}} 
+\index{occ@{occ}!E\+V\+\_\+\+S\+A\+V\+E\+\_\+\+C\+O\+N\+F\+IG@{E\+V\+\_\+\+S\+A\+V\+E\+\_\+\+C\+O\+N\+F\+IG}}
+\index{E\+V\+\_\+\+S\+A\+V\+E\+\_\+\+C\+O\+N\+F\+IG@{E\+V\+\_\+\+S\+A\+V\+E\+\_\+\+C\+O\+N\+F\+IG}!occ@{occ}}
+\subsubsection{\texorpdfstring{E\+V\+\_\+\+S\+A\+V\+E\+\_\+\+C\+O\+N\+F\+IG}{EV\_SAVE\_CONFIG}}
+{\footnotesize\ttfamily int occ.\+E\+V\+\_\+\+S\+A\+V\+E\+\_\+\+C\+O\+N\+F\+IG = U\+S\+E\+R\+E\+V\+E\+NT + 2}
+
+\mbox{\Hypertarget{namespaceocc_a5a9a4be409ee0999eda56f0ce148acf1}\label{namespaceocc_a5a9a4be409ee0999eda56f0ce148acf1}} 
+\index{occ@{occ}!E\+V\+\_\+\+U\+P\+D\+A\+T\+E\+\_\+\+V\+A\+L\+U\+ES@{E\+V\+\_\+\+U\+P\+D\+A\+T\+E\+\_\+\+V\+A\+L\+U\+ES}}
+\index{E\+V\+\_\+\+U\+P\+D\+A\+T\+E\+\_\+\+V\+A\+L\+U\+ES@{E\+V\+\_\+\+U\+P\+D\+A\+T\+E\+\_\+\+V\+A\+L\+U\+ES}!occ@{occ}}
+\subsubsection{\texorpdfstring{E\+V\+\_\+\+U\+P\+D\+A\+T\+E\+\_\+\+V\+A\+L\+U\+ES}{EV\_UPDATE\_VALUES}}
+{\footnotesize\ttfamily int occ.\+E\+V\+\_\+\+U\+P\+D\+A\+T\+E\+\_\+\+V\+A\+L\+U\+ES = U\+S\+E\+R\+E\+V\+E\+NT + 1}
+
+\mbox{\Hypertarget{namespaceocc_a46db66163eeb50234471c2f1f0bf4133}\label{namespaceocc_a46db66163eeb50234471c2f1f0bf4133}} 
+\index{occ@{occ}!L\+O\+G\+\_\+\+L\+E\+V\+EL@{L\+O\+G\+\_\+\+L\+E\+V\+EL}}
+\index{L\+O\+G\+\_\+\+L\+E\+V\+EL@{L\+O\+G\+\_\+\+L\+E\+V\+EL}!occ@{occ}}
+\subsubsection{\texorpdfstring{L\+O\+G\+\_\+\+L\+E\+V\+EL}{LOG\_LEVEL}}
+{\footnotesize\ttfamily dictionary occ.\+L\+O\+G\+\_\+\+L\+E\+V\+EL}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+1 =  \{\textcolor{stringliteral}{"DEBUG"}: logging.DEBUG,
+2              \textcolor{stringliteral}{"INFO"}: logging.INFO,
+3              \textcolor{stringliteral}{"WARNING"}: logging.WARNING,
+4              \textcolor{stringliteral}{"ERROR"}: logging.ERROR,
+5              \textcolor{stringliteral}{"CRITICAL"}: logging.CRITICAL\}
+\end{DoxyCode}
+\mbox{\Hypertarget{namespaceocc_a7e1cbc3e940d1e1447f10aa267089947}\label{namespaceocc_a7e1cbc3e940d1e1447f10aa267089947}} 
+\index{occ@{occ}!L\+O\+N\+G\+\_\+\+C\+L\+I\+CK@{L\+O\+N\+G\+\_\+\+C\+L\+I\+CK}}
+\index{L\+O\+N\+G\+\_\+\+C\+L\+I\+CK@{L\+O\+N\+G\+\_\+\+C\+L\+I\+CK}!occ@{occ}}
+\subsubsection{\texorpdfstring{L\+O\+N\+G\+\_\+\+C\+L\+I\+CK}{LONG\_CLICK}}
+{\footnotesize\ttfamily int occ.\+L\+O\+N\+G\+\_\+\+C\+L\+I\+CK = 800}
+
+\mbox{\Hypertarget{namespaceocc_ac82cdb07f5273721cc906275db48fdea}\label{namespaceocc_ac82cdb07f5273721cc906275db48fdea}} 
+\index{occ@{occ}!main\+\_\+window@{main\+\_\+window}}
+\index{main\+\_\+window@{main\+\_\+window}!occ@{occ}}
+\subsubsection{\texorpdfstring{main\+\_\+window}{main\_window}}
+{\footnotesize\ttfamily occ.\+main\+\_\+window = \hyperlink{classocc_1_1open__cycling__computer}{open\+\_\+cycling\+\_\+computer}(\hyperlink{namespaceocc_a35726e64f674d1e4e3a555cd0356d719}{simulate})}
+
+\mbox{\Hypertarget{namespaceocc_a64c211a19dd3f0055e1fe6379aaf76e0}\label{namespaceocc_a64c211a19dd3f0055e1fe6379aaf76e0}} 
+\index{occ@{occ}!R\+E\+F\+R\+E\+S\+H\+\_\+\+T\+I\+ME@{R\+E\+F\+R\+E\+S\+H\+\_\+\+T\+I\+ME}}
+\index{R\+E\+F\+R\+E\+S\+H\+\_\+\+T\+I\+ME@{R\+E\+F\+R\+E\+S\+H\+\_\+\+T\+I\+ME}!occ@{occ}}
+\subsubsection{\texorpdfstring{R\+E\+F\+R\+E\+S\+H\+\_\+\+T\+I\+ME}{REFRESH\_TIME}}
+{\footnotesize\ttfamily int occ.\+R\+E\+F\+R\+E\+S\+H\+\_\+\+T\+I\+ME = 1000}
+
+\mbox{\Hypertarget{namespaceocc_a35726e64f674d1e4e3a555cd0356d719}\label{namespaceocc_a35726e64f674d1e4e3a555cd0356d719}} 
+\index{occ@{occ}!simulate@{simulate}}
+\index{simulate@{simulate}!occ@{occ}}
+\subsubsection{\texorpdfstring{simulate}{simulate}}
+{\footnotesize\ttfamily bool occ.\+simulate = False}
+
+\mbox{\Hypertarget{namespaceocc_a70d4872735664d1037ca459f09fe9084}\label{namespaceocc_a70d4872735664d1037ca459f09fe9084}} 
+\index{occ@{occ}!suffix@{suffix}}
+\index{suffix@{suffix}!occ@{occ}}
+\subsubsection{\texorpdfstring{suffix}{suffix}}
+{\footnotesize\ttfamily occ.\+suffix = strftime(\char`\"{}\%d-\/\%H\+:\%M\+:\%S\char`\"{})}
+
+\mbox{\Hypertarget{namespaceocc_a3129ec9f4196c08eefb3ebab1c298ffd}\label{namespaceocc_a3129ec9f4196c08eefb3ebab1c298ffd}} 
+\index{occ@{occ}!S\+W\+I\+P\+E\+\_\+\+L\+E\+N\+G\+TH@{S\+W\+I\+P\+E\+\_\+\+L\+E\+N\+G\+TH}}
+\index{S\+W\+I\+P\+E\+\_\+\+L\+E\+N\+G\+TH@{S\+W\+I\+P\+E\+\_\+\+L\+E\+N\+G\+TH}!occ@{occ}}
+\subsubsection{\texorpdfstring{S\+W\+I\+P\+E\+\_\+\+L\+E\+N\+G\+TH}{SWIPE\_LENGTH}}
+{\footnotesize\ttfamily int occ.\+S\+W\+I\+P\+E\+\_\+\+L\+E\+N\+G\+TH = 30}
+
+\mbox{\Hypertarget{namespaceocc_aa3d695ee6e11c0477ad1a3e231bc460b}\label{namespaceocc_aa3d695ee6e11c0477ad1a3e231bc460b}} 
+\index{occ@{occ}!sys\+\_\+log\+\_\+filename@{sys\+\_\+log\+\_\+filename}}
+\index{sys\+\_\+log\+\_\+filename@{sys\+\_\+log\+\_\+filename}!occ@{occ}}
+\subsubsection{\texorpdfstring{sys\+\_\+log\+\_\+filename}{sys\_log\_filename}}
+{\footnotesize\ttfamily string occ.\+sys\+\_\+log\+\_\+filename = \char`\"{}log/debug.\char`\"{} + suffix + \char`\"{}.log\char`\"{}}
+
+\mbox{\Hypertarget{namespaceocc_a8ee3a0abd32118bdb574cf16a23630d3}\label{namespaceocc_a8ee3a0abd32118bdb574cf16a23630d3}} 
+\index{occ@{occ}!sys\+\_\+log\+\_\+format@{sys\+\_\+log\+\_\+format}}
+\index{sys\+\_\+log\+\_\+format@{sys\+\_\+log\+\_\+format}!occ@{occ}}
+\subsubsection{\texorpdfstring{sys\+\_\+log\+\_\+format}{sys\_log\_format}}
+{\footnotesize\ttfamily string occ.\+sys\+\_\+log\+\_\+format = \textquotesingle{}\mbox{[}\%(levelname)-\/5s\mbox{]} \%(message)s\textquotesingle{}}
+
+\mbox{\Hypertarget{namespaceocc_a348b24b53f259d2dd54db5baa553791b}\label{namespaceocc_a348b24b53f259d2dd54db5baa553791b}} 
+\index{occ@{occ}!sys\+\_\+log\+\_\+handler@{sys\+\_\+log\+\_\+handler}}
+\index{sys\+\_\+log\+\_\+handler@{sys\+\_\+log\+\_\+handler}!occ@{occ}}
+\subsubsection{\texorpdfstring{sys\+\_\+log\+\_\+handler}{sys\_log\_handler}}
+{\footnotesize\ttfamily occ.\+sys\+\_\+log\+\_\+handler = logging.\+handlers.\+Rotating\+File\+Handler(\hyperlink{namespaceocc_aa3d695ee6e11c0477ad1a3e231bc460b}{sys\+\_\+log\+\_\+filename})}
+
+\mbox{\Hypertarget{namespaceocc_ae0c6eddc92a2aa9a7c427fd9fbdc8a9f}\label{namespaceocc_ae0c6eddc92a2aa9a7c427fd9fbdc8a9f}} 
+\index{occ@{occ}!sys\+\_\+logger@{sys\+\_\+logger}}
+\index{sys\+\_\+logger@{sys\+\_\+logger}!occ@{occ}}
+\subsubsection{\texorpdfstring{sys\+\_\+logger}{sys\_logger}}
+{\footnotesize\ttfamily occ.\+sys\+\_\+logger = logging.\+get\+Logger(\textquotesingle{}system\textquotesingle{})}
+
