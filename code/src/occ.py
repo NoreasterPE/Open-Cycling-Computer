@@ -1,4 +1,8 @@
 #!/usr/bin/python
+## @package OCC
+#  OpenCyclingCompyter main file
+#
+#  http://opencyclingcomputer.eu/
 
 from layout import layout
 from config import config
@@ -33,6 +37,7 @@ REFRESH_TIME = 1000
 CONFIG_SAVE_TIME = 15000
 
 
+## Main OCC class
 class open_cycling_computer(object):
 
     'Class for PiTFT 2.8" 320x240 cycling computer'
@@ -43,7 +48,11 @@ class open_cycling_computer(object):
     #  @param width Width of screen or window. Default value is 240 pixels
     #  @param height Height of screen or window.  Default value is 320 pixels
     def __init__(self, simulate=False, width=240, height=320):
+	## @var simulate
+	#  Stores simulate parameter from constructor call
         self.simulate = simulate
+	## @var l
+	#  Handle to system logger
         self.l = logging.getLogger('system')
         pygame.init()
         # pygame.display.init()
@@ -55,7 +64,11 @@ class open_cycling_computer(object):
         self.l.debug(
             "[OCC] EV_SAVE_CONFIG to be generated every {} s".format(CONFIG_SAVE_TIME / 1000))
         pygame.time.set_timer(EV_SAVE_CONFIG, CONFIG_SAVE_TIME)
+	## @var width
+	#  Window/screen width
         self.width = width
+	## @var height
+	#  Window/screen height
         self.height = height
         self.l.debug("[OCC] Screen size is {} x {}".format(self.width, self.height))
         self.screen = pygame.display.set_mode((self.width, self.height))
