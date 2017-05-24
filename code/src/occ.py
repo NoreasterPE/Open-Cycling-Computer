@@ -139,6 +139,9 @@ class open_cycling_computer(object):
                 else:
                     yield event
 
+    def force_refresh(self):
+        self.refresh = True
+
     ## Switches logging level
     #  @param self The python object self
     #  @param log_level Log level to be set. Allowed levels are in \link LOG_LEVEL \endlink
