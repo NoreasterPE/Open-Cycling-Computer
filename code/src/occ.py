@@ -48,11 +48,11 @@ class open_cycling_computer(object):
     #  @param width Width of screen or window. Default value is 240 pixels
     #  @param height Height of screen or window.  Default value is 320 pixels
     def __init__(self, simulate=False, width=240, height=320):
-	## @var simulate
-	#  Stores simulate parameter from constructor call
+        ## @var simulate
+        #  Stores simulate parameter from constructor call
         self.simulate = simulate
-	## @var l
-	#  Handle to system logger
+        ## @var l
+        #  Handle to system logger
         self.l = logging.getLogger('system')
         pygame.init()
         # pygame.display.init()
@@ -64,37 +64,67 @@ class open_cycling_computer(object):
         self.l.debug(
             "[OCC] EV_SAVE_CONFIG to be generated every {} s".format(CONFIG_SAVE_TIME / 1000))
         pygame.time.set_timer(EV_SAVE_CONFIG, CONFIG_SAVE_TIME)
-	## @var width
-	#  Window/screen width
+        ## @var width
+        #  Window/screen width
         self.width = width
-	## @var height
-	#  Window/screen height
+        ## @var height
+        #  Window/screen height
         self.height = height
         self.l.debug("[OCC] Screen size is {} x {}".format(self.width, self.height))
+        ## @var screen
+        #  Handle to pygame screen
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.l.debug("[OCC] Calling sensors")
+        ## @var sensors
+        #  Handle to sensors instance
         self.sensors = sensors(self, simulate)
         self.l.debug("[OCC] Calling ride_parameters")
+        ## @var rp
+        #  Handle to ride_parameters instance
         self.rp = ride_parameters(self, simulate)
+        ## @var layout_path
+        #  Path to layout file
         self.layout_path = ''
         self.l.debug("[OCC] Initialising config")
+        ## @var config
+        #  Handle to config instance
         self.config = config(self, "config/config.xml", "config/config_base.xml")
         self.l.debug("[OCC] Reading config")
         self.config.read_config()
+        ## @var layout
+        #  Handle to layout instance
         self.layout = layout(self, self.layout_path)
         self.l.debug("[OCC] Starting RP sensors")
         self.rp.start_sensors()
         self.l.debug("[OCC] Setting up rendering")
+        ## @var rendering
+        #  Handle to rendering instance
         self.rendering = rendering(self.layout)
         self.l.debug("[OCC] Starting rendering thread")
         self.rendering.start()
+        ## @var released_t
+        #  Time stamp of pygame.MOUSEBUTTONUP event (end of finger contact with touchscreen)
         self.released_t = 0
-        self.rel_movement = 0
+        ## @var rel_movement
+        #  Vector since MOUSEBUTTONDOWN event. Used to derermine swipe motion.
+        self.rel_movement = (0, 0)
+        ## @var pressed_t
+        #  Time stamp of pygame.MOUSEBUTTONDOWN event (start of finger contact with touchscreen)
         self.pressed_t = 0
-        self.pressed_pos = 0
+        ## @var pressed_pos
+        #  Position of pygame.MOUSEBUTTONDOWN event (start of finger contact with touchscreen)
+        self.pressed_pos = (0, 0)
+        ## @var released_pos
+        #  Position of pygame.MOUSEBUTTONUP event (end of finger contact with touchscreen)
         self.released_pos = 0
-        self.add_rel_motion = 0
+        ## @var add_rel_motion
+        #  Used to control if finger/mouse vectors should be tracked to determine total relative motion
+        self.add_rel_motion = False
+        ## @var running
+        #  Variable controlling the main occ event loop. pygame.QUIT event triggers setting running to False
         self.running = True
+        ## @var refresh
+        #  Variable controlling if the screen need to be refreshed
         self.refresh = False
 
     ## Provides events from pygame system
@@ -109,9 +139,9 @@ class open_cycling_computer(object):
                 else:
                     yield event
 
-    def force_refresh(self):
-        self.refresh = True
-
+    ## Switches logging level
+    #  @param self The python object self
+    #  @param log_level New log level, allowed levels are in LOG_LEVEL
     def switch_log_level(self, log_level):
         self.l.setLevel(LOG_LEVEL[log_level])
         self.l.log(100, "[OCC] Switching to log_level {}".format(log_level))
