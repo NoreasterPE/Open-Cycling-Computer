@@ -1,5 +1,5 @@
 #!/usr/bin/python
-## @package OCC
+## @package occ
 #  OpenCyclingCompyter main file
 #
 #  http://opencyclingcomputer.eu/
@@ -141,7 +141,7 @@ class open_cycling_computer(object):
 
     ## Switches logging level
     #  @param self The python object self
-    #  @param log_level New log level, allowed levels are in LOG_LEVEL
+    #  @param log_level Log level to be set. Allowed levels are in \link LOG_LEVEL \endlink
     def switch_log_level(self, log_level):
         self.l.setLevel(LOG_LEVEL[log_level])
         self.l.log(100, "[OCC] Switching to log_level {}".format(log_level))
