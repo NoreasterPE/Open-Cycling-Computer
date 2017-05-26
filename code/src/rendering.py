@@ -1,12 +1,17 @@
 #! /usr/bin/python
+## @package rendering
+#  Rendering module. Runs in a separate thread and keeps flipping screen with pygame.display.flip at 20 fps using pygame.clock.tick.
 
 import threading
 import pygame
 
 
+## Display rendering class
 class rendering(threading.Thread):
-    # Class for PiTFT rendering
 
+    ## The constructor
+    #  @param self The python object self
+    #  @param layout \link layout \endlink instance
     def __init__(self, layout):
         # Run init for super class
         super(rendering, self).__init__()

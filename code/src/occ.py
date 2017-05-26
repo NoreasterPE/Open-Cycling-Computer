@@ -37,7 +37,7 @@ REFRESH_TIME = 1000
 CONFIG_SAVE_TIME = 15000
 
 
-## Main OCC class
+## Main OpenCyclingComputer class
 class open_cycling_computer(object):
 
     'Class for PiTFT 2.8" 320x240 cycling computer'
