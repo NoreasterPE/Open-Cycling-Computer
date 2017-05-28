@@ -149,6 +149,9 @@ class open_cycling_computer(object):
         self.l.setLevel(LOG_LEVEL[log_level])
         self.l.log(100, "[OCC] Switching to log_level {}".format(log_level))
 
+    ## Main click and swipe handler
+    #  @param self The python object self
+    #  @param time_now is event time passwd from the main event loop
     def screen_touched_handler(self, time_now):
         if (time_now - self.pressed_t) > LONG_CLICK:
             self.l.debug("[OCC] LONG CLICK : {} {} {}".format(
@@ -185,6 +188,10 @@ class open_cycling_computer(object):
                 self.layout.check_click(self.pressed_pos, 'T_TO_B')
                 self.reset_motion()
 
+    ## Main event handler
+    #  @param self The python object self
+    #  @param event Pygame event
+    #  @param time_now is event time passwd from the main event loop
     def event_handler(self, event, time_now):
         if event.type == pygame.QUIT:
             self.running = False
@@ -225,6 +232,8 @@ class open_cycling_computer(object):
             self.refresh = True
             self.screen_touched_handler(time_now)
 
+    ## Main event loop. Pools eventr from event_iterator, calls event_handler
+    #  @param self The python object self
     def main_loop(self):
         self.l.debug("[OCC][F] main_loop")
         self.reset_motion()
@@ -238,6 +247,8 @@ class open_cycling_computer(object):
                     self.refresh = False
                     self.rendering.force_refresh()
 
+    ## Resets all parameters related to clicks/swipes
+    #  @param self The python object self
     def reset_motion(self):
         self.l.debug("[OCC][F] reset_motion")
         self.pressed_t = 0
@@ -249,6 +260,8 @@ class open_cycling_computer(object):
         self.add_rel_motion = False
         pygame.event.clear()
 
+    ## Clean up function. Stops ride_parameters, writes config and layout, calls pygame quit and ends OCC. Should never be user it the real device once the code is rady. Used on development version.
+    #  @param self The python object self
     def cleanup(self):
         self.l.debug("[OCC] Cleaning...")
         sleep(1)
@@ -270,17 +283,25 @@ class open_cycling_computer(object):
         quit()
 
 
+## Quit handler, triggers cleanup function after SIGTERM or SIGINT
+#  @param signal TBC
+#  @param frame TBC
 def quit_handler(signal, frame):
     main_window.cleanup()
 
 if __name__ == "__main__":
+    ## @var suffix Log suffix
     suffix = strftime("%d-%H:%M:%S")
+    ## @var sys_log_filename Log filename
     sys_log_filename = "log/debug." + suffix + ".log"
     logging.getLogger('system').setLevel(logging.DEBUG)
+    ## @var sys_log_handler Log handler
     sys_log_handler = logging.handlers.RotatingFileHandler(sys_log_filename)
+    ## @var sys_log_format Log format string
     sys_log_format = '[%(levelname)-5s] %(message)s'
     sys_log_handler.setFormatter(logging.Formatter(sys_log_format))
     logging.getLogger('system').addHandler(sys_log_handler)
+    ## @var System logger handle
     sys_logger = logging.getLogger('system')
     signal.signal(signal.SIGTERM, quit_handler)
     signal.signal(signal.SIGINT, quit_handler)
@@ -297,6 +318,7 @@ if __name__ == "__main__":
         simulate = True
         sys_logger.warning(
             "Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
+    ## @var OCC main window. It's instance of open_cycling_computer class
     main_window = open_cycling_computer(simulate)
     sys_logger.debug("[OCC] simulate = {}".format(simulate))
     main_window.main_loop()
