@@ -21,32 +21,42 @@ import platform
 import pygame
 import signal
 
+## @var LOG_LEVEL
+# Log level definitions
 LOG_LEVEL = {"DEBUG": logging.DEBUG,
              "INFO": logging.INFO,
              "WARNING": logging.WARNING,
              "ERROR": logging.ERROR,
              "CRITICAL": logging.CRITICAL}
 
-## @var LONG_CLICK Time of long click in ms All clicks over 800 ms are considered "long".
+## @var LONG_CLICK
+# Time of long click in ms All clicks over 800 ms are considered "long".
 LONG_CLICK = 800
-## @var SWIPE Lenght of swipe in pixels. All clicks with length ver 30 pixels are considered swipes.
+
+## @var SWIPE_LENGTH
+# Lenght of swipe in pixels. All clicks with length ver 30 pixels are considered swipes.
 SWIPE_LENGTH = 30
 
-## @var EV_UPDATE_VALUES Custom pygame event used to trgger updating values in ride_parameters.
+## @var EV_UPDATE_VALUES
+# Custom pygame event used to trgger updating values in ride_parameters.
 EV_UPDATE_VALUES = USEREVENT + 1
-## @var EV_UPDATE_VALUES Custom pygame event used to trgger config file save.
+
+## @var EV_SAVE_CONFIG
+# Custom pygame event used to trgger config file save.
 EV_SAVE_CONFIG = USEREVENT + 2
 
-## @var REFRESH_TIME Period of time in ms between EV_UPDATE_VALUES events.
+## @var REFRESH_TIME
+# Period of time in ms between EV_UPDATE_VALUES events.
 REFRESH_TIME = 1000
-## @var CONFIG_SAVE_TIME Period of time in ms between EV_SAVE_CONFIG events.
+
+## @var CONFIG_SAVE_TIME
+# Period of time in ms between EV_SAVE_CONFIG events.
 CONFIG_SAVE_TIME = 15000
 
 
 ## Main OpenCyclingComputer class
+# Based on RPI model A+ and PiTFT 2.8" 320x240
 class open_cycling_computer(object):
-
-    'Class for PiTFT 2.8" 320x240 cycling computer'
 
     ## The constructor
     #  @param self The python object self
@@ -296,18 +306,23 @@ def quit_handler(signal, frame):
     main_window.cleanup()
 
 if __name__ == "__main__":
-    ## @var suffix Log suffix
+    ## @var suffix
+    # Log suffix
     suffix = strftime("%d-%H:%M:%S")
-    ## @var sys_log_filename Log filename
+    ## @var sys_log_filename
+    # Log filename
     sys_log_filename = "log/debug." + suffix + ".log"
     logging.getLogger('system').setLevel(logging.DEBUG)
-    ## @var sys_log_handler Log handler
+    ## @var sys_log_handler
+    # Log handler
     sys_log_handler = logging.handlers.RotatingFileHandler(sys_log_filename)
-    ## @var sys_log_format Log format string
+    ## @var sys_log_format
+    # Log format string
     sys_log_format = '[%(levelname)-5s] %(message)s'
     sys_log_handler.setFormatter(logging.Formatter(sys_log_format))
     logging.getLogger('system').addHandler(sys_log_handler)
-    ## @var System logger handle
+    ## @var sys_logger
+    # System logger handle
     sys_logger = logging.getLogger('system')
     signal.signal(signal.SIGTERM, quit_handler)
     signal.signal(signal.SIGINT, quit_handler)
@@ -319,12 +334,15 @@ if __name__ == "__main__":
         os.environ["SDL_FBDEV"] = "/dev/fb1"
         os.putenv('SDL_VIDEODRIVER', 'fbcon')
         os.putenv('SDL_MOUSEDRV', 'TSLIB')
+        ## @var simulate
+        #  Stores simulate parameter. It's True on non armv6l platform
         simulate = False
     else:
         simulate = True
         sys_logger.warning(
             "Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
-    ## @var OCC main window. It's instance of open_cycling_computer class
+    ## @var main_window
+    # OCC main window. It's instance of open_cycling_computer class
     main_window = open_cycling_computer(simulate)
     sys_logger.debug("[OCC] simulate = {}".format(simulate))
     main_window.main_loop()
