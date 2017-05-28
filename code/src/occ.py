@@ -27,13 +27,19 @@ LOG_LEVEL = {"DEBUG": logging.DEBUG,
              "ERROR": logging.ERROR,
              "CRITICAL": logging.CRITICAL}
 
-LONG_CLICK = 800  # ms of long click
-SWIPE_LENGTH = 30  # pixels of swipe
+## @var LONG_CLICK Time of long click in ms All clicks over 800 ms are considered "long".
+LONG_CLICK = 800
+## @var SWIPE Lenght of swipe in pixels. All clicks with length ver 30 pixels are considered swipes.
+SWIPE_LENGTH = 30
 
+## @var EV_UPDATE_VALUES Custom pygame event used to trgger updating values in ride_parameters.
 EV_UPDATE_VALUES = USEREVENT + 1
+## @var EV_UPDATE_VALUES Custom pygame event used to trgger config file save.
 EV_SAVE_CONFIG = USEREVENT + 2
 
+## @var REFRESH_TIME Period of time in ms between EV_UPDATE_VALUES events.
 REFRESH_TIME = 1000
+## @var CONFIG_SAVE_TIME Period of time in ms between EV_SAVE_CONFIG events.
 CONFIG_SAVE_TIME = 15000
 
 
