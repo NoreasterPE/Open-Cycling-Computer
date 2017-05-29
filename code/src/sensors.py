@@ -1,4 +1,10 @@
 #! /usr/bin/python
+## @package sensors
+#  Sensors module. Responsible for connecting to, starting and stopping sensors. Currently used sensors are:
+#  BLE heart rate
+#  BLE speed & cadence sensor
+#  GPS (MTK3339) - [disabled]
+#  BMP183 pressure & temperature sensor
 
 from ble_sc import ble_sc
 from ble_hr import ble_hr
@@ -10,9 +16,20 @@ import logging
 import threading
 import time
 
+## @var RECONNECT_DELAY
 # Time between check if BLE connection need to be re-established
 RECONNECT_DELAY = 2
 
+
+## @var STATE_HOST
+# BLE host states. Linked with different icons.
+#  - disabled (state 0)
+#  - present (state 1)
+#  - scanning (state 2,3)
+#  - connected 1 device (state 4)
+#  - connected 2 devices (state 5)
+#  - connected 3 devices (state 6)
+#  - connected 4 devices (state 7)
 
 STATE_HOST = {'disabled': 0,
               'enabled': 1,
@@ -23,41 +40,50 @@ STATE_HOST = {'disabled': 0,
               'connected_3': 6,
               'connected_4': 7}
 
+## @var STATE_DEV
+# BLE device states.
+#  - disconnected (state 0)
+#  - connecting (state 1)
+#  - connected (state 2)
 STATE_DEV = {'disconnected': 0,
              'connecting': 1,
              'connected': 2}
 
-#  FIXME BLE host states in documentation:
-#  - disabled (state 0)
-#  - present (state 1)
-#  - scanning (state 2,3)
-#  - connected 1 (state 4)
-#  - connected 2 (state 5)
-#  - connected 3 (state 6)
-#  - connected 4 (state 7)
-
-#  FIXME BLE device states in documentation:
-#  - disconnected (state 0)
-#  - connecting (state 1)
-#  - connected (state 2)
-
-
+## Class for handling starting/stopping sensors in separate threads
 class sensors(threading.Thread):
-    # Class for handling starting/stopping sensors in separate threads
 
     def __init__(self, occ, simulate=False):
         threading.Thread.__init__(self)
+        ## @var l
+        # System logger handle
         self.l = logging.getLogger('system')
+        ## @var occ
+        # OCC Handle
         self.occ = occ
+        ## @var sensors
+        # Dict with sensor instances
         self.sensors = dict(ble_sc=None, ble_hr=None, gps=None, bmp183=None)
+        ## @var names
+        # Dict with names of the sensors
         self.names = dict(ble_sc='', ble_hr='', gps='', bmp183='')
+        ## @var addrs
+        # Dict with BLE addresses of the sensors
         self.addrs = dict(ble_sc='', ble_hr='', gps='', bmp183='')
+        ## @var simulate
+        # Local copy of simulate variable from OCC
         self.simulate = simulate
+        ## @var ble_state
+        # BLE host state
         self.ble_state = STATE_HOST['enabled']
+        ## @var no_of_connected
+        # Number of connected BLE devices
         self.no_of_connected = 0
+        ## @var connecting
+        # Indicated if host is currently trying to establish connection
         self.connecting = False
-        self.connected = dict(
-            ble_sc=False, ble_hr=None, gps=False, bmp183=False)
+        ## @var connected
+        # Dict keeping track of which sensor is connected
+        self.connected = dict(ble_sc=False, ble_hr=None, gps=False, bmp183=False)
         self.l.info("[SE] Initialising GPS")
         try:
             # Disable GPS (temporary)
@@ -75,6 +101,8 @@ class sensors(threading.Thread):
             self.connected['bmp183'] = None
         self.running = True
 
+    ## Reads BLE devices names/addresses from ride_parameters module
+    #  @param self The python object self
     def init_data_from_ride_parameters(self):
         self.names['ble_hr'] = self.occ.rp.params['ble_hr_name']
         self.names['ble_sc'] = self.occ.rp.params['ble_sc_name']
