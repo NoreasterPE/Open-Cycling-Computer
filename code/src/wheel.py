@@ -1,8 +1,13 @@
 #!/usr/bin/pyhon
+## @package wheel
+#  Helper module providing wheel size based on tyre size/width. 
 
 
+## wheel class
 class wheel:
 
+    ## The constructor
+    #  @param self The python object self
     def __init__(self):
         self.wheel_size = {}
         self.wheel_size['700x18C'] = 2.070
@@ -21,5 +26,8 @@ class wheel:
         self.wheel_size['700x45C'] = 2.242
         self.wheel_size['700x47C'] = 2.268
 
+    ## Helper function returning wheel size in mm
+    #  @param self The python object self
+    #  @param name String describing wheel, i.e. 700x25C
     def get_size(self, name):
             return self.wheel_size[name]
