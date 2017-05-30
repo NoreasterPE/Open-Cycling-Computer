@@ -53,6 +53,9 @@ STATE_DEV = {'disconnected': 0,
 ## Class for handling starting/stopping sensors in separate threads
 class sensors(threading.Thread):
 
+    ## The constructor
+    #  @param self The python object self
+    #  @param occ OCC instance
     def __init__(self, occ):
         threading.Thread.__init__(self)
         ## @var l
@@ -123,6 +126,7 @@ class sensors(threading.Thread):
         self.connected['ble_' + dev_type + '_addr'] = False
 
     ## Main loop of sensors module. Constantly tries to reconnect with BLE devices
+    #  @param self The python object self
     def run(self):
         self.init_data_from_ride_parameters()
         if not self.simulate:
@@ -165,6 +169,8 @@ class sensors(threading.Thread):
             # Wait before checking again if we need to reconnect
             time.sleep(RECONNECT_DELAY)
 
+    ## Helper function for setting ble_state variable. 
+    #  @param self The python object self
     def set_ble_state(self):
         self.no_of_connected = 0
         self.connecting = False
@@ -192,24 +198,34 @@ class sensors(threading.Thread):
         if self.connecting:
             self.ble_state = STATE_HOST['scanning_1']
 
+    ## Helper function for getting ble_state variable. 
+    #  @param self The python object self
     def get_ble_state(self):
         return self.ble_state
 
+    ## Helper function for getting sensor handle
+    #  @param self The python object self
     def get_sensor(self, name):
         self.l.debug('[SE] get_sensor called for {}'.format(name))
         if name in self.sensors and self.connected[name]:
             return self.sensors[name]
         else:
-            self.l.debug(
-                "[SE] Sensor {} not ready or doesn't exist".format(name))
+            self.l.debug("[SE] Sensor {} not ready or doesn't exist".format(name))
             return None
 
+    ## Helper function for forcing sensor reconnection
+    #  @param self The python object self
+    #  @param name Sensor name
     def reconnect_sensor(self, name):
         self.connected[name] = False
 
+    ## The destructor
+    #  @param self The python object self
     def __del__(self):
         self.stop()
 
+    ## Function stopping all sensors. Called by the destructor
+    #  @param self The python object self
     def stop(self):
         self.l.debug("[SE] Stopping.. {}".format(__name__))
         self.running = False
