@@ -49,6 +49,7 @@ STATE_DEV = {'disconnected': 0,
              'connecting': 1,
              'connected': 2}
 
+
 ## Class for handling starting/stopping sensors in separate threads
 class sensors(threading.Thread):
 
@@ -109,6 +110,11 @@ class sensors(threading.Thread):
         self.addrs['ble_hr'] = self.occ.rp.params['ble_hr_addr']
         self.addrs['ble_sc'] = self.occ.rp.params['ble_sc_addr']
 
+    ## Helper for setting BLE devices name and address
+    #  @param self The python object self
+    #  @param name Name of the device
+    #  @param addr Address of the device
+    #  @param dev_type Device type "hr" for heart rate sensor, "sc" for speed & cadence sensor
     def set_ble_device(self, name, addr, dev_type):
         self.names['ble_' + dev_type] = name
         self.addrs['ble_' + dev_type] = addr
@@ -116,6 +122,7 @@ class sensors(threading.Thread):
         self.occ.rp.params['ble_' + dev_type + '_addr'] = addr
         self.connected['ble_' + dev_type + '_addr'] = False
 
+    ## Main loop of sensors module. Constantly tries to reconnect with BLE devices
     def run(self):
         self.init_data_from_ride_parameters()
         if not self.simulate:
