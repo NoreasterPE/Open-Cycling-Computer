@@ -53,7 +53,7 @@ STATE_DEV = {'disconnected': 0,
 ## Class for handling starting/stopping sensors in separate threads
 class sensors(threading.Thread):
 
-    def __init__(self, occ, simulate=False):
+    def __init__(self, occ):
         threading.Thread.__init__(self)
         ## @var l
         # System logger handle
@@ -72,7 +72,7 @@ class sensors(threading.Thread):
         self.addrs = dict(ble_sc='', ble_hr='', gps='', bmp183='')
         ## @var simulate
         # Local copy of simulate variable from OCC
-        self.simulate = simulate
+        self.simulate = occ.get_simulate()
         ## @var ble_state
         # BLE host state
         self.ble_state = STATE_HOST['enabled']
@@ -96,7 +96,7 @@ class sensors(threading.Thread):
             self.sensors['gps'] = None
         self.l.info("[SE] Initialising bmp183 sensor")
         try:
-            self.sensors['bmp183'] = bmp183(simulate)
+            self.sensors['bmp183'] = bmp183(self.simulate)
             self.connected['bmp183'] = True
         except IOError:
             self.connected['bmp183'] = None

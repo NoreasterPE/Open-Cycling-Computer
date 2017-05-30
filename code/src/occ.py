@@ -93,7 +93,7 @@ class open_cycling_computer(object):
         self.l.debug("[OCC] Calling sensors")
         ## @var sensors
         #  Handle to sensors instance
-        self.sensors = sensors(self, simulate)
+        self.sensors = sensors(self)
         self.l.debug("[OCC] Calling ride_parameters")
         ## @var rp
         #  Handle to ride_parameters instance
@@ -275,6 +275,11 @@ class open_cycling_computer(object):
         self.layout.render_button = None
         self.add_rel_motion = False
         pygame.event.clear()
+
+    ## Returns simulate variable
+    #  @param self The python object self
+    def get_simulate(self):
+        return self.simulate
 
     ## Clean up function. Stops ride_parameters, writes config and layout, calls pygame quit and ends OCC. Should never be user it the real device once the code is rady. Used on development version.
     #  @param self The python object self
