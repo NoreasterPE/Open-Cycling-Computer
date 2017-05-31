@@ -10,8 +10,7 @@ import threading
 NaN = float('nan')
 
 
-## Class for Bosch BMP183 pressure and temperature sensor
-# Class for Bosch BMP183 pressure and temperature sensor with SPI interface as sold by Adafruit
+## Class for Bosch BMP183 pressure and temperature sensor with SPI interface as sold by Adafruit
 class bmp183(threading.Thread):
 
     ## @var BMP183_REG
@@ -90,7 +89,7 @@ class bmp183(threading.Thread):
         #  Stores simulate parameter from constructor call
         self.simulate = simulate
         ## @var sensor_ready
-        #  Set to the constructor sets it to True after succesfull handshake with the sensor. False otherwise. 
+        #  Set to the constructor sets it to True after succesfull handshake with the sensor. False otherwise.
         self.sensor_ready = False
         ## @var running
         #  Variable controlling the main sensor handling loop. Setting it to False stops the loop.
