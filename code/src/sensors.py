@@ -169,7 +169,7 @@ class sensors(threading.Thread):
             # Wait before checking again if we need to reconnect
             time.sleep(RECONNECT_DELAY)
 
-    ## Helper function for setting ble_state variable. 
+    ## Helper function for setting ble_state variable.
     #  @param self The python object self
     def set_ble_state(self):
         self.no_of_connected = 0
@@ -198,7 +198,7 @@ class sensors(threading.Thread):
         if self.connecting:
             self.ble_state = STATE_HOST['scanning_1']
 
-    ## Helper function for getting ble_state variable. 
+    ## Helper function for getting ble_state variable.
     #  @param self The python object self
     def get_ble_state(self):
         return self.ble_state

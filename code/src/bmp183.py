@@ -1,3 +1,7 @@
+#!/usr/bin/python
+## @package bmp183
+#  Module for handling Bosch BMP183 pressure sensor
+
 import logging
 import time
 import numpy
@@ -6,9 +10,11 @@ import threading
 NaN = float('nan')
 
 
+## Class for Bosch BMP183 pressure and temperature sensor
+# Class for Bosch BMP183 pressure and temperature sensor with SPI interface as sold by Adafruit
 class bmp183(threading.Thread):
 
-    'Class for Bosch BMP183 pressure and temperature sensor with SPI interface as sold by Adafruit'
+    ## @var BMP183_REG
     # BMP183 registers
     BMP183_REG = {
         #@ Calibration data
@@ -41,6 +47,7 @@ class bmp183(threading.Thread):
         'DATA': 0xF6,
     }
 
+    ## @var BMP183_CMD
     # BMP183 commands
     BMP183_CMD = {
         #@ Chip ID Value fixed to 0x55. Useful to check if communication works
@@ -68,6 +75,9 @@ class bmp183(threading.Thread):
         'OVERSAMPLE_3_WAIT': 0.0255,
     }
 
+    ## The constructor
+    #  @param self The python object self
+    #  @param simulate Decides if bmp183 runs in simulation mode or real device mode.
     def __init__(self, simulate=False):
         # Run init for super class
         super(bmp183, self).__init__()

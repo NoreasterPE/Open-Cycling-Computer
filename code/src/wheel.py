@@ -1,6 +1,6 @@
 #!/usr/bin/pyhon
 ## @package wheel
-#  Helper module providing wheel size based on tyre size/width. 
+#  Helper module providing wheel size based on tyre size/width.
 
 
 ## wheel class
@@ -9,6 +9,7 @@ class wheel:
     ## The constructor
     #  @param self The python object self
     def __init__(self):
+        #FIXME move to csv fiel, add more wheels
         self.wheel_size = {}
         self.wheel_size['700x18C'] = 2.070
         self.wheel_size['700x19C'] = 2.080
