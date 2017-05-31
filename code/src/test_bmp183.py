@@ -15,8 +15,8 @@ try:
         time.sleep(1)
         run += 1
     # Stop measuring
-    bmp.stop_measurement()
+    bmp.stop()
 except:
     # Stop measuring after an error or Ctrl-C
-    bmp.stop_measurement()
+    bmp.stop()
 quit()

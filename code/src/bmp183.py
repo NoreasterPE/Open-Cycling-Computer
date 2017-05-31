@@ -297,10 +297,6 @@ class bmp183(threading.Thread):
         if dtemperature < self.temperature_max_delta:
             self.temperature = temperature
 
-    def stop_measurement(self):
-        self.l.debug("[BMP] stop_measurement")
-        self.running = False
-
     def run(self):
         self.l.debug("[BMP] run")
         self.running = True
