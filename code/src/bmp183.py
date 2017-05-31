@@ -82,10 +82,18 @@ class bmp183(threading.Thread):
         # Run init for super class
         super(bmp183, self).__init__()
         # self.rp = occ.rp
+        ## @var l
+        #  Handle to system logger
         self.l = logging.getLogger('system')
         self.l.debug("[BMP] Initialising..")
+        ## @var simulate
+        #  Stores simulate parameter from constructor call
         self.simulate = simulate
+        ## @var sensor_ready
+        #  Set to the constructor sets it to True after succesfull handshake with the sensor. False otherwise. 
         self.sensor_ready = False
+        ## @var running
+        #  Variable controlling the main sensor handling loop. Setting it to False stops the loop.
         self.running = False
         self.first_run = True
         # Delay between measurements in [s]
