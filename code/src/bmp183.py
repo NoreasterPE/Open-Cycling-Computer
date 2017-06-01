@@ -95,12 +95,19 @@ class bmp183(threading.Thread):
         #  Variable controlling the main sensor handling loop. Setting it to False stops the loop.
         self.running = False
         self.first_run = True
-        # Delay between measurements in [s]
+        ## @var measurement_delay
+        #  Time between measurements in [s]
         self.measurement_delay = 0.45
+        ## @var temperature
+        #  Measured temperature
         self.temperature = 0
-        # Maximum allowable temperature change between measurements. If
-        # measurement differ more than delta they are ignored.
+        ## @var temperature_max_delta
+        #  Maximum allowed temperature difference between measurements. Normally temperature doesn't change too quickly
+        #  so a sudden change means the measurement if invalid. It a new temperature value differs from the previous velu more than
+        #  temperature_max_delta the measurement is ignored.
         self.temperature_max_delta = 10
+        ## @var pressure
+        #  Measured pressure
         self.pressure = 0
         self.pressure_unfiltered = 0
         # Setup Raspberry PINS, as numbered on BOARD
