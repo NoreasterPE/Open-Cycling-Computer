@@ -68,9 +68,11 @@ class gps_mtk3339(threading.Thread):
         ret = os.system(command)
         if ret == 0:
             self.l.info("[GPS] gpsd restarted succesfully")
-        self.restart_gps = False
-        self.gpsd_link_init()
-        time.sleep(3)
+            self.restart_gps = False
+            self.gpsd_link_init()
+        else:
+            self.l.info("[GPS] gpsd fails to restart with error {}".format(ret))
+            time.sleep(3)
 
     ## Main loop of gps_mtk3339 module. Responsible for restarting gps and processing gps messages into locally stored values describing current location.
     #  @param self The python object self
