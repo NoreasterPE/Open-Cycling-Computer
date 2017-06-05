@@ -1,4 +1,6 @@
 #! /usr/bin/python
+## @package ble_sc
+#  BLE speed and cadence sensor handling module.
 from bluepy.btle import AssignedNumbers
 from bluepy.btle import BTLEException
 from bluepy.btle import DefaultDelegate
