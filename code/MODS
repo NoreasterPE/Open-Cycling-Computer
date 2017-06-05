@@ -57,7 +57,7 @@ sudo insserv /etc/init.d/asplashscreen
     Stream #0:0(und): Video: h264 (High) (avc1 / 0x31637661), yuv420p, 240x320 [SAR 1:1 DAR 3:4], 11 kb/s, 19.98 fps, 19.98 tbr, 20k tbn, 39.96 tbc (default)
 
 5. Install mplayer
-6. Add fbcp and make /etc/init.d/asplashscreen use it. fbcp: https://github.com/tasanakorn/rpi-fbcp
+6. [MOVED] Add fbcp and make /etc/init.d/asplashscreen use it. fbcp: https://github.com/tasanakorn/rpi-fbcp
 
 #! /bin/sh
 ### BEGIN INIT INFO
@@ -112,8 +112,7 @@ sudo TSLIB_FBDEVICE=/dev/fb1 TSLIB_TSDEVICE=/dev/input/touchscreen ts_calibrate
 and test using:
 sudo TSLIB_FBDEVICE=/dev/fb1 TSLIB_TSDEVICE=/dev/input/touchscreen ts_test
 
-10. sudo apt-get install python3-lxml
-
+10. [ADDED] sudo apt-get install python3-lxml
 
 11. sudo apt-get install minicom
 
@@ -150,8 +149,8 @@ changed to:
                 print "ImportError on calendar.timegm. Will try again {} in 1s".format(i)
                 time.sleep(1)
                 i += 1
-21. sudo apt-get install i2c-tools
-22. Add i2c-dev to /etc/modules
+21. [MOVED] sudo apt-get install i2c-tools
+22. [MOVED] Add i2c-dev to /etc/modules
 23. Install RPi from source and modify file cpuinfo.c:
             (strcmp(revision, "000e") == 0) ||
             (strcmp(revision, "000f") == 0))
@@ -185,197 +184,4 @@ diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf
 +++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
 @@ -0,0 +1 @@
 +option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Add i2c module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+option i2c_bcm2708 combined=1
-
-
-25. Load i2c-dev and add Add i2c-bcm2708 module option:
-diff -Nru /dev/null /etc/modprobe.d/i2c-bcm2708.conf 
---- /dev/null	2017-02-05 20:50:36.320000000 +0000
-+++ /etc/modprobe.d/i2c-bcm2708.conf	2017-02-05 21:58:33.077046244 +0000
-@@ -0,0 +1 @@
-+options i2c_bcm2708 combined=1
-
 26. sudo apt-get install python-setuptools
