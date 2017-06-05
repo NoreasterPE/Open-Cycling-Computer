@@ -12,7 +12,6 @@ class units():
                        "K": self.temp_C_to_K(value),
                        "km/h": self.speed_ms_to_kmh(value),
                        "mi/h": self.speed_ms_to_mph(value),
-                       "pd": self.mass_kg_to_pd(value),
                        "st": self.mass_kg_to_st(value),
                        "lb": self.mass_kg_to_lb(value),
                        "km": self.dist_m_to_km(value),
@@ -47,10 +46,9 @@ class units():
         s_mph = speed * 2.23694
         return s_mph
 
-    def mass_kg_to_pd(self, mass):
-        m_pd = mass / 0.45359237
-        return m_pd
-
+    ## kilograms to stones conversion
+    #  @param self The python object self
+    #  @param mass in kilograns
     def mass_kg_to_st(self, mass):
         m_st = mass * 0.15747
         # m_lb = (mass - (m_st / 0.15747)) * 2.2046
@@ -91,7 +89,7 @@ if __name__ == '__main__':
     print "m {} km {} mi {} yd {}".format(dist, u.convert(dist, "km"), u.convert(dist, "mi"), u.convert(dist, "yd"))
 
     mass = 79.5
-    print "kg {} pd {}".format(mass, u.convert(mass, "pd"))
+    print "kg {} lb {}".format(mass, u.convert(mass, "lb"))
 
     speed = 10
     print "m/s {} km/h {} mph {}".format(speed, u.convert(speed, "km/h"), u.convert(speed, "mi/h"))
