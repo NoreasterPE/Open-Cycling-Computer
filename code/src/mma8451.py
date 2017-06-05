@@ -1,5 +1,5 @@
 #! /usr/bin/python
-## @package i2c
+## @package mma8451
 #   Module for MMA8451 Triple-Axis Accelerometer w/ 14-bit ADC with I2C interface as sold by Adafruit'. Not yet used by the OCC
 
 import smbus

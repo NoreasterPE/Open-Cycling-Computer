@@ -1,3 +1,6 @@
+#! /usr/bin/python
+## @package layout
+#   Module responsible for loading and rendering layouts. Needs heavy cleaning...
 from units import units
 import logging
 import lxml.etree as eltree
@@ -8,6 +11,7 @@ import sys
 import time
 
 
+## Class for handling layouts
 class layout():
     # def __init__(self, occ, layout_path="layouts/current.xml"):
     # Temporary change

@@ -6,6 +6,7 @@ import serial
 import time
 
 
+## Class for handling mtk3339 GPS hardware at serial port level
 class mtk3339():
 
     def __init__(self, device):

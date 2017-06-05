@@ -10,6 +10,7 @@ import threading
 import time
 
 
+## Class for handling BLE speed and cadence sensor
 class ble_sc(Peripheral, threading.Thread):
     # FIXME - replace with proper service & characteristic scan
     CSC_HANDLE = 0x000f  # FIXME - explain
