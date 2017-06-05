@@ -1,9 +1,12 @@
+#! /usr/bin/python
+## @package mtk3339
+#   Module for handling hardware of mtk3339 GPS, 66 channel w/10 Hz as sold by Adafruit
 import operator
 import serial
 import time
 
 
-class mt3339():
+class mtk3339():
 
     def __init__(self, device):
         # NMEA sentences handled by this class
@@ -160,7 +163,7 @@ class mt3339():
         ser.close()
 
 # Example commands:
-# gps = mt3339("/dev/ttyAMA0")
+# gps = mtk3339("/dev/ttyAMA0")
 # gps.cold_start()
 # gps.warm_start()
 # gps.hot_start()

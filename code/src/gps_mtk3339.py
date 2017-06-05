@@ -33,7 +33,7 @@ class gps_mtk3339(threading.Thread):
         self.restart_gps = False
         if not self.simulate:
             self.l.debug("[GPS] Initialising mtk3339")
-            ser = mtk3339.mt3339("/dev/ttyAMA0")
+            ser = mtk3339.mtk3339("/dev/ttyAMA0")
             ser.set_baudrate(115200)
             ser.set_fix_update_rate(1000)
             ser.set_nmea_update_rate(1000)
