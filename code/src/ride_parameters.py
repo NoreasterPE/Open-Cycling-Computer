@@ -1,27 +1,64 @@
+#! /usr/bin/python
+## @package ride_parameters
+#  Module for handling all ride parameters. This is the main module responsible for pulling all data together and preparing values for displaying, logging and saving.
 from time import strftime
 from units import units
 import logging
 import math
 import time
 
+## @var INF_MIN
+# helper variable, minus infinity
 INF_MIN = float("-inf")
+
+## @var INF
+# helper variable, infinity
 INF = float("inf")
+
+## @var degC
+# helper variable, degree Celsius
 degC = u'\N{DEGREE SIGN}' + "C"
-BLE_RECONNECT_DELAY = 10  # After this time the sensor is considered to be disconnected
+
+## @var BLE_RECONNECT_DELAY
+# Disconnect time in seconds. After this time the sensor is considered to be disconnected.
+BLE_RECONNECT_DELAY = 10
 
 
+## Class for handling all ride parameters
 class ride_parameters():
 
+    ## The constructor
+    #  @param self The python object self
+    #  @param occ OCC instance
+    #  @param simulate Decides if ride_parameters runs in simulation mode or real device mode.
     def __init__(self, occ, simulate=False):
+        ## @var occ
+        # OCC Handle
         self.occ = occ
+        ## @var l
+        # System logger handle
         self.l = logging.getLogger('system')
+        ## @var r
+        # Ride logger handle
         self.r = self.setup_ridelog()
+        ## @var uc
+        # Units converter
         self.uc = units()
         self.l.info("[RP] Initialising sensors")
+        ## @var sensors
+        # Handle of sensors instance
         self.sensors = occ.sensors
+        ## @var ble_sc
+        # Handle of BLE speed and cadence sensor
         self.ble_sc = self.sensors.get_sensor('ble_sc')
+        ## @var ble_hr
+        # Handle of BLE heart rate sensor
         self.ble_hr = self.sensors.get_sensor('ble_hr')
+        ## @var gps
+        # Handle of GPS sensor
         self.gps = self.sensors.get_sensor('gps')
+        ## @var bmp183
+        # Handle of bmp183 sensor
         self.bmp183 = self.sensors.get_sensor('bmp183')
 
         self.suffixes = ("_digits", "_tenths", "_hms")
