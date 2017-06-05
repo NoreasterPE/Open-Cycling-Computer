@@ -1,4 +1,6 @@
 #!/usr/bin/python
+## @package config
+#  Package responsible for reading/writing config file. The config file contains different user and system related parameters that should be preserved between OCC starts.
 
 import logging
 import logging.handlers
@@ -7,8 +9,13 @@ from shutil import copyfile
 from wheel import wheel
 
 
+## Main config class
 class config(object):
 
+    ## The constructor
+    #  @param self The python object self
+    #  @param config_file_path path to config file
+    #  @param base_config_file_path base config file used when for some reason config file can't be read. Also used as seed file during the first run.
     def __init__(self, occ, config_file_path, base_config_file_path):
         self.l = logging.getLogger('system')
         self.occ = occ
@@ -16,6 +23,8 @@ class config(object):
         self.config_file_path = config_file_path
         self.base_config_file_path = base_config_file_path
 
+    ## Function that reads config file. Currently read values are written directly to destination variables which is not really flexible solution.
+    #  @param self The python object self
     def read_config(self):
         self.l.debug("[CON][F] read_config")
         try:
@@ -129,6 +138,8 @@ class config(object):
                 self.l.error("[CON] Missing: {} in config file".format(item))
             error_list = []
 
+    ## Function that writes config file.
+    #  @param self The python object self
     def write_config(self):
         self.l.debug("[CON] Writing config file")
         log_level = logging.getLevelName(self.l.getEffectiveLevel())

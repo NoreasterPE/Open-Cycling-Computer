@@ -1,4 +1,6 @@
 #! /usr/bin/python
+## @package gps_mtk3339
+#  GPS module. Responsible for connecting to, starting and stopping mtk3339 hardware as sold by Adafruit
 
 from gps import gps
 from gps import WATCH_NEWSTYLE
@@ -9,15 +11,20 @@ import os
 import threading
 import time
 
+## @var NaN
+# helper variable, non arithmetic number
 NaN = float('nan')
+
+## @var fix_mode
+# helper variable, modes of GPS fix
 fix_mode = {0: "No data",
             1: "No fix",
             2: "Fix 2D",
             3: "Fix 3D"}
 
 
+## Class for handling GPS mtk3339 hardware, runs in a separate thread.
 class gps_mtk3339(threading.Thread):
-    # Class for gps mtk3339 as sold by Adafruit
 
     def __init__(self, simulate=False):
         threading.Thread.__init__(self)
@@ -54,6 +61,8 @@ class gps_mtk3339(threading.Thread):
             self.present = False
             raise IOError("Communication with GPS mtk3339 failed")
 
+    ## Helper function that restarts gpsd using system shell command "service gpsd restart"
+    #  @param self The python object self
     def restart_gpsd(self):
         command = "service gpsd restart"
         ret = os.system(command)
@@ -63,6 +72,8 @@ class gps_mtk3339(threading.Thread):
         self.gpsd_link_init()
         time.sleep(3)
 
+    ## Main loop of gps_mtk3339 module. Responsible for restarting gps and processing gps messages into locally stored values describing current location.
+    #  @param self The python object self
     def run(self):
         if self.present:
             self.running = True
@@ -86,8 +97,7 @@ class gps_mtk3339(threading.Thread):
 
     def process_gps(self):
         timestamp = time.time()
-        self.l.debug(
-            "[GPS] timestamp: {}, running: {},".format(timestamp, self.running))
+        self.l.debug("[GPS] timestamp: {}, running: {},".format(timestamp, self.running))
         gps_data_available = False
         try:
             # FIXME Fails sometimes with ImportError from gps.py - see TODO 21
@@ -96,8 +106,7 @@ class gps_mtk3339(threading.Thread):
             data = self.data
             gps_data_available = True
         except StopIteration:
-            self.l.error(
-                "[GPS] StopIteration exception in GPS. Restarting GPS in 10 s")
+            self.l.error("[GPS] StopIteration exception in GPS. Restarting GPS in 10 s")
             # FIXME Reinit gps after a delay (from RP?) as restarting gpsd doesn't help
             # so this need to be in the loop as well: self.data =
             # gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
@@ -150,6 +159,8 @@ class gps_mtk3339(threading.Thread):
         else:
             self.reset_gps_data()
 
+    ## Resets all gps data to the initial state
+    #  @param self The python object self
     def reset_gps_data(self):
         self.l.debug("[GPS] Setting null values to GPS params")
         self.latitude = NaN
@@ -168,6 +179,8 @@ class gps_mtk3339(threading.Thread):
         self.epv = NaN
         self.ept = NaN
 
+    ## Returns dictionary withvalues describing current location
+    #  @param self The python object self
     def get_data(self):
         r = dict(latitude=self.latitude, longitude=self.longitude,
                  altitude_gps=self.altitude_gps, speed_gps=self.speed_gps, utc=self.utc,
