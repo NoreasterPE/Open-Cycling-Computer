@@ -15,18 +15,32 @@ class ble_hr(Peripheral, threading.Thread):
     # FIXME - replace with proper service & characteristic scan
     HR_HANDLE = 0x000f  # FIXME - explain
     HR_ENABLE_HR = "10"    # FIXME - explain, try "01" is fails
-    WAIT_TIME = 1      # Time of waiting for notifications
-    EXCEPTION_WAIT_TIME = 10      # Time of waiting after an exception has been raies
+    ## @var WAIT_TIME
+    # Time of waiting for notifications in seconds
+    WAIT_TIME = 1
+    ## @var EXCEPTION_WAIT_TIME
+    # Time of waiting after an exception has been raiesed or connection lost
+    EXCEPTION_WAIT_TIME = 10
 
     def __init__(self, addr):
+        ## @var l
+        # System logger handle
         self.l = logging.getLogger('system')
         self.l.debug('[BLE_HR] WAIT_TIME {}'.format(self.WAIT_TIME))
+        ## @var connected
+        # Indicates if sensor is currently connected
         self.connected = False
         self.state = 0
+        ## @var heart_rate
+        # Measured heart rate
         self.heart_rate = 0
+        ## @var time_stamp
+        # Time stamp of the measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
         self.time_stamp = time.time()
         self.l.info('[BLE_HR] State = {}'.format(self.state))
         threading.Thread.__init__(self)
+        ## @var addr
+        # Address of the heart rate sensor
         self.addr = addr
         self.l.info('[BLE_HR] Connecting to {}'.format(addr))
         self.state = 1
@@ -35,6 +49,8 @@ class ble_hr(Peripheral, threading.Thread):
         self.connected = True
         self.state = 2
         self.l.info('[BLE_HR] State = {}'.format(self.state))
+        ## @var name
+        # Name of the heart rate sensor
         self.name = self.get_device_name()
         self.l.info('[BLE_HR] Connected to {}'.format(self.name))
         self.l.debug('[BLE_HR] Setting notification handler')

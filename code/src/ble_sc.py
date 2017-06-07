@@ -15,20 +15,38 @@ class ble_sc(Peripheral, threading.Thread):
     # FIXME - replace with proper service & characteristic scan
     CSC_HANDLE = 0x000f  # FIXME - explain
     CSC_ENABLE_SC = "10"    # FIXME - explain
-    WAIT_TIME = 0.3      # Time of waiting for notifications
-    EXCEPTION_WAIT_TIME = 10      # Time of waiting after an exception has been raies
+    ## @var WAIT_TIME
+    # Time of waiting for notifications in seconds
+    WAIT_TIME = 0.3
+    ## @var EXCEPTION_WAIT_TIME
+    # Time of waiting after an exception has been raiesed or connection lost
+    EXCEPTION_WAIT_TIME = 10
 
     def __init__(self, addr):
+        ## @var l
+        # System logger handle
         self.l = logging.getLogger('system')
         self.l.debug('[BLE_SC] WAIT_TIME {}'.format(self.WAIT_TIME))
+        ## @var connected
+        # Indicates if sensor is currently connected
         self.connected = False
         self.state = 0
         self.l.info('[BLE_SC] State = {}'.format(self.state))
         threading.Thread.__init__(self)
+        ## @var addr
+        # Address of the cadence and speed sensor
         self.addr = addr
+        ## @var cadence_time_stamp
+        # Time stamp of the measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
         self.wheel_time_stamp = time.time()
+        ## @var wheel_rev_time
+        # Measured wheel revolution time
         self.wheel_rev_time = 0
+        ## @var cadence_time_stamp
+        # Time stamp of the measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
         self.cadence_time_stamp = time.time()
+        ## @var cadence
+        # Measured cadence
         self.cadence = 0
         self.l.info('[BLE_SC] Connecting to {}'.format(addr))
         self.state = 1

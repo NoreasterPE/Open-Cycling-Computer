@@ -83,7 +83,7 @@ class sensors(threading.Thread):
         # Number of connected BLE devices
         self.no_of_connected = 0
         ## @var connecting
-        # Indicated if host is currently trying to establish connection
+        # Indicates if host is currently trying to establish connection
         self.connecting = False
         ## @var connected
         # Dict keeping track of which sensor is connected
