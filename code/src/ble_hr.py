@@ -9,8 +9,8 @@ import logging
 import threading
 import time
 
- 
-## Class for handling BLE heart rate sensor 
+
+## Class for handling BLE heart rate sensor
 class ble_hr(Peripheral, threading.Thread):
     # FIXME - replace with proper service & characteristic scan
     HR_HANDLE = 0x000f  # FIXME - explain
@@ -118,6 +118,7 @@ class ble_hr(Peripheral, threading.Thread):
             self.l.info('[BLE_HR] {} disconnected'.format(self.name))
 
 
+## Class for handling BLE notifications from heart rate sensor
 class HR_Delegate(DefaultDelegate):
 
     def __init__(self):

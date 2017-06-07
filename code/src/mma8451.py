@@ -7,6 +7,7 @@ import threading
 import time
 
 
+## Class for MMA8451 Triple-Axis Accelerometer w/ 14-bit ADC with I2C interface as sold by Adafruit'. Not yet used by the OCC
 class mma8451(threading.Thread):
     DEVICE_ADDR = 29
     DEVICE_ID = 26

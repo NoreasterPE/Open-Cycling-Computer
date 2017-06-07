@@ -123,6 +123,7 @@ class ble_sc(Peripheral, threading.Thread):
             self.l.debug('[BLE_SC] Disconnected')
 
 
+## Class for handling BLE notifications from cadence and speed sensor
 class CSC_Delegate(DefaultDelegate):
     WHEEL_REV_DATA_PRESENT = 0x01
     CRANK_REV_DATA_PRESENT = 0x02
