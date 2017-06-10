@@ -107,7 +107,7 @@ class ride_parameters():
             temperature_min='', timeon='', timeon_hms='', time_of_ride_reset='', track_gps='-', utc='',
             ble_hr_name='', ble_hr_addr='', ble_sc_name='', ble_sc_addr='',
             # Editor params
-            editor_index=0, editor_type=0, variable=None,
+            editor_index=0, variable=None,
             variable_description=None, variable_raw_value=None, variable_unit=None, variable_value=None,
             # System params
             debug_level='')

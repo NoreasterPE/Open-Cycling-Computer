@@ -26,6 +26,7 @@ class layout():
         self.ble_scanner = occ.ble_scanner
         self.uc = units()
         self.screen = occ.screen
+        self.editor_name = ''
         self.colorkey = [0, 0, 0]
         self.alpha = 255
         self.font_list = {}
@@ -282,9 +283,9 @@ class layout():
                         # FIXME I's dirty way of getting value - add some
                         # helper function
                         self.l.debug("[LY] LONG CLICK on {}".format(function))
-                        editor_name = self.occ.rp.get_editor_name(function)
-                        if editor_name:
-                            self.open_editor_page(editor_name, function)
+                        self.editor_name = self.occ.rp.get_editor_name(function)
+                        if self.editor_name:
+                            self.open_editor_page(function)
                             break
                         p = self.occ.rp.strip_end(function)
                         if p in self.occ.rp.p_resettable:
@@ -300,8 +301,8 @@ class layout():
         elif click == 'T_TO_B':  # Swipe TOP to BOTTOM
             self.run_function("settings")
 
-    def open_editor_page(self, editor_name, function):
-        self.l.debug("[LY] Opening editor {} for {}".format(editor_name, function))
+    def open_editor_page(self, function):
+        self.l.debug("[LY] Opening editor {} for {}".format(self.editor_name, function))
         self.occ.rp.set_param('variable', function)
         self.occ.rp.set_param('variable_raw_value', self.occ.rp.get_raw_val(function))
         self.occ.rp.set_param('variable_value', self.occ.rp.get_param(function))
@@ -309,7 +310,7 @@ class layout():
         self.occ.rp.set_param('variable_description', self.occ.rp.get_description(function))
         self.occ.rp.set_param('editor_index', 0)
 
-        if editor_name == 'editor_units':
+        if self.editor_name == 'editor_units':
             name = self.occ.rp.params["variable"]
             # FIXME make a stripping function
             na = name.find("_")
@@ -321,7 +322,7 @@ class layout():
             self.occ.rp.set_param('variable', n)
             self.occ.rp.set_param('variable_unit', unit)
             self.occ.rp.set_param('variable_value', 0)
-        self.use_page(editor_name)
+        self.use_page(self.editor_name)
 
     def run_function(self, name):
         functions = {"page_0": self.load_page_0,
@@ -474,9 +475,9 @@ class layout():
         variable_unit = self.occ.rp.params["variable_unit"]
         variable_raw_value = self.occ.rp.params["variable_raw_value"]
         variable_value = self.occ.rp.params["variable_value"]
-        if self.occ.rp.params["editor_type"] == 0:
+        if self.editor_name == "editor_units":
             self.occ.rp.units[variable] = variable_unit
-        if self.occ.rp.params["editor_type"] == 1:
+        if self.editor_name == "editor_numbers":
             unit_raw = self.occ.rp.get_internal_unit(variable)
             value = variable_value
             if unit_raw != variable_unit:
@@ -487,10 +488,10 @@ class layout():
             if variable == "altitude_home":
                 # Force recalculation
                 self.occ.rp.p_raw["pressure_at_sea_level"] = 0
-        if self.occ.rp.params["editor_type"] == 2:
+        if self.editor_name == "editor_string":
             self.occ.rp.p_raw[variable] = variable_value
             self.occ.rp.params[variable] = variable_value
-        if self.occ.rp.params["editor_type"] == 3:
+        if self.editor_name == "ble_selector":
             (name, addr, dev_type) = variable_value
             self.occ.sensors.set_ble_device(name, addr, dev_type)
         self.force_refresh()
