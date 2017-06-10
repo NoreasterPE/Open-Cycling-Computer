@@ -21,6 +21,9 @@ class layout():
         # System logger handle
         self.l = logging.getLogger('system')
         self.occ = occ
+        ## @var ble_scanner
+        # ble_Scanner instance handle
+        self.ble_scanner = occ.ble_scanner
         self.uc = units()
         self.screen = occ.screen
         self.colorkey = [0, 0, 0]
@@ -70,49 +73,6 @@ class layout():
 
     def write_layout(self, layout_path="layouts/current.xml"):
         self.layout_tree.write(layout_path, encoding="UTF-8", pretty_print=True)
-
-    def ble_scan(self):
-        self.occ.l.debug("[LY] starting BLE scanning")
-        for i in range(5):
-            self.occ.rp.params['ble_dev_name_' + str(i)] = "Scanning.."
-        import ble_scanner
-        bs = ble_scanner.ble_scan()
-        bs.scan()
-        for i in range(5):
-            self.occ.rp.params['ble_dev_name_' + str(i)] = ""
-        i = 1
-        for dev in bs.get_dev_list():
-            self.occ.l.debug("[LY] BLE device found {} {}".format(dev['name'], dev['addr']))
-            self.occ.rp.params['ble_dev_name_' + str(i)] = dev['name']
-            self.occ.rp.params['ble_dev_addr_' + str(i)] = dev['addr']
-            i += 1
-        self.occ.l.debug("[LY] BLE scanning finished")
-
-    def ble_dev_helper(self, no, master):
-        if master == 'ble_hr_name':
-            dev_type = 'hr'
-        elif master == 'ble_sc_name':
-            dev_type = 'sc'
-        name = self.occ.rp.params['ble_dev_name_' + str(no)]
-        addr = self.occ.rp.params['ble_dev_addr_' + str(no)]
-        self.occ.l.debug("[LY] Selected BLE device {} {}".format(name, addr))
-        self.occ.rp.params["variable_value"] = (name, addr, dev_type)
-
-    def ble_dev_name_1(self):
-        self.ble_dev_helper(1, self.occ.rp.params["variable"])
-        self.ed_accept()
-
-    def ble_dev_name_2(self):
-        self.ble_dev_helper(2, self.occ.rp.params["variable"])
-        self.ed_accept()
-
-    def ble_dev_name_3(self):
-        self.ble_dev_helper(3, self.occ.rp.params["variable"])
-        self.ed_accept()
-
-    def ble_dev_name_4(self):
-        self.ble_dev_helper(4, self.occ.rp.params["variable"])
-        self.ed_accept()
 
     def use_page(self, page_id="page_0"):
         self.l.debug("[LY][F] use_page {}".format(page_id))
@@ -382,11 +342,11 @@ class layout():
                      "prev_page": self.prev_page,
                      "reboot": self.reboot,
                      "write_layout": self.write_layout,
-                     "ble_scan": self.ble_scan,
-                     "ble_dev_name_1": self.ble_dev_name_1,
-                     "ble_dev_name_2": self.ble_dev_name_2,
-                     "ble_dev_name_3": self.ble_dev_name_3,
-                     "ble_dev_name_4": self.ble_dev_name_4,
+                     "ble_scan": self.ble_scanner.ble_scan,
+                     "ble_dev_name_1": self.ble_scanner.ble_dev_name_1,
+                     "ble_dev_name_2": self.ble_scanner.ble_dev_name_2,
+                     "ble_dev_name_3": self.ble_scanner.ble_dev_name_3,
+                     "ble_dev_name_4": self.ble_scanner.ble_dev_name_4,
                      "quit": self.quit}
         functions[name]()
 
