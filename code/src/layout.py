@@ -17,8 +17,10 @@ class layout():
     # Temporary change
 
     def __init__(self, occ, layout_path="layouts/default.xml"):
+        ## @var l
+        # System logger handle
+        self.l = logging.getLogger('system')
         self.occ = occ
-        self.l = occ.l
         self.uc = units()
         self.screen = occ.screen
         self.colorkey = [0, 0, 0]
@@ -42,10 +44,10 @@ class layout():
             self.layout_tree = eltree.parse(layout_path)
             self.layout_path = layout_path
         except:
-            self.occ.l.error(
+            self.l.error(
                 "{} Loading layout {} failed, falling back to default.xml".format(__name__, layout_path))
             sys_info = "Error details: {}".format(sys.exc_info()[0])
-            self.occ.l.error(sys_info)
+            self.l.error(sys_info)
             # Fallback to default layout
             # FIXME - define const file with paths?
             self.layout_tree = eltree.parse("layouts/default.xml")
@@ -113,7 +115,7 @@ class layout():
         self.ed_accept()
 
     def use_page(self, page_id="page_0"):
-        self.occ.l.debug("[LY][F] use_page {}".format(page_id))
+        self.l.debug("[LY][F] use_page {}".format(page_id))
         self.occ.force_refresh()
         self.current_function_list = []
         self.current_button_list = []
@@ -122,8 +124,8 @@ class layout():
             bg_path = self.current_page.get('background')
             self.bg_image = pygame.image.load(bg_path).convert()
         except pygame.error:
-            self.occ.l.critical("{} Cannot load background image! layout_path = {} background path = {} page_id = {}"
-                                .format(__name__, self.layout_path, bg_path, page_id))
+            self.l.critical("{} Cannot load background image! layout_path = {} background path = {} page_id = {}"
+                            .format(__name__, self.layout_path, bg_path, page_id))
             # That stops occ but not immediately - errors can occur
             self.occ.running = False
             self.occ.cleanup()
@@ -131,8 +133,8 @@ class layout():
             bt_path = self.current_page.get('buttons')
             self.bt_image = pygame.image.load(bt_path).convert()
         except pygame.error:
-            self.occ.l.critical("{} Cannot load buttons image! layout_path = {} buttons path = {} page_id = {}"
-                                .format(__name__, self.layout_path, bt_path, page_id))
+            self.l.critical("{} Cannot load buttons image! layout_path = {} buttons path = {} page_id = {}"
+                            .format(__name__, self.layout_path, bt_path, page_id))
             self.occ.running = False
             self.occ.cleanup()
             pass
@@ -172,9 +174,9 @@ class layout():
                     image.set_colorkey(self.colorkey)
                     image.set_alpha(self.alpha)
                     self.current_image_list[image_path_for_frame] = image
-                    self.occ.l.debug("[LY] Image {} loaded".format(image_path_for_frame))
+                    self.l.debug("[LY] Image {} loaded".format(image_path_for_frame))
                 except:
-                    self.occ.l.error("[LY] Cannot load image {}".format(image_path_for_frame))
+                    self.l.error("[LY] Cannot load image {}".format(image_path_for_frame))
                     self.current_image_list[image_path_for_frame] = None
         else:
             try:
@@ -182,9 +184,9 @@ class layout():
                 image.set_colorkey(self.colorkey)
                 image.set_alpha(self.alpha)
                 self.current_image_list[image_path] = image
-                self.occ.l.debug("[LY] Image {} loaded".format(image_path))
+                self.l.debug("[LY] Image {} loaded".format(image_path))
             except:
-                self.occ.l.error("[LY] Cannot load image {}".format(image_path))
+                self.l.error("[LY] Cannot load image {}".format(image_path))
                 self.current_image_list[image_path] = None
 
     def use_main_page(self):
@@ -295,8 +297,7 @@ class layout():
                         self.render_pressed_button(self.screen, func)
                         break
                 except KeyError:
-                    self.occ.l.critical(
-                        "{} show_pressed_button failed! func ={}".format, __name__, func)
+                    self.l.critical("{} show_pressed_button failed! func ={}".format, __name__, func)
                     self.occ.running = False
 
     def check_click(self, position, click):
@@ -311,8 +312,7 @@ class layout():
                         self.run_function(function)
                         break
                 except KeyError:
-                    self.occ.l.debug(
-                        "[LY] CLICK on non-clickable {}".format(function))
+                    self.l.debug("[LY] CLICK on non-clickable {}".format(function))
         elif click == 'LONG':
             # print self.function_rect_list
             # print self.current_button_list
@@ -321,7 +321,7 @@ class layout():
                     if self.function_rect_list[function].collidepoint(position):
                         # FIXME I's dirty way of getting value - add some
                         # helper function
-                        self.occ.l.debug("[LY] LONG CLICK on {}".format(function))
+                        self.l.debug("[LY] LONG CLICK on {}".format(function))
                         editor_name = self.occ.rp.get_editor_name(function)
                         if editor_name:
                             self.open_editor_page(editor_name, function)
@@ -330,8 +330,7 @@ class layout():
                         if p in self.occ.rp.p_resettable:
                             self.occ.rp.reset_param(p)
                 except KeyError:
-                    self.occ.l.debug(
-                        "[LY] LONG CLICK on non-clickable {}".format(function))
+                    self.l.debug("[LY] LONG CLICK on non-clickable {}".format(function))
         elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
             self.run_function("next_page")
         elif click == 'L_TO_R':  # Swipe LEFT to RIGHT
@@ -342,8 +341,8 @@ class layout():
             self.run_function("settings")
 
     def open_editor_page(self, editor_name, function):
-        self.occ.l.debug("[LY] Opening editor {} for {}".format(editor_name, function))
-        self.odd.rp.set_param('variable', function)
+        self.l.debug("[LY] Opening editor {} for {}".format(editor_name, function))
+        self.occ.rp.set_param('variable', function)
         self.occ.rp.set_param('variable_raw_value', self.occ.rp.get_raw_val(function))
         self.occ.rp.set_param('variable_value', self.occ.rp.get_param(function))
         self.occ.rp.set_param('variable_unit', self.occ.rp.get_unit(function))
@@ -496,7 +495,7 @@ class layout():
         try:
             f = self.occ.rp.p_format[variable]
         except KeyError:
-            self.occ.l.warning(
+            self.l.warning(
                 "[LY] Formatting not available: function ={}".format(variable))
             f = "%.1f"
         self.occ.rp.params["variable_value"] = float(f % float(variable_value))
@@ -559,12 +558,12 @@ class layout():
             no = int(self.current_page.get('no'))
             page_id = self.current_page.get('id')
             page_type = self.current_page.get('type')
-            self.occ.l.debug("[LY][F] next_page {} {} {}".format(page_id, page_type, no))
+            self.l.debug("[LY][F] next_page {} {} {}".format(page_id, page_type, no))
             next_page_id = self.get_page(page_type, no + 1)
             try:
                 self.use_page(next_page_id)
             except KeyError:
-                self.occ.l.critical("[LY][F] Page 0 of type {} not found!".format(page_type))
+                self.l.critical("[LY][F] Page 0 of type {} not found!".format(page_type))
 
     def prev_page(self):
         # Editor is a special page - it cannot be switched, only cancel or accept
@@ -572,12 +571,12 @@ class layout():
             no = int(self.current_page.get('no'))
             page_id = self.current_page.get('id')
             page_type = self.current_page.get('type')
-            self.occ.l.debug("[LY][F] prev_page {} {} {}".format(page_id, page_type, no))
+            self.l.debug("[LY][F] prev_page {} {} {}".format(page_id, page_type, no))
             prev_page_id = self.get_page(page_type, no - 1)
             try:
                 self.use_page(prev_page_id)
             except KeyError:
-                self.occ.l.critical("[LY][F] Page {} of type {} not found!".format(self.max_page_id, page_type))
+                self.l.critical("[LY][F] Page {} of type {} not found!".format(self.max_page_id, page_type))
 
     def load_layout_by_name(self, name):
         self.load_layout("layouts/" + name)
