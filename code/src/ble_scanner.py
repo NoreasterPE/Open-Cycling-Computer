@@ -20,7 +20,7 @@ class ScanDelegate(DefaultDelegate):
 
 ## BLE Scanner class
 # Scans for and returns list of BLE devices.
-class ble_scan(object):
+class ble_scanner(object):
 
     ## The constructor
     #  @param self The python object self
@@ -58,7 +58,7 @@ class ble_scan(object):
         return dl
 
 if __name__ == '__main__':
-    ble = ble_scan()
+    ble = ble_scanner()
     ble.scan()
     for i in ble.get_dev_list():
         print (i)
