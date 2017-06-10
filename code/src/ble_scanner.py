@@ -29,6 +29,9 @@ class ble_scanner(object):
         ## @var l
         # System logger handle
         self.l = logging.getLogger('system')
+        ## @var occ
+        # OCC Handle
+        self.occ = occ
         ## @var rp
         # ride_parameters instance handle
         self.rp = occ.rp
@@ -88,6 +91,7 @@ class ble_scanner(object):
         addr = self.rp.get_param('ble_dev_addr_' + str(no))
         self.l.debug("[BLE] Selected BLE device {} {}".format(name, addr))
         self.rp.set_param("variable_value", (name, addr, dev_type))
+        self.occ.layout.ed_accept()
 
     def ble_dev_name_1(self):
         self.ble_dev_helper(1, self.rp.params["variable"])
