@@ -9,6 +9,7 @@ UI
 8. Add BLE icons
 9. Indicate BLE connection on screen (WIP)
 10. BLE device list expiry time. Currently never expires
+11. There is no way to disconnect from a BLE device
 
 CODING STYLE:
 1. Fix inconsistent naming: func, function, param_name
