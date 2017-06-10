@@ -4,6 +4,7 @@
 #
 #  http://opencyclingcomputer.eu/
 
+from ble_scanner import ble_scanner
 from layout import layout
 from config import config
 from operator import add
@@ -107,6 +108,9 @@ class open_cycling_computer(object):
         self.config = config(self, "config/config.xml", "config/config_base.xml")
         self.l.debug("[OCC] Reading config")
         self.config.read_config()
+        ## @var ble_scanner
+        #  Handle to ble_scanner instance
+        self.ble_scanner = ble_scanner(self)
         ## @var layout
         #  Handle to layout instance
         self.layout = layout(self, self.layout_path)
