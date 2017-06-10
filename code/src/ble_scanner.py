@@ -50,6 +50,7 @@ class ble_scanner(object):
         #  List of devices returned by bluepy scanner
         devices = self.scanner.scan(timeout)
 
+        self.dev_list_raw = []
         for dev in devices:
             ## @var local_name
             #  By default all devices are named "Unknown". If device reports a bane it will be used instead.
