@@ -8,6 +8,7 @@ UI
 7. Add icon showing BLE connection status
 8. Add BLE icons
 9. Indicate BLE connection on screen (WIP)
+10. BLE device list expiry time. Currently never expires
 
 CODING STYLE:
 1. Fix inconsistent naming: func, function, param_name
