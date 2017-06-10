@@ -73,7 +73,7 @@ class ble_scanner(object):
             self.rp.set_param('ble_dev_name_' + str(i), "")
         i = 1
         for dev in self.get_dev_list():
-            self.l.debug("[BLE] BLE device found {} {}".format(dev['name'], dev['addr']))
+            self.l.debug("[BLE] BLE device found! Name:\"{}\" addr:\"{}\"".format(dev['name'], dev['addr']))
             self.rp.set_param('ble_dev_name_' + str(i), dev['name'])
             self.rp.set_param('ble_dev_addr_' + str(i), dev['addr'])
             i += 1
