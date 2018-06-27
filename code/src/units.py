@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 ## @package units
 #  Package for converting units. When run independently shows a pseudo-test.
 #  This is not a general unit converter as it always converts from default units used by ride_parameters module.
@@ -18,9 +19,8 @@ class units():
     #  @param value value in source units. Source units are default units from ride_parameters module
     #  @param target_unit target unit
     def convert(self, value, target_unit):
-        C = u'\N{DEGREE SIGN}' + "C"
-        conversions = {"F": self.temp_C_to_F(value),
-                       "K": self.temp_C_to_K(value),
+        conversions = {'F': self.temp_C_to_F(value),
+                       'K': self.temp_C_to_K(value),
                        "km/h": self.speed_ms_to_kmh(value),
                        "mi/h": self.speed_ms_to_mph(value),
                        "st": self.mass_kg_to_st(value),
@@ -30,7 +30,7 @@ class units():
                        "yd": self.dist_m_to_yd(value),
                        "%": self.m_m_to_percent(value),
                        "hPa": self.pressure_Pa_to_hPa(value),
-                       C: value,
+                       'C': value,
                        "Pa": value,
                        "kg": value,
                        "s": value,

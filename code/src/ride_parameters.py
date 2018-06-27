@@ -1,4 +1,5 @@
-#! /usr/bin/python
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 ## @package ride_parameters
 #  Module for handling all ride parameters. This is the main module responsible for pulling all data together and preparing values for displaying, logging and saving.
 from time import strftime
@@ -14,10 +15,6 @@ INF_MIN = float("-inf")
 ## @var INF
 # helper variable, infinity
 INF = float("inf")
-
-## @var degC
-# helper variable, degree Celsius
-degC = u'\N{DEGREE SIGN}' + "C"
 
 ## @var BLE_RECONNECT_DELAY
 # Disconnect time in seconds. After this time the sensor is considered to be disconnected.
@@ -92,7 +89,7 @@ class ride_parameters():
             altitude='m', cadence='RPM', climb='m/s', distance='m', eps='', ept='', epv='', epx='',
             dtime='s', fix_gps='', latitude='', longitude='', odometer='m', pressure='Pa', riderweight='kg', wheel_size='',
             ridetime='s', ridetime_total='s', satellites='', satellitesused='', slope='m/m', speed='m/s',
-            temperature=degC, timeon='s', time_of_ride_reset='s', heart_rate='BPM', track_gps='')
+            temperature='C', timeon='s', time_of_ride_reset='s', heart_rate='BPM', track_gps='')
 
         # Params of the ride ready for rendering.
         self.params = dict(
@@ -130,7 +127,7 @@ class ride_parameters():
             altitude='m', cadence='RPM', climb='m/s', distance='km', eps='', epx='', epv='', ept='',
             dtime='s', fix_gps='', fix_gps_time='', heart_rate='BPM', latitude='', longitude='', odometer='km', pressure='hPa',
             riderweight='kg', wheel_size='', ridetime='s', ridetime_hms='', ridetime_total='s', ridetime_total_hms='', satellites='',
-            satellitesused='', slope='%', speed='km/h', temperature=degC, timeon='s', timeon_hms='', time_of_ride_reset='s',
+            satellitesused='', slope='%', speed='km/h', temperature='C', timeon='s', timeon_hms='', time_of_ride_reset='s',
             track_gps='')
 
         # Allowed units - user can switch between those when editing value
@@ -138,9 +135,9 @@ class ride_parameters():
         # FIXME switch to mi/h when mi are set for odometer
         self.units_allowed = dict(
             odometer=['km', 'mi'], riderweight=['kg', 'st', 'lb'],
-            # slope=['%', degC],
+            # slope=['%', 'C'],
             wheel_size=[''],
-            speed=['km/h', 'm/s', 'mi/h'], temperature=[degC, 'F', 'K'])
+            speed=['km/h', 'm/s', 'mi/h'], temperature=['C', 'F', 'K'])
 
         # Params description FIXME localisation
         self.p_desc = dict(

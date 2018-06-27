@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 ## @package occ
 #  OpenCyclingCompyter main file
 #
@@ -105,7 +106,7 @@ class open_cycling_computer(object):
         self.l.debug("[OCC] Initialising config")
         ## @var config
         #  Handle to config instance
-        self.config = config(self, "config/config.xml", "config/config_base.xml")
+        self.config = config(self, "config/config.yaml", "config/config_base.yaml")
         self.l.debug("[OCC] Reading config")
         self.config.read_config()
         ## @var ble_scanner
@@ -313,6 +314,7 @@ class open_cycling_computer(object):
 #  @param frame TBC
 def quit_handler(signal, frame):
     main_window.cleanup()
+
 
 if __name__ == "__main__":
     ## @var suffix
