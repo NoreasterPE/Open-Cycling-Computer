@@ -18,6 +18,9 @@ CODING STYLE:
 4. Add a standard parent class for hardware module running in a separate thread (init, start, run, stop, get_data)
 6. Add new params from modules to ride parameters? Modules to give ready for use values? Help standarisation, but makes splitting code into libs harder.
 7. Define sensor module API (init, get_data, get_formatting, start, stop, get_status)
+8. Make library for layout handling. Might be useful for other projects like weather station
+9. Switch from XML to YAML for layout description
+9. Switch from XML to YAML for config file
 
 REAL WORLD PROBLEMS:
 1. Speed filtering or max speed will be false sooner or later. Average from 2/3 samples? Kalman?
