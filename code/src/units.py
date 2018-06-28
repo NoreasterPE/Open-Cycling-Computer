@@ -120,22 +120,23 @@ class units():
         v = value / 100.0
         return v
 
+
 if __name__ == '__main__':
     u = units()
 
     tC = 20  # C
-    print "C {} F {} K {}".format(tC, u.convert(tC, "F"), u.convert(tC, "K"))
+    print("C {} F {} K {}".format(tC, u.convert(tC, "F"), u.convert(tC, "K")))
 
     dist = 1854.3
-    print "m {} km {} mi {} yd {}".format(dist, u.convert(dist, "km"), u.convert(dist, "mi"), u.convert(dist, "yd"))
+    print("m {} km {} mi {} yd {}".format(dist, u.convert(dist, "km"), u.convert(dist, "mi"), u.convert(dist, "yd")))
 
     mass = 79.5
-    print "kg {} lb {}".format(mass, u.convert(mass, "lb"))
+    print("kg {} lb {}".format(mass, u.convert(mass, "lb")))
 
     speed = 10
-    print "m/s {} km/h {} mph {}".format(speed, u.convert(speed, "km/h"), u.convert(speed, "mi/h"))
+    print("m/s {} km/h {} mph {}".format(speed, u.convert(speed, "km/h"), u.convert(speed, "mi/h")))
 
     slope = 0.013
-    print "m/m {} % {}".format(slope, u.convert(slope, "%"))
+    print("m/m {} % {}".format(slope, u.convert(slope, "%")))
     pressure = 101013
-    print "Pa {} hPa {}".format(pressure, u.convert(pressure, "hPa"))
+    print("Pa {} hPa {}".format(pressure, u.convert(pressure, "hPa")))
