@@ -1,0 +1,17 @@
+log_level: DEBUG
+layout_path: "layouts/default.xml"
+riderweight: "80.0"
+riderweight_units: kg
+wheel_size: 700x25C
+altitude_home: "0.0"
+altitude_home_units: m
+odometer: "0.0"
+odometer_units: km
+ridetime_total: "0.0"
+speed_max: "0.0"
+speed_units: "km/h"
+temperature_units: "C"
+ble_hr_name: "Tacx HRB 04741"
+ble_hr_addr: "D6:90:A8:08:F0:E4"
+ble_sc_name: "Lezyne S&C 249"
+ble_sc_addr: "FD:DF:0E:4E:76:CF"
