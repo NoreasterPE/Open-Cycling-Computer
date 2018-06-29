@@ -1,6 +1,11 @@
-Changelog next:
-- BLE icons shows connection status (no scanning animation yet)
-- Added more BLE icons
+Changelog v0.04:
+- Convert config and layout files to yaml
+
+Changelog v0.03:
+- Add working BLE scanner / selector
+
+Changelog v0.02:
+- Lot of BLE changes, (heart rate sensor, icon showing connection states)
 
 Changelog v0.01:
 - BLE connectivity to speed & cadence sensor (initial version, hardcoded address)
