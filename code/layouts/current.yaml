@@ -1,0 +1,928 @@
+pages: 
+       - name: Main
+         id: page_0
+         number: 0
+         type: normal
+         background: images/occ_page_0_background.png
+         buttons: images/occ_page_0_buttons.png
+         font: ""
+         font_size: 7
+         fg_colour: FFFFFF
+         fields: 
+                - function: speed_digits
+                  x: 95
+                  y: 75
+                  font_size: 19
+                  button: 
+                          x0: 0
+                          y0: 0
+                          w: 240
+                          h: 150
+
+                - function: speed_tenths
+                  x: 210
+                  y: 115
+                  font_size: 7
+
+                - function: speed_units
+                  x: 205
+                  y: 75
+                  font_size: 2
+
+                - function: gps_icon
+                  x: 205
+                  y: 5
+                  file: images/gps_icon_32x32.png
+                  variable:
+                          name: gps_strength
+                          frames: 3
+
+                - function: ble_icon
+                  x: 175
+                  y: 5
+                  file: images/ble_icon_32x32.png
+                  variable:
+                          name: ble_state
+                          frames: 6
+
+                - function: distance
+                  x: 170
+                  y: 175
+                  font_size: 4
+                  button: 
+                          x0: 120
+                          y0: 150
+                          w: 119
+                          h: 90
+
+                - function: distance_units
+                  x: 210
+                  y: 175
+                  font_size: 2
+
+                - function: ridetime_hms
+                  x: 180
+                  y: 205
+                  font_size: 3
+
+                - function: timeon_hms
+                  x: 180
+                  y: 225
+                  font_size: 3
+
+                - function: climb
+                  x: 50
+                  y: 180
+                  font_size: 4
+
+                - function: climb_units
+                  x: 100
+                  y: 185
+                  font_size: 2
+
+                - function: slope
+                  x: 50
+                  y: 215
+                  font_size: 4
+
+                - function: slope_units
+                  x: 100
+                  y: 220
+                  font_size: 2
+
+                - function: cadence
+                  x: 50
+                  y: 290
+                  font_size: 7
+                  button: 
+                          x0: 0
+                          y0: 240
+                          w: 119
+                          h: 80
+
+                - function: cadence_min
+                  x: 20
+                  y: 255
+                  font_size: 2
+
+                - function: cadence_ave
+                  x: 60
+                  y: 255
+                  font_size: 2
+
+                - function: cadence_max
+                  x: 100
+                  y: 255
+                  font_size: 2
+
+                - function: cadence_units
+                  x: 105
+                  y: 310
+                  font_size: 1.2
+
+                - function: cadence_icon
+                  x: 98
+                  y: 267
+                  file: images/cadence_icon_20x32.png
+
+                - function: heart_rate
+                  x: 171
+                  y: 290
+                  font_size: 7
+                  button: 
+                          x0: 120
+                          y0: 240
+                          w: 119
+                          h: 80
+
+                - function: heart_rate_min
+                  x: 140
+                  y: 255
+                  font_size: 2
+
+                - function: heart_rate_ave
+                  x: 180
+                  y: 255
+                  font_size: 2
+
+                - function: heart_rate_max
+                  x: 220
+                  y: 255
+                  font_size: 2
+
+                - function: heart_rate_units
+                  x: 225
+                  y: 310
+                  font_size: 1.2
+
+                - function: heart_rate_icon
+                  x: 218
+                  y: 267
+                  file: images/heart_rate_icon_20x32.png
+
+       - name: "Weather"
+         id: page_1
+         number: 1
+         type: normal
+         background: images/occ_page_1_background.png
+         buttons: images/occ_page_1_buttons.png
+         font: ""
+         font_size: 2
+         fg_colour: FFFFFF
+         fields: 
+                - function: speed_max_label
+                  x: 25
+                  y: 10
+                  font_size: 2
+                  text: Max
+                - function: speed_max_digits
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 240
+                          h: 150
+                  x: 95
+                  y: 75
+                  font_size: 19
+
+                - function: speed_max_tenths
+                  x: 210
+                  y: 115
+                  font_size: 7
+
+                - function: speed_units
+                  x: 205
+                  y: 75
+                  font_size: 2
+
+                - function: speed_avg_label
+                  x: 25
+                  y: 160
+                  font_size: 2
+                  text: Ave
+                - function: speed_avg
+                  button:
+                          x0: 0
+                          y0: 150
+                          w: 239
+                          h: 89
+                  x: 100
+                  y: 175
+                  font_size: 4
+
+                - function: speed_avg_units
+                  x: 210
+                  y: 175
+                  font_size: 2
+
+                - function: temperature
+                  button:
+                          x0: 0
+                          y0: 240
+                          w: 119
+                          h: 80
+                  x: 50
+                  y: 290
+                  font_size: 7
+
+                - function: temperature_icon
+                  x: 98
+                  y: 267
+                  file: images/temperature_icon_20x32.png
+
+                - function: temperature_min
+                  x: 20
+                  y: 255
+                  font_size: 2
+
+                - function: temperature_avg
+                  x: 60
+                  y: 255
+                  font_size: 2
+
+                - function: temperature_max
+                  x: 100
+                  y: 255
+                  font_size: 2
+
+                - function: temperature_units
+                  x: 110
+                  y: 310
+                  font_size: 2
+
+                - function: pressure
+                  x: 170
+                  y: 280
+                  font_size: 5
+
+                - function: pressure_units
+                  x: 220
+                  y: 310
+                  font_size: 2
+
+                - function: ridetime_total_hms
+                  x: 120
+                  y: 215
+                  font_size: 4
+       - name: "GPS"
+         id: page_2
+         number: 2
+         type: normal
+         background: images/occ_page_2_background.png
+         buttons: images/occ_page_2_buttons.png
+         font: ""
+         font_size: 2
+         fg_colour: FFFFFF
+         fields: 
+                - function: latitude
+                  x: 60
+                  y: 25
+                  font_size: 3
+
+                - function: longitude
+                  x: 60
+                  y: 60
+                  font_size: 3
+
+                - function: fix_time_gps
+                  x: 60
+                  y: 95
+                  font_size: 3
+
+                - function: fix_gps
+                  x: 60
+                  y: 130
+                  font_size: 3
+
+                - function: time
+                  x: 180
+                  y: 25
+                  font_size: 3
+
+                - function: date
+                  x: 180
+                  y: 60
+                  font_size: 3
+
+                - function: altitude_gps
+                  button:
+                          x0: 120
+                          y0: 240
+                          w: 119
+                          h: 80
+                  x: 50
+                  y: 290
+                  font_size: 7
+
+                - function: altitude_units
+                  x: 110
+                  y: 310
+                  font_size: 1.2
+
+                - function: altitude_gps_icon
+                  x: 97
+                  y: 267
+                  file: images/altitude_gps_icon_20x32.png
+
+                - function: altitude
+                  button:
+                          x0: 120
+                          y0: 240
+                          w: 119
+                          h: 80
+                  x: 170
+                  y: 290
+                  font_size: 7
+
+                - function: altitude_min
+                  x: 140
+                  y: 255
+                  font_size: 2
+
+                - function: altitude_max
+                  x: 220
+                  y: 255
+                  font_size: 2
+
+                - function: altitude_units
+                  x: 230
+                  y: 310
+                  font_size: 1.2
+
+                - function: altitude_icon
+                  x: 217
+                  y: 267
+                  file: images/altitude_icon_20x32.png
+
+       - name: "Settings 0"
+         id: settings_0
+         number: 0
+         type: settings
+         background: images/occ_settings_0_background.png
+         buttons: images/occ_settings_0_buttons.png
+         font: ""
+         font_size: 2
+         fg_colour: FFFFFF
+         fields: 
+                - function: label
+                  x: 60
+                  y: 15
+                  text: Rider weight
+
+                - function: rider_weight
+                  x: 45
+                  y: 50
+                  font_size: 4
+                  button: 
+                          x0: 0
+                          y0: 0
+                          w: 120
+                          h: 80
+
+                - function: riderweight_units
+                  x: 100
+                  y: 50
+                  font_size: 2
+
+                - function: label
+                  x: 180
+                  y: 15
+                  text: Home altitude
+
+                - function: altitude_home
+                  x: 165
+                  y: 50
+                  font_size: 4
+
+                  button:
+                          x0: 120
+                          y0: 0
+                          w: 119
+                          h: 80
+
+                - function: altitude_home_units
+                  x: 220
+                  y: 50
+                  font_size: 2
+
+                - function: label
+                  x: 60
+                  y: 95
+                  font_size: 2
+                  text: Speed
+
+                - function: speed_units
+                  x: 60
+                  y: 130
+                  font_size: 4
+                  button:
+                          x0: 0
+                          y0: 80
+                          w: 120
+                          h: 80
+
+                - function: label
+                  x: 180
+                  y: 95
+                  font_size: 2
+                  text: Temperature
+
+                - function: temperature_units
+                  x: 180
+                  y: 130
+                  font_size: 4
+                  button:
+                          x0: 120
+                          y0: 80
+                          w: 120
+                          h: 80
+
+                - function: label
+                  x: 60
+                  y: 175
+                  font_size: 2
+                  text: Wheel size
+
+                - function: wheel_size
+                  x: 60
+                  y: 215
+                  font_size: 3
+                  button:
+                          x0: 0
+                          y0: 160
+                          w: 120
+                          h: 80
+
+                - function: label
+                  x: 60
+                  y: 255
+                  font_size: 2
+                  text: Heart rate 
+
+                - function: ble_hr_name
+                  x: 60
+                  y: 280
+                  font_size: 1.5
+                  button:
+                          x0: 0
+                          y0: 240
+                          w: 120
+                          h: 80
+
+                - function: ble_hr_addr
+                  x: 60
+                  y: 300
+                  font_size: 1.5
+
+                - function: label
+                  x: 180
+                  y: 255
+                  font_size: 2
+                  text: Spd/cadence
+
+                - function: ble_sc_name
+                  x: 180
+                  y: 280
+                  font_size: 1.5
+                  button:
+                          x0: 120
+                          y0: 240
+                          w: 120
+                          h: 80
+
+                - function: ble_sc_addr
+                  x: 180
+                  y: 300
+                  font_size: 1.5
+
+       - name: "Settings 1"
+         id: settings_1
+         number: 1
+         type: settings
+         background: images/occ_settings_1_background.png
+         buttons: images/occ_settings_1_buttons.png
+         font: ""
+         font_size: 2
+         fg_colour: FFFFFF
+         fields: 
+                - function: halt
+                  x: 120
+                  y: 40
+                  font_size: 2
+                  text: Halt
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 240
+                          h: 80
+
+                - function: reboot
+                  x: 120
+                  y: 120
+                  font_size: 2
+                  text: Reboot
+                  button:
+                          x0: 0
+                          y0: 79
+                          w: 240
+                          h: 80
+
+                - function: quit
+                  x: 120
+                  y: 200
+                  font_size: 2
+                  text: Quit
+                  button:
+                          x0: 0
+                          y0: 159
+                          w: 240
+                          h: 80
+
+       - name: "Settings 2"
+         id: settings_2
+         number: 2
+         type: settings
+         background: images/occ_settings_2_background.png
+         buttons: images/occ_settings_2_buttons.png
+         font: ""
+         font_size: 2
+         fg_colour: FFFFFF
+         fields: 
+                - function: load_current_layout
+                  x: 120
+                  y: 40
+                  font_size: 2
+                  text: Load current layout
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 240
+                          h: 80
+
+                - function: load_default_layout
+                  x: 120
+                  y: 120
+                  font_size: 2
+                  text: Load default layout
+                  button:
+                          x0: 0
+                          y0: 79
+                          w: 240
+                          h: 80
+
+                - function: 
+                  x: 120
+                  y: 200
+                  font_size: 2
+                  text: 
+                  button:
+                          x0: 0
+                          y0: 159
+                          w: 240
+                          h: 80
+
+                - function: debug_level
+                  x: 120
+                  y: 280
+                  font_size: 2
+                  text: 
+                  button:
+                          x0: 0
+                          y0: 239
+                          w: 240
+                          h: 80
+
+       - name: "Unit Editor"
+         id: editor_units
+         number: 0
+         type: editor
+         background: images/occ_editor_background.png
+         buttons: images/occ_editor_buttons.png
+         font: ""
+         font_size: 2
+         fg_colour: FFFFFF
+         fields: 
+                - function: ed_accept
+                  x: 60
+                  y: 30
+                  font_size: 3
+                  text: Accept
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 119
+                          h: 60
+
+                - function: ed_cancel
+                  x: 180
+                  y: 30
+                  font_size: 3
+                  text: Cancel
+                  button:
+                          x0: 120
+                          y0: 0
+                          w: 119
+                          h: 60
+
+                - function: variable_description
+                  x: 120
+                  y: 70
+                  font_size: 2
+
+                - function: variable_unit
+                  x: 120
+                  y: 110
+                  font_size: 6
+
+                - function: ed_prev_unit
+                  x: 40
+                  y: 130
+                  font_size: 3
+                  button:
+                          x0: 0
+                          y0: 140
+                          w: 59
+                          h: 60
+
+                - function: ed_next_unit
+                  x: 200
+                  y: 130
+                  font_size: 3
+                  button:
+                          x0: 180
+                          y0: 140
+                          w: 59
+                          h: 60
+
+       - name: "Number Editor"
+         id: editor_numbers
+         number: 0
+         type: editor
+         background: images/occ_editor_background.png
+         buttons: images/occ_editor_buttons.png
+         font: ""
+         font_size: 2
+         fg_colour: FFFFFF
+         fields: 
+                - function: ed_accept
+                  x: 60
+                  y: 30
+                  font_size: 3
+                  text: Accept
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 119
+                          h: 60
+
+                - function: ed_cancel
+                  x: 180
+                  y: 30
+                  font_size: 3
+                  text: Cancel
+                  button:
+                          x0: 120
+                          y0: 0
+                          w: 119
+                          h: 60
+
+                - function: variable_description
+                  x: 120
+                  y: 70
+                  font_size: 2
+
+                - function: variable_value
+                  x: 120
+                  y: 110
+                  font_size: 6
+
+                - function: variable_unit
+                  x: 120
+                  y: 180
+                  font_size: 3
+
+                - function: ed_prev_unit
+                  x: 40
+                  y: 130
+                  font_size: 3
+                  button:
+                          x0: 0
+                          y0: 140
+                          w: 59
+                          h: 60
+
+                - function: ed_next_unit
+                  x: 200
+                  y: 130
+                  font_size: 3
+                  button:
+                          x0: 180
+                          y0: 140
+                          w: 59
+                          h: 60
+
+                - function: ed_decrease
+                  x: 60
+                  y: 230
+                  font_size: 5
+                  text: "-"
+                  button:
+                          x0: 0
+                          y0: 200
+                          w: 119
+                          h: 60
+
+                - function: ed_increase
+                  x: 180
+                  y: 230
+                  font_size: 5
+                  text: "+"
+                  button:
+                          x0: 120
+                          y0: 200
+                          w: 119
+                          h: 60
+
+                - function: ed_prev
+                  x: 60
+                  y: 290
+                  font_size: 3
+                  text: Prev
+                  button:
+                          x0: 0
+                          y0: 260
+                          w: 119
+                          h: 60
+
+                - function: ed_next
+                  x: 180
+                  y: 290
+                  font_size: 3
+                  text: Next
+                  button:
+                          x0: 120
+                          y0: 260
+                          w: 119
+                          h: 60
+
+       - name: "List Editor"
+         id: editor_list
+         number: 0
+         type: editor
+         background: images/occ_editor_background.png
+         buttons: images/occ_editor_buttons.png
+         font: ""
+         font_size: 2
+         fg_colour: FFFFFF
+         fields: 
+                - function: ed_accept
+                  x: 60
+                  y: 30
+                  font_size: 3
+                  text: Accept
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 119
+                          h: 60
+
+                - function: ed_cancel
+                  x: 180
+                  y: 30
+                  font_size: 3
+                  text: Cancel
+                  button:
+                          x0: 120
+                          y0: 0
+                          w: 119
+                          h: 60
+
+                - function: variable_description
+                  x: 120
+                  y: 90
+                  font_size: 2
+
+                - function: variable_value
+                  x: 120
+                  y: 130
+                  font_size: 6
+
+                - function: ed_decrease
+                  x: 60
+                  y: 230
+                  font_size: 5
+                  text: "-"
+                  button:
+                          x0: 0
+                          y0: 200
+                          w: 119
+                          h: 60
+
+                - function: ed_increase
+                  x: 180
+                  y: 230
+                  font_size: 5
+                  text: +
+                  button:
+                          x0: 120
+                          y0: 200
+                          w: 119
+                          h: 60
+
+                - function: ed_prev
+                  x: 60
+                  y: 290
+                  font_size: 3
+                  text: Prev
+                  button:
+                          x0: 0
+                          y0: 260
+                          w: 119
+                          h: 60
+
+                - function: ed_next
+                  x: 180
+                  y: 290
+                  font_size: 3
+                  text: Next
+                  button:
+                          x0: 120
+                          y0: 260
+                          w: 119
+                          h: 60
+
+       - name: "List Piscke"
+         id: ble_selector
+         number: 0
+         type: editor
+         background: images/ble_selector.png
+         buttons: images/occ_settings_2_buttons.png
+         font: ""
+         font_size: 2
+         fg_colour: FFFFFF
+         fields: 
+                - function: ble_scan
+                  x: 60
+                  y: 30
+                  font_size: 3
+                  text: Scan
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 119
+                          h: 60
+
+                - function: ed_cancel
+                  x: 180
+                  y: 30
+                  font_size: 3
+                  text: Cancel
+                  button:
+                          x0: 120
+                          y0: 0
+                          w: 119
+                          h: 60
+
+                - function: ble_dev_name_1
+                  x: 120
+                  y: 96
+                  font_size: 2
+                  text: Device ?
+                  button:
+                          x0: 0
+                          y0: 64
+                          w: 240
+                          h: 63
+
+                - function: ble_dev_name_2
+                  x: 120
+                  y: 160
+                  font_size: 2
+                  text: Device ?
+                  button:
+                          x0: 0
+                          y0: 128
+                          w: 240
+                          h: 63
+
+                - function: ble_dev_name_3
+                  x: 120
+                  y: 224
+                  font_size: 2
+                  text: Device ?
+                  button:
+                          x0: 0
+                          y0: 192
+                          w: 240
+                          h: 63
+
+                - function: ble_dev_name_4
+                  x: 120
+                  y: 288
+                  font_size: 2
+                  text: Device ?
+                  button:
+                          x0: 0
+                          y0: 256
+                          w: 240
+                          h: 63
