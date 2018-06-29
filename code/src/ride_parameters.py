@@ -75,7 +75,7 @@ class ride_parameters():
                           cadence_time_stamp=time.time(), ble_data_expiry_time=1.5, time_of_ride_reset=0.0001,
                           ble_hr_name='', ble_hr_addr='',
                           ble_sc_name='', ble_sc_addr='',
-                          riderweight=0.0,
+                          rider_weight=0.0,
                           ridetime=0.0, ridetime_total=0.0,
                           slope=0.0,
                           speed=0.0, speed_avg=0.0, speed_gps=0.0, speed_max=0.0,
@@ -87,7 +87,7 @@ class ride_parameters():
         # Internal units
         self.p_raw_units = dict(
             altitude='m', cadence='RPM', climb='m/s', distance='m', eps='', ept='', epv='', epx='',
-            dtime='s', fix_gps='', latitude='', longitude='', odometer='m', pressure='Pa', riderweight='kg', wheel_size='',
+            dtime='s', fix_gps='', latitude='', longitude='', odometer='m', pressure='Pa', rider_weight='kg', wheel_size='',
             ridetime='s', ridetime_total='s', satellites='', satellitesused='', slope='m/m', speed='m/s',
             temperature='C', timeon='s', time_of_ride_reset='s', heart_rate='BPM', track_gps='')
 
@@ -97,7 +97,7 @@ class ride_parameters():
             cadence='-', cadence_avg='-', cadence_max='-', heart_rate='-', heart_rate_min='-', heart_rate_avg='-', heart_rate_max='-',
             climb='-', distance=0, eps='-', ept='-', epv='-', epx='-',
             dtime=0, fix_gps='-', fix_gps_time='-', latitude='-', longitude='-', odometer=0.0,
-            pressure='-', pressure_at_sea_level='-', riderweight=0.0, wheel_size='', wheel_circ='', ridetime='', ridetime_hms='', ridetime_total='',
+            pressure='-', pressure_at_sea_level='-', rider_weight=0.0, wheel_size='', wheel_circ='', ridetime='', ridetime_hms='', ridetime_total='',
             ridetime_total_hms='', rtc='', satellites='-', satellitesused='-', slope='-', speed='-', speed_avg='-',
             speed_avg_digits='-', speed_avg_tenths='-', speed_digits='-', speed_max='-', speed_max_digits='-',
             speed_max_tenths='-', speed_tenths='-', temperature='', temperature_avg='', temperature_max='',
@@ -116,7 +116,7 @@ class ride_parameters():
             dtime='%.2f', fix_gps='', fix_gps_time='',
             heart_rate='%.0f', heart_rate_min='%.0f', heart_rate_avg='%.0f', heart_rate_max='%.0f',
             latitude='%.4f', longitude='%.4f', odometer='%.0f',
-            pressure='%.0f', pressure_at_sea_level='%.0f', riderweight='%.1f', ridetime='%.0f', ridetime_hms='', ridetime_total='.0f',
+            pressure='%.0f', pressure_at_sea_level='%.0f', rider_weight='%.1f', ridetime='%.0f', ridetime_hms='', ridetime_total='.0f',
             ridetime_total_hms='', rtc='', satellites='%.0f', satellitesused='%.0f', slope='%.0f', speed='%.1f', speed_avg='%.1f',
             speed_avg_digits='%.0f', speed_avg_tenths='%.0f', speed_digits='%.0f', speed_max='%.1f', speed_max_digits='%.0f', speed_max_tenths='%.0f',
             speed_tenths='%.0f', temperature='%.0f', temperature_avg='%.1f', temperature_max='%.0f', temperature_min='%.0f',
@@ -126,7 +126,7 @@ class ride_parameters():
         self.units = dict(
             altitude='m', cadence='RPM', climb='m/s', distance='km', eps='', epx='', epv='', ept='',
             dtime='s', fix_gps='', fix_gps_time='', heart_rate='BPM', latitude='', longitude='', odometer='km', pressure='hPa',
-            riderweight='kg', wheel_size='', ridetime='s', ridetime_hms='', ridetime_total='s', ridetime_total_hms='', satellites='',
+            rider_weight='kg', wheel_size='', ridetime='s', ridetime_hms='', ridetime_total='s', ridetime_total_hms='', satellites='',
             satellitesused='', slope='%', speed='km/h', temperature='C', timeon='s', timeon_hms='', time_of_ride_reset='s',
             track_gps='')
 
@@ -134,7 +134,7 @@ class ride_parameters():
         # FIXME switch to mi when mi/h are set for speed
         # FIXME switch to mi/h when mi are set for odometer
         self.units_allowed = dict(
-            odometer=['km', 'mi'], riderweight=['kg', 'st', 'lb'],
+            odometer=['km', 'mi'], rider_weight=['kg', 'st', 'lb'],
             # slope=['%', 'C'],
             wheel_size=[''],
             speed=['km/h', 'm/s', 'mi/h'], temperature=['C', 'F', 'K'])
@@ -142,12 +142,12 @@ class ride_parameters():
         # Params description FIXME localisation
         self.p_desc = dict(
             altitude_home='Home altitude', odometer='Odometer', odometer_units='Odometer units',
-            riderweight='Rider weight', riderweight_units='Rider weight units', wheel_size='Wheel size', speed_units='Speed units',
+            rider_weight='Rider weight', rider_weight_units='Rider weight units', wheel_size='Wheel size', speed_units='Speed units',
             temperature_units='Temp. unit')
 
         # Params that can be changed in Settings by user
-        self.editors = dict(editor_units=('odometer_units', 'riderweight_units', 'speed_units', 'temperature_units'),
-                            editor_numbers=('altitude_home', 'odometer', 'riderweight'),
+        self.editors = dict(editor_units=('odometer_units', 'rider_weight_units', 'speed_units', 'temperature_units'),
+                            editor_numbers=('altitude_home', 'odometer', 'rider_weight'),
                             editor_string=('wheel_size',),
                             ble_selector=('ble_hr_name', 'ble_sc_name'))
 
@@ -464,7 +464,7 @@ class ride_parameters():
         self.split_speed("speed")
         self.params["utc"] = self.p_raw["utc"]
         self.update_param("odometer")
-        self.update_param("riderweight")
+        self.update_param("rider_weight")
         self.update_param("pressure")
         self.update_temperatures()
         self.update_param("satellitesused")

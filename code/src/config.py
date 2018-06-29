@@ -61,9 +61,9 @@ class config(object):
 
         error_list = []
         try:
-            self.rp.p_raw["riderweight"] = float(self.config_params["riderweight"])
+            self.rp.p_raw["rider_weight"] = float(self.config_params["rider_weight"])
         except AttributeError:
-            error_list.append("riderweight")
+            error_list.append("rider_weight")
         try:
             self.rp.p_raw["wheel_size"] = self.config_params["wheel_size"]
             self.rp.params["wheel_size"] = self.rp.p_raw["wheel_size"]
@@ -76,9 +76,9 @@ class config(object):
         except AttributeError:
             error_list.append("wheel_size")
         try:
-            self.rp.units["riderweight"] = self.config_params["riderweight_units"]
+            self.rp.units["rider_weight"] = self.config_params["rider_weight_units"]
         except AttributeError:
-            error_list.append("riderweight_units")
+            error_list.append("rider_weight_units")
         try:
             self.rp.p_raw["altitude_home"] = float(self.config_params["altitude_home"])
         except AttributeError:
@@ -150,8 +150,8 @@ class config(object):
         c = {}
         c["log_level"] = log_level
         c["layout_path"] = self.occ.layout_path
-        c["riderweight"] = self.rp.p_raw["riderweight"]
-        c["riderweight_units"] = self.rp.units["riderweight"]
+        c["rider_weight"] = self.rp.p_raw["rider_weight"]
+        c["rider_weight_units"] = self.rp.units["rider_weight"]
         c["wheel_size"] = self.rp.p_raw["wheel_size"]
         c["altitude_home"] = self.rp.p_raw["altitude_home"]
         c["altitude_home_units"] = self.rp.units["altitude_home"]

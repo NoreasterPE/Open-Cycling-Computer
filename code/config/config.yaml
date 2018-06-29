@@ -8,8 +8,8 @@ layout_path: layouts/default.yaml
 log_level: DEBUG
 odometer: 0.0
 odometer_units: km
-riderweight: 80.0
-riderweight_units: kg
+rider_weight: 80.0
+rider_weight_units: kg
 ridetime_total: 0.0
 speed_max: 0.0
 speed_units: km/h

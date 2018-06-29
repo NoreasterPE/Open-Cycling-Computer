@@ -379,7 +379,7 @@ pages:
                           w: 120
                           h: 80
 
-                - function: riderweight_units
+                - function: rider_weight_units
                   x: 100
                   y: 50
                   font_size: 2
@@ -393,7 +393,6 @@ pages:
                   x: 165
                   y: 50
                   font_size: 4
-
                   button:
                           x0: 120
                           y0: 0
