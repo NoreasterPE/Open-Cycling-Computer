@@ -55,7 +55,7 @@ class config(object):
             self.occ.layout_path = self.config_params["layout_path"]
             self.l.debug("[CON] Setting layout. Path = {}".format(self.occ.layout_path))
         except AttributeError:
-            self.occ.layout_path = "layouts/default.xml"
+            self.occ.layout_path = "layouts/default.yaml"
             self.l.error(
                 "[CON] Missing layout path, falling back to {}".format(self.occ.layout_path))
 

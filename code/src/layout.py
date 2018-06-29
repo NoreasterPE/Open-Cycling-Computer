@@ -1,22 +1,23 @@
 #! /usr/bin/python
 ## @package layout
 #   Module responsible for loading and rendering layouts. Needs heavy cleaning...
+from shutil import copyfile
 from units import units
 import logging
-import lxml.etree as eltree
 import os
 import pygame
 import struct
 import sys
 import time
+import yaml
 
 
 ## Class for handling layouts
 class layout():
-    # def __init__(self, occ, layout_path="layouts/current.xml"):
+    # def __init__(self, occ, layout_path="layouts/current.yaml"):
     # Temporary change
 
-    def __init__(self, occ, layout_path="layouts/default.xml"):
+    def __init__(self, occ, layout_path="layouts/default.yaml"):
         ## @var l
         # System logger handle
         self.l = logging.getLogger('system')
@@ -45,35 +46,39 @@ class layout():
         self.page_list = {}
         self.page_index = {}
         try:
-            self.layout_tree = eltree.parse(layout_path)
+            with open(layout_path) as f:
+                self.layout_tree = yaml.safe_load(f)
+            f.close()
             self.layout_path = layout_path
         except:
             self.l.error(
-                "{} Loading layout {} failed, falling back to default.xml".format(__name__, layout_path))
+                "{} Loading layout {} failed, falling back to default.yaml".format(__name__, layout_path))
             sys_info = "Error details: {}".format(sys.exc_info()[0])
             self.l.error(sys_info)
             # Fallback to default layout
             # FIXME - define const file with paths?
-            self.layout_tree = eltree.parse("layouts/default.xml")
+            layout_path = "layouts/default.yaml"
+            with open(layout_path) as f:
+                self.layout_tree = yaml.safe_load(f)
+            f.close()
 
-        self.pages = self.layout_tree.getroot()
-        for page in self.pages:
-            page_id = page.get('id')
+        for page in self.layout_tree['pages']:
+            page_id = page['id']
             self.page_list[page_id] = page
-            self.page_index[page_id] = page.get('name')
-            page_type = page.get('type')
-            _no = page.get('no')
+            self.page_index[page_id] = page['name']
+            page_type = page['type']
+            _number = page['number']
             if page_type == 'normal':
-                no = int(_no)
-                self.max_page_id = max(self.max_page_id, no)
+                number = int(_number)
+                self.max_page_id = max(self.max_page_id, number)
             if page_type == 'settings':
-                no = int(_no)
-                self.max_settings_id = max(self.max_settings_id, no)
+                number = int(_number)
+                self.max_settings_id = max(self.max_settings_id, number)
         self.use_page()
         self.write_layout()
 
-    def write_layout(self, layout_path="layouts/current.xml"):
-        self.layout_tree.write(layout_path, encoding="UTF-8", pretty_print=True)
+    def write_layout(self, layout_path="layouts/current.yaml"):
+        copyfile(self.layout_path, layout_path)
 
     def use_page(self, page_id="page_0"):
         self.l.debug("[LY][F] use_page {}".format(page_id))
@@ -82,7 +87,7 @@ class layout():
         self.current_button_list = []
         self.current_page = self.page_list[page_id]
         try:
-            bg_path = self.current_page.get('background')
+            bg_path = self.current_page['background']
             self.bg_image = pygame.image.load(bg_path).convert()
         except pygame.error:
             self.l.critical("{} Cannot load background image! layout_path = {} background path = {} page_id = {}"
@@ -91,7 +96,7 @@ class layout():
             self.occ.running = False
             self.occ.cleanup()
         try:
-            bt_path = self.current_page.get('buttons')
+            bt_path = self.current_page['buttons']
             self.bt_image = pygame.image.load(bt_path).convert()
         except pygame.error:
             self.l.critical("{} Cannot load buttons image! layout_path = {} buttons path = {} page_id = {}"
@@ -99,15 +104,18 @@ class layout():
             self.occ.running = False
             self.occ.cleanup()
             pass
-        self.font = self.current_page.get('font')
+        self.font = self.current_page['font']
+        self.font_size = self.current_page['font_size']
         if (self.font == ""):
             self.font = None
-        self.fg_colour_rgb = self.current_page.get('fg_colour')
+        self.fg_colour_rgb = self.current_page['fg_colour']
         self.fg_colour = struct.unpack('BBB', self.fg_colour_rgb.decode('hex'))
-        for field in self.current_page:
-            # print "function name : ", field.get('function')
-            self.current_function_list.append(field.get('function'))
-            b = field.find('button')
+        for field in self.current_page['fields']:
+            self.current_function_list.append(field['function'])
+            try:
+                b = field['button']
+            except KeyError:
+                b = None
             if (b is not None):
                 x0 = int(b.get('x0'))
                 y0 = int(b.get('y0'))
@@ -117,38 +125,26 @@ class layout():
                 rect = pygame.Rect(x0, y0, w, h)
                 self.function_rect_list[name] = rect
                 self.current_button_list.append(name)
-                text_center = field.find('text_center')
-                image_path = text_center.get('file')
-                if (image_path is not None):
-                    self.load_image(text_center)
-
-    # FIXME text_center isn't really good name
-    def load_image(self, text_center):
-        image_path = text_center.get('file')
-        frames = text_center.get('frames')
-        if frames is not None:
-            frames = int(frames)
-            for i in range(frames + 1):
-                image_path_for_frame = self.make_image_key(image_path, i)
+                #try:
+                #    position = (field['x'], field['y'])
+                #except KeyError:
+                #    pass
                 try:
-                    image = pygame.image.load(image_path_for_frame).convert()
-                    image.set_colorkey(self.colorkey)
-                    image.set_alpha(self.alpha)
-                    self.current_image_list[image_path_for_frame] = image
-                    self.l.debug("[LY] Image {} loaded".format(image_path_for_frame))
-                except:
-                    self.l.error("[LY] Cannot load image {}".format(image_path_for_frame))
-                    self.current_image_list[image_path_for_frame] = None
-        else:
-            try:
-                image = pygame.image.load(image_path).convert()
-                image.set_colorkey(self.colorkey)
-                image.set_alpha(self.alpha)
-                self.current_image_list[image_path] = image
-                self.l.debug("[LY] Image {} loaded".format(image_path))
-            except:
-                self.l.error("[LY] Cannot load image {}".format(image_path))
-                self.current_image_list[image_path] = None
+                    if (field['file'] is not None):
+                        self.load_image(field['file'])
+                except KeyError:
+                    pass
+
+    def load_image(self, image_path):
+        try:
+            image = pygame.image.load(image_path).convert()
+            image.set_colorkey(self.colorkey)
+            image.set_alpha(self.alpha)
+            self.current_image_list[image_path] = image
+            self.l.debug("[LY] Image {} loaded".format(image_path))
+        except:
+            self.l.error("[LY] Cannot load image {}".format(image_path))
+            self.current_image_list[image_path] = None
 
     def use_main_page(self):
         self.use_page()
@@ -177,36 +173,48 @@ class layout():
         return (name + suffix + extension)
 
     def render(self, screen):
-        # FIXME Optimisation!
-        for field in self.current_page:
-            function = field.get('function')
-            text_center = field.find('text_center')
+        for field in self.current_page['fields']:
+            function = field['function']
+            position_x = field['x']
+            position_y = field['y']
             value = self.occ.rp.get_param(function)
             if value is None:
-                value = text_center.text
-            if value is None:
-                value = ""
+                try:
+                    value = field['text']
+                except KeyError:
+                    value = ""
             uv = unicode(value)
-            text_center_x = int(text_center.get('x'))
-            text_center_y = int(text_center.get('y'))
-            variable = text_center.get('variable')
-            image_path = text_center.get('file')
-            if variable is not None:
-                value = self.occ.rp.get_raw_val(variable)
-                image_path_for_frame = self.make_image_key(image_path, value)
-                if image_path_for_frame not in self.current_image_list:
-                    self.load_image(text_center)
-                image = self.current_image_list[image_path_for_frame]
-                screen.blit(image, [text_center_x, text_center_y])
-            elif image_path is not None:
-                if image_path not in self.current_image_list:
-                    self.load_image(text_center)
-                image = self.current_image_list[image_path]
-                screen.blit(image, [text_center_x, text_center_y])
+            variable = None
+            # Get icon image
             try:
-                fs = float(text_center.get('size'))
-            except:
-                fs = 0
+                image_path = field['file']
+            except KeyError:
+                image_path = None
+            try:
+                variable = field['variable']
+                value = self.occ.rp.get_raw_val(variable['name'])
+                try:
+                    # If there is a variable with frames defined prepare path for relevant icon
+                    frames = field['variable']['frames']
+                    if value > frames:
+                        self.l.error("[LY] Variable {} value {} is greater than number of frames ({}) for image file {}".format(variable['name'], value, frames, image_path))
+                        value = frames
+                    image_path = self.make_image_key(image_path, value)
+                except KeyError:
+                    pass
+            except KeyError:
+                pass
+            if image_path is not None:
+                if image_path not in self.current_image_list:
+                    self.load_image(image_path)
+                image = self.current_image_list[image_path]
+                if image is not None:
+                    screen.blit(image, [position_x, position_y])
+            try:
+                fs = field['font_size']
+            except KeyError:
+                # Fall back to page font size
+                fs = self.font_size
             if function != "variable_value":
                 font_size = int(12.0 * fs)
                 if font_size in self.font_list:
@@ -218,7 +226,7 @@ class layout():
                 ren = font.render(uv, 1, self.fg_colour)
                 x = ren.get_rect().centerx
                 y = ren.get_rect().centery
-                screen.blit(ren, (text_center_x - x, text_center_y - y))
+                screen.blit(ren, (position_x - x, position_y - y))
             else:
                 font_size_small = int(12.0 * (fs - 1))
                 font_size_large = int(12.0 * (fs + 1))
@@ -245,10 +253,10 @@ class layout():
                 ren3 = font_s.render(rv3, 1, self.fg_colour)
                 w3 = ren3.get_rect().width
                 y3 = ren3.get_rect().centery
-                x = text_center_y - int((w1 + w2 + w3) / 2)
-                screen.blit(ren1, (x, text_center_y - y1))
-                screen.blit(ren2, (x + w1, text_center_y - y2))
-                screen.blit(ren3, (x + w1 + w2, text_center_y - y3))
+                x = position_y - int((w1 + w2 + w3) / 2)
+                screen.blit(ren1, (x, position_y - y1))
+                screen.blit(ren2, (x + w1, position_y - y2))
+                screen.blit(ren3, (x + w1 + w2, position_y - y3))
 
     def show_pressed_button(self):
         if self.render_button:
@@ -262,8 +270,6 @@ class layout():
                     self.occ.running = False
 
     def check_click(self, position, click):
-        # print "check_click: ", position, click
-
         if click == 'SHORT':
             # Short click
             # FIXME Search through function_rect_list directly? TBD
@@ -291,7 +297,7 @@ class layout():
                         if p in self.occ.rp.p_resettable:
                             self.occ.rp.reset_param(p)
                 except KeyError:
-                    self.l.debug("[LY] LONG CLICK on non-clickable {}".format(function))
+                    self.l.debug("[LY] LONG CLICK on non-clickable {} or missing editor page".format(function))
         elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
             self.run_function("next_page")
         elif click == 'L_TO_R':  # Swipe LEFT to RIGHT
@@ -497,6 +503,7 @@ class layout():
         self.force_refresh()
 
     def get_page(self, page_type, page_no):
+        self.l.debug("[LY] get_page {} {} ".format(page_type, page_no))
         if page_type == 'normal':
             if page_no == -1:
                 page_no = self.max_page_id
@@ -507,20 +514,20 @@ class layout():
                 page_no = self.max_settings_id
             if page_no > self.max_settings_id:
                 page_no = 0
-        for p in self.page_list:
-            t = self.page_list[p].get('type')
-            n = self.page_list[p].get('no')
-            if t == page_type and n == str(page_no):
-                return self.page_list[p].get('id')
+        for p, page in self.page_list.iteritems():
+            t = page['type']
+            n = page['number']
+            if t == page_type and n == page_no:
+                return page['id']
 
     def next_page(self):
         # Editor is a special page - it cannot be switched, only cancel or accept
-        if not self.current_page.get('type') == 'editor':
-            no = int(self.current_page.get('no'))
-            page_id = self.current_page.get('id')
-            page_type = self.current_page.get('type')
-            self.l.debug("[LY][F] next_page {} {} {}".format(page_id, page_type, no))
-            next_page_id = self.get_page(page_type, no + 1)
+        if not self.current_page['type'] == 'editor':
+            number = int(self.current_page['number'])
+            page_id = self.current_page['id']
+            page_type = self.current_page['type']
+            self.l.debug("[LY][F] next_page {} {} {}".format(page_id, page_type, number))
+            next_page_id = self.get_page(page_type, number + 1)
             try:
                 self.use_page(next_page_id)
             except KeyError:
@@ -528,25 +535,26 @@ class layout():
 
     def prev_page(self):
         # Editor is a special page - it cannot be switched, only cancel or accept
-        if not self.current_page.get('type') == 'editor':
-            no = int(self.current_page.get('no'))
-            page_id = self.current_page.get('id')
-            page_type = self.current_page.get('type')
-            self.l.debug("[LY][F] prev_page {} {} {}".format(page_id, page_type, no))
-            prev_page_id = self.get_page(page_type, no - 1)
+        if not self.current_page['type'] == 'editor':
+            number = int(self.current_page['number'])
+            page_id = self.current_page['id']
+            page_type = self.current_page['type']
+            self.l.debug("[LY][F] prev_page {} {} {}".format(page_id, page_type, number))
+            prev_page_id = self.get_page(page_type, number - 1)
             try:
                 self.use_page(prev_page_id)
             except KeyError:
                 self.l.critical("[LY][F] Page {} of type {} not found!".format(self.max_page_id, page_type))
 
     def load_layout_by_name(self, name):
+        print(self.layout_path)
         self.load_layout("layouts/" + name)
 
     def load_current_layout(self):
-        self.load_layout_by_name("current.xml")
+        self.load_layout_by_name("current.yaml")
 
     def load_default_layout(self):
-        self.load_layout_by_name("default.xml")
+        self.load_layout_by_name("default.yaml")
 
     def quit(self):
         self.occ.running = False
