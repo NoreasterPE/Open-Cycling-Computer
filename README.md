@@ -9,7 +9,7 @@ https://github.com/adafruit/Adafruit-PiTFT-2.8-inch-Display-PCB
 Code can be run with
 ```
 cd code
-python src/occ.py
+./start_occ.sh
 ```
 but it is highly experimental!
 
@@ -26,6 +26,9 @@ Future main page of the Open Cycling Computer: http://opencyclingcomputer.eu
 ![DEMO 1](https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/code/demo_screenshoots/demo_1.png?raw=true)
 ![DEMO 2](https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/code/demo_screenshoots/demo_2.png?raw=true)
 ![DEMO 3](https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/code/demo_screenshoots/demo_3.png?raw=true)
+![DEMO 4](https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/code/demo_screenshoots/demo_4.png?raw=true)
+![DEMO 5](https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/code/demo_screenshoots/demo_5.png?raw=true)
+![DEMO 6](https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/code/demo_screenshoots/demo_6.png?raw=true)
 
 Licence CC-SA-BY
 
