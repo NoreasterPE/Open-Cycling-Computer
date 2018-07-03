@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 ## @package units
 #  Package for converting units. When run independently shows a pseudo-test.
@@ -35,6 +35,7 @@ class units():
                        "kg": value,
                        "s": value,
                        "RPM": value,
+                       "BPM": value,
                        "m/s": value,
                        "m/m": value,
                        "m": value,

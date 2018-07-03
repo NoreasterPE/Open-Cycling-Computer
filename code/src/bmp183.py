@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 ## @package bmp183
 #  Module for handling Bosch BMP183 pressure sensor
 
@@ -8,7 +8,7 @@ import numpy
 import threading
 
 NaN = float('nan')
-
+M = {'module_name': 'bmp183'}
 
 ## Class for Bosch BMP183 pressure and temperature sensor with SPI interface as sold by Adafruit
 class bmp183(threading.Thread):
@@ -83,8 +83,8 @@ class bmp183(threading.Thread):
         # self.rp = occ.rp
         ## @var l
         #  Handle to system logger
-        self.l = logging.getLogger('system')
-        self.l.debug("[BMP] Initialising..")
+        self.log = logging.getLogger('system')
+        self.log.debug("Initialising..", extra=M)
         ## @var simulate
         #  Stores simulate parameter from constructor call
         self.simulate = simulate
@@ -123,7 +123,7 @@ class bmp183(threading.Thread):
             # Check comunication / read ID
             ret = self.read_byte(self.BMP183_REG['ID'])
             if ret != self.BMP183_CMD['ID_VALUE']:
-                self.l.error("[BMP] Communication with bmp183 failed")
+                self.log.error("Communication with bmp183 failed", extra=M)
                 self.sensor_ready = False
                 raise IOError("Communication with bmp183 failed")
             else:
@@ -132,27 +132,27 @@ class bmp183(threading.Thread):
                 # Proceed with initial pressure/temperature measurement
         self.measure_pressure()
         self.kalman_setup()
-        self.l.debug("[BMP] Initialised.")
+        self.log.debug("Initialised.", extra=M)
 
     def get_data(self):
         r = dict(pressure=self.pressure, temperature=self.temperature)
         return r
 
     def stop(self):
-        self.l.debug("[BMP] Stopping {}".format(__name__))
+        self.log.debug("Stopping {}".format(__name__), extra=M)
         self.running = False
         time.sleep(1)
         if not self.simulate:
             self.cleanup_gpio()
-        self.l.debug("[BMP] Stopped {}".format(__name__))
+        self.log.debug("Stopped {}".format(__name__), extra=M)
 
     def __del__(self):
-        self.l.debug("[BMP] __del__")
+        self.log.debug("__del__", extra=M)
         self.stop()
 
     def set_up_gpio(self):
         import RPi.GPIO as GPIO
-        self.l.debug("[BMP] set_up_gpio")
+        self.log.debug("set_up_gpio", extra=M)
         # GPIO initialisation
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.SCK, GPIO.OUT, initial=GPIO.HIGH)
@@ -162,7 +162,7 @@ class bmp183(threading.Thread):
 
     def cleanup_gpio(self):
         import RPi.GPIO as GPIO
-        self.l.debug("[BMP] cleanup_gpio")
+        self.log.debug("cleanup_gpio", extra=M)
         GPIO.cleanup(self.SCK)
         GPIO.cleanup(self.CS)
         GPIO.cleanup(self.SDI)
@@ -230,7 +230,7 @@ class bmp183(threading.Thread):
         return ret_value
 
     def read_calibration_data(self):
-        self.l.debug("[BMP] read_calibration_data")
+        self.log.debug("read_calibration_data", extra=M)
         # Read calibration data
         self.AC1 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC1']))
         self.AC2 = numpy.int16(self.read_word(self.BMP183_REG['CAL_AC2']))
@@ -304,13 +304,13 @@ class bmp183(threading.Thread):
             self.temperature = temperature
 
     def run(self):
-        self.l.debug("[BMP] run")
+        self.log.debug("run", extra=M)
         self.running = True
         while self.running:
             self.measure_pressure()
             self.kalman_update()
-            self.l.debug(
-                "[BMP] pressure = {} Pa, temperature = {} degC".format(self.pressure, self.temperature))
+            self.log.debug(
+                "pressure = {} Pa, temperature = {} degC".format(self.pressure, self.temperature))
             time.sleep(self.measurement_delay)
 
     def kalman_setup(self):

@@ -1,9 +1,10 @@
-#! /usr/bin/python
+#!/usr/bin/python3
 ## @package mtk3339
 #   Module for handling hardware of mtk3339 GPS, 66 channel w/10 Hz as sold by Adafruit
 import operator
 import serial
 import time
+import functools.reduce as reduce
 
 
 ## Class for handling mtk3339 GPS hardware at serial port level
@@ -41,7 +42,7 @@ class mtk3339():
             return -1
         else:
             command_pmtk = "PMTK" + \
-                unicode(self.valid_commands[command]) + unicode(params)
+                format(self.valid_commands[command]) + format(params)
             checksum = "{:02X}".format(self.nmea_checksum(command_pmtk))
             nmea_command = "".join(["$", command_pmtk, "*", checksum, "\r\n"])
             return nmea_command
@@ -53,7 +54,7 @@ class mtk3339():
         else:
             self.baudrate = baudrate
             command = "SET_NMEA_BAUDRATE"
-            params = "," + unicode(baudrate)
+            params = "," + format(baudrate)
             nmea_command = self.create_nmea_command(command, params)
             self.send_command(nmea_command)
             return 0
@@ -64,7 +65,7 @@ class mtk3339():
             return -1
         else:
             command = "SET_NMEA_UPDATERATE"
-            params = "," + unicode(rate)
+            params = "," + format(rate)
             nmea_command = self.create_nmea_command(command, params)
             self.send_command(nmea_command)
             return 0
@@ -75,7 +76,7 @@ class mtk3339():
             return -1
         else:
             command = "API_SET_FIX_CTL"
-            params = "," + unicode(rate) + ",0,0,0,0"
+            params = "," + format(rate) + ",0,0,0,0"
             nmea_command = self.create_nmea_command(command, params)
             self.send_command(nmea_command)
             return 0
@@ -83,7 +84,7 @@ class mtk3339():
     # set speed treshold. If speed is below the treshold the output position
     # will stay frozen
     def set_nav_speed_threshold(self, treshold=0):
-        t = unicode(treshold)
+        t = format(treshold)
         if t not in self.speed_treshold:
             return -1
         else:
@@ -148,8 +149,8 @@ class mtk3339():
         if gsv not in self.nmea_output_frequency:
             return -1
         command = "API_SET_NMEA_OUTPUT"
-        params = "," + unicode(gll) + "," + unicode(rmc) + "," + unicode(vtg)\
-                 + "," + unicode(gga) + "," + unicode(gsa) + "," + unicode(gsv)\
+        params = "," + format(gll) + "," + format(rmc) + "," + format(vtg)\
+                 + "," + format(gga) + "," + format(gsa) + "," + format(gsv)\
                  + ",0,0,0,0,0,0,0,0,0,0,0,0,0"
         nmea_command = self.create_nmea_command(command, params)
         self.send_command(nmea_command)

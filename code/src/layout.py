@@ -1,15 +1,16 @@
-#! /usr/bin/python
+#!/usr/bin/python3
 ## @package layout
 #   Module responsible for loading and rendering layouts. Needs heavy cleaning...
 from shutil import copyfile
 from units import units
 import logging
 import os
-import pygame
-import struct
 import sys
 import time
 import yaml
+import cairo
+
+M = {'module_name': 'layout'}
 
 
 ## Class for handling layouts
@@ -20,13 +21,12 @@ class layout():
     def __init__(self, occ, layout_path="layouts/default.yaml"):
         ## @var l
         # System logger handle
-        self.l = logging.getLogger('system')
+        self.log = logging.getLogger('system')
         self.occ = occ
         ## @var ble_scanner
         # ble_Scanner instance handle
         self.ble_scanner = occ.ble_scanner
         self.uc = units()
-        self.screen = occ.screen
         self.editor_name = ''
         self.colorkey = [0, 0, 0]
         self.alpha = 255
@@ -38,7 +38,7 @@ class layout():
         self.current_image_list = {}
         self.layout_path = layout_path
         self.load_layout(layout_path)
-        self.render_button = None
+        self.pressed_pos = None
 
     def load_layout(self, layout_path):
         self.max_page_id = 0
@@ -48,19 +48,22 @@ class layout():
         try:
             with open(layout_path) as f:
                 self.layout_tree = yaml.safe_load(f)
-            f.close()
+                f.close()
             self.layout_path = layout_path
-        except:
-            self.l.error(
-                "{} Loading layout {} failed, falling back to default.yaml".format(__name__, layout_path))
+        except FileNotFoundError:
+            self.log.critical("Loading layout {} failed, falling back to default.yaml".format(__name__, layout_path), extra=M)
             sys_info = "Error details: {}".format(sys.exc_info()[0])
-            self.l.error(sys_info)
+            self.log.error(sys_info, extra=M)
             # Fallback to default layout
             # FIXME - define const file with paths?
             layout_path = "layouts/default.yaml"
-            with open(layout_path) as f:
-                self.layout_tree = yaml.safe_load(f)
-            f.close()
+            try:
+                with open(layout_path) as f:
+                    self.layout_tree = yaml.safe_load(f)
+                    f.close()
+            except FileNotFoundError:
+                self.log.critical("Loading default layout {} failed, Quitting...".format(__name__, layout_path), extra=M)
+                self.occ.stop()
 
         for page in self.layout_tree['pages']:
             page_id = page['id']
@@ -81,35 +84,40 @@ class layout():
         copyfile(self.layout_path, layout_path)
 
     def use_page(self, page_id="page_0"):
-        self.l.debug("[LY][F] use_page {}".format(page_id))
+        self.log.debug("use_page {}".format(page_id), extra=M)
         self.occ.force_refresh()
         self.current_function_list = []
         self.current_button_list = []
         self.current_page = self.page_list[page_id]
         try:
             bg_path = self.current_page['background']
-            self.bg_image = pygame.image.load(bg_path).convert()
-        except pygame.error:
-            self.l.critical("{} Cannot load background image! layout_path = {} background path = {} page_id = {}"
-                            .format(__name__, self.layout_path, bg_path, page_id))
+            self.bg_image = self.png_to_cairo_surface(bg_path)
+        except cairo.Error:
+            self.log.critical("{} Cannot load background image! layout_path = {} background path = {} page_id = {}".format(__name__, self.layout_path, bg_path, page_id), extra=M)
             # That stops occ but not immediately - errors can occur
-            self.occ.running = False
-            self.occ.cleanup()
+            self.occ.stop()
         try:
             bt_path = self.current_page['buttons']
-            self.bt_image = pygame.image.load(bt_path).convert()
-        except pygame.error:
-            self.l.critical("{} Cannot load buttons image! layout_path = {} buttons path = {} page_id = {}"
-                            .format(__name__, self.layout_path, bt_path, page_id))
-            self.occ.running = False
-            self.occ.cleanup()
-            pass
+            self.bt_image = self.png_to_cairo_surface(bt_path)
+        except cairo.Error:
+            self.log.critical("{} Cannot load buttons image! layout_path = {} buttons path = {} page_id = {}".format(__name__, self.layout_path, bt_path, page_id), extra=M)
+            self.occ.top()
         self.font = self.current_page['font']
-        self.font_size = self.current_page['font_size']
+        # Wait for OCC to set rendering module
+        try:
+            self.occ.cr.select_font_face(self.font, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
+        except AttributeError:
+            pass
+        self.page_font_size = self.current_page['font_size']
         if (self.font == ""):
             self.font = None
         self.fg_colour_rgb = self.current_page['fg_colour']
-        self.fg_colour = struct.unpack('BBB', self.fg_colour_rgb.decode('hex'))
+        fg_colour_rgb = self.fg_colour_rgb
+        if fg_colour_rgb[0] == '#':
+            fg_colour_rgb = fg_colour_rgb[1:]
+        r, g, b = fg_colour_rgb[:2], fg_colour_rgb[2:4], fg_colour_rgb[4:]
+        r, g, b = [int(n, 16) for n in (r, g, b)]
+        self.fg_colour = (r, g, b)
         for field in self.current_page['fields']:
             self.current_function_list.append(field['function'])
             try:
@@ -122,12 +130,12 @@ class layout():
                 w = int(b.get('w'))
                 h = int(b.get('h'))
                 name = field.get('function')
-                rect = pygame.Rect(x0, y0, w, h)
+                rect = (x0, y0, w, h)
                 self.function_rect_list[name] = rect
                 self.current_button_list.append(name)
-                #try:
+                # try:
                 #    position = (field['x'], field['y'])
-                #except KeyError:
+                # except KeyError:
                 #    pass
                 try:
                     if (field['file'] is not None):
@@ -137,42 +145,42 @@ class layout():
 
     def load_image(self, image_path):
         try:
-            image = pygame.image.load(image_path).convert()
-            image.set_colorkey(self.colorkey)
-            image.set_alpha(self.alpha)
+            image = self.png_to_cairo_surface(image_path)
             self.current_image_list[image_path] = image
-            self.l.debug("[LY] Image {} loaded".format(image_path))
-        except:
-            self.l.error("[LY] Cannot load image {}".format(image_path))
+            self.log.debug("Image {} loaded".format(image_path), extra=M)
+        except cairo.Error:
+            self.log.critical("Cannot load image {}".format(image_path), extra=M)
             self.current_image_list[image_path] = None
 
     def use_main_page(self):
         self.use_page()
 
-    def render_background(self, screen):
-        screen.blit(self.bg_image, [0, 0])
+    def render_background(self):
+        self.occ.cr.set_source_surface(self.bg_image, 0, 0)
+        self.occ.cr.rectangle(0, 0, 240, 320)
+        self.occ.cr.fill()
 
-    def render_pressed_button(self, screen, function):
-        # FIXME make sure it's OK to skip rendering here
-        try:
-            r = self.function_rect_list[function]
-            screen.blit(self.bt_image, r, r, 0)
-        # FIXME required to catch exception?
-        except (TypeError, AttributeError):
-            pass
+    def render_pressed_button(self, function):
+        #Temporary
+        #self.load_layout(self.layout_path)
+        fr = self.function_rect_list[function]
+        self.occ.cr.set_source_surface(self.bt_image, 0, 0)
+        self.occ.cr.rectangle(fr[0], fr[1], fr[2], fr[3])
+        self.occ.cr.fill()
 
     def render_page(self):
-        self.render_background(self.screen)
+        self.render_background()
+        self.occ.rendering.force_refresh()
         self.show_pressed_button()
-        self.render(self.screen)
+        self.render()
 
     def make_image_key(self, image_path, value):
-        suffix = "_" + unicode(value)
+        suffix = "_" + format(value)
         extension = image_path[-4:]
         name = image_path[:-4]
         return (name + suffix + extension)
 
-    def render(self, screen):
+    def render(self):
         for field in self.current_page['fields']:
             function = field['function']
             position_x = field['x']
@@ -183,7 +191,7 @@ class layout():
                     value = field['text']
                 except KeyError:
                     value = ""
-            uv = unicode(value)
+            uv = format(value)
             variable = None
             # Get icon image
             try:
@@ -197,7 +205,7 @@ class layout():
                     # If there is a variable with frames defined prepare path for relevant icon
                     frames = field['variable']['frames']
                     if value > frames:
-                        self.l.error("[LY] Variable {} value {} is greater than number of frames ({}) for image file {}".format(variable['name'], value, frames, image_path))
+                        self.log.error("Variable {} value {} is greater than number of frames ({}) for image file {}".format(variable['name'], value, frames, image_path), extra=M)
                         value = frames
                     image_path = self.make_image_key(image_path, value)
                 except KeyError:
@@ -209,65 +217,50 @@ class layout():
                     self.load_image(image_path)
                 image = self.current_image_list[image_path]
                 if image is not None:
-                    screen.blit(image, [position_x, position_y])
+                    self.image_to_surface(image, position_x, position_y)
+                    #screen.blit(image, [position_x, position_y])
             try:
                 fs = field['font_size']
             except KeyError:
                 # Fall back to page font size
-                fs = self.font_size
+                fs = self.page_font_size
+            self.occ.cr.set_font_size(fs)
             if function != "variable_value":
-                font_size = int(12.0 * fs)
-                if font_size in self.font_list:
-                    font = self.font_list[font_size]
-                else:
-                    font = pygame.font.Font(self.font, font_size)
-                    self.font_list[font_size] = font
-                # font = pygame.font.Font(self.font, font_size)
-                ren = font.render(uv, 1, self.fg_colour)
-                x = ren.get_rect().centerx
-                y = ren.get_rect().centery
-                screen.blit(ren, (position_x - x, position_y - y))
+                #FIXME Colour ignored for now
+                self.text_to_surface(uv, position_x, position_y)
+                pass
             else:
-                font_size_small = int(12.0 * (fs - 1))
-                font_size_large = int(12.0 * (fs + 1))
-                if font_size_small in self.font_list:
-                    font_s = self.font_list[font_size_small]
-                else:
-                    font_s = pygame.font.Font(self.font, font_size_small)
-                    self.font_list[font_size_small] = font_s
-                if font_size_large in self.font_list:
-                    font_l = self.font_list[font_size_large]
-                else:
-                    font_l = pygame.font.Font(self.font, font_size_large)
-                    self.font_list[font_size_large] = font_l
                 i = self.occ.rp.params["editor_index"]
+                #Head
                 rv1 = uv[:i]
-                ren1 = font_s.render(rv1, 1, self.fg_colour)
-                w1 = ren1.get_rect().width
-                y1 = ren1.get_rect().centery
-                rv2 = uv[i]
-                ren2 = font_l.render(rv2, 1, self.fg_colour)
-                w2 = ren2.get_rect().width
-                y2 = ren2.get_rect().centery
+                te1 = self.occ.cr.text_extents(rv1)
+                #Tail
                 rv3 = uv[i + 1:]
-                ren3 = font_s.render(rv3, 1, self.fg_colour)
-                w3 = ren3.get_rect().width
-                y3 = ren3.get_rect().centery
-                x = position_y - int((w1 + w2 + w3) / 2)
-                screen.blit(ren1, (x, position_y - y1))
-                screen.blit(ren2, (x + w1, position_y - y2))
-                screen.blit(ren3, (x + w1 + w2, position_y - y3))
+                te3 = self.occ.cr.text_extents(rv3)
+                #Currently edited digit
+                rv2 = uv[i]
+                self.occ.cr.set_font_size(1.3 * fs)
+                te2 = self.occ.cr.text_extents(rv2)
+
+                total_width_half = (te1.width + te2.width + te3.width) / 2
+                rv1_x = position_x - total_width_half + (te1.width / 2)
+                rv2_x = position_x - total_width_half + te1.width + (te2.width / 2)
+                rv3_x = position_x - total_width_half + te1.width + te2.width + (te3.width / 2)
+
+                self.text_to_surface(rv2, rv2_x, position_y)
+                self.occ.cr.set_font_size(fs)
+                self.text_to_surface(rv1, rv1_x, position_y)
+                self.text_to_surface(rv3, rv3_x, position_y)
 
     def show_pressed_button(self):
-        if self.render_button:
-            for func in self.current_button_list:
-                try:
-                    if self.function_rect_list[func].collidepoint(self.render_button):
-                        self.render_pressed_button(self.screen, func)
-                        break
-                except KeyError:
-                    self.l.critical("{} show_pressed_button failed! func ={}".format, __name__, func)
-                    self.occ.running = False
+        if self.pressed_pos:
+            for function in self.current_button_list:
+                if self.point_in_rect(self.pressed_pos, self.function_rect_list[function]):
+                    try:
+                        self.render_pressed_button(function)
+                    except KeyError:
+                        self.log.critical("{} show_pressed_button failed! func ={}".format, __name__, function, extra=M)
+                        self.occ.stop()
 
     def check_click(self, position, click):
         if click == 'SHORT':
@@ -275,20 +268,20 @@ class layout():
             # FIXME Search through function_rect_list directly? TBD
             for function in self.current_button_list:
                 try:
-                    if self.function_rect_list[function].collidepoint(position):
+                    if self.point_in_rect(position, self.function_rect_list[function]):
                         self.run_function(function)
                         break
                 except KeyError:
-                    self.l.debug("[LY] CLICK on non-clickable {}".format(function))
+                    self.log.debug("CLICK on non-clickable {}".format(function), extra=M)
         elif click == 'LONG':
             # print self.function_rect_list
             # print self.current_button_list
             for function in self.current_button_list:
                 try:
-                    if self.function_rect_list[function].collidepoint(position):
+                    if self.point_in_rect(position, self.function_rect_list[function]):
                         # FIXME I's dirty way of getting value - add some
                         # helper function
-                        self.l.debug("[LY] LONG CLICK on {}".format(function))
+                        self.log.debug("LONG CLICK on {}".format(function), extra=M)
                         self.editor_name = self.occ.rp.get_editor_name(function)
                         if self.editor_name:
                             self.open_editor_page(function)
@@ -297,7 +290,7 @@ class layout():
                         if p in self.occ.rp.p_resettable:
                             self.occ.rp.reset_param(p)
                 except KeyError:
-                    self.l.debug("[LY] LONG CLICK on non-clickable {} or missing editor page".format(function))
+                    self.log.debug("LONG CLICK on non-clickable {} or missing editor page".format(function), extra=M)
         elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
             self.run_function("next_page")
         elif click == 'L_TO_R':  # Swipe LEFT to RIGHT
@@ -308,7 +301,7 @@ class layout():
             self.run_function("settings")
 
     def open_editor_page(self, function):
-        self.l.debug("[LY] Opening editor {} for {}".format(self.editor_name, function))
+        self.log.debug("Opening editor {} for {}".format(self.editor_name, function), extra=M)
         self.occ.rp.set_param('variable', function)
         self.occ.rp.set_param('variable_raw_value', self.occ.rp.get_raw_val(function))
         self.occ.rp.set_param('variable_value', self.occ.rp.get_param(function))
@@ -374,14 +367,14 @@ class layout():
         self.use_main_page()
 
     def ed_decrease(self):
-        u = unicode(self.occ.rp.params["variable_value"])
+        u = format(self.occ.rp.params["variable_value"])
         i = self.occ.rp.params["editor_index"]
         ui = u[i]
         if ui == "0":
             ui = "9"
         else:
             try:
-                ui = unicode(int(ui) - 1)
+                ui = format(int(ui) - 1)
             except ValueError:
                 pass
         un = u[:i] + ui + u[i + 1:]
@@ -389,14 +382,14 @@ class layout():
         self.force_refresh()
 
     def ed_increase(self):
-        u = unicode(self.occ.rp.params["variable_value"])
+        u = format(self.occ.rp.params["variable_value"])
         i = self.occ.rp.params["editor_index"]
         ui = u[i]
         if ui == "9":
             ui = "0"
         else:
             try:
-                ui = unicode(int(ui) + 1)
+                ui = format(int(ui) + 1)
             except ValueError:
                 pass
         un = u[:i] + ui + u[i + 1:]
@@ -404,16 +397,16 @@ class layout():
         self.force_refresh()
 
     def ed_next(self):
-        u = unicode(self.occ.rp.params["variable_value"])
+        u = format(self.occ.rp.params["variable_value"])
         i = self.occ.rp.params["editor_index"]
         if u[0] == '0':
             u = u[1:]
             self.occ.rp.params["variable_value"] = u
         else:
             i += 1
-        l = len(u) - 1
-        if i > l:
-            i = l
+        le = len(u) - 1
+        if i > le:
+            i = le
         else:
             ui = u[i]
             # FIXME localisation points to be used here
@@ -423,7 +416,7 @@ class layout():
         self.force_refresh()
 
     def ed_prev(self):
-        u = unicode(self.occ.rp.params["variable_value"])
+        u = format(self.occ.rp.params["variable_value"])
         i = self.occ.rp.params["editor_index"]
         i -= 1
         if i < 0:
@@ -462,8 +455,7 @@ class layout():
         try:
             f = self.occ.rp.p_format[variable]
         except KeyError:
-            self.l.warning(
-                "[LY] Formatting not available: function ={}".format(variable))
+            self.log.warning("Formatting not available: function ={}".format(variable), extra=M)
             f = "%.1f"
         self.occ.rp.params["variable_value"] = float(f % float(variable_value))
         self.occ.rp.params["variable_unit"] = next_unit
@@ -503,7 +495,7 @@ class layout():
         self.force_refresh()
 
     def get_page(self, page_type, page_no):
-        self.l.debug("[LY] get_page {} {} ".format(page_type, page_no))
+        self.log.debug("get_page {} {} ".format(page_type, page_no), extra=M)
         if page_type == 'normal':
             if page_no == -1:
                 page_no = self.max_page_id
@@ -514,7 +506,7 @@ class layout():
                 page_no = self.max_settings_id
             if page_no > self.max_settings_id:
                 page_no = 0
-        for p, page in self.page_list.iteritems():
+        for p, page in self.page_list.items():
             t = page['type']
             n = page['number']
             if t == page_type and n == page_no:
@@ -526,12 +518,12 @@ class layout():
             number = int(self.current_page['number'])
             page_id = self.current_page['id']
             page_type = self.current_page['type']
-            self.l.debug("[LY][F] next_page {} {} {}".format(page_id, page_type, number))
+            self.log.debug("next_page {} {} {}".format(page_id, page_type, number), extra=M)
             next_page_id = self.get_page(page_type, number + 1)
             try:
                 self.use_page(next_page_id)
             except KeyError:
-                self.l.critical("[LY][F] Page 0 of type {} not found!".format(page_type))
+                self.log.critical("Page 0 of type {} not found!".format(page_type), extra=M)
 
     def prev_page(self):
         # Editor is a special page - it cannot be switched, only cancel or accept
@@ -539,15 +531,14 @@ class layout():
             number = int(self.current_page['number'])
             page_id = self.current_page['id']
             page_type = self.current_page['type']
-            self.l.debug("[LY][F] prev_page {} {} {}".format(page_id, page_type, number))
+            self.log.debug("prev_page {} {} {}".format(page_id, page_type, number), extra=M)
             prev_page_id = self.get_page(page_type, number - 1)
             try:
                 self.use_page(prev_page_id)
             except KeyError:
-                self.l.critical("[LY][F] Page {} of type {} not found!".format(self.max_page_id, page_type))
+                self.log.critical("Page {} of type {} not found!".format(self.max_page_id, page_type), extra=M)
 
     def load_layout_by_name(self, name):
-        print(self.layout_path)
         self.load_layout("layouts/" + name)
 
     def load_current_layout(self):
@@ -557,7 +548,7 @@ class layout():
         self.load_layout_by_name("default.yaml")
 
     def quit(self):
-        self.occ.running = False
+        self.occ.stop()
 
     def reboot(self):
         self.quit()
@@ -572,10 +563,47 @@ class layout():
             os.system("halt")
 
     def debug_level(self):
-        log_level = self.l.getEffectiveLevel()
-        log_level -= 10
-        if log_level < 10:
-            log_level = 40
+        log_level = self.log.getEffectiveLevel()
+        log_level += 10
+        if log_level > 50:
+            log_level = 10
         log_level_name = logging.getLevelName(log_level)
+        self.log.debug("Changing log level to: {}".format(log_level_name), extra=M)
         self.occ.switch_log_level(log_level_name)
         self.occ.rp.params["debug_level"] = log_level_name
+
+    def png_to_cairo_surface(self, file_path):
+        png_surface = cairo.ImageSurface.create_from_png(file_path)
+        return png_surface
+
+    def image_to_surface(self, surface, x=0, y=0, w=240, h=320):
+        self.occ.cr.set_source_surface(surface, x, y)
+        self.occ.cr.rectangle(x, y, w, h)
+        self.occ.cr.fill()
+
+    def text_to_surface(self, text, x, y):
+        self.occ.cr.set_source_rgb(0.0, 0.0, 0.0)
+        te = self.occ.cr.text_extents(text)
+        self.occ.cr.rectangle(x - (te.width / 2), y - (te.height / 2), te.width, te.height)
+        self.occ.cr.fill()
+        self.occ.cr.set_source_rgb(1.0, 1.0, 1.0)
+        x0 = x - (te.width / 2) - te.x_bearing
+        y0 = y - (te.height / 2) - te.y_bearing
+        self.occ.cr.move_to(x0, y0)
+        self.occ.cr.show_text(text)
+        return (te)
+
+    def point_in_rect(self, point, rect):
+        try:
+            if rect[1] + rect[3] - point[1] < 0:
+                return False
+            if point[0] - rect[0] < 0:
+                return False
+            if rect[0] + rect[2] - point[0] < 0:
+                return False
+            if point[1] - rect[1] < 0:
+                return False
+            self.log.debug("Point: {} is in rect: {}".format(point, rect), extra=M)
+            return True
+        except TypeError:
+            return False

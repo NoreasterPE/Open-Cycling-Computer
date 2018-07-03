@@ -1,10 +1,11 @@
-#! /usr/bin/python
+#!/usr/bin/python3
 ## @package rendering
-#  Rendering module. Runs in a separate thread and keeps flipping screen with pygame.display.flip at 20 fps using pygame.clock.tick.
+#  Rendering module. Runs in a separate thread and keeps flipping screen with (??) at 20 fps using (???).
 
+import cairo
+import mmap
 import threading
-import pygame
-
+import time
 
 ## Display rendering class
 class rendering(threading.Thread):
@@ -15,10 +16,23 @@ class rendering(threading.Thread):
     def __init__(self, layout):
         # Run init for super class
         super(rendering, self).__init__()
-        self.clock = pygame.time.Clock()
         self.layout = layout
         self.refresh = True
         self.running = False
+        self.fps = 5.0
+        PiTFT_mem_size = 153600
+        self.fb_fd  = open("/dev/fb1", "r+") 
+        self.fb_map = mmap.mmap(self.fb_fd.fileno(), PiTFT_mem_size)
+        # Framebuffer surface
+        self.fb_surface = cairo.ImageSurface.create_for_data(self.fb_map, cairo.FORMAT_RGB16_565, 240, 320)
+        # Main cairo drawing surface
+        self.surface = cairo.ImageSurface.create_similar(self.fb_surface, cairo.CONTENT_COLOR, 240, 320)
+        # Framebuffer context
+        self.fb_cr = cairo.Context(self.fb_surface)
+        # Main cairo context
+        self.cr = cairo.Context(self.surface)
+        self.cr.set_source_rgba (0.0, 0.0, 0.0, 1.0);
+        self.cr.paint_with_alpha (1.0);
 
     def run(self):
         self.running = True
@@ -26,12 +40,10 @@ class rendering(threading.Thread):
             if self.refresh:
                 self.refresh = False
                 self.layout.render_page()
-                # FIXME display.update might be faster, but require list of
-                # rectangles for he update
-                pygame.display.flip()
-            # Setting FPS too low causes some click-directly-after-click
-            # problems
-            self.clock.tick(20)
+                self.fb_cr.set_source_surface (self.surface, 0, 0);
+                self.fb_cr.rectangle (0, 0, 240, 320);
+                self.fb_cr.fill ();
+                time.sleep(1.0/self.fps)
 
     def stop(self):
         self.running = False

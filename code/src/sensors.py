@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/python3
 ## @package sensors
 #  Sensors module. Responsible for connecting to, starting and stopping sensors. Currently used sensors are:
 #  BLE heart rate
@@ -6,19 +6,21 @@
 #  GPS (MTK3339) - [disabled]
 #  BMP183 pressure & temperature sensor
 
-from ble_sc import ble_sc
-from ble_hr import ble_hr
-from bluepy.btle import BTLEException
-from bmp183 import bmp183
+#from ble_sc import ble_sc
+import ble_hr
+#from bluepy.btle import BTLEException
+#from bmp183 import bmp183
 # Disable GPS (temporary)
 # from gps_mtk3339 import gps_mtk3339
 import logging
 import threading
 import time
 
+M = {'module_name': 'sensors'}
+
 ## @var RECONNECT_DELAY
 # Time between check if BLE connection need to be re-established
-RECONNECT_DELAY = 2
+RECONNECT_DELAY = 2.0
 
 
 ## @var STATE_HOST
@@ -60,7 +62,7 @@ class sensors(threading.Thread):
         threading.Thread.__init__(self)
         ## @var l
         # System logger handle
-        self.l = logging.getLogger('system')
+        self.log = logging.getLogger('system')
         ## @var occ
         # OCC Handle
         self.occ = occ
@@ -88,7 +90,8 @@ class sensors(threading.Thread):
         ## @var connected
         # Dict keeping track of which sensor is connected
         self.connected = dict(ble_sc=False, ble_hr=None, gps=False, bmp183=False)
-        self.l.info("[SE] Initialising GPS")
+        '''
+        self.log.info("Initialising GPS", extra=M)
         try:
             # Disable GPS (temporary)
             # self.sensors['gps'] = gps_mtk3339(simulate)
@@ -97,12 +100,13 @@ class sensors(threading.Thread):
             self.connected['gps'] = False
         except IOError:
             self.sensors['gps'] = None
-        self.l.info("[SE] Initialising bmp183 sensor")
+        self.log.info("Initialising bmp183 sensor", extra=M)
         try:
             self.sensors['bmp183'] = bmp183(self.simulate)
             self.connected['bmp183'] = True
         except IOError:
-            self.connected['bmp183'] = None
+            self.connected['bmp183'] = None'''
+        self.sensors['ble_hr'] = ble_hr.ble_hr()
         self.running = True
 
     ## Reads BLE devices names/addresses from ride_parameters module
@@ -128,46 +132,67 @@ class sensors(threading.Thread):
     ## Main loop of sensors module. Constantly tries to reconnect with BLE devices
     #  @param self The python object self
     def run(self):
+        self.log.debug("run started", extra=M)
         self.init_data_from_ride_parameters()
-        if not self.simulate:
+        '''if not self.simulate:
             if self.sensors['gps']:
-                self.l.info("[SE] Starting GPS thread")
+                self.log.info("Starting GPS thread", extra=M)
                 self.sensors['gps'].start()
             if self.sensors['bmp183']:
-                self.l.info("[SE] Starting bmp183 thread")
+                self.log.info("Starting bmp183 thread", extra=M)
                 self.sensors['bmp183'].start()
+            self.log.info("Initialising ble_hr sensor", extra=M)'''
+        self.log.debug("Setting ble_hr device address to {}".format(self.addrs["ble_hr"]), extra=M)
+        self.sensors['ble_hr'].set_addr(self.addrs["ble_hr"])
+        #self.log.debug("Initialising connection", extra=M)
+        #try:
+        #    self.sensors['ble_hr'].initialise_connection()
+        #    self.connected['ble_hr'] = True
+        #except BTLEException as e:
+        #    self.log.debug("Connecion to ble_hr heart rate sensor from sensors module failed: '{}'".format(e), extra=M)
+        #    # Make sure the device is disconnected
+        #    self.sensors['ble_hr'].disconnect()
+        self.log.debug("Starting ble_hr thread", extra=M)
+        self.sensors['ble_hr'].start()
+
         while self.running:
-            self.set_ble_state()
-            if not self.connected['ble_hr']:
-                self.l.info("[SE] Initialising BLE heart rate sensor")
-                try:
-                    self.sensors['ble_hr'] = ble_hr(self.addrs['ble_hr'])
-                    self.names['ble_hr'] = self.sensors[
-                        'ble_hr'].get_device_name()
-                    self.l.info("[SE] Starting BLE heart rate thread")
-                    self.sensors['ble_hr'].start()
-                except BTLEException:
-                    self.l.info(
-                        "[SE] Connecion to BLE heart rate sensor failed")
-                else:
-                    self.connected['ble_hr'] = True
-            self.set_ble_state()
-            if not self.connected['ble_sc']:
-                self.l.info("[SE] Initialising BLE speed & cadence sensor")
+            #self.set_ble_state()
+            time.sleep(1.0)
+            '''self.log.debug("Getting ble_hr device name", extra=M)
+            try:
+                self.names['ble_hr'] = self.sensors['ble_hr'].get_device_name()
+            except AttributeError:
+                #Sensor is not ready yet, let's wait
+                pass
+            except BTLEException:
+                #Sensor is not ready yet, let's wait
+                pass
+            try:
+                self.connected['ble_hr'] = self.sensors['ble_hr'].is_connected()
+            except AttributeError:
+                #Sensor is not ready yet, let's wait
+                pass'''
+
+            '''if not self.connected['ble_sc']:
+                self.log.debug("Initialising BLE speed & cadence sensor", extra=M)
                 try:
                     self.sensors['ble_sc'] = ble_sc(self.addrs['ble_sc'])
-                    self.names['ble_sc'] = self.sensors[
-                        'ble_sc'].get_device_name()
-                    self.l.info("[SE] Starting BLE speed & cadence thread")
+                    self.names['ble_sc'] = self.sensors['ble_sc'].get_device_name()
+                    self.log.debug("Starting BLE speed & cadence thread", extra=M)
                     self.sensors['ble_sc'].start()
-                except BTLEException, e:
-                    self.l.info(
-                        "[SE] Connecion to BLE speed & cadence sensor failed: {}".format(e))
-                else:
                     self.connected['ble_sc'] = True
+                except BTLEException as e:
+                    self.log.info("Connecion to BLE speed & cadence sensor failed: '{}'".format(e), extra=M)
+            try:
+                if self.sensors["ble_sc"].get_state() == 0:
+                    self.connected['ble_sc'] = False
+            except AttributeError:
+                #Sensor is not ready yet, let's wait
+                pass'''
 
             # Wait before checking again if we need to reconnect
-            time.sleep(RECONNECT_DELAY)
+            #time.sleep(RECONNECT_DELAY)
+        self.log.debug("run finished", extra=M)
 
     ## Helper function for setting ble_state variable.
     #  @param self The python object self
@@ -181,7 +206,8 @@ class sensors(threading.Thread):
                     self.connecting = True
                 if s == 2:
                     self.no_of_connected += 1
-            except:
+            except AttributeError:
+                #Sensor is not ready yet, let's wait
                 pass
         if self.no_of_connected == 0:
             self.ble_state = STATE_HOST['enabled']
@@ -206,18 +232,12 @@ class sensors(threading.Thread):
     ## Helper function for getting sensor handle
     #  @param self The python object self
     def get_sensor(self, name):
-        self.l.debug('[SE] get_sensor called for {}'.format(name))
-        if name in self.sensors and self.connected[name]:
+        self.log.debug('get_sensor called for {}'.format(name), extra=M)
+        if name in self.sensors:
             return self.sensors[name]
         else:
-            self.l.debug("[SE] Sensor {} not ready or doesn't exist".format(name))
+            self.log.debug("Sensor {} not ready or doesn't exist".format(name), extra=M)
             return None
-
-    ## Helper function for forcing sensor reconnection
-    #  @param self The python object self
-    #  @param name Sensor name
-    def reconnect_sensor(self, name):
-        self.connected[name] = False
 
     ## The destructor
     #  @param self The python object self
@@ -227,12 +247,15 @@ class sensors(threading.Thread):
     ## Function stopping all sensors. Called by the destructor
     #  @param self The python object self
     def stop(self):
-        self.l.debug("[SE] Stopping.. {}".format(__name__))
+        self.log.debug("stop started", extra=M)
         self.running = False
         for s in self.sensors:
-            if self.connected[s]:
-                self.connected[s] = False
-                self.l.debug("[SE] Stopping {} thread".format(s))
+            self.connected[s] = False
+            self.log.debug("Stopping {} thread".format(s), extra=M)
+            try:
                 self.sensors[s].stop()
-                self.l.debug("[SE] Stopped {} thread".format(s))
-                self.sensors[s] = None
+                self.log.debug("Stopped {} thread".format(s), extra=M)
+            except AttributeError:
+                pass
+            self.sensors[s] = None
+        self.log.debug("stop finished", extra=M)

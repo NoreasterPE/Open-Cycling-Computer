@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 ## @package occ
 #  OpenCyclingCompyter main file
@@ -6,58 +6,40 @@
 #  http://opencyclingcomputer.eu/
 
 from ble_scanner import ble_scanner
-from layout import layout
 from config import config
-from operator import add
-from pygame.locals import NOEVENT
-from pygame.locals import USEREVENT
+from layout import layout
+from pitft_touchscreen import pitft_touchscreen
 from rendering import rendering
 from ride_parameters import ride_parameters
 from sensors import sensors
-from time import sleep
-from time import strftime
 import logging
 import logging.handlers
-import os
+import operator
 import platform
-import pygame
 import signal
+import time
 
-## @var LOG_LEVEL
-# Log level definitions
-LOG_LEVEL = {"DEBUG": logging.DEBUG,
-             "INFO": logging.INFO,
-             "WARNING": logging.WARNING,
-             "ERROR": logging.ERROR,
-             "CRITICAL": logging.CRITICAL}
+M = {'module_name': 'OCC'}
 
 ## @var LONG_CLICK
-# Time of long click in ms All clicks over 800 ms are considered "long".
-LONG_CLICK = 800
+# Time of long click in ms All clicks over 0.8s are considered "long".
+LONG_CLICK = 0.8
 
 ## @var SWIPE_LENGTH
-# Lenght of swipe in pixels. All clicks with length ver 30 pixels are considered swipes.
-SWIPE_LENGTH = 30
+# Lenght of swipe in pixels. All clicks with length over 50 pixels are considered swipes.
+SWIPE_LENGTH = 50
 
-## @var EV_UPDATE_VALUES
-# Custom pygame event used to trgger updating values in ride_parameters.
-EV_UPDATE_VALUES = USEREVENT + 1
-
-## @var EV_SAVE_CONFIG
-# Custom pygame event used to trgger config file save.
-EV_SAVE_CONFIG = USEREVENT + 2
-
-## @var REFRESH_TIME
-# Period of time in ms between EV_UPDATE_VALUES events.
-REFRESH_TIME = 1000
+## @var MAIN_LOOP_BEAT
+# Period oiting time in event main loop
+MAIN_LOOP_BEAT = 0.2
 
 ## @var CONFIG_SAVE_TIME
-# Period of time in ms between EV_SAVE_CONFIG events.
-CONFIG_SAVE_TIME = 15000
+# Period of time in s between EV_SAVE_CONFIG events.
+CONFIG_SAVE_TIME = 15
 
 
 ## Main OpenCyclingComputer class
-# Based on RPI model A+ and PiTFT 2.8" 320x240
+# Based on RPI model Zero W and PiTFT 2.8" 320x240
 class open_cycling_computer(object):
 
     ## The constructor
@@ -71,43 +53,33 @@ class open_cycling_computer(object):
         self.simulate = simulate
         ## @var l
         #  Handle to system logger
-        self.l = logging.getLogger('system')
-        pygame.init()
-        # pygame.display.init()
+        self.log = logging.getLogger('system')
         if not self.simulate:
-            pygame.event.set_grab(True)
-            pygame.mouse.set_visible(0)
-        self.l.debug("[OCC] EV_UPDATE_VALUES to be generated every {} ms".format(REFRESH_TIME))
-        pygame.time.set_timer(EV_UPDATE_VALUES, REFRESH_TIME)
-        self.l.debug(
-            "[OCC] EV_SAVE_CONFIG to be generated every {} s".format(CONFIG_SAVE_TIME / 1000))
-        pygame.time.set_timer(EV_SAVE_CONFIG, CONFIG_SAVE_TIME)
+            pass
+
         ## @var width
         #  Window/screen width
         self.width = width
         ## @var height
         #  Window/screen height
         self.height = height
-        self.l.debug("[OCC] Screen size is {} x {}".format(self.width, self.height))
-        ## @var screen
-        #  Handle to pygame screen
-        self.screen = pygame.display.set_mode((self.width, self.height))
-        self.l.debug("[OCC] Calling sensors")
+        self.log.debug("Screen size is {} x {}".format(self.width, self.height), extra=M)
+        self.log.debug("Calling sensors", extra=M)
         ## @var sensors
         #  Handle to sensors instance
         self.sensors = sensors(self)
-        self.l.debug("[OCC] Calling ride_parameters")
+        self.log.debug("Calling ride_parameters", extra=M)
         ## @var rp
         #  Handle to ride_parameters instance
         self.rp = ride_parameters(self, simulate)
         ## @var layout_path
         #  Path to layout file
         self.layout_path = ''
-        self.l.debug("[OCC] Initialising config")
+        self.log.debug("Initialising config", extra=M)
         ## @var config
         #  Handle to config instance
         self.config = config(self, "config/config.yaml", "config/config_base.yaml")
-        self.l.debug("[OCC] Reading config")
+        self.log.debug("Reading config", extra=M)
         self.config.read_config()
         ## @var ble_scanner
         #  Handle to ble_scanner instance
@@ -115,198 +87,182 @@ class open_cycling_computer(object):
         ## @var layout
         #  Handle to layout instance
         self.layout = layout(self, self.layout_path)
-        self.l.debug("[OCC] Starting RP sensors")
+        self.log.debug("Starting RP sensors", extra=M)
         self.rp.start_sensors()
-        self.l.debug("[OCC] Setting up rendering")
+        self.log.debug("Setting up rendering", extra=M)
         ## @var rendering
         #  Handle to rendering instance
         self.rendering = rendering(self.layout)
-        self.l.debug("[OCC] Starting rendering thread")
+        ## @var surface
+        #  Main cairo surface
+        self.surface = self.rendering.surface
+        ## @var cr
+        #  Main cairo context
+        self.cr = self.rendering.cr
+        self.log.debug("Starting rendering thread", extra=M)
         self.rendering.start()
-        ## @var released_t
-        #  Time stamp of pygame.MOUSEBUTTONUP event (end of finger contact with touchscreen)
-        self.released_t = 0
-        ## @var rel_movement
-        #  Vector since MOUSEBUTTONDOWN event. Used to derermine swipe motion.
-        self.rel_movement = (0, 0)
-        ## @var pressed_t
-        #  Time stamp of pygame.MOUSEBUTTONDOWN event (start of finger contact with touchscreen)
-        self.pressed_t = 0
-        ## @var pressed_pos
-        #  Position of pygame.MOUSEBUTTONDOWN event (start of finger contact with touchscreen)
-        self.pressed_pos = (0, 0)
-        ## @var released_pos
-        #  Position of pygame.MOUSEBUTTONUP event (end of finger contact with touchscreen)
-        self.released_pos = 0
-        ## @var add_rel_motion
-        #  Used to control if finger/mouse vectors should be tracked to determine total relative motion
-        self.add_rel_motion = False
-        ## @var running
-        #  Variable controlling the main occ event loop. pygame.QUIT event triggers setting running to False
-        self.running = True
+        ## @var touchscreen
+        #  Handle to touchscreen (pitft_touchscreen module)
+        self.touchscreen = pitft_touchscreen()
         ## @var refresh
         #  Variable controlling if the screen need to be refreshed
         self.refresh = False
-
-    ## Provides events from pygame system
-    #  @param self The python object self
-    def event_iterator(self):
-        while True:
-            yield pygame.event.wait()
-            while True:
-                event = pygame.event.poll()
-                if event.type == NOEVENT:
-                    break
-                else:
-                    yield event
 
     def force_refresh(self):
         self.refresh = True
 
     ## Switches logging level
     #  @param self The python object self
-    #  @param log_level Log level to be set. Allowed levels are in \link LOG_LEVEL \endlink
+    #  @param log_level Log level to be set.
     def switch_log_level(self, log_level):
-        self.l.setLevel(LOG_LEVEL[log_level])
-        self.l.log(100, "[OCC] Switching to log_level {}".format(log_level))
+        self.log.debug("Switching to log_level {}".format(log_level), extra=M)
+        self.log.setLevel(log_level)
 
     ## Main click and swipe handler
     #  @param self The python object self
-    #  @param time_now is event time passwd from the main event loop
+    #  @param time_now is event time passed from the main event loop
     def screen_touched_handler(self, time_now):
-        if (time_now - self.pressed_t) > LONG_CLICK:
-            self.l.debug("[OCC] LONG CLICK : {} {} {}".format(
-                time_now, self.pressed_t, self.pressed_pos))
-            self.layout.check_click(self.pressed_pos, 'LONG')
+        dx = self.relative_movement[0]
+        dy = self.relative_movement[1]
+        dt = time_now - self.relative_movement_time_start
+        self.log.debug("screen_touched_handler: {} {} {}".format(dx, dy, dt), extra=M)
+        if (self.released_timestamp is not None and dt < LONG_CLICK):
+            self.log.debug("Short click: {} {}".format(dt, self.touch_position), extra=M)
+            self.layout.check_click(self.touch_position, 'SHORT')
             self.reset_motion()
-        if self.released_t != 0:
-            self.l.debug("[OCC] SHORT CLICK : {} {} {}".format(
-                time_now, self.pressed_t, self.pressed_pos))
-            self.layout.check_click(self.pressed_pos, 'SHORT')
-            self.reset_motion()
-        dx = self.rel_movement[0]
-        dy = self.rel_movement[1]
+        if (dt > LONG_CLICK):
+            self.log.debug("Long click: {} {}".format(dt, self.touch_position), extra=M)
+            self.layout.check_click(self.touch_position, 'LONG')
+            #The finger is still touching the screen, make sure it's ignored to avoid generating ghost events
+            self.ignore_touch = True
         if (abs(dx)) > SWIPE_LENGTH:
-            if dx > 0:
-                self.l.debug("[OCC] SWIPE X RIGHT to LEFT : {} {} {} {} {} {}".
-                             format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
-                self.layout.check_click(self.pressed_pos, 'R_TO_L')
-                self.reset_motion()
+            if dx < 0:
+                self.log.debug("Swipe right to left: {} {}".format(dx, dy), extra=M)
+                self.layout.check_click(self.touch_position, 'R_TO_L')
+                self.ignore_touch = True
             else:
-                self.l.debug("[OCC] SWIPE X LEFT to RIGHT : {} {} {} {} {} {}".
-                             format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
-                self.layout.check_click(self.pressed_pos, 'L_TO_R')
-                self.reset_motion()
+                self.log.debug("Swipe left to right: {} {}".format(dx, dy), extra=M)
+                self.layout.check_click(self.touch_position, 'L_TO_R')
+                self.ignore_touch = True
         elif (abs(dy)) > SWIPE_LENGTH:
-            if dy < 0:
-                self.l.debug("[OCC] SWIPE X BOTTOM to TOP : {} {} {} {} {} {}".
-                             format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
-                self.layout.check_click(self.pressed_pos, 'B_TO_T')
-                self.reset_motion()
+            if dy > 0:
+                self.log.debug("Swipe bottom to toP: {} {}".format(dx, dy), extra=M)
+                self.layout.check_click(self.touch_position, 'B_TO_T')
+                self.ignore_touch = True
             else:
-                self.l.debug("[OCC] SWIPE X TOP to BOTTOM : {} {} {} {} {} {}".
-                             format(time_now, self.pressed_t, self.pressed_pos, self.released_pos, dx, dy))
-                self.layout.check_click(self.pressed_pos, 'T_TO_B')
-                self.reset_motion()
+                self.log.debug("Swipe top to bottom: {} {}".format(dx, dy), extra=M)
+                self.layout.check_click(self.touch_position, 'T_TO_B')
+                self.ignore_touch = True
 
     ## Main event handler
     #  @param self The python object self
-    #  @param event Pygame event
-    #  @param time_now is event time passwd from the main event loop
-    def event_handler(self, event, time_now):
-        if event.type == pygame.QUIT:
-            self.running = False
-            self.l.debug("[OCC] QUIT {}".format(time_now))
-        elif event.type == EV_UPDATE_VALUES:
-            self.l.debug("[OCC] calling update_values {}".format(time_now))
-            self.rp.update_values()
-        elif event.type == EV_SAVE_CONFIG:
-            self.l.debug("[OCC] calling write_config {}".format(time_now))
-            self.config.write_config()
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            self.pressed_t = time_now
-            self.pressed_pos = pygame.mouse.get_pos()
-            # Read rel to clean the value generated on click
-            pressed_rel = pygame.mouse.get_rel()
-            self.add_rel_motion = True
-            self.layout.render_button = self.pressed_pos
-            self.l.debug("[OCC] DOWN:{} {} {}".format(
-                self.pressed_t, self.released_t, self.pressed_pos))
-        elif event.type == pygame.MOUSEBUTTONUP:
-            # That check prevents setting release_x after long click
-            if (self.pressed_t != 0):
-                self.released_t = time_now
-                self.released_pos = pygame.mouse.get_pos()
-            self.add_rel_motion = False
-            self.layout.render_button = None
-            self.l.debug("[OCC] UP: {} {} {}".format(
-                self.pressed_t, self.released_t, self.pressed_pos))
-        elif event.type == pygame.MOUSEMOTION:
-            pressed_rel = pygame.mouse.get_rel()
-            if self.add_rel_motion:
-                self.rel_movement = tuple(map(add, self.rel_movement, pressed_rel))
-            self.l.debug("[OCC] MOTION: {}".format(self.rel_movement))
-        # self.l.debug("[OCC] ticking:time_now:{} pressed_t:{} pressed_pos:{} released_t:{} released_pos:{}". \
-        # format(time_now, self.pressed_t, self.pressed_pos, self.released_t,
-        # self.released_pos))
-        if self.pressed_t != 0:
-            self.refresh = True
-            self.screen_touched_handler(time_now)
-
-    ## Main event loop. Pools eventr from event_iterator, calls event_handler
-    #  @param self The python object self
-    def main_loop(self):
-        self.l.debug("[OCC][F] main_loop")
-        self.reset_motion()
-        while self.running:
-            for event in self.event_iterator():
-                time_now = pygame.time.get_ticks()
-                self.event_handler(event, time_now)
-                if not self.running:
-                    break
-                if self.refresh:
-                    self.refresh = False
-                    self.rendering.force_refresh()
+    #  @param event Event, might be input event or internal event
+    #  @param time_now is event time passed from the main event loop
+    def input_event_handler(self, event):
+        if not ('x' in event and 'y' in event and 'id' in event and 'time' in event and 'touch' in event):
+            #Ignore incomplete event
+            return
+        if (event["touch"] == 1 and (event["x"] is None or event["y"] is None)):
+            #Ignore invalid event
+            return
+        t = event['time']
+        if event['touch'] == 1 and not self.ignore_touch:
+            if self.touch_timestamp is None:
+                self.touch_timestamp = t
+            # FIXME Screen in cairo and evdev don't have the same origin
+            current_touch_position = (240 - event["x"], 320 - event["y"])
+            self.log.debug("current touch: {} {}".format(t, current_touch_position), extra=M)
+            if self.touch_position is None:
+                self.touch_position = current_touch_position
+                self.log.debug("touch start: {}".format(self.touch_position), extra=M)
+            if self.previous_position is None:
+                self.relative_movement = (0, 0)
+                self.relative_movement_time_start = t
+                self.log.debug("relative_movement start", extra=M)
+            else:
+                rm = tuple(map(operator.sub, self.previous_position, current_touch_position))
+                self.relative_movement = tuple(map(operator.add, self.relative_movement, rm))
+                self.log.debug("relative_movement: {}  change {}".format(self.relative_movement, rm), extra=M)
+            self.previous_position = current_touch_position
+        elif event['touch'] == 0:
+            #Wait for the end of touch before starting a new event
+            self.ignore_touch = False
+            #if self.released_timestamp is None:
+            self.released_timestamp = t
+            self.log.debug("touch end", extra=M)
+        if self.ignore_touch:
+            self.reset_motion()
+        if self.touch_position is not None:
+            self.screen_touched_handler(t)
 
     ## Resets all parameters related to clicks/swipes
     #  @param self The python object self
     def reset_motion(self):
-        self.l.debug("[OCC][F] reset_motion")
-        self.pressed_t = 0
-        self.released_t = 0
-        self.pressed_pos = (0, 0)
-        self.released_pos = (0, 0)
-        self.rel_movement = (0, 0)
-        self.layout.render_button = None
-        self.add_rel_motion = False
-        pygame.event.clear()
+        self.log.debug("reset_motion", extra=M)
+        self.touch_timestamp = None
+        self.touch_position = None
+        self.released_timestamp = None
+        self.relative_movement = None
+        self.previous_position = None
+        self.relative_movement = None
+        self.relative_movement_time_start = None
+        #self.layout.render_button = None
+
+    ## Main event loop. Pools eventr from event_iterator, calls event_handler
+    #  @param self The python object self
+    def main_loop(self):
+        self.log.debug("main loop started", extra=M)
+        self.previous_position = None
+        self.ignore_touch = False
+        self.reset_motion()
+        self.running = True
+        self.touchscreen.start()
+        while self.running:
+            while not self.touchscreen.queue_empty():
+                for e in self.touchscreen.get_event():
+                    self.input_event_handler(e)
+            if self.refresh:
+                self.refresh = False
+                self.rendering.force_refresh()
+            #t = self.rp.event_scheduler.run(blocking=False)
+            self.rp.event_scheduler.run(blocking=False)
+            time.sleep(MAIN_LOOP_BEAT)
+            #self.log.debug("Ride event scheduler, next event in: {0:.3f}".format(t), extra=M)
+        self.log.debug("main loop finsished", extra=M)
+        self.touchscreen.stop()
+
+    ## Stops main event loop
+    #  @param self The python object self
+    def stop(self):
+        self.log.debug("occ stop called", extra=M)
+        self.running = False
+        time.sleep(2.0)
+        self.cleanup()
 
     ## Returns simulate variable
     #  @param self The python object self
     def get_simulate(self):
         return self.simulate
 
-    ## Clean up function. Stops ride_parameters, writes config and layout, calls pygame quit and ends OCC. Should never be user it the real device once the code is rady. Used on development version.
+    ## Clean up function. Stops ride_parameters, writes config and layout and ends OCC. Should never be user it the real device once the code is ready. Used on development version.
     #  @param self The python object self
     def cleanup(self):
-        self.l.debug("[OCC] Cleaning...")
-        sleep(1)
+        self.log.debug("Cleaning...", extra=M)
+        time.sleep(1)
         self.rp.stop()
         try:
             self.rendering.stop()
         except AttributeError:
-            self.l.debug("[OCC] self.rendering.stop() produced AttributeError")
+            self.log.debug("self.rendering.stop() produced AttributeError", extra=M)
         try:
             self.config.write_config()
         except AttributeError:
-            self.l.debug("[OCC] self.config.write_config() produced AttributeError")
+            self.log.debug("self.config.write_config() produced AttributeError", extra=M)
         try:
             self.layout.write_layout()
         except AttributeError:
-            self.l.debug("[OCC] self.layout.write_layout() produced AttributeError")
-        pygame.quit()
-        self.l.debug("[OCC] Log end")
-        quit()
+            self.log.debug("self.layout.write_layout() produced AttributeError", extra=M)
+        self.log.debug("Log end", extra=M)
 
 
 ## Quit handler, triggers cleanup function after SIGTERM or SIGINT
@@ -314,22 +270,20 @@ class open_cycling_computer(object):
 #  @param frame TBC
 def quit_handler(signal, frame):
     main_window.cleanup()
+    quit()
 
 
 if __name__ == "__main__":
-    ## @var suffix
-    # Log suffix
-    suffix = strftime("%d-%H:%M:%S")
     ## @var sys_log_filename
-    # Log filename
-    sys_log_filename = "log/debug." + suffix + ".log"
+    # Log filename, helper variable
+    sys_log_filename = "log/debug." + time.strftime("%Y-%m-%d-%H:%M:%S") + ".log"
     logging.getLogger('system').setLevel(logging.DEBUG)
     ## @var sys_log_handler
     # Log handler
     sys_log_handler = logging.handlers.RotatingFileHandler(sys_log_filename)
     ## @var sys_log_format
     # Log format string
-    sys_log_format = '[%(levelname)-5s] %(message)s'
+    sys_log_format = '%(asctime)-25s %(levelname)-10s %(module_name)-12s %(message)s'
     sys_log_handler.setFormatter(logging.Formatter(sys_log_format))
     logging.getLogger('system').addHandler(sys_log_handler)
     ## @var sys_logger
@@ -337,24 +291,19 @@ if __name__ == "__main__":
     sys_logger = logging.getLogger('system')
     signal.signal(signal.SIGTERM, quit_handler)
     signal.signal(signal.SIGINT, quit_handler)
-    sys_logger.debug("[OCC] Log start")
+    sys_logger.debug("Log start", extra=M)
     # This is a simple check if we're running on Raspberry PI.
     # Switch to simulation mode if we're not
     if (platform.machine() == "armv6l"):
-        os.putenv('SDL_MOUSEDEV', '/dev/input/touchscreen')
-        os.environ["SDL_FBDEV"] = "/dev/fb1"
-        os.putenv('SDL_VIDEODRIVER', 'fbcon')
-        os.putenv('SDL_MOUSEDRV', 'TSLIB')
         ## @var simulate
         #  Stores simulate parameter. It's True on non armv6l platform
         simulate = False
     else:
         simulate = True
-        sys_logger.warning(
-            "Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.")
+        sys_logger.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.", extra=M)
     ## @var main_window
     # OCC main window. It's instance of open_cycling_computer class
     main_window = open_cycling_computer(simulate)
-    sys_logger.debug("[OCC] simulate = {}".format(simulate))
+    sys_logger.debug("simulate = {}".format(simulate), extra=M)
     main_window.main_loop()
     main_window.cleanup()

@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/python3
 
 import time
 from bmp183 import bmp183
@@ -10,8 +10,8 @@ bmp.start()
 run = 0
 try:
     while (run != 60):
-        print "Temperature: ", bmp.temperature, " deg C"
-        print "Pressure: ", bmp.pressure / 100.0, " hPa"
+        print("Temperature: ", bmp.temperature, " deg C")
+        print("Pressure: ", bmp.pressure / 100.0, " hPa")
         time.sleep(1)
         run += 1
     # Stop measuring

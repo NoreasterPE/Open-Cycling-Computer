@@ -1,16 +1,17 @@
-#! /usr/bin/python
+#!/usr/bin/python3
 ## @package ble_scanner
 #  BLE scanner module. Provides list of BLE devices. Can be run directly printing the list of devices to the console.
 #  Uses fixed scan time (10s)
-from bluepy.btle import DefaultDelegate
-from bluepy.btle import Scanner
+import bluepy
 import logging
+
+M = {'module_name': 'ble_scanner'}
 
 
 ## Helper class inheriting from bluepy DefaultDelegate
-class ScanDelegate(DefaultDelegate):
+class ScanDelegate(bluepy.btle.DefaultDelegate):
     def __init__(self):
-        DefaultDelegate.__init__(self)
+        bluepy.btle.DefaultDelegate.__init__(self)
 
 #    def handleDiscovery(self, dev, isNewDev, isNewData):
 #        if isNewDev:
@@ -28,7 +29,7 @@ class ble_scanner(object):
     def __init__(self, occ):
         ## @var l
         # System logger handle
-        self.l = logging.getLogger('system')
+        self.log = logging.getLogger('system')
         ## @var occ
         # OCC Handle
         self.occ = occ
@@ -37,7 +38,7 @@ class ble_scanner(object):
         self.rp = occ.rp
         ## @var scanner
         #  BLE scanner from bluepy
-        self.scanner = Scanner().withDelegate(ScanDelegate())
+        self.scanner = bluepy.btle.Scanner().withDelegate(ScanDelegate())
         ## @var dev_list_raw
         #  List of BLE devices stored for get_dev_list function
         self.dev_list_raw = []
@@ -48,17 +49,21 @@ class ble_scanner(object):
     def scan(self, timeout=10.0):
         ## @var devices
         #  List of devices returned by bluepy scanner
-        devices = self.scanner.scan(timeout)
-
-        self.dev_list_raw = []
-        for dev in devices:
-            ## @var local_name
-            #  By default all devices are named "Unknown". If device reports a bane it will be used instead.
-            local_name = "Unknown"
-            for (adtype, desc, value) in dev.getScanData():
-                if adtype == 9:
-                    local_name = value
-            self.dev_list_raw.append(dict(addr=dev.addr, name=local_name, addr_type=dev.addrType, rss=dev.rssi))
+        try:
+            devices = self.scanner.scan(timeout)
+        except bluepy.btle.BTLEException as exception:
+            #Failed to execute mgmt cmd 'le on'
+            self.log.error("Exception {}".format(exception), extra=M)
+        else:
+            self.dev_list_raw = []
+            for dev in devices:
+                ## @var local_name
+                #  By default all devices are named "Unknown". If device reports a bane it will be used instead.
+                local_name = "Unknown"
+                for (adtype, desc, value) in dev.getScanData():
+                    if adtype == 9:
+                        local_name = value
+                self.dev_list_raw.append(dict(addr=dev.addr, name=local_name, addr_type=dev.addrType, rss=dev.rssi))
 
     ## Returns list of BLE devices. scan function needs to be called first.
     #  List of BLE devices stored for get_dev_list function
@@ -69,7 +74,7 @@ class ble_scanner(object):
         return dl
 
     def ble_scan(self):
-        self.l.debug("[BLE] starting BLE scanning")
+        self.log.debug("starting BLE scanning", extra=M)
         for i in range(5):
             self.rp.set_param('ble_dev_name_' + str(i), "Scanning..")
         self.scan()
@@ -77,11 +82,11 @@ class ble_scanner(object):
             self.rp.set_param('ble_dev_name_' + str(i), "")
         i = 1
         for dev in self.get_dev_list():
-            self.l.debug("[BLE] BLE device found! Name:\"{}\" addr:\"{}\"".format(dev['name'], dev['addr']))
+            self.log.debug("BLE device found! Name:\"{}\" addr:\"{}\"".format(dev['name'], dev['addr']), extra=M)
             self.rp.set_param('ble_dev_name_' + str(i), dev['name'])
             self.rp.set_param('ble_dev_addr_' + str(i), dev['addr'])
             i += 1
-        self.l.debug("[BLE] BLE scanning finished")
+        self.log.debug("BLE scanning finished", extra=M)
 
     def ble_dev_helper(self, no, master):
         if master == 'ble_hr_name':
@@ -90,7 +95,7 @@ class ble_scanner(object):
             dev_type = 'sc'
         name = self.rp.get_param('ble_dev_name_' + str(no))
         addr = self.rp.get_param('ble_dev_addr_' + str(no))
-        self.l.debug("[BLE] Selected BLE device {} {}".format(name, addr))
+        self.log.debug("Selected BLE device {} {}".format(name, addr), extra=M)
         self.rp.set_param("variable_value", (name, addr, dev_type))
         self.occ.layout.ed_accept()
 
@@ -107,8 +112,9 @@ class ble_scanner(object):
         self.ble_dev_helper(4, self.rp.params["variable"])
 
 
+#TODO Currently doesn't work as it is OCC dependent
 if __name__ == '__main__':
     ble = ble_scanner()
     ble.scan()
     for i in ble.get_dev_list():
-        print (i)
+        print(i)

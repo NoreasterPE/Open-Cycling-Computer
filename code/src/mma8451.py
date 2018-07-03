@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/python3
 ## @package mma8451
 #   Module for MMA8451 Triple-Axis Accelerometer w/ 14-bit ADC with I2C interface as sold by Adafruit'. Not yet used by the OCC
 
@@ -100,7 +100,7 @@ class mma8451(threading.Thread):
             ret = self.read_byte_data(self.REG_WHOAMI)
             if ret == self.DEVICE_ID:
                 return
-            print 'ret=', ret, ' Expected:', self.DEVICE_ID, ' Sensor mmt8451 not found. Trying again [{}] in 1 s...'.format(i)
+            print('ret=', ret, ' Expected:', self.DEVICE_ID, ' Sensor mmt8451 not found. Trying again [{}] in 1 s...'.format(i))
             time.sleep(1)
             i += 1
 

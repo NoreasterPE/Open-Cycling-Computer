@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 ## @package ride_parameters
 #  Module for handling all ride parameters. This is the main module responsible for pulling all data together and preparing values for displaying, logging and saving.
@@ -7,6 +7,9 @@ from units import units
 import logging
 import math
 import time
+import sched
+
+M = {"module_name": "ride"}
 
 ## @var INF_MIN
 # helper variable, minus infinity
@@ -16,9 +19,17 @@ INF_MIN = float("-inf")
 # helper variable, infinity
 INF = float("inf")
 
+## @var NAN
+# helper variable, not-a-number
+NAN = float("nan")
+
+## @var RIDE_PARAMETERS_UPDATE
+# Period of time in m between ride parameters update events.
+RIDE_PARAMETERS_UPDATE = 1.0
+
 ## @var BLE_RECONNECT_DELAY
 # Disconnect time in seconds. After this time the sensor is considered to be disconnected.
-BLE_RECONNECT_DELAY = 10
+BLE_RECONNECT_DELAY = 30
 
 
 ## Class for handling all ride parameters
@@ -34,23 +45,22 @@ class ride_parameters():
         self.occ = occ
         ## @var l
         # System logger handle
-        self.l = logging.getLogger('system')
+        self.log = logging.getLogger('system')
         ## @var r
         # Ride logger handle
         self.r = self.setup_ridelog()
         ## @var uc
         # Units converter
         self.uc = units()
-        self.l.info("[RP] Initialising sensors")
+        self.event_scheduler = sched.scheduler(time.time, time.sleep)
+        self.log.info("Initialising sensors", extra=M)
         ## @var sensors
         # Handle of sensors instance
         self.sensors = occ.sensors
         ## @var ble_sc
         # Handle of BLE speed and cadence sensor
         self.ble_sc = self.sensors.get_sensor('ble_sc')
-        ## @var ble_hr
-        # Handle of BLE heart rate sensor
-        self.ble_hr = self.sensors.get_sensor('ble_hr')
+
         ## @var gps
         # Handle of GPS sensor
         self.gps = self.sensors.get_sensor('gps')
@@ -69,10 +79,8 @@ class ride_parameters():
                           odometer=0.0, ddistance=0.0, ddistance_cumulative=0.0, distance=0.0,
                           eps=0.0, ept=0.0, epv=0.0, epx=0.0, gps_strength=0, fix_mode_gps='', fix_time_gps=0.0, latitude=0.0, longitude=0.0, satellites=0.0, satellitesused=0.0,
                           ble_state=0,
-                          ble_hr_ts=0,
-                          heart_rate=0.0, heart_rate_min=INF, heart_rate_avg=0.0, heart_rate_max=INF_MIN,
                           cadence=0.0, cadence_avg=0.0, cadence_max=INF_MIN,
-                          cadence_time_stamp=time.time(), ble_data_expiry_time=1.5, time_of_ride_reset=0.0001,
+                          cadence_time_stamp=time.time(), ble_data_expiry_time=3.0, time_of_ride_reset=0.0001,
                           ble_hr_name='', ble_hr_addr='',
                           ble_sc_name='', ble_sc_addr='',
                           rider_weight=0.0,
@@ -89,12 +97,12 @@ class ride_parameters():
             altitude='m', cadence='RPM', climb='m/s', distance='m', eps='', ept='', epv='', epx='',
             dtime='s', fix_gps='', latitude='', longitude='', odometer='m', pressure='Pa', rider_weight='kg', wheel_size='',
             ridetime='s', ridetime_total='s', satellites='', satellitesused='', slope='m/m', speed='m/s',
-            temperature='C', timeon='s', time_of_ride_reset='s', heart_rate='BPM', track_gps='')
+            temperature='C', timeon='s', time_of_ride_reset='s', track_gps='')
 
         # Params of the ride ready for rendering.
         self.params = dict(
             altitude='-', altitude_gps='-', altitude_home='-', altitude_max='-', altitude_min='-',
-            cadence='-', cadence_avg='-', cadence_max='-', heart_rate='-', heart_rate_min='-', heart_rate_avg='-', heart_rate_max='-',
+            cadence='-', cadence_avg='-', cadence_max='-',
             climb='-', distance=0, eps='-', ept='-', epv='-', epx='-',
             dtime=0, fix_gps='-', fix_gps_time='-', latitude='-', longitude='-', odometer=0.0,
             pressure='-', pressure_at_sea_level='-', rider_weight=0.0, wheel_size='', wheel_circ='', ridetime='', ridetime_hms='', ridetime_total='',
@@ -102,7 +110,7 @@ class ride_parameters():
             speed_avg_digits='-', speed_avg_tenths='-', speed_digits='-', speed_max='-', speed_max_digits='-',
             speed_max_tenths='-', speed_tenths='-', temperature='', temperature_avg='', temperature_max='',
             temperature_min='', timeon='', timeon_hms='', time_of_ride_reset='', track_gps='-', utc='',
-            ble_hr_name='', ble_hr_addr='', ble_sc_name='', ble_sc_addr='',
+            ble_sc_name='', ble_sc_addr='',
             # Editor params
             editor_index=0, variable=None,
             variable_description=None, variable_raw_value=None, variable_unit=None, variable_value=None,
@@ -114,7 +122,6 @@ class ride_parameters():
             altitude='%.0f', altitude_gps='%.0f', altitude_home='%.0f', altitude_max='%.0f', altitude_min='%.0f',
             cadence='%.0f', cadence_avg='%.0f', cadence_max='%.0f', climb='%.1f', distance='%.1f', eps='%.4f', epx='%.4f', epv='%.4f', ept='%.4f',
             dtime='%.2f', fix_gps='', fix_gps_time='',
-            heart_rate='%.0f', heart_rate_min='%.0f', heart_rate_avg='%.0f', heart_rate_max='%.0f',
             latitude='%.4f', longitude='%.4f', odometer='%.0f',
             pressure='%.0f', pressure_at_sea_level='%.0f', rider_weight='%.1f', ridetime='%.0f', ridetime_hms='', ridetime_total='.0f',
             ridetime_total_hms='', rtc='', satellites='%.0f', satellitesused='%.0f', slope='%.0f', speed='%.1f', speed_avg='%.1f',
@@ -123,9 +130,10 @@ class ride_parameters():
             timeon='%.0f', timeon_hms='', time_of_ride_reset='%.0f', track_gps='%.1f', utc='')
 
         # Units - name has to be identical as in params
+        # FIXME rename to p_units for consistency
         self.units = dict(
             altitude='m', cadence='RPM', climb='m/s', distance='km', eps='', epx='', epv='', ept='',
-            dtime='s', fix_gps='', fix_gps_time='', heart_rate='BPM', latitude='', longitude='', odometer='km', pressure='hPa',
+            dtime='s', fix_gps='', fix_gps_time='', latitude='', longitude='', odometer='km', pressure='hPa',
             rider_weight='kg', wheel_size='', ridetime='s', ridetime_hms='', ridetime_total='s', ridetime_total_hms='', satellites='',
             satellitesused='', slope='%', speed='km/h', temperature='C', timeon='s', timeon_hms='', time_of_ride_reset='s',
             track_gps='')
@@ -152,35 +160,76 @@ class ride_parameters():
                             ble_selector=('ble_hr_name', 'ble_sc_name'))
 
         self.p_resettable = dict(distance=1, odometer=1, ridetime=1, speed_max=1,
-                                 cadence=1, cadence_avg=1, cadence_max=1,
-                                 heart_rate_min=1, heart_rate_avg=1, heart_rate_max=1)
+                                 cadence=1, cadence_avg=1, cadence_max=1)
+        #FIXME That might be part of layout, not part of data
+        #                        ble_hr_heart_rate_min=1, ble_hr_heart_rate_avg=1, ble_hr_heart_rate_max=1)
 
         # FIXME Use set_nav_speed_threshold(self, treshold=0) from gps module
-        self.l.info("[RP] GPS low speed treshold preset to {} [NOT USED]".format(self.p_raw['speed_gps_low']))
-        self.l.info("[RP] GPS speed noise level treshold preset to {}".format(self.p_raw['speed_gps_noise']))
-        self.l.info("[RP] Speed below {} m/a treshold won't be recorded".format(self.p_raw['speed_low']))
+        self.log.info("GPS low speed treshold preset to {} [NOT USED]".format(self.p_raw['speed_gps_low']), extra=M)
+        self.log.info("GPS speed noise level treshold preset to {}".format(self.p_raw['speed_gps_noise']), extra=M)
+        self.log.info("Speed below {} m/a treshold won't be recorded".format(self.p_raw['speed_low']), extra=M)
 
         self.update_param("speed_max")
         self.split_speed("speed_max")
         self.update_param("altitude_home")
-        self.l.info("[RP] altitude_home set to {}".format(self.params["altitude_home"]))
+        self.log.info("altitude_home set to {}".format(self.params["altitude_home"]), extra=M)
+
+        self.ble_hr = self.init_sensor_data("ble_hr")
+        self.log.debug("Setting up event scheduler", extra=M)
+        self.event_scheduler.enter(RIDE_PARAMETERS_UPDATE, 1, self.schedule_update_event)
+
+    def init_sensor_data(self, sensor_name):
+        sensor = self.sensors.get_sensor(sensor_name)
+        sensor_prefix = sensor.get_prefix()
+        # Get all parameters provided by sensor
+        sensor_raw_data = sensor.get_raw_data()
+        # Add prefix to keys in the dictionary
+        sensor_raw_data = {sensor_prefix + "_" + key: value for key, value in sensor_raw_data.items()}
+        # Add the blr_hr parameters to p_raw
+        self.p_raw.update(sensor_raw_data)
+
+        sensor_units = sensor.get_units()
+        # Add prefix to keys in the dictionary
+        sensor_units = {sensor_prefix + "_" + key: value for key, value in sensor_units.items()}
+        # Add the blr_hr parameters to p_raw
+        self.units.update(sensor_units)
+
+        sensor_raw_units = sensor.get_raw_units()
+        # Add prefix to keys in the dictionary
+        sensor_raw_units = {sensor_prefix + "_" + key: value for key, value in sensor_raw_units.items()}
+        # Add the blr_hr parameters to p_raw
+        self.p_raw_units.update(sensor_raw_units)
+
+        sensor_formats = sensor.get_formats()
+        # Add prefix to keys in the dictionary
+        sensor_formats = {sensor_prefix + "_" + key: value for key, value in sensor_formats.items()}
+        # Add the blr_hr parameters to p_raw
+        self.p_format.update(sensor_formats)
+        return sensor
+
+    def schedule_update_event(self):
+        self.log.debug("Calling update values from event scheduler", extra=M)
+        self.update_values()
+        #Setting up next update event
+        self.event_scheduler.enter(RIDE_PARAMETERS_UPDATE, 1, self.schedule_update_event)
+        t = self.event_scheduler.run(blocking=False)
+        self.log.debug("Event scheduler, next event in: {0:.3f}".format(t), extra=M)
 
     def start_sensors(self):
-        self.l.debug("[RP] Starting sensors thread")
+        self.log.debug("Starting sensors thread", extra=M)
         self.sensors.start()
 
     def setup_ridelog(self):
-        ride_log_filename = "log/ride." + \
-            strftime("%Y-%m-%d-%H:%M:%S") + ".log"
+        ride_log_filename = "log/ride." + strftime("%Y-%m-%d-%H:%M:%S") + ".log"
         logging.getLogger('ride').setLevel(logging.INFO)
-        ride_log_handler = logging.handlers.RotatingFileHandler(
-            ride_log_filename)
-        ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(cadence)-8s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(altitude_gps)-8s,%(distance)-8s,%(slope)-8s,%(climb)-8s,%(track_gps)-8s,%(eps)-8s,%(epx)-8s,%(epv)-8s,%(ept)-8s'
+        ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
+        #FIXME ridelog should be defined in config file
+        ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(cadence)-8s,%(ble_hr_heart_rate)-5s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(altitude_gps)-8s,%(distance)-8s,%(slope)-8s,%(climb)-8s,%(track_gps)-8s,%(eps)-8s,%(epx)-8s,%(epv)-8s,%(ept)-8s'
         ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
         logging.getLogger('ride').addHandler(ride_log_handler)
         ride_logger = logging.getLogger('ride')
         ride_logger.info('', extra={'time': "Time", 'dtime': "Delta", 'speed': "Speed",
-                                    'cadence': "Cadence", 'heart_rate': "Heart RT",
+                                    'cadence': "Cadence", 'ble_hr_heart_rate': "Heart RT",
                                     'pressure': "Pressure", 'temperature': "Temp",
                                     'altitude': "Altitude", 'altitude_gps': "Alt GPS",
                                     'distance': "Distance", 'slope': "Slope", 'climb': "Climb",
@@ -189,29 +238,30 @@ class ride_parameters():
         return ride_logger
 
     def stop(self):
-        self.l.debug("[RP] Stopping sensors thread")
+        self.log.debug("Stop started", extra=M)
+        self.log.debug("Stopping sensors thread", extra=M)
         self.sensors.stop()
+        self.log.debug("Stop finished", extra=M)
 
     def __del__(self):
         self.stop()
 
     def update_values(self):
-        self.read_bmp183_data()
+        ###self.read_bmp183_data()
         t = time.time()
         self.p_raw["dtime"] = t - self.p_raw["time_stamp"]
         self.p_raw["time_stamp"] = t
-        self.read_gps_data()
+        ##self.read_gps_data()
         # FIXME Move this to gps module?
         dt_adjustment = self.p_raw['time_adjustment_delta']
         if dt_adjustment > 0:
             self.p_raw["dtime"] = self.p_raw["dtime"] - dt_adjustment
-            self.l.info("[RP] dtime adjusted by {}".format(dt_adjustment))
+            self.log.info("dtime adjusted by {}".format(dt_adjustment), extra=M)
             self.sensors['gps'].time_adjustment_delta = 0
             # FIXME Correct other parameters like ridetime
-        self.l.debug("[RP] timestamp: {} dtime {}".format(t, self.p_raw["dtime"]))
-        self.read_ble_data()
-        self.read_bmp183_data()
-        self.calculate_altitude()
+        self.log.debug("timestamp: {} dtime {:10.3f}".format(time.strftime("%H:%M:%S", time.localtime(t)), self.p_raw["dtime"]), extra=M)
+        ###self.read_bmp183_data()
+        ###self.calculate_altitude()
         self.calculate_time_related_parameters()
         self.p_raw["daltitude_cumulative"] += self.p_raw["daltitude"]
         self.p_raw["ddistance_cumulative"] += self.p_raw["ddistance"]
@@ -221,11 +271,10 @@ class ride_parameters():
         # delta was grater than 8,4m
         elif self.p_raw["ddistance_cumulative"] > 8.4:
             self.p_raw["slope"] = self.p_raw["daltitude_cumulative"] / self.p_raw["ddistance_cumulative"]
-            self.l.debug("[RP] daltitude_cumulative: {} ddistance_cumulative: {}".
-                         format(self.p_raw["daltitude_cumulative"], self.p_raw["ddistance_cumulative"]))
+            self.log.debug("daltitude_cumulative: {} ddistance_cumulative: {}".format(self.p_raw["daltitude_cumulative"], self.p_raw["ddistance_cumulative"]), extra=M)
             self.p_raw["daltitude_cumulative"] = 0
             self.p_raw["ddistance_cumulative"] = 0
-        self.l.debug("[RP] slope: {}".format(self.p_raw["slope"]))
+        self.log.debug("slope: {}".format(self.p_raw["slope"]), extra=M)
         self.update_params()
 
     def calculate_time_related_parameters(self):
@@ -242,11 +291,10 @@ class ride_parameters():
             self.p_raw["speed_avg"] = self.p_raw["distance"] / self.p_raw["ridetime"]
             self.update_param("speed_avg")
             self.split_speed("speed_avg")
-            self.l.debug("[RP] speed_gps: {}, distance: {}, odometer: {}".format(
-                s, self.p_raw["distance"], self.p_raw["odometer"]))
+            self.log.debug("speed_gps: {}, distance: {}, odometer: {}".format(s, self.p_raw["distance"], self.p_raw["odometer"]), extra=M)
         else:
             self.p_raw["ddistance"] = 0
-            self.l.debug("[RP] speed_gps: below speed_low {} m/s treshold".format(self.p_raw['speed_low']))
+            self.log.debug("speed_gps: below speed_low {} m/s treshold".format(self.p_raw['speed_low']), extra=M)
 
     def force_refresh(self):
         self.occ.force_refresh()
@@ -258,7 +306,7 @@ class ride_parameters():
             return self.p_raw[param]
 
     def set_param(self, param_name, value):
-        self.l.debug("[RP] Setting {} to {} ".format(param_name, value))
+        self.log.debug("Setting {} to {} ".format(param_name, value), extra=M)
         self.params[param_name] = value
 
     def get_param(self, param):
@@ -269,7 +317,7 @@ class ride_parameters():
             elif param in self.params:
                 value = self.params[param]
         except KeyError:
-            self.l.debug("[RP] No unit for {}".format(param))
+            self.log.error("No unit for {}".format(param), extra=M)
         finally:
             return value
 
@@ -296,7 +344,7 @@ class ride_parameters():
         if param_name in self.p_desc:
             return self.p_desc[param_name]
         else:
-            self.l.error("[RP] {} has no description defined".format(param_name))
+            self.log.error("{} has no description defined".format(param_name), extra=M)
             return "No description"
 
     def clean_value(self, variable, empty=0):
@@ -305,14 +353,14 @@ class ride_parameters():
         else:
             return empty
 
-    def read_ble_data(self):
+        '''    def read_ble_data(self):
         self.p_raw['ble_state'] = self.sensors.get_ble_state()
         if self.ble_sc:
             data = self.ble_sc.get_data()
             tt = time.time()
             self.params['ble_sc_name'] = data['name']
             if data['addr'] is not None:
-                self.l.info('[RP] BLE SC new address {}'.format(data['addr']))
+                #self.log.info('BLE SC new address {}'.format(data['addr']), extra=M)
                 self.params['ble_sc_addr'] = data['addr']
             self.p_raw['wheel_time_stamp'] = self.clean_value(data['wheel_time_stamp'])
             if (tt - self.p_raw['wheel_time_stamp']) < self.p_raw['ble_data_expiry_time']:
@@ -326,34 +374,18 @@ class ride_parameters():
             if delay < self.p_raw['ble_data_expiry_time']:
                 self.p_raw['cadence'] = self.clean_value(data['cadence'])
             else:
-                self.p_raw["cadence"] = 0
-            if delay > BLE_RECONNECT_DELAY:
-                # Force reconnect
-                self.ble_sc = None
-                self.sensors.reconnect_sensor('ble_sc')
+                self.p_raw["cadence"] = 0.0
+            #FIXME That should be in sensors.py?
+            #if delay > BLE_RECONNECT_DELAY:
+            #    # Force reconnect
+            #    self.log.debug('BLE SC delay {} greater than BLE_RECONNECT_DELAY {}. Forcing reconnect'.format(delay, BLE_RECONNECT_DELAY), extra=M)
+            #    self.ble_sc = None
+            #    self.sensors.reconnect_sensor('ble_sc')
         else:
-            self.l.info('[RP] BLE SC sensor not set, trying to get it...')
+            self.log.info('BLE SC sensor not set, trying to get it...', extra=M)
             self.ble_sc = self.sensors.get_sensor('ble_sc')
 
-        if self.ble_hr:
-            data = self.ble_hr.get_data()
-            tt = time.time()
-            self.params['ble_hr_name'] = data['name']
-            if data['addr'] is not None:
-                self.l.info('[RP] BLE HR new address {}'.format(data['addr']))
-                self.params['ble_hr_addr'] = data['addr']
-            self.p_raw['ble_hr_ts'] = data['time_stamp']
-            self.p_raw['heart_rate'] = data['heart_rate']
-            self.l.debug('[RP] BLE HR = {} at {}'.format(
-                self.p_raw['heart_rate'], self.p_raw['ble_hr_ts']))
-            delay = tt - self.p_raw['ble_hr_ts']
-            if delay > BLE_RECONNECT_DELAY:
-                # Force reconnect
-                self.ble_hr = None
-                self.sensors.reconnect_sensor('ble_hr')
-        else:
-            self.l.info('[RP] BLE HR sensor not set, trying to get it...')
-            self.ble_hr = self.sensors.get_sensor('ble_hr')
+        #    self.ble_hr = self.sensors.get_sensor('ble_hr') '''
 
     def read_gps_data(self):
         if self.gps:
@@ -385,7 +417,7 @@ class ride_parameters():
             if self.p_raw["speed_gps"] < self.p_raw['speed_gps_noise']:
                 self.p_raw["speed_gps"] = 0
         else:
-            self.l.info('[RP] GPS sensor not set, trying to set it...')
+            self.log.info('GPS sensor not set, trying to set it...', extra=M)
             self.gps = self.sensors.get_sensor('gps')
 
     def split_speed(self, speed_name):
@@ -424,14 +456,14 @@ class ride_parameters():
         ca_new = (c * dt + ca * tt) / (tt + dt)
         self.p_raw["cadence_avg"] = ca_new
 
-    def calculate_avg_heart_rate(self):
+    def calculate_avg_ble_hr_heart_rate(self):
         dt = self.p_raw["dtime"]
-        hr = self.p_raw["heart_rate"]
-        hra = self.p_raw["heart_rate_avg"]
+        hr = self.p_raw["ble_hr_heart_rate"]
+        hra = self.p_raw["ble_hr_heart_rate_avg"]
         # FIXME ridetime doesn't seem to be right
         tt = self.p_raw["ridetime"]
         hr_new = (hr * dt + hra * tt) / (tt + dt)
-        self.p_raw["heart_rate_avg"] = hr_new
+        self.p_raw["ble_hr_heart_rate_avg"] = hr_new
 
     def update_altitude(self):
         self.update_param("altitude_gps")
@@ -450,7 +482,7 @@ class ride_parameters():
         self.update_param("longitude")
         self.update_altitude()
         self.update_cadence()
-        self.update_heart_rate()
+        self.update_ble_hr_heart_rate()
         self.update_param("climb")
         self.update_param("distance")
         self.update_param("ridetime")
@@ -471,15 +503,15 @@ class ride_parameters():
         self.update_param("satellites")
         self.update_param("slope")
         self.add_ridelog_entry()
-        self.l.debug("[RP] speed: {}, speed_max: {}, average speed: {} {}, cadence {} {}".
-                     format(self.params["speed"], self.params["speed_max"],
-                            self.params["speed_avg"], self.units["speed"],
-                            self.params["cadence"], self.units["cadence"]))
+        self.log.debug("speed: {}, speed_max: {}, average speed: {} {}, cadence {} {}".  format(self.params["speed"], self.params["speed_max"], self.params["speed_avg"], self.units["speed"], self.params["cadence"], self.units["cadence"]), extra=M)
         self.force_refresh()
 
     def add_ridelog_entry(self):
         slp = self.params["slope"]
-        hrt = self.params["heart_rate"]
+        try:
+            hrt = self.params["ble_hr_heart_rate"]
+        except KeyError:
+            hrt = "-"
         tme = self.params["timeon_hms"]
         spd = self.params["speed"]
         cde = self.params["cadence"]
@@ -496,7 +528,7 @@ class ride_parameters():
         epv = self.p_raw["epv"]
         ept = self.p_raw["ept"]
         self.r.info('', extra={'time': tme, 'dtime': dte, 'speed': spd, 'cadence': cde,
-                               'heart_rate': hrt, 'pressure': pre, 'temperature': tem,
+                               'ble_hr_heart_rate': hrt, 'pressure': pre, 'temperature': tem,
                                'altitude': alt, 'altitude_gps': alg, 'distance': dst,
                                'slope': slp, 'climb': clb, 'track_gps': trk, 'eps': eps,
                                'epx': epx, 'epv': epv, 'ept': ept})
@@ -507,15 +539,16 @@ class ride_parameters():
             suffix = self.suffixes
         for s in suffix:
             if param_name.endswith(s):
-                l = -1 * len(s)
-                param_name = param_name[:l]
+                length = -1 * len(s)
+                param_name = param_name[:length]
         return param_name
 
     def reset_ride(self):
         self.p_raw["distance"] = 0.0
         self.p_raw["ridetime"] = 0.0
         self.reset_cadence()
-        self.reset_heart_rate()
+        #FIXME To be linked with all sensors reset
+        self.ble_hr.reset()
 
     def reset_cadence(self):
         self.p_raw["cadence"] = 0.0
@@ -523,41 +556,34 @@ class ride_parameters():
         self.p_raw["cadence_max"] = INF_MIN
         self.p_raw["time_of_ride_reset"] = time.time()
 
-    def reset_heart_rate(self):
-        self.p_raw["heart_rate"] = 0.0
-        self.p_raw["heart_rate_min"] = INF
-        self.p_raw["heart_rate_avg"] = 0.0
-        self.p_raw["heart_rate_max"] = INF_MIN
-        self.p_raw["time_of_ride_reset"] = time.time()
-
     def reset_param(self, param_name):
-        self.l.debug("[RP] Resetting {}".format(param_name))
+        self.log.debug("Resetting {}".format(param_name), extra=M)
         self.p_raw[param_name] = 0
-        if param_name in ("ridetime", "distance", "cadence", "heart_rate"):
+        if param_name in ("ridetime", "distance", "cadence", "ble_hr_heart_rate"):
             self.reset_ride()
         self.force_refresh()
 
-    def update_param(self, param_name):
-        if param_name in self.p_format:
-            f = self.p_format[param_name]
+    def update_param(self, param):
+        if param in self.p_format:
+            f = self.p_format[param]
         else:
-            self.l.error("[RP] Formatting not available: param_name = {}".format(param_name))
+            self.log.error("Formatting not available: param = {}".format(param), extra=M)
             f = "%.1f"
 
-        if self.p_raw[param_name] != "-":
-            unit_raw = self.get_internal_unit(param_name)
-            unit = self.get_unit(param_name)
-            value = self.p_raw[param_name]
+        if self.p_raw[param] != "-":
+            unit_raw = self.get_internal_unit(param)
+            unit = self.get_unit(param)
+            value = self.p_raw[param]
             if unit_raw != unit:
                 value = self.uc.convert(value, unit)
-            self.params[param_name] = f % float(value)
+            self.params[param] = f % float(value)
         else:
-            self.params[param_name] = '-'
-            self.l.debug("[RP] param_name {} = -".format(param_name))
+            self.params[param] = '-'
+            self.log.debug("param {} = -".format(param), extra=M)
 
     def add_zero(self, value):
         if value < 10:
-            value = "0" + unicode(value)
+            value = "0" + format(value)
         return value
 
     def update_hms(self, param):
@@ -584,7 +610,7 @@ class ride_parameters():
             self.p_raw['pressure'] = data['pressure']
             self.p_raw['temperature'] = data['temperature']
         else:
-            self.l.info('[RP] BMP183 sensor not set, trying to set it...')
+            self.log.info('BMP183 sensor not set, trying to set it...', extra=M)
             self.bmp183 = self.sensors.get_sensor('bmp183')
 
     def calculate_altitude(self):
@@ -604,8 +630,7 @@ class ride_parameters():
             self.p_raw["altitude_previous"] = self.p_raw["altitude"]
             self.p_raw["altitude"] = calc_alt()
             self.p_raw["daltitude"] = self.p_raw["altitude"] - self.p_raw["altitude_previous"]
-        self.l.debug("[RP] altitude: {}, daltitude {}".format(
-            self.p_raw["altitude"], self.p_raw["daltitude"]))
+        self.log.debug("altitude: {}, daltitude {}".format(self.p_raw["altitude"], self.p_raw["daltitude"]), extra=M)
 
     def calculate_pressure_at_sea_level(self):
         # Set pressure_at_sea_level based on given altitude
@@ -614,7 +639,7 @@ class ride_parameters():
         if altitude_home < 43300:
             self.p_raw["pressure_at_sea_level"] = float(
                 pressure / pow((1 - altitude_home / 44330), 5.255))
-        self.l.debug("[RP] pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]))
+        self.log.debug("pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]), extra=M)
 
     def update_temperatures(self):
         self.set_min("temperature")
@@ -625,42 +650,63 @@ class ride_parameters():
         self.update_param("temperature_min")
         self.update_param("temperature_max")
 
-    def no_zero(self, param_name):
-        if self.params[param_name] == '0' or self.params[param_name] == '-0':
+    def sanitise(self, param_name):
+        if self.params[param_name] == "-0":
+            self.params[param_name] = "0"
+        if (math.isinf(float(self.params[param_name])) or
+                math.isnan(float(self.params[param_name]))):
             self.params[param_name] = '-'
 
     def update_cadence(self):
         self.calculate_avg_cadence()
         self.set_max("cadence")
         self.update_param("cadence")
-        self.no_zero("cadence")
+        self.sanitise("cadence")
         self.update_param("cadence_avg")
-        self.no_zero("cadence_avg")
+        self.sanitise("cadence_avg")
         self.update_param("cadence_max")
-        self.no_zero("cadence_max")
+        self.sanitise("cadence_max")
 
-    def update_heart_rate(self):
-        self.set_min("heart_rate")
-        self.set_max("heart_rate")
-        self.calculate_avg_heart_rate()
-        self.update_param("heart_rate")
-        self.no_zero("heart_rate")
-        self.update_param("heart_rate_min")
-        self.no_zero("heart_rate_min")
-        self.update_param("heart_rate_avg")
-        self.no_zero("heart_rate_avg")
-        self.update_param("heart_rate_max")
-        self.no_zero("heart_rate_max")
+    def update_ble_hr_heart_rate(self):
+        self.log.debug("update_ble_hr_heart_rate started", extra=M)
+        if self.ble_hr:
+            if self.ble_hr.is_connected():
+                self.log.debug("Fetching ble_hr prefix & data", extra=M)
+                data = self.ble_hr.get_raw_data()
+                if (time.time() - data["time_stamp"]) < 3.0:  # EXPIRED_DATA_TIME
+                    prefix = self.ble_hr.get_prefix()
+                    # Add prefix to keys in the dictionary
+                    data_with_prefix = {prefix + "_" + key: value for key, value in data.items()}
+                    self.log.debug("{}".format(data_with_prefix), extra=M)
+                    for param in data_with_prefix:
+                        self.p_raw[param] = data_with_prefix[param]
+                else:
+                    #FIXME Temporary fix for expired data
+                    self.p_raw["ble_hr_heart_rate"] = NAN
+                    self.log.debug("ble_hr data expired", extra=M)
+                # FIXME move to ble_hr, sensor module should provide data for display
+                #self.calculate_avg_ble_hr_heart_rate()
+                self.update_param("ble_hr_heart_rate_min")
+                self.sanitise("ble_hr_heart_rate_min")
+                #self.update_param("ble_hr_heart_rate_avg")
+                #self.sanitise("ble_hr_heart_rate_avg")
+                self.update_param("ble_hr_heart_rate_max")
+                self.sanitise("ble_hr_heart_rate_max")
+                self.update_param("ble_hr_heart_rate")
+                self.sanitise("ble_hr_heart_rate")
+        else:
+            self.log.debug("ble_hr_connection lost", extra=M)
+        self.log.debug("update_ble_hr_heart_rate finished", extra=M)
 
     def get_editor_name(self, parameter):
-        self.l.debug("[RP] get_editor_name searching for editor for parameter {}".format(parameter))
+        self.log.debug("get_editor_name searching for editor for parameter {}".format(parameter), extra=M)
         editor = None
         for e in self.editors:
             if parameter in self.editors[e]:
                 editor = e
                 break
         if editor:
-            self.l.debug("[RP] get_editor_name found editor {} for parameter {}".format(editor, parameter))
+            self.log.debug("get_editor_name found editor {} for parameter {}".format(editor, parameter), extra=M)
         else:
-            self.l.debug("[RP] get_editor_name didn't find any editor for parameter {}".format(parameter))
+            self.log.debug("get_editor_name didn't find any editor for parameter {}".format(parameter), extra=M)
         return editor

@@ -1,3 +1,2 @@
-#!/usr/bin/bash
-python src/occ.py
+python3 src/occ.py
 

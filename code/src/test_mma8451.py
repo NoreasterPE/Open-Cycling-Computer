@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/python3
 
 import time
 from mma8451 import mma8451
@@ -10,7 +10,7 @@ mma.check_id()
 run = 0
 while (run != 60):
     (x, y, z) = mma.read_xyz()
-    print "X:", x, "Y:", y, "Z:", z
+    print("X:", x, "Y:", y, "Z:", z)
     time.sleep(1)
     run += 1
 quit()

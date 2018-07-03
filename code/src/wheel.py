@@ -27,7 +27,7 @@ class wheel:
         self.wheel_size['700x45C'] = 2.242
         self.wheel_size['700x47C'] = 2.268
 
-    ## Helper function returning wheel size in mm
+    ## Helper function returning wheel size in meters
     #  @param self The python object self
     #  @param name String describing wheel, i.e. 700x25C
     def get_size(self, name):

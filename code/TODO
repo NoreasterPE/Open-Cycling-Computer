@@ -1,32 +1,38 @@
 UI
 1. Consider scroll-over-the-edge to switch pages
-2. Use sprites to make smooth page switching?
+2. Use sprites to make smooth page switching? {WONTFIX]
 3. Control rounding errors when switching units in editor
 4. New editor layout. Current is confusing.
 5. Click to switch value i.e. click on temperature to cycle over min/average/max
 6. Button maps with colour images
-7. Add icon showing BLE connection status
-8. Add BLE icons
-9. Indicate BLE connection on screen (WIP)
-10. BLE device list expiry time. Currently never expires
-11. There is no way to disconnect from a BLE device
+7. Indicate BLE connection on screen (WIP)
+8. BLE device list expiry time. Currently never expires
+9. There is no way to disconnect from a BLE device
+10. Use real ff fonts instead of the "toy" cairo API
 
 CODING STYLE:
 1. Fix inconsistent naming: func, function, param_name
 2. Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
-3. Review & avoid try/catch. It's too expensive
+3. Review & avoid try/catch. It's too expensive [HOLD]
 4. Add a standard parent class for hardware module running in a separate thread (init, start, run, stop, get_data)
 6. Add new params from modules to ride parameters? Modules to give ready for use values? Help standarisation, but makes splitting code into libs harder.
 7. Define sensor module API (init, get_data, get_formatting, start, stop, get_status)
 8. Make library for layout handling. Might be useful for other projects like weather station
-9. Switch from XML to YAML for layout description
-9. Switch from XML to YAML for config file
+9. Remove pygame
 
 REAL WORLD PROBLEMS:
 1. Speed filtering or max speed will be false sooner or later. Average from 2/3 samples? Kalman?
 2. Average cadence to be calculated for ride time (reset with ride time?)
 3. Do not try to initialise subsystems too many times. If BLE/GPS/other sensor is not there it won't magically show up. Log error and give up.
 4. Add a module to allow real live raw data monitoring
+5. BLE_HR main loop sometimes quit with some unhandled exception
+6. Change log formatting. Timestamp should be first in human readable format
+7. Use timestamp to discard false notifications BLE HR/SC
+8. Use Kalman filter for speed - BLE SC goes crazy sometimes
+9. Pulse heart rate icon every time ble notification is received
+10. Pulse speed/cadence icon every time ble notification is received
+11. Make threads stoppable with feedback for clean exit (low priority)
+12. Use Kalman filter for heart rate - ble_hr goes crazy sometimes
 
 CODE ERRORS:
 1. Threads write to log aftred log end [ERROR]
@@ -44,7 +50,7 @@ Traceback (most recent call last):
     rv2 = uv[i]
 IndexError: string index out of range
 4. Setting time from GPS for the first time breaks delta (trip time)
-5. BLE Notifications re-enabled on quit??
+5. BLE Notifications re-enabled on quit??. Update: look like notificationc can show up even when switched off?
 [DEBUG] [BLE] Notification received from : 0xe
 [DEBUG] [BMP] pressure = 101300.0 Pa, temperature = 19.8 degC
 [DEBUG] [BMP] pressure = 101300.0 Pa, temperature = 19.8 degC
@@ -163,3 +169,8 @@ FUTURE
 53. [DONE] Crash when no config/config.xml file
 54. [DONE] Editing Rider weight doesn't work - missing value.
 55. [DONE] Move wheel size to config
+56. [DONE] Switch from XML to YAML for layout description
+57. [DONE] Switch from XML to YAML for config file
+58. [DONE] Add icon showing BLE connection status
+59. [DONE] Add BLE icons
+60. [DONE] Switch to self.log.critical("Loading default layout {} failed, Quitting...".format(layout_path), extra=M) style

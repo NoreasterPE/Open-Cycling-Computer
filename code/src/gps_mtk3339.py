@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/python3
 ## @package gps_mtk3339
 #  GPS module. Responsible for connecting to, starting and stopping mtk3339 hardware as sold by Adafruit
 
@@ -10,6 +10,8 @@ import mtk3339
 import os
 import threading
 import time
+
+M = {'module_name': 'gps'}
 
 ## @var NaN
 # helper variable, non arithmetic number
@@ -28,11 +30,11 @@ class gps_mtk3339(threading.Thread):
 
     def __init__(self, simulate=False):
         threading.Thread.__init__(self)
-        self.l = logging.getLogger('system')
+        self.log = logging.getLogger('system')
         self.simulate = simulate
         self.restart_gps = False
         if not self.simulate:
-            self.l.debug("[GPS] Initialising mtk3339")
+            self.log.debug("Initialising mtk3339", extra=M)
             ser = mtk3339.mtk3339("/dev/ttyAMA0")
             ser.set_baudrate(115200)
             ser.set_fix_update_rate(1000)
@@ -51,13 +53,13 @@ class gps_mtk3339(threading.Thread):
 
     def gpsd_link_init(self):
         try:
-            self.l.debug("[GPS] Trying to establich serial link")
+            self.log.debug("Trying to establich serial link", extra=M)
             # FIXME Add check for running gpsd. Restart if missing. Consider watchdog thread to start gpsd
             # FIXME Check how that reacts for missing gps hardware
             self.data = gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
             self.present = True
         except:
-            self.l.error("[GPS] Cannot talk to GPS")
+            self.log.error("Cannot talk to GPS", extra=M)
             self.present = False
             raise IOError("Communication with GPS mtk3339 failed")
 
@@ -67,11 +69,11 @@ class gps_mtk3339(threading.Thread):
         command = "service gpsd restart"
         ret = os.system(command)
         if ret == 0:
-            self.l.info("[GPS] gpsd restarted succesfully")
+            self.log.info("gpsd restarted succesfully", extra=M)
             self.restart_gps = False
             self.gpsd_link_init()
         else:
-            self.l.info("[GPS] gpsd fails to restart with error {}".format(ret))
+            self.log.info("gpsd fails to restart with error {}".format(ret), extra=M)
             time.sleep(3)
 
     ## Main loop of gps_mtk3339 module. Responsible for restarting gps and processing gps messages into locally stored values describing current location.
@@ -99,7 +101,7 @@ class gps_mtk3339(threading.Thread):
 
     def process_gps(self):
         timestamp = time.time()
-        self.l.debug("[GPS] timestamp: {}, running: {},".format(timestamp, self.running))
+        self.log.debug("timestamp: {}, running: {},".format(timestamp, self.running), extra=M)
         gps_data_available = False
         try:
             # FIXME Fails sometimes with ImportError from gps.py - see TODO 21
@@ -108,7 +110,7 @@ class gps_mtk3339(threading.Thread):
             data = self.data
             gps_data_available = True
         except StopIteration:
-            self.l.error("[GPS] StopIteration exception in GPS. Restarting GPS in 10 s")
+            self.log.error("StopIteration exception in GPS. Restarting GPS in 10 s", extra=M)
             # FIXME Reinit gps after a delay (from RP?) as restarting gpsd doesn't help
             # so this need to be in the loop as well: self.data =
             # gps(mode=WATCH_ENABLE | WATCH_NEWSTYLE)
@@ -131,7 +133,7 @@ class gps_mtk3339(threading.Thread):
             if isinstance(data.fix.time, float):
                 self.fix_time = data.fix.time
             else:
-                # Workaround for python bug
+                # Workaround for python3 bug
                 # ImportError: Failed to import _strptime because the import
                 # lock is held by another thread.
                 try:
@@ -140,8 +142,8 @@ class gps_mtk3339(threading.Thread):
                     self.fix_time = time.mktime(time.strptime(
                         data.fix.time, '%Y-%m-%dT%H:%M:%S.%fZ'))
                 except ImportError:
-                    self.l.critical(
-                        "[GPS] self.fix_time {}".format(self.fix_time))
+                    self.log.critical(
+                        "self.fix_time {}".format(self.fix_time))
                     pass
             if self.set_time:
                 if (self.utc is not None):
@@ -152,11 +154,11 @@ class gps_mtk3339(threading.Thread):
                 self.satellites = len(sat)
                 self.satellitesused = self.data.satellites_used
             except AttributeError:
-                self.l.error("[GPS] AttributeError exception in GPS")
+                self.log.error("AttributeError exception in GPS", extra=M)
                 pass
-            self.l.debug("[GPS] timestamp: {}, fix time: {}, UTC: {}, Satellites: {}, Used: {}"
+            self.log.debug("timestamp: {}, fix time: {}, UTC: {}, Satellites: {}, Used: {}"
                          .format(timestamp, self.fix_time, self.utc, self.satellites, self.satellitesused))
-            self.l.debug("[GPS] Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"
+            self.log.debug("Mode: {}, Lat,Lon: {},{}, Speed: {}, Altitude: {}, Climb: {}"
                          .format(self.fix_mode, self.latitude, self.longitude, self.speed, self.altitude, self.climb))
         else:
             self.reset_gps_data()
@@ -164,7 +166,7 @@ class gps_mtk3339(threading.Thread):
     ## Resets all gps data to the initial state
     #  @param self The python object self
     def reset_gps_data(self):
-        self.l.debug("[GPS] Setting null values to GPS params")
+        self.log.debug("Setting null values to GPS params", extra=M)
         self.latitude = NaN
         self.longitude = NaN
         self.utc = None
@@ -200,8 +202,8 @@ class gps_mtk3339(threading.Thread):
 
     def set_system_time(self):
         tt_before = time.time()
-        self.l.info("[GPS] time.time before {}".format(tt_before))
-        self.l.info("[GPS] Setting UTC system time to {}".format(self.utc))
+        self.log.info("time.time before {}".format(tt_before), extra=M)
+        self.log.info("Setting UTC system time to {}".format(self.utc), extra=M)
         command = 'date -u --set={} "+%Y-%m-%dT%H:%M:%S.000Z" 2>&1 > /dev/null'.format(
             self.utc)
         ret = os.system(command)
@@ -209,6 +211,6 @@ class gps_mtk3339(threading.Thread):
             self.set_time = False
             tt_after = time.time()
             self.time_adjustment_delta = tt_before - tt_after
-            self.l.info("[GPS] time.time after {}".format(tt_after))
-            self.l.info(
-                "[GPS] time.time delta {}".format(self.time_adjustment_delta))
+            self.log.info("time.time after {}".format(tt_after), extra=M)
+            self.log.info(
+                "time.time delta {}".format(self.time_adjustment_delta))

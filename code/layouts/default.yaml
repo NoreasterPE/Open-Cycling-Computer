@@ -5,14 +5,14 @@ pages:
          type: normal
          background: images/occ_page_0_background.png
          buttons: images/occ_page_0_buttons.png
-         font: ""
-         font_size: 7
+         font: "serif"
+         font_size: 700
          fg_colour: FFFFFF
          fields: 
                 - function: speed_digits
                   x: 95
                   y: 75
-                  font_size: 19
+                  font_size: 130
                   button: 
                           x0: 0
                           y0: 0
@@ -22,12 +22,12 @@ pages:
                 - function: speed_tenths
                   x: 210
                   y: 115
-                  font_size: 7
+                  font_size: 50
 
                 - function: speed_units
                   x: 205
                   y: 75
-                  font_size: 2
+                  font_size: 16
 
                 - function: gps_icon
                   x: 205
@@ -42,13 +42,13 @@ pages:
                   y: 5
                   file: images/ble_icon_32x32.png
                   variable:
-                          name: ble_state
+                          name: ble_hr_state
                           frames: 6
 
                 - function: distance
                   x: 170
-                  y: 175
-                  font_size: 4
+                  y: 180
+                  font_size: 30
                   button: 
                           x0: 120
                           y0: 150
@@ -58,42 +58,42 @@ pages:
                 - function: distance_units
                   x: 210
                   y: 175
-                  font_size: 2
+                  font_size: 16
 
                 - function: ridetime_hms
                   x: 180
                   y: 205
-                  font_size: 3
+                  font_size: 20
 
                 - function: timeon_hms
                   x: 180
                   y: 225
-                  font_size: 3
+                  font_size: 20
 
                 - function: climb
                   x: 50
                   y: 180
-                  font_size: 4
+                  font_size: 30
 
                 - function: climb_units
                   x: 100
                   y: 185
-                  font_size: 2
+                  font_size: 16
 
                 - function: slope
                   x: 50
                   y: 215
-                  font_size: 4
+                  font_size: 30
 
                 - function: slope_units
                   x: 100
                   y: 220
-                  font_size: 2
+                  font_size: 16
 
                 - function: cadence
                   x: 50
                   y: 290
-                  font_size: 7
+                  font_size: 40
                   button: 
                           x0: 0
                           y0: 240
@@ -103,62 +103,65 @@ pages:
                 - function: cadence_min
                   x: 20
                   y: 255
-                  font_size: 2
+                  font_size: 16
 
                 - function: cadence_ave
                   x: 60
                   y: 255
-                  font_size: 2
+                  font_size: 16
 
                 - function: cadence_max
                   x: 100
                   y: 255
-                  font_size: 2
+                  font_size: 16
 
                 - function: cadence_units
                   x: 105
                   y: 310
-                  font_size: 1.2
+                  font_size: 12
 
                 - function: cadence_icon
                   x: 98
                   y: 267
                   file: images/cadence_icon_20x32.png
 
-                - function: heart_rate
+                - function: ble_hr_heart_rate
                   x: 171
                   y: 290
-                  font_size: 7
+                  font_size: 40
                   button: 
                           x0: 120
                           y0: 240
                           w: 119
                           h: 80
 
-                - function: heart_rate_min
+                - function: ble_hr_heart_rate_min
                   x: 140
                   y: 255
-                  font_size: 2
+                  font_size: 16
 
-                - function: heart_rate_ave
+                - function: ble_hr_heart_rate_ave
                   x: 180
                   y: 255
-                  font_size: 2
+                  font_size: 16
 
-                - function: heart_rate_max
+                - function: ble_hr_heart_rate_max
                   x: 220
                   y: 255
-                  font_size: 2
+                  font_size: 16
 
-                - function: heart_rate_units
+                - function: ble_hr_heart_rate_units
                   x: 225
                   y: 310
-                  font_size: 1.2
+                  font_size: 12
 
-                - function: heart_rate_icon
+                - function: ble_hr_heart_rate_icon
                   x: 218
                   y: 267
-                  file: images/heart_rate_icon_20x32.png
+                  file: images/ble_hr_heart_rate_icon_20x32.png
+                  variable:
+                          name: ble_hr_heart_rate_beat
+                          frames: 2
 
        - name: "Weather"
          id: page_1
@@ -167,13 +170,13 @@ pages:
          background: images/occ_page_1_background.png
          buttons: images/occ_page_1_buttons.png
          font: ""
-         font_size: 2
+         font_size: 16
          fg_colour: FFFFFF
          fields: 
                 - function: speed_max_label
                   x: 25
                   y: 10
-                  font_size: 2
+                  font_size: 16
                   text: Max
                 - function: speed_max_digits
                   button:
@@ -183,23 +186,23 @@ pages:
                           h: 150
                   x: 95
                   y: 75
-                  font_size: 19
+                  font_size: 130
 
                 - function: speed_max_tenths
                   x: 210
                   y: 115
-                  font_size: 7
+                  font_size: 50
 
                 - function: speed_units
                   x: 205
                   y: 75
-                  font_size: 2
+                  font_size: 16
 
                 - function: speed_avg_label
                   x: 25
-                  y: 160
-                  font_size: 2
-                  text: Ave
+                  y: 170
+                  font_size: 16
+                  text: Avg
                 - function: speed_avg
                   button:
                           x0: 0
@@ -208,12 +211,12 @@ pages:
                           h: 89
                   x: 100
                   y: 175
-                  font_size: 4
+                  font_size: 30
 
                 - function: speed_avg_units
                   x: 210
                   y: 175
-                  font_size: 2
+                  font_size: 16
 
                 - function: temperature
                   button:
@@ -223,7 +226,7 @@ pages:
                           h: 80
                   x: 50
                   y: 290
-                  font_size: 7
+                  font_size: 40
 
                 - function: temperature_icon
                   x: 98
@@ -233,37 +236,37 @@ pages:
                 - function: temperature_min
                   x: 20
                   y: 255
-                  font_size: 2
+                  font_size: 16
 
                 - function: temperature_avg
                   x: 60
                   y: 255
-                  font_size: 2
+                  font_size: 16
 
                 - function: temperature_max
                   x: 100
                   y: 255
-                  font_size: 2
+                  font_size: 16
 
                 - function: temperature_units
                   x: 110
                   y: 310
-                  font_size: 2
+                  font_size: 16
 
                 - function: pressure
                   x: 170
-                  y: 280
-                  font_size: 5
+                  y: 290
+                  font_size: 40
 
                 - function: pressure_units
                   x: 220
                   y: 310
-                  font_size: 2
+                  font_size: 16
 
                 - function: ridetime_total_hms
                   x: 120
                   y: 215
-                  font_size: 4
+                  font_size: 30
        - name: "GPS"
          id: page_2
          number: 2
@@ -271,38 +274,38 @@ pages:
          background: images/occ_page_2_background.png
          buttons: images/occ_page_2_buttons.png
          font: ""
-         font_size: 2
+         font_size: 16
          fg_colour: FFFFFF
          fields: 
                 - function: latitude
                   x: 60
                   y: 25
-                  font_size: 3
+                  font_size: 25
 
                 - function: longitude
                   x: 60
                   y: 60
-                  font_size: 3
+                  font_size: 25
 
                 - function: fix_time_gps
                   x: 60
                   y: 95
-                  font_size: 3
+                  font_size: 25
 
                 - function: fix_gps
                   x: 60
                   y: 130
-                  font_size: 3
+                  font_size: 25
 
                 - function: time
-                  x: 180
-                  y: 25
-                  font_size: 3
+                  x: 120
+                  y: 180
+                  font_size: 25
 
                 - function: date
-                  x: 180
-                  y: 60
-                  font_size: 3
+                  x: 120
+                  y: 220
+                  font_size: 25
 
                 - function: altitude_gps
                   button:
@@ -312,12 +315,12 @@ pages:
                           h: 80
                   x: 50
                   y: 290
-                  font_size: 7
+                  font_size: 40
 
                 - function: altitude_units
                   x: 110
                   y: 310
-                  font_size: 1.2
+                  font_size: 1.20
 
                 - function: altitude_gps_icon
                   x: 97
@@ -332,22 +335,22 @@ pages:
                           h: 80
                   x: 170
                   y: 290
-                  font_size: 7
+                  font_size: 40
 
                 - function: altitude_min
                   x: 140
                   y: 255
-                  font_size: 2
+                  font_size: 16
 
                 - function: altitude_max
                   x: 220
                   y: 255
-                  font_size: 2
+                  font_size: 16
 
                 - function: altitude_units
                   x: 230
                   y: 310
-                  font_size: 1.2
+                  font_size: 1.20
 
                 - function: altitude_icon
                   x: 217
@@ -361,7 +364,7 @@ pages:
          background: images/occ_settings_0_background.png
          buttons: images/occ_settings_0_buttons.png
          font: ""
-         font_size: 2
+         font_size: 16
          fg_colour: FFFFFF
          fields: 
                 - function: label
@@ -372,7 +375,7 @@ pages:
                 - function: rider_weight
                   x: 45
                   y: 50
-                  font_size: 4
+                  font_size: 30
                   button: 
                           x0: 0
                           y0: 0
@@ -382,7 +385,7 @@ pages:
                 - function: rider_weight_units
                   x: 100
                   y: 50
-                  font_size: 2
+                  font_size: 16
 
                 - function: label
                   x: 180
@@ -392,7 +395,7 @@ pages:
                 - function: altitude_home
                   x: 165
                   y: 50
-                  font_size: 4
+                  font_size: 30
                   button:
                           x0: 120
                           y0: 0
@@ -402,18 +405,18 @@ pages:
                 - function: altitude_home_units
                   x: 220
                   y: 50
-                  font_size: 2
+                  font_size: 16
 
                 - function: label
                   x: 60
                   y: 95
-                  font_size: 2
+                  font_size: 16
                   text: Speed
 
                 - function: speed_units
                   x: 60
                   y: 130
-                  font_size: 4
+                  font_size: 30
                   button:
                           x0: 0
                           y0: 80
@@ -423,13 +426,13 @@ pages:
                 - function: label
                   x: 180
                   y: 95
-                  font_size: 2
+                  font_size: 16
                   text: Temperature
 
                 - function: temperature_units
                   x: 180
                   y: 130
-                  font_size: 4
+                  font_size: 30
                   button:
                           x0: 120
                           y0: 80
@@ -439,13 +442,13 @@ pages:
                 - function: label
                   x: 60
                   y: 175
-                  font_size: 2
+                  font_size: 16
                   text: Wheel size
 
                 - function: wheel_size
                   x: 60
                   y: 215
-                  font_size: 3
+                  font_size: 20
                   button:
                           x0: 0
                           y0: 160
@@ -455,13 +458,13 @@ pages:
                 - function: label
                   x: 60
                   y: 255
-                  font_size: 2
+                  font_size: 16
                   text: Heart rate 
 
                 - function: ble_hr_name
                   x: 60
                   y: 280
-                  font_size: 1.5
+                  font_size: 14
                   button:
                           x0: 0
                           y0: 240
@@ -471,18 +474,18 @@ pages:
                 - function: ble_hr_addr
                   x: 60
                   y: 300
-                  font_size: 1.5
+                  font_size: 16
 
                 - function: label
                   x: 180
                   y: 255
-                  font_size: 2
+                  font_size: 16
                   text: Spd/cadence
 
                 - function: ble_sc_name
                   x: 180
                   y: 280
-                  font_size: 1.5
+                  font_size: 16
                   button:
                           x0: 120
                           y0: 240
@@ -492,7 +495,7 @@ pages:
                 - function: ble_sc_addr
                   x: 180
                   y: 300
-                  font_size: 1.5
+                  font_size: 16
 
        - name: "Settings 1"
          id: settings_1
@@ -501,13 +504,13 @@ pages:
          background: images/occ_settings_1_background.png
          buttons: images/occ_settings_1_buttons.png
          font: ""
-         font_size: 2
+         font_size: 16
          fg_colour: FFFFFF
          fields: 
                 - function: halt
                   x: 120
                   y: 40
-                  font_size: 2
+                  font_size: 16
                   text: Halt
                   button:
                           x0: 0
@@ -518,7 +521,7 @@ pages:
                 - function: reboot
                   x: 120
                   y: 120
-                  font_size: 2
+                  font_size: 16
                   text: Reboot
                   button:
                           x0: 0
@@ -529,7 +532,7 @@ pages:
                 - function: quit
                   x: 120
                   y: 200
-                  font_size: 2
+                  font_size: 16
                   text: Quit
                   button:
                           x0: 0
@@ -544,13 +547,13 @@ pages:
          background: images/occ_settings_2_background.png
          buttons: images/occ_settings_2_buttons.png
          font: ""
-         font_size: 2
+         font_size: 16
          fg_colour: FFFFFF
          fields: 
                 - function: load_current_layout
                   x: 120
                   y: 40
-                  font_size: 2
+                  font_size: 16
                   text: Load current layout
                   button:
                           x0: 0
@@ -561,7 +564,7 @@ pages:
                 - function: load_default_layout
                   x: 120
                   y: 120
-                  font_size: 2
+                  font_size: 16
                   text: Load default layout
                   button:
                           x0: 0
@@ -572,7 +575,7 @@ pages:
                 - function: 
                   x: 120
                   y: 200
-                  font_size: 2
+                  font_size: 16
                   text: 
                   button:
                           x0: 0
@@ -583,7 +586,7 @@ pages:
                 - function: debug_level
                   x: 120
                   y: 280
-                  font_size: 2
+                  font_size: 16
                   text: 
                   button:
                           x0: 0
@@ -598,13 +601,13 @@ pages:
          background: images/occ_editor_background.png
          buttons: images/occ_editor_buttons.png
          font: ""
-         font_size: 2
+         font_size: 16
          fg_colour: FFFFFF
          fields: 
                 - function: ed_accept
                   x: 60
                   y: 30
-                  font_size: 3
+                  font_size: 30
                   text: Accept
                   button:
                           x0: 0
@@ -615,7 +618,7 @@ pages:
                 - function: ed_cancel
                   x: 180
                   y: 30
-                  font_size: 3
+                  font_size: 30
                   text: Cancel
                   button:
                           x0: 120
@@ -626,17 +629,17 @@ pages:
                 - function: variable_description
                   x: 120
                   y: 70
-                  font_size: 2
+                  font_size: 16
 
                 - function: variable_unit
                   x: 120
                   y: 110
-                  font_size: 6
+                  font_size: 60
 
                 - function: ed_prev_unit
                   x: 40
                   y: 130
-                  font_size: 3
+                  font_size: 30
                   button:
                           x0: 0
                           y0: 140
@@ -646,7 +649,7 @@ pages:
                 - function: ed_next_unit
                   x: 200
                   y: 130
-                  font_size: 3
+                  font_size: 30
                   button:
                           x0: 180
                           y0: 140
@@ -660,13 +663,13 @@ pages:
          background: images/occ_editor_background.png
          buttons: images/occ_editor_buttons.png
          font: ""
-         font_size: 2
+         font_size: 16
          fg_colour: FFFFFF
          fields: 
                 - function: ed_accept
                   x: 60
                   y: 30
-                  font_size: 3
+                  font_size: 30
                   text: Accept
                   button:
                           x0: 0
@@ -677,7 +680,7 @@ pages:
                 - function: ed_cancel
                   x: 180
                   y: 30
-                  font_size: 3
+                  font_size: 30
                   text: Cancel
                   button:
                           x0: 120
@@ -688,22 +691,22 @@ pages:
                 - function: variable_description
                   x: 120
                   y: 70
-                  font_size: 2
+                  font_size: 16
 
                 - function: variable_value
                   x: 120
                   y: 110
-                  font_size: 6
+                  font_size: 60
 
                 - function: variable_unit
                   x: 120
                   y: 180
-                  font_size: 3
+                  font_size: 30
 
                 - function: ed_prev_unit
                   x: 40
                   y: 130
-                  font_size: 3
+                  font_size: 30
                   button:
                           x0: 0
                           y0: 140
@@ -713,7 +716,7 @@ pages:
                 - function: ed_next_unit
                   x: 200
                   y: 130
-                  font_size: 3
+                  font_size: 30
                   button:
                           x0: 180
                           y0: 140
@@ -723,7 +726,7 @@ pages:
                 - function: ed_decrease
                   x: 60
                   y: 230
-                  font_size: 5
+                  font_size: 50
                   text: "-"
                   button:
                           x0: 0
@@ -734,7 +737,7 @@ pages:
                 - function: ed_increase
                   x: 180
                   y: 230
-                  font_size: 5
+                  font_size: 50
                   text: "+"
                   button:
                           x0: 120
@@ -745,7 +748,7 @@ pages:
                 - function: ed_prev
                   x: 60
                   y: 290
-                  font_size: 3
+                  font_size: 30
                   text: Prev
                   button:
                           x0: 0
@@ -756,7 +759,7 @@ pages:
                 - function: ed_next
                   x: 180
                   y: 290
-                  font_size: 3
+                  font_size: 30
                   text: Next
                   button:
                           x0: 120
@@ -771,13 +774,13 @@ pages:
          background: images/occ_editor_background.png
          buttons: images/occ_editor_buttons.png
          font: ""
-         font_size: 2
+         font_size: 16
          fg_colour: FFFFFF
          fields: 
                 - function: ed_accept
                   x: 60
                   y: 30
-                  font_size: 3
+                  font_size: 30
                   text: Accept
                   button:
                           x0: 0
@@ -788,7 +791,7 @@ pages:
                 - function: ed_cancel
                   x: 180
                   y: 30
-                  font_size: 3
+                  font_size: 30
                   text: Cancel
                   button:
                           x0: 120
@@ -799,17 +802,17 @@ pages:
                 - function: variable_description
                   x: 120
                   y: 90
-                  font_size: 2
+                  font_size: 16
 
                 - function: variable_value
                   x: 120
                   y: 130
-                  font_size: 6
+                  font_size: 60
 
                 - function: ed_decrease
                   x: 60
                   y: 230
-                  font_size: 5
+                  font_size: 50
                   text: "-"
                   button:
                           x0: 0
@@ -820,7 +823,7 @@ pages:
                 - function: ed_increase
                   x: 180
                   y: 230
-                  font_size: 5
+                  font_size: 50
                   text: +
                   button:
                           x0: 120
@@ -831,7 +834,7 @@ pages:
                 - function: ed_prev
                   x: 60
                   y: 290
-                  font_size: 3
+                  font_size: 30
                   text: Prev
                   button:
                           x0: 0
@@ -842,7 +845,7 @@ pages:
                 - function: ed_next
                   x: 180
                   y: 290
-                  font_size: 3
+                  font_size: 30
                   text: Next
                   button:
                           x0: 120
@@ -857,13 +860,13 @@ pages:
          background: images/ble_selector.png
          buttons: images/occ_settings_2_buttons.png
          font: ""
-         font_size: 2
+         font_size: 16
          fg_colour: FFFFFF
          fields: 
                 - function: ble_scan
                   x: 60
                   y: 30
-                  font_size: 3
+                  font_size: 30
                   text: Scan
                   button:
                           x0: 0
@@ -874,7 +877,7 @@ pages:
                 - function: ed_cancel
                   x: 180
                   y: 30
-                  font_size: 3
+                  font_size: 30
                   text: Cancel
                   button:
                           x0: 120
@@ -885,7 +888,7 @@ pages:
                 - function: ble_dev_name_1
                   x: 120
                   y: 96
-                  font_size: 2
+                  font_size: 16
                   text: Device ?
                   button:
                           x0: 0
@@ -896,7 +899,7 @@ pages:
                 - function: ble_dev_name_2
                   x: 120
                   y: 160
-                  font_size: 2
+                  font_size: 16
                   text: Device ?
                   button:
                           x0: 0
@@ -907,7 +910,7 @@ pages:
                 - function: ble_dev_name_3
                   x: 120
                   y: 224
-                  font_size: 2
+                  font_size: 16
                   text: Device ?
                   button:
                           x0: 0
@@ -918,7 +921,7 @@ pages:
                 - function: ble_dev_name_4
                   x: 120
                   y: 288
-                  font_size: 2
+                  font_size: 16
                   text: Device ?
                   button:
                           x0: 0
