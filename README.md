@@ -1,11 +1,5 @@
 THIS IS WORK IN PROGRESS!
 
-Model of RPI model A+is based on measurements of A+ board and drawings of B+ board from
-http://www.raspberrypi.org/documentation/hardware/raspberrypi/mechanical/README.md
-
-Model of PiTFT is based on drawings by Adafruit:
-https://github.com/adafruit/Adafruit-PiTFT-2.8-inch-Display-PCB
-
 Code can be run with
 ```
 cd code
