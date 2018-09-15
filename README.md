@@ -5,7 +5,7 @@ Code can be run with
 cd code
 ./start_occ.sh
 ```
-but it is highly experimental!
+but it is highly experimental and no longer runs in simulation mode. The real hardware (raspberry pi and piTFT) is required.
 
 Drag screen left-right to switch view, drag down to access Options.
 Dragging left-right from Oprions switches to User Preferences
