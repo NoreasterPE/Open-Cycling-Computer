@@ -1,6 +1,5 @@
 UI
 1. Consider scroll-over-the-edge to switch pages
-2. Use sprites to make smooth page switching? {WONTFIX]
 3. Control rounding errors when switching units in editor
 4. New editor layout. Current is confusing.
 5. Click to switch value i.e. click on temperature to cycle over min/average/max
@@ -174,3 +173,4 @@ FUTURE
 58. [DONE] Add icon showing BLE connection status
 59. [DONE] Add BLE icons
 60. [DONE] Switch to self.log.critical("Loading default layout {} failed, Quitting...".format(layout_path), extra=M) style
+61. [WONTFIX] Use sprites to make smooth page switching? {pygame is gone, so no sprites}

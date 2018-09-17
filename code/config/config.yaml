@@ -1,17 +1,17 @@
 altitude_home: 131.0
 altitude_home_units: m
-ble_hr_addr: null
-ble_hr_name: null
+ble_hr_addr: D6:90:A8:08:F0:E4
+ble_hr_name: Tacx HRB 04741
 ble_sc_addr: FD:DF:0E:4E:76:CF
 ble_sc_name: b'Lezyne S&C 249'
 layout_path: layouts/default.yaml
 log_level: DEBUG
-odometer: 2806.372520048205
+odometer: 29694827.27722636
 odometer_units: km
 rider_weight: 78.0
 rider_weight_units: kg
-ridetime_total: 462.7914369106293
-speed_max: 0.0
+ridetime_total: 1472.3112931251526
+speed_max: 23.949465300849752
 speed_units: m/s
 temperature_units: C
 wheel_size: 700x25C

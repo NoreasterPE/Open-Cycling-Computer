@@ -6,7 +6,7 @@
 #  GPS (MTK3339) - [disabled]
 #  BMP183 pressure & temperature sensor
 
-#from ble_sc import ble_sc
+import ble_sc
 import ble_hr
 #from bluepy.btle import BTLEException
 #from bmp183 import bmp183
@@ -78,9 +78,9 @@ class sensors(threading.Thread):
         ## @var simulate
         # Local copy of simulate variable from OCC
         self.simulate = occ.get_simulate()
-        ## @var ble_state
+        ## @var ble_host_state
         # BLE host state
-        self.ble_state = STATE_HOST['enabled']
+        self.ble_host_state = STATE_HOST['enabled']
         ## @var no_of_connected
         # Number of connected BLE devices
         self.no_of_connected = 0
@@ -89,7 +89,7 @@ class sensors(threading.Thread):
         self.connecting = False
         ## @var connected
         # Dict keeping track of which sensor is connected
-        self.connected = dict(ble_sc=False, ble_hr=None, gps=False, bmp183=False)
+        self.connected = dict(ble_sc=False, ble_hr=False, gps=False, bmp183=False)
         '''
         self.log.info("Initialising GPS", extra=M)
         try:
@@ -107,6 +107,7 @@ class sensors(threading.Thread):
         except IOError:
             self.connected['bmp183'] = None'''
         self.sensors['ble_hr'] = ble_hr.ble_hr()
+        self.sensors['ble_sc'] = ble_sc.ble_sc()
         self.running = True
 
     ## Reads BLE devices names/addresses from ride_parameters module
@@ -134,69 +135,25 @@ class sensors(threading.Thread):
     def run(self):
         self.log.debug("run started", extra=M)
         self.init_data_from_ride_parameters()
-        '''if not self.simulate:
-            if self.sensors['gps']:
-                self.log.info("Starting GPS thread", extra=M)
-                self.sensors['gps'].start()
-            if self.sensors['bmp183']:
-                self.log.info("Starting bmp183 thread", extra=M)
-                self.sensors['bmp183'].start()
-            self.log.info("Initialising ble_hr sensor", extra=M)'''
+
         self.log.debug("Setting ble_hr device address to {}".format(self.addrs["ble_hr"]), extra=M)
         self.sensors['ble_hr'].set_addr(self.addrs["ble_hr"])
-        #self.log.debug("Initialising connection", extra=M)
-        #try:
-        #    self.sensors['ble_hr'].initialise_connection()
-        #    self.connected['ble_hr'] = True
-        #except BTLEException as e:
-        #    self.log.debug("Connecion to ble_hr heart rate sensor from sensors module failed: '{}'".format(e), extra=M)
-        #    # Make sure the device is disconnected
-        #    self.sensors['ble_hr'].disconnect()
         self.log.debug("Starting ble_hr thread", extra=M)
         self.sensors['ble_hr'].start()
 
+        self.log.debug("Setting ble_sc device address to {}".format(self.addrs["ble_sc"]), extra=M)
+        self.sensors['ble_sc'].set_addr(self.addrs["ble_sc"])
+        self.log.debug("Starting ble_sc tscead", extra=M)
+        self.sensors['ble_sc'].start()
+
         while self.running:
-            #self.set_ble_state()
+            self.set_ble_host_state()
             time.sleep(1.0)
-            '''self.log.debug("Getting ble_hr device name", extra=M)
-            try:
-                self.names['ble_hr'] = self.sensors['ble_hr'].get_device_name()
-            except AttributeError:
-                #Sensor is not ready yet, let's wait
-                pass
-            except BTLEException:
-                #Sensor is not ready yet, let's wait
-                pass
-            try:
-                self.connected['ble_hr'] = self.sensors['ble_hr'].is_connected()
-            except AttributeError:
-                #Sensor is not ready yet, let's wait
-                pass'''
-
-            '''if not self.connected['ble_sc']:
-                self.log.debug("Initialising BLE speed & cadence sensor", extra=M)
-                try:
-                    self.sensors['ble_sc'] = ble_sc(self.addrs['ble_sc'])
-                    self.names['ble_sc'] = self.sensors['ble_sc'].get_device_name()
-                    self.log.debug("Starting BLE speed & cadence thread", extra=M)
-                    self.sensors['ble_sc'].start()
-                    self.connected['ble_sc'] = True
-                except BTLEException as e:
-                    self.log.info("Connecion to BLE speed & cadence sensor failed: '{}'".format(e), extra=M)
-            try:
-                if self.sensors["ble_sc"].get_state() == 0:
-                    self.connected['ble_sc'] = False
-            except AttributeError:
-                #Sensor is not ready yet, let's wait
-                pass'''
-
-            # Wait before checking again if we need to reconnect
-            #time.sleep(RECONNECT_DELAY)
         self.log.debug("run finished", extra=M)
 
-    ## Helper function for setting ble_state variable.
+    ## Helper function for setting ble_host_state variable.
     #  @param self The python object self
-    def set_ble_state(self):
+    def set_ble_host_state(self):
         self.no_of_connected = 0
         self.connecting = False
         for name in self.sensors:
@@ -210,24 +167,24 @@ class sensors(threading.Thread):
                 #Sensor is not ready yet, let's wait
                 pass
         if self.no_of_connected == 0:
-            self.ble_state = STATE_HOST['enabled']
+            self.ble_host_state = STATE_HOST['enabled']
         if self.no_of_connected == 1:
-            self.ble_state = STATE_HOST['connected_1']
+            self.ble_host_state = STATE_HOST['connected_1']
         if self.no_of_connected == 2:
-            self.ble_state = STATE_HOST['connected_2']
+            self.ble_host_state = STATE_HOST['connected_2']
         if self.no_of_connected == 3:
-            self.ble_state = STATE_HOST['connected_3']
+            self.ble_host_state = STATE_HOST['connected_3']
         if self.no_of_connected == 4:
-            self.ble_state = STATE_HOST['connected_4']
+            self.ble_host_state = STATE_HOST['connected_4']
         # FIXME Tidy it up - showing "connecting" state doesn't work (blocking
         # call is the problem)
         if self.connecting:
-            self.ble_state = STATE_HOST['scanning_1']
+            self.ble_host_state = STATE_HOST['scanning_1']
 
-    ## Helper function for getting ble_state variable.
+    ## Helper function for getting ble_host_state variable.
     #  @param self The python object self
-    def get_ble_state(self):
-        return self.ble_state
+    def get_ble_host_state(self):
+        return STATE_HOST[self.ble_host_state]
 
     ## Helper function for getting sensor handle
     #  @param self The python object self

@@ -90,7 +90,7 @@ pages:
                   y: 220
                   font_size: 16
 
-                - function: cadence
+                - function: ble_sc_cadence
                   x: 50
                   y: 290
                   font_size: 40
@@ -100,30 +100,28 @@ pages:
                           w: 119
                           h: 80
 
-                - function: cadence_min
-                  x: 20
-                  y: 255
-                  font_size: 16
-
-                - function: cadence_ave
+                - function: ble_sc_cadence_ave
                   x: 60
                   y: 255
                   font_size: 16
 
-                - function: cadence_max
+                - function: ble_sc_cadence_max
                   x: 100
                   y: 255
                   font_size: 16
 
-                - function: cadence_units
+                - function: ble_sc_cadence_units
                   x: 105
                   y: 310
                   font_size: 12
 
-                - function: cadence_icon
+                - function: ble_sc_cadence_icon
                   x: 98
                   y: 267
-                  file: images/cadence_icon_20x32.png
+                  file: images/ble_sc_cadence_icon_20x32.png
+                  variable:
+                          name: ble_sc_cadence_beat
+                          frames: 2
 
                 - function: ble_hr_heart_rate
                   x: 171

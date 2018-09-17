@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 ## @package layout
 #   Module responsible for loading and rendering layouts. Needs heavy cleaning...
-from shutil import copyfile
 from units import units
 import logging
 import os
@@ -18,19 +17,15 @@ class layout():
     # def __init__(self, occ, layout_path="layouts/current.yaml"):
     # Temporary change
 
-    def __init__(self, occ, layout_path="layouts/default.yaml"):
+    def __init__(self, occ, cr, layout_path="layouts/default.yaml"):
         ## @var l
         # System logger handle
         self.log = logging.getLogger('system')
         self.occ = occ
-        ## @var ble_scanner
-        # ble_Scanner instance handle
-        self.ble_scanner = occ.ble_scanner
-        self.uc = units()
+        self.cr = cr
+        self.render = False
+        self.units = units()
         self.editor_name = ''
-        self.colorkey = [0, 0, 0]
-        self.alpha = 255
-        self.font_list = {}
         self.page_list = {}
         self.page_index = {}
         self.function_rect_list = {}
@@ -78,14 +73,10 @@ class layout():
                 number = int(_number)
                 self.max_settings_id = max(self.max_settings_id, number)
         self.use_page()
-        self.write_layout()
-
-    def write_layout(self, layout_path="layouts/current.yaml"):
-        copyfile(self.layout_path, layout_path)
 
     def use_page(self, page_id="page_0"):
         self.log.debug("use_page {}".format(page_id), extra=M)
-        self.occ.force_refresh()
+        self.render = True
         self.current_function_list = []
         self.current_button_list = []
         self.current_page = self.page_list[page_id]
@@ -105,7 +96,7 @@ class layout():
         self.font = self.current_page['font']
         # Wait for OCC to set rendering module
         try:
-            self.occ.cr.select_font_face(self.font, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
+            self.cr.select_font_face(self.font, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
         except AttributeError:
             pass
         self.page_font_size = self.current_page['font_size']
@@ -156,23 +147,21 @@ class layout():
         self.use_page()
 
     def render_background(self):
-        self.occ.cr.set_source_surface(self.bg_image, 0, 0)
-        self.occ.cr.rectangle(0, 0, 240, 320)
-        self.occ.cr.fill()
+        self.cr.set_source_surface(self.bg_image, 0, 0)
+        self.cr.rectangle(0, 0, 240, 320)
+        self.cr.fill()
 
     def render_pressed_button(self, function):
-        #Temporary
-        #self.load_layout(self.layout_path)
         fr = self.function_rect_list[function]
-        self.occ.cr.set_source_surface(self.bt_image, 0, 0)
-        self.occ.cr.rectangle(fr[0], fr[1], fr[2], fr[3])
-        self.occ.cr.fill()
+        self.cr.set_source_surface(self.bt_image, 0, 0)
+        self.cr.rectangle(fr[0], fr[1], fr[2], fr[3])
+        self.cr.fill()
 
     def render_page(self):
         self.render_background()
-        self.occ.rendering.force_refresh()
+        self.render = True
         self.show_pressed_button()
-        self.render()
+        self.render_layout()
 
     def make_image_key(self, image_path, value):
         suffix = "_" + format(value)
@@ -180,7 +169,7 @@ class layout():
         name = image_path[:-4]
         return (name + suffix + extension)
 
-    def render(self):
+    def render_layout(self):
         for field in self.current_page['fields']:
             function = field['function']
             position_x = field['x']
@@ -224,7 +213,7 @@ class layout():
             except KeyError:
                 # Fall back to page font size
                 fs = self.page_font_size
-            self.occ.cr.set_font_size(fs)
+            self.cr.set_font_size(fs)
             if function != "variable_value":
                 #FIXME Colour ignored for now
                 self.text_to_surface(uv, position_x, position_y)
@@ -233,14 +222,14 @@ class layout():
                 i = self.occ.rp.params["editor_index"]
                 #Head
                 rv1 = uv[:i]
-                te1 = self.occ.cr.text_extents(rv1)
+                te1 = self.cr.text_extents(rv1)
                 #Tail
                 rv3 = uv[i + 1:]
-                te3 = self.occ.cr.text_extents(rv3)
+                te3 = self.cr.text_extents(rv3)
                 #Currently edited digit
                 rv2 = uv[i]
-                self.occ.cr.set_font_size(1.3 * fs)
-                te2 = self.occ.cr.text_extents(rv2)
+                self.cr.set_font_size(1.3 * fs)
+                te2 = self.cr.text_extents(rv2)
 
                 total_width_half = (te1.width + te2.width + te3.width) / 2
                 rv1_x = position_x - total_width_half + (te1.width / 2)
@@ -248,7 +237,7 @@ class layout():
                 rv3_x = position_x - total_width_half + te1.width + te2.width + (te3.width / 2)
 
                 self.text_to_surface(rv2, rv2_x, position_y)
-                self.occ.cr.set_font_size(fs)
+                self.cr.set_font_size(fs)
                 self.text_to_surface(rv1, rv1_x, position_y)
                 self.text_to_surface(rv3, rv3_x, position_y)
 
@@ -341,17 +330,8 @@ class layout():
                      "next_page": self.next_page,
                      "prev_page": self.prev_page,
                      "reboot": self.reboot,
-                     "write_layout": self.write_layout,
-                     "ble_scan": self.ble_scanner.ble_scan,
-                     "ble_dev_name_1": self.ble_scanner.ble_dev_name_1,
-                     "ble_dev_name_2": self.ble_scanner.ble_dev_name_2,
-                     "ble_dev_name_3": self.ble_scanner.ble_dev_name_3,
-                     "ble_dev_name_4": self.ble_scanner.ble_dev_name_4,
                      "quit": self.quit}
         functions[name]()
-
-    def force_refresh(self):
-        self.occ.force_refresh()
 
     def load_page_0(self):
         self.use_main_page()
@@ -379,7 +359,7 @@ class layout():
                 pass
         un = u[:i] + ui + u[i + 1:]
         self.occ.rp.params["variable_value"] = un
-        self.force_refresh()
+        self.render = True
 
     def ed_increase(self):
         u = format(self.occ.rp.params["variable_value"])
@@ -394,7 +374,7 @@ class layout():
                 pass
         un = u[:i] + ui + u[i + 1:]
         self.occ.rp.params["variable_value"] = un
-        self.force_refresh()
+        self.render = True
 
     def ed_next(self):
         u = format(self.occ.rp.params["variable_value"])
@@ -413,7 +393,7 @@ class layout():
             if (ui == ".") or (ui == ","):
                 i += 1
         self.occ.rp.params["editor_index"] = i
-        self.force_refresh()
+        self.render = True
 
     def ed_prev(self):
         u = format(self.occ.rp.params["variable_value"])
@@ -429,7 +409,7 @@ class layout():
             if (ui == ".") or (ui == ","):
                 i -= 1
         self.occ.rp.params["editor_index"] = i
-        self.force_refresh()
+        self.render = True
 
     def ed_change_unit(self, direction):
         # direction to be 1 (next) or 0 (previous)
@@ -451,7 +431,7 @@ class layout():
             except IndexError:
                 next_unit = self.occ.rp.units_allowed[variable][-1]
         if next_unit != variable_unit:
-            variable_value = self.uc.convert(variable_value, next_unit)
+            variable_value = self.units.convert(variable_value, next_unit)
         try:
             f = self.occ.rp.p_format[variable]
         except KeyError:
@@ -462,11 +442,11 @@ class layout():
 
     def ed_next_unit(self):
         self.ed_change_unit(1)
-        self.force_refresh()
+        self.render = True
 
     def ed_prev_unit(self):
         self.ed_change_unit(0)
-        self.force_refresh()
+        self.render = True
 
     def accept_edit(self):
         variable = self.occ.rp.params["variable"]
@@ -479,7 +459,7 @@ class layout():
             unit_raw = self.occ.rp.get_internal_unit(variable)
             value = variable_value
             if unit_raw != variable_unit:
-                value = self.uc.convert(variable_raw_value, variable_unit)
+                value = self.units.convert(variable_raw_value, variable_unit)
             self.occ.rp.p_raw[variable] = float(value)
             self.occ.rp.units[variable] = self.occ.rp.params["variable_unit"]
             # FIXME - find a better place for it
@@ -492,7 +472,7 @@ class layout():
         if self.editor_name == "ble_selector":
             (name, addr, dev_type) = variable_value
             self.occ.sensors.set_ble_device(name, addr, dev_type)
-        self.force_refresh()
+        self.render = True
 
     def get_page(self, page_type, page_no):
         self.log.debug("get_page {} {} ".format(page_type, page_no), extra=M)
@@ -577,20 +557,20 @@ class layout():
         return png_surface
 
     def image_to_surface(self, surface, x=0, y=0, w=240, h=320):
-        self.occ.cr.set_source_surface(surface, x, y)
-        self.occ.cr.rectangle(x, y, w, h)
-        self.occ.cr.fill()
+        self.cr.set_source_surface(surface, x, y)
+        self.cr.rectangle(x, y, w, h)
+        self.cr.fill()
 
     def text_to_surface(self, text, x, y):
-        self.occ.cr.set_source_rgb(0.0, 0.0, 0.0)
-        te = self.occ.cr.text_extents(text)
-        self.occ.cr.rectangle(x - (te.width / 2), y - (te.height / 2), te.width, te.height)
-        self.occ.cr.fill()
-        self.occ.cr.set_source_rgb(1.0, 1.0, 1.0)
+        self.cr.set_source_rgb(0.0, 0.0, 0.0)
+        te = self.cr.text_extents(text)
+        self.cr.rectangle(x - (te.width / 2), y - (te.height / 2), te.width, te.height)
+        self.cr.fill()
+        self.cr.set_source_rgb(1.0, 1.0, 1.0)
         x0 = x - (te.width / 2) - te.x_bearing
         y0 = y - (te.height / 2) - te.y_bearing
-        self.occ.cr.move_to(x0, y0)
-        self.occ.cr.show_text(text)
+        self.cr.move_to(x0, y0)
+        self.cr.show_text(text)
         return (te)
 
     def point_in_rect(self, point, rect):

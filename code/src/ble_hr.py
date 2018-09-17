@@ -58,7 +58,6 @@ class ble_hr(threading.Thread):
         ## @var state
         #State of the connection, same as in sensors.py STATE_DEV
         self.state = 0
-        #bluepy.btle.Peripheral.__init__(self)
         self.notifications_enabled = False
         self.running = False
 
@@ -95,8 +94,9 @@ class ble_hr(threading.Thread):
                 self.log.debug('Connected', extra=M)
                 self.connected = True
                 self.state = 2
-                self.log.debug('Connected', extra=M)
+                self.log.debug('Getting device name', extra=M)
                 self.name = self.get_device_name()
+                self.log.debug('Getting battery level name', extra=M)
                 self.battery_level = self.get_battery_level()
             except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
                 self.handle_exception(e, "initialise_connection")
@@ -151,34 +151,46 @@ class ble_hr(threading.Thread):
         while self.running:
             self.log.debug('run 0', extra=M)
             self.log.debug('Address: {}, connected: {}, notifications: {}'.format(self.addr, self.connected, self.notifications_enabled), extra=M)
-            if self.connected and self.notifications_enabled:
-                self.log.debug('run 1', extra=M)
-                try:
-                    if self.peripherial.waitForNotifications(self.WAIT_TIME):
-                        self.log.debug('run 2', extra=M)
-                        if self.time_stamp != self.delegate.time_stamp:
-                            self.log.debug('run 3', extra=M)
-                            self.time_stamp = self.delegate.time_stamp
-                            self.heart_rate = self.delegate.heart_rate
-                            self.heart_rate_min = min(self.heart_rate_min, self.delegate.heart_rate)
-                            self.heart_rate_max = max(self.heart_rate_max, self.delegate.heart_rate)
-                            self.heart_rate_beat = self.delegate.heart_rate_beat
-                            self.log.debug('run 4', extra=M)
-                            self.log.debug('heart rate = {} @ {}'.format(self.heart_rate, time.strftime("%H:%M:%S", time.localtime(self.time_stamp))), extra=M)
-                            self.log.debug('run 5', extra=M)
-                except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
-                    self.log.debug('run 6', extra=M)
-                    self.handle_exception(e, "waitForNotifications")
+            if self.addr is not None:
+                if self.connected and self.notifications_enabled:
+                    self.log.debug('run 1', extra=M)
+                    try:
+                        self.log.debug('run 1a peripherial: {}'.format(self.peripherial), extra=M)
+                        if self.peripherial.waitForNotifications(self.WAIT_TIME):
+                            self.log.debug('run 2', extra=M)
+                            if self.time_stamp != self.delegate.time_stamp:
+                                self.log.debug('run 3', extra=M)
+                                self.time_stamp = self.delegate.time_stamp
+                                self.heart_rate = self.delegate.heart_rate
+                                self.heart_rate_min = min(self.heart_rate_min, self.delegate.heart_rate)
+                                self.heart_rate_max = max(self.heart_rate_max, self.delegate.heart_rate)
+                                self.heart_rate_beat = self.delegate.heart_rate_beat
+                                self.log.debug('run 4', extra=M)
+                                self.log.debug('heart rate = {} @ {}'.format(self.heart_rate, time.strftime("%H:%M:%S", time.localtime(self.time_stamp))), extra=M)
+                                self.log.debug('run 5', extra=M)
+                    except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+                        self.log.debug('run 6', extra=M)
+                        self.handle_exception(e, "waitForNotifications")
+                else:
+                    #try:
+                    #    iface = self.peripherial.iface
+                    #    self.log.debug('run 7 iface: {}'.format(iface), extra=M)
+                    #    if iface == '':
+                    #        self.connected = False
+                    #except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+                    #    self.log.debug('run 6', extra=M)
+                    #    self.handle_exception(e, "waitForNotifications, iface")
+                    self.log.debug('ble_hr NOT connected', extra=M)
+                    self.initialise_connection()
+                    self.log.debug('run 9', extra=M)
+                    time.sleep(5.0)
+                    self.set_notifications(enable=True)
+                    self.log.debug('run 10', extra=M)
+                    time.sleep(5.0)
             else:
-                self.log.debug('run 7', extra=M)
-                self.log.debug('ble_hr NOT connected', extra=M)
-                #time.sleep(3.0)
-                self.initialise_connection()
-                self.log.debug('run 9', extra=M)
-                time.sleep(3.0)
-                self.set_notifications(enable=True)
-                self.log.debug('run 10', extra=M)
-                time.sleep(3.0)
+                #Waiting for ble address
+                self.log.debug('ble_hr add is None, waiting...', extra=M)
+                time.sleep(5.0)
         self.log.debug('Main ble_hr loop finished', extra=M)
 
     def safe_disconnect(self):

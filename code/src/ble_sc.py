@@ -23,7 +23,7 @@ NAN = float("nan")
 
 
 ## Class for handling BLE speed and cadence sensor
-class ble_sc(Peripheral, threading.Thread):
+class ble_sc(threading.Thread):
     # FIXME - replace with proper service & characteristic scan
     CSC_HANDLE = 0x000f  # FIXME - explain
     CSC_ENABLE_SC = bytes("10", 'UTF-8')    # FIXME - explain
@@ -33,15 +33,16 @@ class ble_sc(Peripheral, threading.Thread):
     WAIT_TIME = 1.0
     ## @var RECONNECT_WAIT_TIME
     # Time of waiting after an exception has been raiesed or connection lost
-    RECONNECT_WAIT_TIME = 3.0
+    RECONNECT_WAIT_TIME = 5.0
 
     def __init__(self):
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
-        self.p_formats = dict(wheel_time_stamp='%.0f', wheel_rev_time='%.0f', cadence_time_stamp='%.0f', cadence="5.0f")
-        self.p_units = dict(wheel_time_stamp='s', wheel_rev_time='s', cadence_time_stamp='s', cadence="RPM")
-        self.p_raw_units = dict(wheel_time_stamp='s', wheel_rev_time='s', cadence_time_stamp='s', cadence="RPM")
+        self.log.debug('WAIT_TIME {}'.format(self.WAIT_TIME), extra=M)
+        self.p_formats = dict(time_stamp='%.0f', wheel_time_stamp='%.0f', wheel_rev_time='%.0f', cadence_time_stamp='%.0f', cadence="%5.0f", cadence_max="%5.0f")
+        self.p_units = dict(time_stamp='s', wheel_time_stamp='s', wheel_rev_time='s', cadence_time_stamp='s', cadence="RPM", cadence_max="RPM")
+        self.p_raw_units = dict(time_stamp='s', wheel_time_stamp='s', wheel_rev_time='s', cadence_time_stamp='s', cadence="RPM", cadence_max="RPM")
 
         ## @var connected
         # Indicates if sensor is currently connected
@@ -50,99 +51,180 @@ class ble_sc(Peripheral, threading.Thread):
         self.reset_data()
         ## @var addr
         # Address of the cadence and speed sensor
-        self.addr = addr
+        self.addr = None
         ## @var name
         # Name of the cadence and speed sensor
         self.name = None
         ## @var state
         #State of the connection, same as in sensors.py STATE_DEV
         self.state = 0
-
-        self.log.info('Connecting to {}'.format(addr), extra=M)
-        self.state = 1
-        self.log.info('State = {}'.format(self.state), extra=M)
-        Peripheral.__init__(self, addr, addrType='random')
-        self.connected = True
-        self.state = 2
-        self.log.info('State = {}'.format(self.state), extra=M)
-        self.name = self.get_device_name()
-        self.log.info('Connected to {}'.format(self.name), extra=M)
-        self.log.debug('Setting notification handler', extra=M)
-        self.delegate = CSC_Delegate()
-        self.log.debug('Setting delegate', extra=M)
-        self.withDelegate(self.delegate)
-        self.log.debug('Enabling notifications', extra=M)
-        self.set_notifications()
+        self.notifications_enabled = False
+        self.running = False
 
     def set_notifications(self, enable=True):
         # Enable/disable notifications
-        self.log.debug('[BLE_HR] Set notifications {}'.format(enable), extra=M)
+        self.log.debug('Set notifications started. enable={}'.format(enable), extra=M)
         try:
             if enable:
-                self.writeCharacteristic(self.CSC_HANDLE, self.CSC_ENABLE_SC, False)
+                self.peripherial.writeCharacteristic(self.CSC_HANDLE, self.CSC_ENABLE_SC, False)
+                self.log.debug('Notifications enabled', extra=M)
+                self.notifications_enabled = True
             else:
-                self.writeCharacteristic(self.CSC_HANDLE, self.CSC_DISABLE_SC, False)
-        except BTLEException as e:
-            if str(e) == "Helper not started (did you call connect()?)":
-                self.log.error('[BLE_HR] Set notifications failed: {}'.format(e), extra=M)
+                self.peripherial.writeCharacteristic(self.CSC_HANDLE, self.CSC_DISABLE_SC, False)
+                self.log.debug('Notifications disabled', extra=M)
+                self.notifications_enabled = False
+        except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+            self.handle_exception(e, "set_notifications")
+        self.log.debug('Set notifications finished', extra=M)
+
+    def initialise_connection(self):
+        if self.addr is not None and self.connected is False and self.running:
+            self.log.debug('Initialising connection started', extra=M)
+            try:
+                self.log.debug('Setting delegate', extra=M)
+                self.delegate = CSC_Delegate()
+                self.log.debug('Setting peripherial', extra=M)
+                self.peripherial = bluepy.btle.Peripheral()
+                self.log.debug('Setting notification handler', extra=M)
+                self.peripherial.withDelegate(self.delegate)
+                self.log.debug('Notification handler set', extra=M)
+                self.log.debug('Connecting', extra=M)
+                self.state = 1
+                self.peripherial.connect(self.addr, addrType='random')
+                self.log.debug('Connected', extra=M)
+                self.connected = True
+                self.state = 2
+                self.log.debug('Getting device name', extra=M)
+                self.name = self.get_device_name()
+                self.log.debug('Getting battery level', extra=M)
+                self.battery_level = self.get_battery_level()
+            except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+                self.handle_exception(e, "initialise_connection")
+                self.state = 0
+            self.log.debug('Initialising connection finished', extra=M)
+
+    def handle_exception(self, exception, caller):
+        self.log.critical(exception, extra=M)
+        self.log.critical("{}".format(type(exception)), extra=M)
+        self.log.error("Exception {} in {}".format(exception, caller), extra=M)
+        try:
+            raise (exception)
+        except bluepy.btle.BTLEException as e:
+            if str(e).startswith("Failed to connect to peripheral"):
+                self.log.info(e, extra=M)
+                self.connected = False
+                self.notifications_enabled = False
+            elif str(e) == "Helper not started (did you call connect()?)":
+                self.log.info(e, extra=M)
+                self.connected = False
+                self.notifications_enabled = False
+            elif str(e) == "Device disconnected":
+                self.log.info(e, extra=M)
+                self.connected = False
+                self.notifications_enabled = False
+            elif str(e) == "Helper exited":  # FIXME - what to do with this?
+                self.log.critical(e, extra=M)
+                self.connected = False
+                self.notifications_enabled = False
+            elif str(e) == "Error from Bluetooth stack (badstate)":  # FIXME - what to do with this?
+                self.log.critical(e, extra=M)
+                self.connected = False
+                self.notifications_enabled = False
+            elif (str(e) == "Unexpected response (rd)" or
+                    str(e) == "Unexpected response (find)" or
+                    str(e) == "Unexpected response (wr)"):
+                self.log.info(e, extra=M)
             else:
-                self.log.critical(
-                    '[BLE_HR] Set notifications failed with uncontrolled error: {}'.format(e))
-                    def get_device_name(self):
-        c = self.getCharacteristics(uuid=AssignedNumbers.deviceName)
-        name = c[0].read()
-        self.log.debug('Device name: {}'.format(name), extra=M)
-        return name
-
-    def get_battery_level(self):
-        b = self.getCharacteristics(uuid=AssignedNumbers.batteryLevel)
-        #FIXME python3 check required (ord)
-        level = ord(b[0].read())
-        self.log.debug('Battery lavel: {}'.format(level), extra=M)
-        return level
-
-    def get_state(self):
-        return self.state
+                self.log.critical('Uncontrolled error {} in {}'.format(e, caller), extra=M)
+                self.connected = False
+                self.notifications_enabled = False
+                raise
+        except (BrokenPipeError, AttributeError) as e:
+            self.log.error('{} in {}'.format(e, caller), extra=M)
+            self.connected = False
+            self.notifications_enabled = False
 
     def run(self):
-        while self.connected:
-            try:
-                if self.waitForNotifications(self.WAIT_TIME):
-                    self.wheel_time_stamp = self.delegate.wheel_time_stamp
-                    self.wheel_rev_time = self.delegate.wheel_rev_time
-                    self.cadence_time_stamp = self.delegate.cadence_time_stamp
-                    self.cadence = self.delegate.cadence
-            except BTLEException as e:
-                if str(e) == 'Device disconnected':
-                    self.log.info('Device disconnected: {}'.format(self.name), extra=M)
-                    self.connected = False
-                    self.state = 0
-                    self.log.debug('State = {}'.format(self.state), extra=M)
-                    # We don't want to call waitForNotifications and fail too often
-                    time.sleep(self.EXCEPTION_WAIT_TIME)
+        self.log.debug('Starting the main BLE_SC loop', extra=M)
+        self.running = True
+        self.state = 0
+        while self.running:
+            self.log.debug('run 0', extra=M)
+            self.log.debug('Address: {}, connected: {}, notifications: {}'.format(self.addr, self.connected, self.notifications_enabled), extra=M)
+            if self.addr is not None:
+                if self.connected and self.notifications_enabled:
+                    self.log.debug('run 1', extra=M)
+                    try:
+                        self.log.debug('run 1a peripherial: {}'.format(self.peripherial), extra=M)
+                        if self.peripherial.waitForNotifications(self.WAIT_TIME):
+                            self.log.debug('run 2', extra=M)
+                            if self.time_stamp != self.delegate.time_stamp:
+                                self.log.debug('run 3', extra=M)
+                                self.time_stamp = self.delegate.time_stamp
+                                self.wheel_time_stamp = self.delegate.wheel_time_stamp
+                                self.wheel_rev_time = self.delegate.wheel_rev_time
+                                self.cadence_time_stamp = self.delegate.cadence_time_stamp
+                                self.cadence = self.delegate.cadence
+                                self.cadence_max = max(self.cadence_max, self.delegate.cadence)
+                                self.cadence_beat = self.delegate.cadence_beat
+                                self.log.debug('run 4', extra=M)
+                                self.log.debug('cadence = {} @ {}'.format(self.cadence, time.strftime("%H:%M:%S", time.localtime(self.time_stamp))), extra=M)
+                                self.log.debug('run 5', extra=M)
+                    except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+                        self.log.debug('run 6', extra=M)
+                        self.handle_exception(e, "waitForNotifications")
                 else:
-                    raise
-            except AttributeError as e:
-                if str(e) == "'NoneType' object has no attribute 'poll'":
-                    self.log.debug('btle raised AttributeError exception {}'.format(e), extra=M)
-                    # We don't want to call waitForNotifications and fail too often
-                    time.sleep(self.EXCEPTION_WAIT_TIME)
-                else:
-                    raise
+                    #try:
+                    #    iface = self.peripherial.iface
+                    #    self.log.debug('run 7 iface: {}'.format(iface), extra=M)
+                    #    if iface == 'disc':
+                    #        self.connected = False
+                    #except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+                    #    self.log.debug('run 6', extra=M)
+                    #    self.handle_exception(e, "waitForNotifications, iface")
+                    self.log.debug('ble_sc NOT connected', extra=M)
+                    self.initialise_connection()
+                    self.log.debug('run 9', extra=M)
+                    time.sleep(5.0)
+                    self.set_notifications(enable=True)
+                    self.log.debug('run 10', extra=M)
+                    time.sleep(5.0)
+            else:
+                #Waiting for ble address
+                time.sleep(5.0)
+        self.log.debug('Main ble_sc loop finished', extra=M)
 
-    def reset_data(self):
-        ## @var cadence_time_stamp
-        # Time stamp of the measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
-        self.wheel_time_stamp = time.time()
-        ## @var wheel_rev_time
-        # Measured wheel revolution time
-        self.wheel_rev_time = 0
-        ## @var cadence_time_stamp
-        # Time stamp of the measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
-        self.cadence_time_stamp = time.time()
-        ## @var cadence
-        # Measured cadence
-        self.cadence = 0
+    def safe_disconnect(self):
+        self.connected = False
+        self.notifications_enabled = False
+        self.log.debug('safe_disconnect started', extra=M)
+        # Make sure the device is not sending notifications (is this required?)
+        try:
+            self.log.debug('safe_disconnect 1', extra=M)
+            self.set_notifications(enable=False)
+            self.log.debug('safe_disconnect 2', extra=M)
+        except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+            self.log.debug('safe_disconnect 3', extra=M)
+            # Not connected yet
+            self.log.critical('{}'.format(e), extra=M)
+            self.log.debug('safe_disconnect 4', extra=M)
+            pass
+        # Make sure the device is disconnected
+        try:
+            self.log.debug('safe_disconnect 5', extra=M)
+            self.peripherial.disconnect()
+            self.log.debug('safe_disconnect 6', extra=M)
+            self.state = 0
+        except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+            self.log.debug('safe_disconnect 7', extra=M)
+            # Not connected yet
+            self.log.error('AttributeError: {}'.format(e), extra=M)
+            pass
+        self.log.debug('safe_disconnect 8', extra=M)
+        self.log.debug('State = {}. Waiting {} s to reconnect'.format(self.state, self.RECONNECT_WAIT_TIME), extra=M)
+        time.sleep(self.RECONNECT_WAIT_TIME)
+        self.log.debug('safe_disconnect 9', extra=M)
+        self.log.debug('safe_disconnect finished', extra=M)
 
     def get_prefix(self):
         return M["module_name"]
@@ -150,18 +232,70 @@ class ble_sc(Peripheral, threading.Thread):
     def get_raw_data(self):
         return dict(name=self.name,
                     addr=self.addr,
+                    battery_level=self.battery_level,
                     state=self.state,
+                    time_stamp=self.time_stamp,
                     wheel_time_stamp=self.wheel_time_stamp,
                     wheel_rev_time=self.wheel_rev_time,
                     cadence_time_stamp=self.cadence_time_stamp,
-                    cadence=self.cadence)
+                    cadence=self.cadence,
+                    cadence_max=self.cadence_max,
+                    cadence_beat=self.cadence_beat)
 
-#    FIXME make decision if get_data and get_raw_data are required
-#    def get_data(self):
-#        r = dict(
-#            name=self.name, addr=self.addr, state=self.state, wheel_time_stamp=self.wheel_time_stamp, wheel_rev_time=self.wheel_rev_time,
-#            cadence_time_stamp=self.cadence_time_stamp, cadence=self.cadence)
-#        return r
+    def get_device_name(self):
+        name = ""
+        try:
+            c = self.peripherial.getCharacteristics(uuid=bluepy.btle.AssignedNumbers.deviceName)
+            name = c[0].read()
+            self.log.debug('Device name: {}'.format(name), extra=M)
+        except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+            self.handle_exception(e, "get_device_name")
+        return name
+
+    def get_battery_level(self):
+        level = NAN
+        try:
+            b = self.peripherial.getCharacteristics(uuid=bluepy.btle.AssignedNumbers.batteryLevel)
+            level = ord(b[0].read())
+            self.log.debug('Battery lavel: {}'.format(level), extra=M)
+        except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+            self.handle_exception(e, "get_battery_level")
+        return level
+
+    def get_state(self):
+        return self.state
+
+    def reset_data(self):
+        ## @var name
+        # Battery level in %
+        self.battery_level = NAN
+        ## @var time_stamp
+        # Time stamp of the measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
+        self.time_stamp = time.time()
+        ## @var cadence_time_stamp
+        # Time stamp of the wheel rev measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
+        self.wheel_time_stamp = time.time()
+        ## @var wheel_rev_time
+        # Measured wheel revolution time
+        self.wheel_rev_time = 0
+        ## @var cadence_time_stamp
+        # Time stamp of the cadence measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
+        self.cadence_time_stamp = time.time()
+        ## @var cadence
+        # Measured cadence
+        self.cadence = 0
+        ## @var cadence_max
+        # Measured cadence
+        self.cadence_max = -INF
+        ## @var cadence_beat
+        # Cadence icon beat, used to show if ble notifications are coming.
+        self.cadence_beat = 0
+
+    def get_raw_units(self):
+        return self.p_raw_units
+
+    def get_units(self):
+        return self.p_units
 
     def get_formats(self):
         return self.p_formats
@@ -172,42 +306,64 @@ class ble_sc(Peripheral, threading.Thread):
     def __del__(self):
         self.stop()
 
+    def set_addr(self, addr):
+        self.log.debug('address set to {}'.format(addr), extra=M)
+        self.addr = addr
+
     def stop(self):
-        self.log.debug('Stop called', extra=M)
-        if self.connected:
-            self.connected = False
-            time.sleep(1)
-            self.log.debug('Disabling notifications', extra=M)
-            self.set_notifications(enable=False)
-            self.log.debug('Disconnecting..', extra=M)
-            self.disconnect()
-            self.state = 0
-            self.log.info('State = {}'.format(self.state), extra=M)
-            self.log.debug('Disconnected', extra=M)
+        self.running = False
+        self.log.debug('Stop started', extra=M)
+        self.connected = False
+        time.sleep(1)
+        self.log.debug('Disabling notifications', extra=M)
+        self.set_notifications(enable=False)
+        time.sleep(1)
+        self.log.debug('Disconnecting', extra=M)
+        self.peripherial.disconnect()
+        self.state = 0
+        self.log.info('{} disconnected'.format(self.name), extra=M)
+        self.log.debug('Stop finished', extra=M)
+
+
+#    FIXME make decision if get_data and get_raw_data are required
+#    def get_data(self):
+#        r = dict(
+#            name=self.name, addr=self.addr, state=self.state, wheel_time_stamp=self.wheel_time_stamp, wheel_rev_time=self.wheel_rev_time,
+#            cadence_time_stamp=self.cadence_time_stamp, cadence=self.cadence)
+#        return r
 
 
 ## Class for handling BLE notifications from cadence and speed sensor
-class CSC_Delegate(DefaultDelegate):
+class CSC_Delegate(bluepy.btle.DefaultDelegate):
     WHEEL_REV_DATA_PRESENT = 0x01
     CRANK_REV_DATA_PRESENT = 0x02
+    ## @var WAIT_TIME
+    # Time of waiting for notifications in seconds
+    EXPIRY_TIME = 2.0
 
     def __init__(self):
         self.log = logging.getLogger('system')
-        DefaultDelegate.__init__(self)
+        self.log.debug('Delegate __init__ started', extra=M)
+        bluepy.btle.DefaultDelegate.__init__(self)
         self.wheel_time_stamp = time.time()
         self.wheel_cumul = 0
         self.wheel_last_time_event = 0
         self.wheel_last_time_delta = 0
         self.wheel_rev_time = 0
         self.cadence_time_stamp = time.time()
+        self.last_measurement = self.cadence_time_stamp
         self.crank_cumul = 0
         self.crank_last_time_event = 0
         self.crank_last_time_delta = 0
         self.crank_rev_time = 0
         self.cadence = 0
+        self.cadence_beat = 0
+        self.measurement_no = 0
+        self.log.debug('Delegate __init__ finished', extra=M)
 
     def handleNotification(self, cHandle, data):
-        self.log.debug('Notification received from : {}'.format(hex(cHandle)), extra=M)
+        self.log.debug('Delegate: handleNotification started', extra=M)
+        self.log.debug('Delegate: Notification received. Handle: {}, data: {}'.format(hex(cHandle), data), extra=M)
 
         # CSC Measurement from BLE_SC standard
         # https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.csc_measurement.xml
@@ -218,7 +374,9 @@ class CSC_Delegate(DefaultDelegate):
         #                ^ Cumulative Crank Revolutions
         #                      ^ Cumulative Crank Revolutions
         #                            ^ Last Crank Event Time, unit has a resolution of 1/1024s.
-        ts = time.time()
+        self.time_stamp = time.time()
+        self.measurement_no += 1
+        self.cadence_beat = int(not(self.cadence_beat))
 
         i = 0
         data_b = {}
@@ -227,6 +385,8 @@ class CSC_Delegate(DefaultDelegate):
             i += 1
 
         if data_b[0] & self.WHEEL_REV_DATA_PRESENT:
+            self.log.debug('WHEEL_REV_DATA_PRESENT', extra=M)
+            self.wheel_time_stamp = self.time_stamp
             # cr - cumularive revolutions
             # le - last event time
             # dt - time delta
@@ -241,17 +401,26 @@ class CSC_Delegate(DefaultDelegate):
             if (self.wheel_cumul != wh_cr) and (self.wheel_last_time_event != wh_le):
                 rt = wh_dt / (wh_cr - self.wheel_cumul)
 
-                self.wheel_time_stamp = ts
+                self.wheel_time_stamp = self.time_stamp
                 self.wheel_last_time_event = wh_le
                 self.wheel_last_time_delta = wh_dt
                 self.wheel_rev_time = rt
                 self.wheel_cumul = wh_cr
+                self.wheel_last_measurement = self.wheel_time_stamp
+            else:
+                if (self.wheel_time_stamp - self.wheel_last_measurement) > self.EXPIRY_TIME:
+                    self.wheel_rev_time = NAN
+        else:
+            self.wheel_time_stamp = NAN
+            self.wheel_rev_time = NAN
 
-                self.log.debug('Last wheel event time: {:10.3f}, delta {:10.3f}'.format(self.wheel_last_time_event, self.wheel_last_time_delta), extra=M)
-                self.log.debug('Wheel cumul revs: {:5d}'.format(wh_cr), extra=M)
-                self.log.debug('Last wheel rev time: {:10.3f}'.format(self.wheel_rev_time), extra=M)
+        self.log.debug('Last wheel event time: {:10.3f}, delta {:10.3f}'.format(self.wheel_last_time_event, self.wheel_last_time_delta), extra=M)
+        self.log.debug('Wheel cumul revs: {:5d}'.format(wh_cr), extra=M)
+        self.log.debug('Last wheel rev time: {:10.3f}'.format(self.wheel_rev_time), extra=M)
 
         if (data_b[0] & self.CRANK_REV_DATA_PRESENT):
+            self.log.debug('CRANK_REV_DATA_PRESENT', extra=M)
+            self.cadence_time_stamp = self.time_stamp
             # cr - cumularive revolutions
             # le - last event time
             # dt - time delta
@@ -261,17 +430,33 @@ class CSC_Delegate(DefaultDelegate):
             # FIXME - there seems to be some accuracy loss on timer overflow?
             if cr_dt < 0:
                 cr_dt = 64 + cr_le - self.crank_last_time_event
+                self.crank_last_time_delta = cr_dt
             if (self.crank_cumul != cr_cr) and (self.crank_last_time_event != cr_le):
                 rt = cr_dt / (cr_cr - self.crank_cumul)
-
-                self.cadence_time_stamp = ts
-                self.crank_last_time_event = cr_le
-                self.wheel_last_time_delta = cr_dt
                 self.crank_rev_time = rt
                 self.crank_cumul = cr_cr
                 self.cadence = 60.0 / rt
+                self.crank_last_time_event = cr_le
+                self.crank_last_measurement = self.cadence_time_stamp
+            else:
+                if (self.cadence_time_stamp - self.crank_last_measurement) > self.EXPIRY_TIME:
+                    self.crank_rev_time = NAN
+                    self.cadence = NAN
+        else:
+            self.cadence_time_stamp = NAN
+            self.cadence = NAN
 
-                self.log.debug('Last crank event time: {:10.3f}, delta {:10.3f}'.format(self.crank_last_time_event, self.crank_last_time_delta), extra=M)
-                self.log.debug('Crank cumul revs: {:5d}'.format(cr_cr), extra=M)
-                self.log.debug('Last crank rev time: {:10.3f}'.format(self.crank_rev_time), extra=M)
-                self.log.debug('Cadence: {:10.3f}'.format(60.0 / rt), extra=M)
+        #Ignore first 3 measurements to avoid "wild" values
+        if self.measurement_no < 3:
+            self.log.debug('Ignoring measurement no {}'.format(self.measurement_no), extra=M)
+            self.wheel_rev_time = NAN
+            self.crank_rev_time = NAN
+            self.cadence = NAN
+
+        self.log.debug('Last crank event time: {:10.3f}, delta {:10.3f}'.format(self.crank_last_time_event, self.crank_last_time_delta), extra=M)
+        self.log.debug('Crank cumul revs: {:5d}'.format(cr_cr), extra=M)
+        self.log.debug('Last crank rev time: {:10.3f}'.format(self.crank_rev_time), extra=M)
+
+        ts_formatted = time.strftime("%H:%M:%S", time.localtime(self.time_stamp))
+        self.log.debug('Delegate: set cadence {}, time stamp {}'.format(self.cadence, ts_formatted), extra=M)
+        self.log.debug('Delegate: handleNotification finished', extra=M)
