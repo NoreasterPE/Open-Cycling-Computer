@@ -6,12 +6,12 @@ ble_sc_addr: FD:DF:0E:4E:76:CF
 ble_sc_name: b'Lezyne S&C 249'
 layout_path: layouts/default.yaml
 log_level: DEBUG
-odometer: 29694827.27722636
+odometer: 29696473.156607687
 odometer_units: km
 rider_weight: 78.0
 rider_weight_units: kg
-ridetime_total: 1472.3112931251526
-speed_max: 23.949465300849752
-speed_units: m/s
+ridetime_total: 1727.5304789543152
+speed_max: 14.35418423973363
+speed_units: km/h
 temperature_units: C
 wheel_size: 700x25C

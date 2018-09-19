@@ -337,6 +337,7 @@ class HR_Delegate(bluepy.btle.DefaultDelegate):
         self.heart_rate = NAN
         self.heart_rate_beat = 0
         self.time_stamp = time.time()
+        self.measurement_no = 0
         self.log.debug('Delegate __init__ finished', extra=M)
 
     def handleNotification(self, cHandle, data):
@@ -348,6 +349,7 @@ class HR_Delegate(bluepy.btle.DefaultDelegate):
         # https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.heart_rate_control_point.xml&u=org.bluetooth.characteristic.heart_rate_control_point.xml
         #
         self.time_stamp = time.time()
+        self.measurement_no += 1
         self.heart_rate_beat = int(not(self.heart_rate_beat))
 
         i = 0
@@ -385,6 +387,12 @@ class HR_Delegate(bluepy.btle.DefaultDelegate):
             self.heart_rate = hr
         else:
             self.heart_rate = NAN
+
+        #Ignore first 3 measurements to avoid "wild" values
+        if self.measurement_no < 3:
+            self.log.debug('Ignoring measurement no {}'.format(self.measurement_no), extra=M)
+            self.heart_rate = NAN
+
         ts_formatted = time.strftime("%H:%M:%S", time.localtime(self.time_stamp))
         self.log.debug('Delegate: set heart rate {}, time stamp {}'.format(self.heart_rate, ts_formatted), extra=M)
         self.log.debug('Delegate: handleNotification finished', extra=M)
