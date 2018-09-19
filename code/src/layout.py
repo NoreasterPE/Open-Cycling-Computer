@@ -29,7 +29,6 @@ class layout():
         self.page_list = {}
         self.page_index = {}
         self.function_rect_list = {}
-        self.current_function_list = []
         self.current_image_list = {}
         self.layout_path = layout_path
         self.load_layout(layout_path)
@@ -77,7 +76,6 @@ class layout():
     def use_page(self, page_id="page_0"):
         self.log.debug("use_page {}".format(page_id), extra=M)
         self.render = True
-        self.current_function_list = []
         self.current_button_list = []
         self.current_page = self.page_list[page_id]
         try:
@@ -110,7 +108,6 @@ class layout():
         r, g, b = [int(n, 16) for n in (r, g, b)]
         self.fg_colour = (r, g, b)
         for field in self.current_page['fields']:
-            self.current_function_list.append(field['function'])
             try:
                 b = field['button']
             except KeyError:
