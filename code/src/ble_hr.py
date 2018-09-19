@@ -96,7 +96,7 @@ class ble_hr(threading.Thread):
                 self.state = 2
                 self.log.debug('Getting device name', extra=M)
                 self.name = self.get_device_name()
-                self.log.debug('Getting battery level name', extra=M)
+                self.log.debug('Getting battery level', extra=M)
                 self.battery_level = self.get_battery_level()
             except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
                 self.handle_exception(e, "initialise_connection")
