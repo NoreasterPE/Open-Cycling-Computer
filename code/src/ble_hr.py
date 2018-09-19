@@ -150,43 +150,25 @@ class ble_hr(threading.Thread):
         self.running = True
         self.state = 0
         while self.running:
-            self.log.debug('run 0', extra=M)
             self.log.debug('Address: {}, connected: {}, notifications: {}'.format(self.addr, self.connected, self.notifications_enabled), extra=M)
             if self.addr is not None:
                 if self.connected and self.notifications_enabled:
-                    self.log.debug('run 1', extra=M)
                     try:
-                        self.log.debug('run 1a peripherial: {}'.format(self.peripherial), extra=M)
                         if self.peripherial.waitForNotifications(self.WAIT_TIME):
-                            self.log.debug('run 2', extra=M)
                             if self.time_stamp != self.delegate.time_stamp:
-                                self.log.debug('run 3', extra=M)
                                 self.time_stamp = self.delegate.time_stamp
                                 self.heart_rate = self.delegate.heart_rate
                                 self.heart_rate_min = min(self.heart_rate_min, self.delegate.heart_rate)
                                 self.heart_rate_max = max(self.heart_rate_max, self.delegate.heart_rate)
                                 self.heart_rate_beat = self.delegate.heart_rate_beat
-                                self.log.debug('run 4', extra=M)
                                 self.log.debug('heart rate = {} @ {}'.format(self.heart_rate, time.strftime("%H:%M:%S", time.localtime(self.time_stamp))), extra=M)
-                                self.log.debug('run 5', extra=M)
                     except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
-                        self.log.debug('run 6', extra=M)
                         self.handle_exception(e, "waitForNotifications")
                 else:
-                    #try:
-                    #    iface = self.peripherial.iface
-                    #    self.log.debug('run 7 iface: {}'.format(iface), extra=M)
-                    #    if iface == '':
-                    #        self.connected = False
-                    #except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
-                    #    self.log.debug('run 6', extra=M)
-                    #    self.handle_exception(e, "waitForNotifications, iface")
                     self.log.debug('ble_hr NOT connected', extra=M)
                     self.initialise_connection()
-                    self.log.debug('run 9', extra=M)
                     time.sleep(5.0)
                     self.set_notifications(enable=True)
-                    self.log.debug('run 10', extra=M)
                     time.sleep(5.0)
             else:
                 #Waiting for ble address
@@ -200,30 +182,21 @@ class ble_hr(threading.Thread):
         self.log.debug('safe_disconnect started', extra=M)
         # Make sure the device is not sending notifications (is this required?)
         try:
-            self.log.debug('safe_disconnect 1', extra=M)
             self.set_notifications(enable=False)
-            self.log.debug('safe_disconnect 2', extra=M)
         except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
-            self.log.debug('safe_disconnect 3', extra=M)
             # Not connected yet
             self.log.critical('{}'.format(e), extra=M)
-            self.log.debug('safe_disconnect 4', extra=M)
             pass
         # Make sure the device is disconnected
         try:
-            self.log.debug('safe_disconnect 5', extra=M)
             self.peripherial.disconnect()
-            self.log.debug('safe_disconnect 6', extra=M)
             self.state = 0
         except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
-            self.log.debug('safe_disconnect 7', extra=M)
             # Not connected yet
             self.log.error('AttributeError: {}'.format(e), extra=M)
             pass
-        self.log.debug('safe_disconnect 8', extra=M)
         self.log.debug('State = {}. Waiting {} s to reconnect'.format(self.state, self.RECONNECT_WAIT_TIME), extra=M)
         time.sleep(self.RECONNECT_WAIT_TIME)
-        self.log.debug('safe_disconnect 9', extra=M)
         self.log.debug('safe_disconnect finished', extra=M)
 
     def get_prefix(self):

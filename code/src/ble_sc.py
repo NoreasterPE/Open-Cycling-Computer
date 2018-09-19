@@ -149,17 +149,12 @@ class ble_sc(threading.Thread):
         self.running = True
         self.state = 0
         while self.running:
-            self.log.debug('run 0', extra=M)
             self.log.debug('Address: {}, connected: {}, notifications: {}'.format(self.addr, self.connected, self.notifications_enabled), extra=M)
             if self.addr is not None:
                 if self.connected and self.notifications_enabled:
-                    self.log.debug('run 1', extra=M)
                     try:
-                        self.log.debug('run 1a peripherial: {}'.format(self.peripherial), extra=M)
                         if self.peripherial.waitForNotifications(self.WAIT_TIME):
-                            self.log.debug('run 2', extra=M)
                             if self.time_stamp != self.delegate.time_stamp:
-                                self.log.debug('run 3', extra=M)
                                 self.time_stamp = self.delegate.time_stamp
                                 self.wheel_time_stamp = self.delegate.wheel_time_stamp
                                 self.wheel_rev_time = self.delegate.wheel_rev_time
@@ -167,27 +162,14 @@ class ble_sc(threading.Thread):
                                 self.cadence = self.delegate.cadence
                                 self.cadence_max = max(self.cadence_max, self.delegate.cadence)
                                 self.cadence_beat = self.delegate.cadence_beat
-                                self.log.debug('run 4', extra=M)
                                 self.log.debug('cadence = {} @ {}'.format(self.cadence, time.strftime("%H:%M:%S", time.localtime(self.time_stamp))), extra=M)
-                                self.log.debug('run 5', extra=M)
                     except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
-                        self.log.debug('run 6', extra=M)
                         self.handle_exception(e, "waitForNotifications")
                 else:
-                    #try:
-                    #    iface = self.peripherial.iface
-                    #    self.log.debug('run 7 iface: {}'.format(iface), extra=M)
-                    #    if iface == 'disc':
-                    #        self.connected = False
-                    #except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
-                    #    self.log.debug('run 6', extra=M)
-                    #    self.handle_exception(e, "waitForNotifications, iface")
                     self.log.debug('ble_sc NOT connected', extra=M)
                     self.initialise_connection()
-                    self.log.debug('run 9', extra=M)
                     time.sleep(5.0)
                     self.set_notifications(enable=True)
-                    self.log.debug('run 10', extra=M)
                     time.sleep(5.0)
             else:
                 #Waiting for ble address
