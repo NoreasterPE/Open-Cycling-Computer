@@ -40,9 +40,9 @@ class ble_sc(threading.Thread):
         # System logger handle
         self.log = logging.getLogger('system')
         self.log.debug('WAIT_TIME {}'.format(self.WAIT_TIME), extra=M)
-        self.p_formats = dict(time_stamp='%.0f', wheel_time_stamp='%.0f', wheel_rev_time='%.0f', cadence_time_stamp='%.0f', cadence="%5.0f", cadence_max="%5.0f")
-        self.p_units = dict(time_stamp='s', wheel_time_stamp='s', wheel_rev_time='s', cadence_time_stamp='s', cadence="RPM", cadence_max="RPM")
-        self.p_raw_units = dict(time_stamp='s', wheel_time_stamp='s', wheel_rev_time='s', cadence_time_stamp='s', cadence="RPM", cadence_max="RPM")
+        self.p_formats = dict(time_stamp='%.0f', wheel_time_stamp='%.0f', wheel_rev_time='%.0f', cadence_time_stamp='%.0f', cadence="%5.0f", cadence_max="%5.0f", battery_level="%.0f")
+        self.p_units = dict(time_stamp='s', wheel_time_stamp='s', wheel_rev_time='s', cadence_time_stamp='s', cadence="RPM", cadence_max="RPM", battery_level="%")
+        self.p_raw_units = dict(time_stamp='s', wheel_time_stamp='s', wheel_rev_time='s', cadence_time_stamp='s', cadence="RPM", cadence_max="RPM", battery_level="%")
 
         ## @var connected
         # Indicates if sensor is currently connected
