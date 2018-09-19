@@ -13,90 +13,37 @@ CODING STYLE:
 1. Fix inconsistent naming: func, function, param_name
 2. Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
 3. Review & avoid try/catch. It's too expensive [HOLD]
-4. Add a standard parent class for hardware module running in a separate thread (init, start, run, stop, get_data)
+4. Add a standard parent class for hardware module running in a separate thread (init, start, run, stop, get_data) [IN PROGRESS]
 6. Add new params from modules to ride parameters? Modules to give ready for use values? Help standarisation, but makes splitting code into libs harder.
-7. Define sensor module API (init, get_data, get_formatting, start, stop, get_status)
+7. Define sensor module API (init, get_data, get_formatting, start, stop, get_status) [IN PROGRESS]
 8. Make library for layout handling. Might be useful for other projects like weather station
-9. Remove pygame
 
 REAL WORLD PROBLEMS:
-1. Speed filtering or max speed will be false sooner or later. Average from 2/3 samples? Kalman?
+1. Max speed will be false sooner or later aftera single invalid measurement. Kalman filter required.
 2. Average cadence to be calculated for ride time (reset with ride time?)
 3. Do not try to initialise subsystems too many times. If BLE/GPS/other sensor is not there it won't magically show up. Log error and give up.
 4. Add a module to allow real live raw data monitoring
-5. BLE_HR main loop sometimes quit with some unhandled exception
-6. Change log formatting. Timestamp should be first in human readable format
 7. Use timestamp to discard false notifications BLE HR/SC
 8. Use Kalman filter for speed - BLE SC goes crazy sometimes
 9. Pulse heart rate icon every time ble notification is received
-10. Pulse speed/cadence icon every time ble notification is received
 11. Make threads stoppable with feedback for clean exit (low priority)
 12. Use Kalman filter for heart rate - ble_hr goes crazy sometimes
+12. Use Kalman filter for cadence - ble_sc goes crazy sometimes
 
 CODE ERRORS:
 1. Threads write to log aftred log end [ERROR]
-2. Crash on rider weight unit change when there is a leading zero - remove leading zero immediately when not needed?
-$ python src/occ.py
-Exception in thread Thread-3:
-Traceback (most recent call last):
-  File "/usr/lib64/python2.7/threading.py", line 804, in __bootstrap_inner
-    self.run()
-  File "/home/przemo/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/rendering.py", line 23, in run
-    self.layout.render_page()
-  File "/home/przemo/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 158, in render_page
-    self.render(self.screen)
-  File "/home/przemo/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 227, in render
-    rv2 = uv[i]
-IndexError: string index out of range
 4. Setting time from GPS for the first time breaks delta (trip time)
-5. BLE Notifications re-enabled on quit??. Update: look like notificationc can show up even when switched off?
-[DEBUG] [BLE] Notification received from : 0xe
-[DEBUG] [BMP] pressure = 101300.0 Pa, temperature = 19.8 degC
-[DEBUG] [BMP] pressure = 101300.0 Pa, temperature = 19.8 degC
-[INFO ] [RP] Stopping sensors thread
-[DEBUG] [SE] Stopping ble thread
-[DEBUG] [BLE] Stop called
-[DEBUG] [BMP] pressure = 101300.0 Pa, temperature = 19.8 degC
-[DEBUG] [BMP] pressure = 101300.0 Pa, temperature = 19.8 degC
-[DEBUG] [BLE] Disabling notifications
-[DEBUG] [BLE] Enabling notifications <------------------------------
-[DEBUG] [BLE] Notification received from : 0xe
-[DEBUG] [BLE] Notification received from : 0xe
-[DEBUG] [BLE] Disconnecting..
-[DEBUG] [BLE] Disconnected
-[DEBUG] [SE] Stopping bmp183 thread
-[DEBUG] [BMP] stop
-[DEBUG] [BMP] __del__
-[DEBUG] [BMP] stop
-[DEBUG] [SE] Stopping gps thread
-[DEBUG] [OCC] Writing config file
-[DEBUG] [OCC] Log end
-7. Missing image causes hard crash
-$ python src/occ.py 
-Exception in thread Thread-4:
-Traceback (most recent call last):
-  File "/usr/lib64/python2.7/threading.py", line 804, in __bootstrap_inner
-    self.run()
-  File "/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/rendering.py", line 23, in run
-    self.layout.render_page()
-  File "/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 165, in render_page
-    self.render(self.screen)
-  File "/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 199, in render
-    screen.blit(image, [text_center_x, text_center_y])
-TypeError: argument 1 must be pygame.Surface, not None
-8. Average caddence and heart rate are invalid
+8. Average cadence and heart rate are invalid
 9. Errors when no bmp183 or gps present
-
 
 HARDWARE:
 1. Add backlight control
 2. Is it possible to read date/time from GPS chip with no fix or a separate clock is needed?
-3. Fix lost should be marked in log?
+3. Fix lost should be marked in log? {Yes, as DEBUG}
 
 FUTURE
-1. Make libaray for layout design?
+1. Make libaray for layout design? [IN PROGRESS]
 2. Explore python-osmgpsmap
-3. Add parent class for BLE to solve locking during initialisation
 
 [DONE]
 1. [DONE] Saving setting (i.e. current layout)
@@ -174,3 +121,56 @@ FUTURE
 59. [DONE] Add BLE icons
 60. [DONE] Switch to self.log.critical("Loading default layout {} failed, Quitting...".format(layout_path), extra=M) style
 61. [WONTFIX] Use sprites to make smooth page switching? {pygame is gone, so no sprites}
+62. [DONE] Remove pygame
+63. [DONE] Crash on rider weight unit change when there is a leading zero - remove leading zero immediately when not needed?
+$ python src/occ.py
+Exception in thread Thread-3:
+Traceback (most recent call last):
+  File "/usr/lib64/python2.7/threading.py", line 804, in __bootstrap_inner
+    self.run()
+  File "/home/przemo/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/rendering.py", line 23, in run
+    self.layout.render_page()
+  File "/home/przemo/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 158, in render_page
+    self.render(self.screen)
+  File "/home/przemo/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 227, in render
+    rv2 = uv[i]
+IndexError: string index out of range
+64. [DONE] BLE Notifications re-enabled on quit??. Update: look like notificationc can show up even when switched off? {Yes, they can}
+[DEBUG] [BLE] Notification received from : 0xe
+[DEBUG] [BMP] pressure = 101300.0 Pa, temperature = 19.8 degC
+[DEBUG] [BMP] pressure = 101300.0 Pa, temperature = 19.8 degC
+[INFO ] [RP] Stopping sensors thread
+[DEBUG] [SE] Stopping ble thread
+[DEBUG] [BLE] Stop called
+[DEBUG] [BMP] pressure = 101300.0 Pa, temperature = 19.8 degC
+[DEBUG] [BMP] pressure = 101300.0 Pa, temperature = 19.8 degC
+[DEBUG] [BLE] Disabling notifications
+[DEBUG] [BLE] Enabling notifications <------------------------------
+[DEBUG] [BLE] Notification received from : 0xe
+[DEBUG] [BLE] Notification received from : 0xe
+[DEBUG] [BLE] Disconnecting..
+[DEBUG] [BLE] Disconnected
+[DEBUG] [SE] Stopping bmp183 thread
+[DEBUG] [BMP] stop
+[DEBUG] [BMP] __del__
+[DEBUG] [BMP] stop
+[DEBUG] [SE] Stopping gps thread
+[DEBUG] [OCC] Writing config file
+[DEBUG] [OCC] Log end
+65. [DONE] Missing image causes hard crash
+$ python src/occ.py 
+Exception in thread Thread-4:
+Traceback (most recent call last):
+  File "/usr/lib64/python2.7/threading.py", line 804, in __bootstrap_inner
+    self.run()
+  File "/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/rendering.py", line 23, in run
+    self.layout.render_page()
+  File "/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 165, in render_page
+    self.render(self.screen)
+  File "/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/code/src/layout.py", line 199, in render
+    screen.blit(image, [text_center_x, text_center_y])
+TypeError: argument 1 must be pygame.Surface, not None
+66. Add parent class for BLE to solve locking during initialisation [DONE] {Not by a parent class, but not blocking init is in place}
+67. [DONE] Pulse speed/cadence icon every time ble notification is received
+68. [DONE] BLE_HR main loop sometimes quit with some unhandled exception
+69. [DONE] Change log formatting. Timestamp should be first in human readable format
