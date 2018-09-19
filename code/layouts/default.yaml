@@ -426,7 +426,7 @@ pages:
                           w: 120
                           h: 80
 
-                - function: label
+                - function: temperature_label
                   x: 180
                   y: 95
                   font_size: 16
@@ -442,7 +442,7 @@ pages:
                           w: 120
                           h: 80
 
-                - function: label
+                - function: wheel_size_label
                   x: 60
                   y: 175
                   font_size: 16
@@ -454,6 +454,23 @@ pages:
                   font_size: 20
                   button:
                           x0: 0
+                          y0: 160
+                          w: 120
+                          h: 80
+
+                - function: odometer_label
+                  x: 180
+                  y: 175
+                  font_size: 16
+                  text: Odometer
+
+                - function: odometer
+                  editable: yes
+                  x: 180
+                  y: 215
+                  font_size: 20
+                  button:
+                          x0: 120
                           y0: 160
                           w: 120
                           h: 80
