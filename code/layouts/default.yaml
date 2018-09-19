@@ -46,6 +46,7 @@ pages:
                           frames: 6
 
                 - function: distance
+                  resettable: yes
                   x: 170
                   y: 180
                   font_size: 30
@@ -91,6 +92,7 @@ pages:
                   font_size: 16
 
                 - function: ble_sc_cadence
+                  resettable: yes
                   x: 50
                   y: 290
                   font_size: 40
@@ -124,6 +126,7 @@ pages:
                           frames: 2
 
                 - function: ble_hr_heart_rate
+                  resettable: yes
                   x: 171
                   y: 290
                   font_size: 40
@@ -177,6 +180,7 @@ pages:
                   font_size: 16
                   text: Max
                 - function: speed_max_digits
+                  resettable: yes
                   button:
                           x0: 0
                           y0: 0
@@ -371,6 +375,7 @@ pages:
                   text: Rider weight
 
                 - function: rider_weight
+                  editable: yes
                   x: 45
                   y: 50
                   font_size: 30

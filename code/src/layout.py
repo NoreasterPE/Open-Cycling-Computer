@@ -260,23 +260,30 @@ class layout():
                 except KeyError:
                     self.log.debug("CLICK on non-clickable {}".format(function), extra=M)
         elif click == 'LONG':
-            # print self.function_rect_list
-            # print self.current_button_list
             for function in self.current_button_list:
-                try:
-                    if self.point_in_rect(position, self.function_rect_list[function]):
-                        # FIXME I's dirty way of getting value - add some
-                        # helper function
-                        self.log.debug("LONG CLICK on {}".format(function), extra=M)
-                        self.editor_name = self.occ.rp.get_editor_name(function)
-                        if self.editor_name:
-                            self.open_editor_page(function)
-                            break
-                        p = self.occ.rp.strip_end(function)
-                        if p in self.occ.rp.p_resettable:
-                            self.occ.rp.reset_param(p)
-                except KeyError:
-                    self.log.debug("LONG CLICK on non-clickable {} or missing editor page".format(function), extra=M)
+                if self.point_in_rect(position, self.function_rect_list[function]):
+                    self.log.debug("LONG CLICK on {}".format(function), extra=M)
+                    for f in self.current_page['fields']:
+                        if f['function'] == function:
+                            try:
+                                if f['resettable']:
+                                    resettable = True
+                            except KeyError:
+                                    resettable = False
+                            try:
+                                if f['editable']:
+                                    editable = True
+                            except KeyError:
+                                    editable = False
+                            if resettable:
+                                self.log.debug("Resetting {}".format(function), extra=M)
+                                self.occ.rp.reset_param(function)
+                            elif editable:
+                                self.editor_name = self.occ.rp.get_editor_name(function)
+                                self.log.debug("Editing {} with self.editor_name".format(function), extra=M)
+                                self.open_editor_page(function)
+                            else:
+                                self.log.debug("LONG CLICK on non-clickable {}".format(function), extra=M)
         elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
             self.run_function("next_page")
         elif click == 'L_TO_R':  # Swipe LEFT to RIGHT
