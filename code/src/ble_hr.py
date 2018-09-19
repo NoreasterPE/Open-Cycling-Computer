@@ -126,7 +126,8 @@ class ble_hr(threading.Thread):
                 self.log.critical(e, extra=M)
                 self.connected = False
                 self.notifications_enabled = False
-            elif str(e) == "Error from Bluetooth stack (badstate)":  # FIXME - what to do with this?
+            elif (str(e) == "Error from Bluetooth stack (badstate)" or
+                    str(e) == "Error from Bluetooth stack (comerr)"):
                 self.log.critical(e, extra=M)
                 self.connected = False
                 self.notifications_enabled = False
