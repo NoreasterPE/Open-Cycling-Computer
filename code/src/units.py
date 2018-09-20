@@ -2,142 +2,122 @@
 # -*- coding: utf-8 -*-
 ## @package units
 #  Package for converting units. When run independently shows a pseudo-test.
-#  This is not a general unit converter as it always converts from default units used by ride_parameters module.
 
 
 ## Main units class
-#  Allows conversion of a value in source unit to target unit. Source unit is always the same as default unit from ride_parameters. I.e. for temperature it's degree Celsius, for mass it's kilogram, etc.
+#  Allows conversion of a value in source unit to target unit.
 class units():
 
     ## The constructor
     #  @param self The python object self
     def __init__(self):
-        pass
+        self.distance = {"m": 1.0, "km": 1000.0, "mi": 1609.344, "yd": 0.9144}
+        self.temperature = {"C", "F"}
+        self.speed = {"m/s": 1.0, "km/h": 0.2777778, "mi/h": 0.44704}
+        self.mass = {"kg": 1.0, "st": 6.350293}
+        self.slope = {"%", "m/m"}
+        self.pressure = {"Pa": 1.0, "hPa": 100.0, "kPa": 1000.0}
 
     ## Main convert function. Returns value in target units
     #  @param self The python object self
-    #  @param value value in source units. Source units are default units from ride_parameters module
+    #  @param value value in source units
+    #  @param source_unit source unit
     #  @param target_unit target unit
-    def convert(self, value, target_unit):
-        conversions = {'F': self.temp_C_to_F(value),
-                       'K': self.temp_C_to_K(value),
-                       "km/h": self.speed_ms_to_kmh(value),
-                       "mi/h": self.speed_ms_to_mph(value),
-                       "st": self.mass_kg_to_st(value),
-                       "lb": self.mass_kg_to_lb(value),
-                       "km": self.dist_m_to_km(value),
-                       "mi": self.dist_m_to_mi(value),
-                       "yd": self.dist_m_to_yd(value),
-                       "%": self.m_m_to_percent(value),
-                       "hPa": self.pressure_Pa_to_hPa(value),
-                       'C': value,
-                       "Pa": value,
-                       "kg": value,
-                       "s": value,
-                       "RPM": value,
-                       "BPM": value,
-                       "m/s": value,
-                       "m/m": value,
-                       "m": value,
-                       "": value}
-        return conversions[target_unit]
+    def convert(self, value, source_unit, target_unit):
+        if source_unit == target_unit:
+            return value
+        if ((source_unit in self.distance) and (target_unit in self.distance)):
+            return self.convert_distance(value, source_unit, target_unit)
+        if ((source_unit in self.temperature) and (target_unit in self.temperature)):
+            return self.convert_temperature(value, source_unit, target_unit)
+        if ((source_unit in self.speed) and (target_unit in self.speed)):
+            return self.convert_speed(value, source_unit, target_unit)
+        if ((source_unit in self.mass) and (target_unit in self.mass)):
+            return self.convert_mass(value, source_unit, target_unit)
+        if ((source_unit in self.slope) and (target_unit in self.slope)):
+            return self.convert_slope(value, source_unit, target_unit)
+        if ((source_unit in self.pressure) and (target_unit in self.pressure)):
+            return self.convert_pressure(value, source_unit, target_unit)
 
-    ## Celsius to Farrenheit conversion
-    #  @param self The python object self
-    #  @param temp temperature in Celsius
-    def temp_C_to_F(self, temp):
-        tF = temp * 1.8 + 32
-        return tF
+    def convert_distance(self, value, source_unit, target_unit):
+        return value * self.distance[source_unit] / self.distance[target_unit]
 
-    ## Celsius to Kelvin conversion
+    ## Temperature conversion
     #  @param self The python object self
-    #  @param temp temperature in Celsius
-    def temp_C_to_K(self, temp):
-        tK = 273.15 + temp
-        return tK
+    #  @param value value in source units
+    #  @param source_unit source unit
+    #  @param target_unit target unit
+    def convert_temperature(self, value, source_unit, target_unit):
+        if source_unit == target_unit:
+            result = value
+        elif target_unit == "C":
+            result = (value - 32) / 1.8
+        elif target_unit == "F":
+            result = (value * 1.8) + 32
+        return result
 
-    ## meters per second to kilometers per second conversion
+    ## Speed conversion
     #  @param self The python object self
-    #  @param speed in meters per second
-    def speed_ms_to_kmh(self, speed):
-        s_kmh = speed * 3.6
-        return s_kmh
+    #  @param value value in source units
+    #  @param source_unit source unit
+    #  @param target_unit target unit
+    def convert_speed(self, value, source_unit, target_unit):
+        return value * self.speed[source_unit] / self.speed[target_unit]
 
-    ## meters per second to miles per second conversion
+    ## Mass conversion
     #  @param self The python object self
-    #  @param speed in meters per second
-    def speed_ms_to_mph(self, speed):
-        s_mph = speed * 2.23694
-        return s_mph
+    #  @param value value in source units
+    #  @param source_unit source unit
+    #  @param target_unit target unit
+    def convert_mass(self, value, source_unit, target_unit):
+        return value * self.mass[source_unit] / self.mass[target_unit]
 
-    ## kilograms to stones conversion
+    ## Slope conversion
     #  @param self The python object self
-    #  @param mass in kilograns
-    def mass_kg_to_st(self, mass):
-        m_st = mass * 0.15747
-        # m_lb = (mass - (m_st / 0.15747)) * 2.2046
-        # return (m_st, m_lb)
-        return m_st
+    #  @param value value in source units
+    #  @param source_unit source unit
+    #  @param target_unit target unit
+    def convert_slope(self, value, source_unit, target_unit):
+        if source_unit == target_unit:
+            result = value
+        elif target_unit == "%":
+            result = 100 * value
+        elif target_unit == "m/m":
+            result = 0.01 * value
+        return result
 
-    ## kilograms to pounds conversion
+    ## Pressure conversion
     #  @param self The python object self
-    #  @param mass in kilograns
-    def mass_kg_to_lb(self, mass):
-        m_lb = mass * 2.2046
-        return m_lb
-
-    ## meters to kilometers conversion
-    #  @param self The python object self
-    #  @param distance in meters
-    def dist_m_to_km(self, dist):
-        d_km = dist / 1000
-        return d_km
-
-    ## meters to miles conversion
-    #  @param self The python object self
-    #  @param distance in meters
-    def dist_m_to_mi(self, dist):
-        d_mi = dist / 1609.344
-        return d_mi
-
-    ## meters to yards conversion
-    #  @param self The python object self
-    #  @param distance in meters
-    def dist_m_to_yd(self, dist):
-        d_yd = dist / 0.9144
-        return d_yd
-
-    ## unitless to percent conversion
-    #  @param self The python object self
-    #  @param unitless value
-    def m_m_to_percent(self, value):
-        v = 100 * value
-        return v
-
-    ## Pascal to hectopascal conversion
-    #  @param self The python object self
-    #  @param value in Pascals
-    def pressure_Pa_to_hPa(self, value):
-        v = value / 100.0
-        return v
+    #  @param value value in source units
+    #  @param source_unit source unit
+    #  @param target_unit target unit
+    def convert_pressure(self, value, source_unit, target_unit):
+        return value * self.pressure[source_unit] / self.pressure[target_unit]
 
 
 if __name__ == '__main__':
     u = units()
 
     tC = 20  # C
-    print("C {} F {} K {}".format(tC, u.convert(tC, "F"), u.convert(tC, "K")))
+    print("C: {} F: {}".format(tC, u.convert(tC, "C", "F")))
 
-    dist = 1854.3
-    print("m {} km {} mi {} yd {}".format(dist, u.convert(dist, "km"), u.convert(dist, "mi"), u.convert(dist, "yd")))
+    tF = 68  # F
+    print("F: {} C: {}".format(tF, u.convert(tF, "F", "C")))
 
-    mass = 79.5
-    print("kg {} lb {}".format(mass, u.convert(mass, "lb")))
+    dist = 1854.3  # m
+    print("m: {} km: {} mi: {} yd: {}".format(dist, u.convert(dist, "m", "km"), u.convert(dist, "m", "mi"), u.convert(dist, "m", "yd")))
 
-    speed = 10
-    print("m/s {} km/h {} mph {}".format(speed, u.convert(speed, "km/h"), u.convert(speed, "mi/h")))
+    mass = 79.5  # kg
+    print("kg: {} st: {}".format(mass, u.convert(mass, "kg", "st")))
 
-    slope = 0.013
-    print("m/m {} % {}".format(slope, u.convert(slope, "%")))
-    pressure = 101013
-    print("Pa {} hPa {}".format(pressure, u.convert(pressure, "hPa")))
+    speed = 10  # m/s
+    print("m/s: {} km/h: {} mi/hh: {}".format(speed, u.convert(speed, "m/s", "km/h"), u.convert(speed, "m/s", "mi/h")))
+
+    slope = 0.013  # m/m
+    print("m/m: {} %: {}".format(slope, u.convert(slope, "m/m", "%")))
+
+    slope = 10  # %
+    print("%: {} m/m: {}".format(slope, u.convert(slope, "%", "m/m")))
+
+    pressure = 101013  # Pa
+    print("Pa: {} hPa: {} kPa: {}".format(pressure, u.convert(pressure, "Pa", "hPa"), u.convert(pressure, "Pa", "kPa")))

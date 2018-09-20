@@ -144,10 +144,10 @@ class ride_parameters():
         # FIXME switch to mi when mi/h are set for speed
         # FIXME switch to mi/h when mi are set for odometer
         self.units_allowed = dict(
-            odometer=['km', 'mi'], rider_weight=['kg', 'st', 'lb'],
+            odometer=['km', 'mi'], rider_weight=['kg', 'st'],
             # slope=['%', 'C'],
             wheel_size=[''],
-            speed=['km/h', 'm/s', 'mi/h'], temperature=['C', 'F', 'K'])
+            speed=['km/h', 'm/s', 'mi/h'], temperature=['C', 'F'])
 
         # Params description FIXME localisation
         self.p_desc = dict(
@@ -553,7 +553,7 @@ class ride_parameters():
             unit = self.get_unit(param)
             value = self.p_raw[param]
             if unit_raw != unit:
-                value = self.uc.convert(value, unit)
+                value = self.uc.convert(value, unit_raw, unit)
             self.params[param] = f % float(value)
         else:
             self.params[param] = '-'

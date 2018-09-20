@@ -463,11 +463,11 @@ class layout():
             self.occ.rp.units[variable] = variable_unit
         if self.editor_name == "editor_numbers":
             unit_raw = self.occ.rp.get_internal_unit(variable)
-            value = variable_value
+            value = float(variable_value)
             if unit_raw != variable_unit:
-                value = self.units.convert(variable_raw_value, variable_unit)
-            self.occ.rp.p_raw[variable] = float(value)
-            self.occ.rp.units[variable] = self.occ.rp.params["variable_unit"]
+                value = self.units.convert(value, variable_unit, unit_raw)
+            self.occ.rp.set_raw_param(variable, value)
+            self.occ.rp.update_param(variable)
             # FIXME - find a better place for it
             if variable == "altitude_home":
                 # Force recalculation
