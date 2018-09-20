@@ -316,6 +316,10 @@ class ride_parameters():
         else:
             return self.p_raw[param]
 
+    def set_raw_param(self, param_name, value):
+        self.log.debug("Setting {} to {} (raw)".format(param_name, value), extra=M)
+        self.p_raw[param_name] = value
+
     def set_param(self, param_name, value):
         self.log.debug("Setting {} to {} ".format(param_name, value), extra=M)
         self.params[param_name] = value
