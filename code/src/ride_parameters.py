@@ -161,11 +161,6 @@ class ride_parameters():
                             editor_string=('wheel_size',),
                             ble_selector=('ble_hr_name', 'ble_sc_name'))
 
-        self.p_resettable = dict(distance=1, odometer=1, ridetime=1, speed_max=1)
-        #FIXME That might be part of layout, not part of data
-        #                         cadence=1, cadence_avg=1, cadence_max=1)
-        #                        ble_hr_heart_rate_min=1, ble_hr_heart_rate_avg=1, ble_hr_heart_rate_max=1)
-
         # FIXME Use set_nav_speed_threshold(self, treshold=0) from gps module
         self.log.info("GPS low speed treshold preset to {} [NOT USED]".format(self.p_raw['speed_gps_low']), extra=M)
         self.log.info("GPS speed noise level treshold preset to {}".format(self.p_raw['speed_gps_noise']), extra=M)
