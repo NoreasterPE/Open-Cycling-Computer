@@ -386,16 +386,18 @@ pages:
                           h: 80
 
                 - function: rider_weight_units
+                  editable: yes
                   x: 100
                   y: 50
                   font_size: 16
 
-                - function: label
+                - function: home_altitude_label
                   x: 180
                   y: 15
                   text: Home altitude
 
                 - function: altitude_home
+                  editable: yes
                   x: 165
                   y: 50
                   font_size: 30
@@ -406,17 +408,19 @@ pages:
                           h: 80
 
                 - function: altitude_home_units
+                  editable: yes
                   x: 220
                   y: 50
                   font_size: 16
 
-                - function: label
+                - function: speed_label
                   x: 60
                   y: 95
                   font_size: 16
                   text: Speed
 
                 - function: speed_units
+                  editable: yes
                   x: 60
                   y: 130
                   font_size: 30
@@ -433,6 +437,7 @@ pages:
                   text: Temperature
 
                 - function: temperature_units
+                  editable: yes
                   x: 180
                   y: 130
                   font_size: 30
@@ -449,6 +454,7 @@ pages:
                   text: Wheel size
 
                 - function: wheel_size
+                  editable: yes
                   x: 60
                   y: 215
                   font_size: 20
@@ -475,7 +481,7 @@ pages:
                           w: 120
                           h: 80
 
-                - function: label
+                - function: ble_hr_label
                   x: 60
                   y: 255
                   font_size: 16
@@ -496,7 +502,7 @@ pages:
                   y: 300
                   font_size: 16
 
-                - function: label
+                - function: ble_sc_label
                   x: 180
                   y: 255
                   font_size: 16
