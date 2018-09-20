@@ -453,10 +453,12 @@ class layout():
         self.render = True
 
     def accept_edit(self):
+        self.log.debug("accept_edit started", extra=M)
         variable = self.occ.rp.params["variable"]
         variable_unit = self.occ.rp.params["variable_unit"]
         variable_raw_value = self.occ.rp.params["variable_raw_value"]
         variable_value = self.occ.rp.params["variable_value"]
+        self.log.debug("variable: {}, variable_unit: {}, variable_raw_value: {}, variable_value: {}".format(variable, variable_unit, variable_raw_value, variable_value), extra=M)
         if self.editor_name == "editor_units":
             self.occ.rp.units[variable] = variable_unit
         if self.editor_name == "editor_numbers":
@@ -477,6 +479,7 @@ class layout():
             (name, addr, dev_type) = variable_value
             self.occ.sensors.set_ble_device(name, addr, dev_type)
         self.render = True
+        self.log.debug("accept_edit finished", extra=M)
 
     def get_page(self, page_type, page_no):
         self.log.debug("get_page {} {} ".format(page_type, page_no), extra=M)
