@@ -148,16 +148,10 @@ class layout():
         self.cr.rectangle(0, 0, 240, 320)
         self.cr.fill()
 
-    def render_pressed_button(self, function):
-        fr = self.function_rect_list[function]
-        self.cr.set_source_surface(self.bt_image, 0, 0)
-        self.cr.rectangle(fr[0], fr[1], fr[2], fr[3])
-        self.cr.fill()
-
     def render_page(self):
         self.render_background()
         self.render = True
-        self.show_pressed_button()
+        self.render_pressed_button()
         self.render_layout()
 
     def make_image_key(self, image_path, value):
@@ -204,7 +198,6 @@ class layout():
                 image = self.current_image_list[image_path]
                 if image is not None:
                     self.image_to_surface(image, position_x, position_y)
-                    #screen.blit(image, [position_x, position_y])
             try:
                 fs = field['font_size']
             except KeyError:
@@ -214,7 +207,6 @@ class layout():
             if function != "variable_value":
                 #FIXME Colour ignored for now
                 self.text_to_surface(uv, position_x, position_y)
-                pass
             else:
                 i = self.occ.rp.params["editor_index"]
                 #Head
@@ -225,28 +217,34 @@ class layout():
                 te3 = self.cr.text_extents(rv3)
                 #Currently edited digit
                 rv2 = uv[i]
-                self.cr.set_font_size(1.3 * fs)
+                self.cr.set_font_size(1.4 * fs)
                 te2 = self.cr.text_extents(rv2)
 
                 total_width_half = (te1.width + te2.width + te3.width) / 2
-                rv1_x = position_x - total_width_half + (te1.width / 2)
-                rv2_x = position_x - total_width_half + te1.width + (te2.width / 2)
-                rv3_x = position_x - total_width_half + te1.width + te2.width + (te3.width / 2)
+                rv1_x = position_x - total_width_half + (te1.width / 2) + te1.x_bearing
+                rv2_x = position_x - total_width_half + te1.width + (te2.width / 2) + te1.x_bearing + te2.x_bearing
+                rv3_x = position_x - total_width_half + te1.width + te2.width + (te3.width / 2) + te1.x_bearing + te2.x_bearing + te3.x_bearing
 
                 self.text_to_surface(rv2, rv2_x, position_y)
                 self.cr.set_font_size(fs)
                 self.text_to_surface(rv1, rv1_x, position_y)
                 self.text_to_surface(rv3, rv3_x, position_y)
 
-    def show_pressed_button(self):
+    def render_pressed_button(self):
+        self.log.debug("render_pressed_button started", extra=M)
         if self.pressed_pos:
+            self.log.debug("self.pressed_pos exist", extra=M)
             for function in self.current_button_list:
                 if self.point_in_rect(self.pressed_pos, self.function_rect_list[function]):
                     try:
-                        self.render_pressed_button(function)
+                        fr = self.function_rect_list[function]
+                        self.cr.set_source_surface(self.bt_image, 0, 0)
+                        self.cr.rectangle(fr[0], fr[1], fr[2], fr[3])
+                        self.pressed_pos = None
                     except KeyError:
                         self.log.critical("{} show_pressed_button failed! func ={}".format, __name__, function, extra=M)
                         self.occ.stop()
+        self.log.debug("render_pressed_button finished", extra=M)
 
     def check_click(self, position, click):
         if click == 'SHORT':
@@ -255,6 +253,7 @@ class layout():
             for function in self.current_button_list:
                 try:
                     if self.point_in_rect(position, self.function_rect_list[function]):
+                        self.pressed_pos = position
                         self.run_function(function)
                         break
                 except KeyError:
@@ -263,6 +262,7 @@ class layout():
             for function in self.current_button_list:
                 if self.point_in_rect(position, self.function_rect_list[function]):
                     self.log.debug("LONG CLICK on {}".format(function), extra=M)
+                    self.pressed_pos = position
                     for f in self.current_page['fields']:
                         if f['function'] == function:
                             try:
@@ -434,8 +434,6 @@ class layout():
                     variable][current_unit_index - 1]
             except IndexError:
                 next_unit = self.occ.rp.units_allowed[variable][-1]
-        if next_unit != variable_unit:
-            variable_value = self.units.convert(variable_value, next_unit)
         try:
             f = self.occ.rp.p_format[variable]
         except KeyError:

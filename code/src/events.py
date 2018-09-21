@@ -114,10 +114,10 @@ class events(threading.Thread):
                 self.log.debug("relative_movement: {}  change {}".format(self.relative_movement, rm), extra=M)
             self.previous_position = current_touch_position
         elif event['touch'] == 0:
-            #Wait for the end of touch before starting a new event
-            self.ignore_touch = False
-            #if self.released_timestamp is None:
             self.released_timestamp = t
+            if self.ignore_touch:
+                self.ignore_touch = False
+                self.released_timestamp = None
             self.log.debug("touch end", extra=M)
         if self.ignore_touch:
             self.reset_motion()
