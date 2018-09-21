@@ -8,6 +8,7 @@ UI
 8. BLE device list expiry time. Currently never expires
 9. There is no way to disconnect from a BLE device
 10. Use real ff fonts instead of the "toy" cairo API
+11. Auto reload layout on date time of modification change might be handy
 
 CODING STYLE:
 1. Fix inconsistent naming: func, function, param_name
