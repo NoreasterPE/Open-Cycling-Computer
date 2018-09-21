@@ -5,7 +5,7 @@ pages:
          type: normal
          background: images/occ_page_0_background.png
          buttons: images/occ_page_0_buttons.png
-         font: "serif"
+         font: "sans-serif"
          font_size: 700
          fg_colour: FFFFFF
          fields: 
@@ -170,7 +170,7 @@ pages:
          type: normal
          background: images/occ_page_1_background.png
          buttons: images/occ_page_1_buttons.png
-         font: ""
+         font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
          fields: 
@@ -220,7 +220,7 @@ pages:
                   y: 175
                   font_size: 16
 
-                - function: temperature
+                - function: bmp183_temperature
                   button:
                           x0: 0
                           y0: 240
@@ -255,7 +255,7 @@ pages:
                   y: 310
                   font_size: 16
 
-                - function: pressure
+                - function: bmp183_pressure
                   x: 170
                   y: 290
                   font_size: 40
@@ -275,7 +275,7 @@ pages:
          type: normal
          background: images/occ_page_2_background.png
          buttons: images/occ_page_2_buttons.png
-         font: ""
+         font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
          fields: 
@@ -365,7 +365,7 @@ pages:
          type: settings
          background: images/occ_settings_0_background.png
          buttons: images/occ_settings_0_buttons.png
-         font: ""
+         font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
          fields: 
@@ -408,7 +408,6 @@ pages:
                           h: 80
 
                 - function: altitude_home_units
-                  editable: yes
                   x: 220
                   y: 50
                   font_size: 16
@@ -481,6 +480,11 @@ pages:
                           w: 120
                           h: 80
 
+                - function: odometer_units
+                  x: 220
+                  y: 215
+                  font_size: 16
+
                 - function: ble_hr_label
                   x: 60
                   y: 255
@@ -489,18 +493,13 @@ pages:
 
                 - function: ble_hr_name
                   x: 60
-                  y: 280
-                  font_size: 14
+                  y: 290
+                  font_size: 12
                   button:
                           x0: 0
                           y0: 240
                           w: 120
                           h: 80
-
-                - function: ble_hr_addr
-                  x: 60
-                  y: 300
-                  font_size: 16
 
                 - function: ble_sc_label
                   x: 180
@@ -510,18 +509,13 @@ pages:
 
                 - function: ble_sc_name
                   x: 180
-                  y: 280
-                  font_size: 16
+                  y: 290
+                  font_size: 12
                   button:
                           x0: 120
                           y0: 240
                           w: 120
                           h: 80
-
-                - function: ble_sc_addr
-                  x: 180
-                  y: 300
-                  font_size: 16
 
        - name: "Settings 1"
          id: settings_1
@@ -529,7 +523,7 @@ pages:
          type: settings
          background: images/occ_settings_1_background.png
          buttons: images/occ_settings_1_buttons.png
-         font: ""
+         font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
          fields: 
@@ -572,7 +566,7 @@ pages:
          type: settings
          background: images/occ_settings_2_background.png
          buttons: images/occ_settings_2_buttons.png
-         font: ""
+         font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
          fields: 
@@ -626,7 +620,7 @@ pages:
          type: editor
          background: images/occ_editor_background.png
          buttons: images/occ_editor_buttons.png
-         font: ""
+         font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
          fields: 
@@ -659,36 +653,38 @@ pages:
 
                 - function: variable_unit
                   x: 120
-                  y: 110
+                  y: 115
                   font_size: 60
 
                 - function: ed_prev_unit
-                  x: 40
-                  y: 130
-                  font_size: 30
+                  x: 60
+                  y: 290
+                  font_size: 50
+                  text: ⇦
                   button:
                           x0: 0
-                          y0: 140
-                          w: 59
+                          y0: 260
+                          w: 119
                           h: 60
 
                 - function: ed_next_unit
-                  x: 200
-                  y: 130
-                  font_size: 30
+                  x: 180
+                  y: 290
+                  font_size: 50
+                  text: ⇨
                   button:
-                          x0: 180
-                          y0: 140
-                          w: 59
+                          x0: 120
+                          y0: 260
+                          w: 119
                           h: 60
 
        - name: "Number Editor"
          id: editor_numbers
          number: 0
          type: editor
-         background: images/occ_editor_background.png
+         background: images/occ_number_editor_background.png
          buttons: images/occ_editor_buttons.png
-         font: ""
+         font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
          fields: 
@@ -721,33 +717,13 @@ pages:
 
                 - function: variable_value
                   x: 120
-                  y: 110
+                  y: 120
                   font_size: 60
 
                 - function: variable_unit
                   x: 120
                   y: 180
                   font_size: 30
-
-                - function: ed_prev_unit
-                  x: 40
-                  y: 130
-                  font_size: 30
-                  button:
-                          x0: 0
-                          y0: 140
-                          w: 59
-                          h: 60
-
-                - function: ed_next_unit
-                  x: 200
-                  y: 130
-                  font_size: 30
-                  button:
-                          x0: 180
-                          y0: 140
-                          w: 59
-                          h: 60
 
                 - function: ed_decrease
                   x: 60
@@ -774,8 +750,8 @@ pages:
                 - function: ed_prev
                   x: 60
                   y: 290
-                  font_size: 30
-                  text: Prev
+                  font_size: 50
+                  text: ⇦
                   button:
                           x0: 0
                           y0: 260
@@ -785,8 +761,8 @@ pages:
                 - function: ed_next
                   x: 180
                   y: 290
-                  font_size: 30
-                  text: Next
+                  font_size: 50
+                  text: ⇨
                   button:
                           x0: 120
                           y0: 260
@@ -799,8 +775,7 @@ pages:
          type: editor
          background: images/occ_editor_background.png
          buttons: images/occ_editor_buttons.png
-         font: ""
-         font_size: 16
+         font: "sans-serif"
          fg_colour: FFFFFF
          fields: 
                 - function: ed_accept
@@ -879,13 +854,13 @@ pages:
                           w: 119
                           h: 60
 
-       - name: "List Piscke"
+       - name: "List Picker"
          id: ble_selector
          number: 0
          type: editor
          background: images/ble_selector.png
          buttons: images/occ_settings_2_buttons.png
-         font: ""
+         font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
          fields: 
