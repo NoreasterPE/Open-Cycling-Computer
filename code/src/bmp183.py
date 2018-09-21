@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 ## @package bmp183
 #  Module for handling Bosch BMP183 pressure sensor
 
@@ -9,6 +10,7 @@ import threading
 
 NaN = float('nan')
 M = {'module_name': 'bmp183'}
+
 
 ## Class for Bosch BMP183 pressure and temperature sensor with SPI interface as sold by Adafruit
 class bmp183(threading.Thread):
@@ -88,9 +90,9 @@ class bmp183(threading.Thread):
         ## @var simulate
         #  Stores simulate parameter from constructor call
         self.simulate = simulate
-        ## @var sensor_ready
+        ## @var connected
         #  Set to the constructor sets it to True after succesfull handshake with the sensor. False otherwise.
-        self.sensor_ready = False
+        self.connected = False
         ## @var running
         #  Variable controlling the main sensor handling loop. Setting it to False stops the loop.
         self.running = False
@@ -110,11 +112,14 @@ class bmp183(threading.Thread):
         #  Measured pressure
         self.pressure = 0
         self.pressure_unfiltered = 0
+        self.p_formats = dict(pressure='%.0f', temperature='%.1f')
+        self.p_units = dict(pressure='hPa', temperature='C')
+        self.p_raw_units = dict(pressure='Pa', temperature='C')
         # Setup Raspberry PINS, as numbered on BOARD
-        self.SCK = 15  # GPIO for SCK, other name SCLK
-        self.SDO = 13  # GPIO for SDO, other name MISO
-        self.SDI = 11  # GPIO for SDI, other name MOSI
-        self.CS = 7  # GPIO for CS, other name CE
+        self.SCK = 40  # GPIO for SCK, other name SCLK
+        self.SDO = 38  # GPIO for SDO, other name MISO
+        self.SDI = 36  # GPIO for SDI, other name MOSI
+        self.CS = 32  # GPIO for CS, other name CE
 
         # SCK frequency 1 MHz
         self.delay = 1 / 1000000.0
@@ -124,19 +129,36 @@ class bmp183(threading.Thread):
             ret = self.read_byte(self.BMP183_REG['ID'])
             if ret != self.BMP183_CMD['ID_VALUE']:
                 self.log.error("Communication with bmp183 failed", extra=M)
-                self.sensor_ready = False
+                self.connected = False
                 raise IOError("Communication with bmp183 failed")
             else:
-                self.sensor_ready = True
+                self.connected = True
                 self.read_calibration_data()
                 # Proceed with initial pressure/temperature measurement
         self.measure_pressure()
         self.kalman_setup()
         self.log.debug("Initialised.", extra=M)
 
-    def get_data(self):
-        r = dict(pressure=self.pressure, temperature=self.temperature)
-        return r
+    def get_prefix(self):
+        return M["module_name"]
+
+    def get_raw_data(self):
+        self.log.debug('get_raw_data called', extra=M)
+        return dict(time_stamp=time.time(),
+                    pressure=self.pressure,
+                    temperature=self.temperature)
+
+    def get_raw_units(self):
+        return self.p_raw_units
+
+    def get_units(self):
+        return self.p_units
+
+    def get_formats(self):
+        return self.p_formats
+
+    def is_connected(self):
+        return self.connected
 
     def stop(self):
         self.log.debug("Stopping {}".format(__name__), extra=M)
@@ -145,10 +167,6 @@ class bmp183(threading.Thread):
         if not self.simulate:
             self.cleanup_gpio()
         self.log.debug("Stopped {}".format(__name__), extra=M)
-
-    def __del__(self):
-        self.log.debug("__del__", extra=M)
-        self.stop()
 
     def set_up_gpio(self):
         import RPi.GPIO as GPIO
@@ -258,7 +276,7 @@ class bmp183(threading.Thread):
         if self.simulate:
             self.pressure_unfiltered = 101300
             self.temperature = 19.8
-        elif self.sensor_ready:
+        elif self.connected:
             # Measure temperature - required for calculations
             self.measure_temperature()
             self.write_byte(self.BMP183_REG['CTRL_MEAS'], self.BMP183_CMD[
@@ -274,8 +292,7 @@ class bmp183(threading.Thread):
         X1 = (self.B2 * (self.B6 * self.B6 / 2 ** 12)) / 2 ** 11
         X2 = self.AC2 * self.B6 / 2 ** 11
         X3 = X1 + X2
-        self.B3 = (
-            ((self.AC1 * 4 + X3) << self.BMP183_CMD['OVERSAMPLE_3']) + 2) / 4
+        self.B3 = ((int(self.AC1 * 4 + X3) << self.BMP183_CMD['OVERSAMPLE_3']) + 2) / 4
         X1 = self.AC3 * self.B6 / 2 ** 13
         X2 = (self.B1 * (self.B6 * self.B6 / 2 ** 12)) / 2 ** 16
         X3 = ((X1 + X2) + 2) / 2 ** 2
@@ -304,14 +321,14 @@ class bmp183(threading.Thread):
             self.temperature = temperature
 
     def run(self):
-        self.log.debug("run", extra=M)
+        self.log.debug("Main loop started", extra=M)
         self.running = True
         while self.running:
             self.measure_pressure()
             self.kalman_update()
-            self.log.debug(
-                "pressure = {} Pa, temperature = {} degC".format(self.pressure, self.temperature))
+            self.log.debug("pressure = {} Pa, temperature = {} degC".format(self.pressure, self.temperature), extra=M)
             time.sleep(self.measurement_delay)
+        self.log.debug("Main loop finished", extra=M)
 
     def kalman_setup(self):
         # FIXME Add detailed comments

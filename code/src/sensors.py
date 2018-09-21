@@ -9,7 +9,7 @@
 import ble_sc
 import ble_hr
 #from bluepy.btle import BTLEException
-#from bmp183 import bmp183
+import bmp183
 # Disable GPS (temporary)
 # from gps_mtk3339 import gps_mtk3339
 import logging
@@ -99,13 +99,13 @@ class sensors(threading.Thread):
             self.sensors['gps'] = None
             self.connected['gps'] = False
         except IOError:
-            self.sensors['gps'] = None
+            self.sensors['gps'] = None'''
         self.log.info("Initialising bmp183 sensor", extra=M)
         try:
-            self.sensors['bmp183'] = bmp183(self.simulate)
+            self.sensors['bmp183'] = bmp183.bmp183(self.simulate)
             self.connected['bmp183'] = True
         except IOError:
-            self.connected['bmp183'] = None'''
+            self.connected['bmp183'] = None
         self.sensors['ble_hr'] = ble_hr.ble_hr()
         self.sensors['ble_sc'] = ble_sc.ble_sc()
         self.running = True
@@ -143,8 +143,10 @@ class sensors(threading.Thread):
 
         self.log.debug("Setting ble_sc device address to {}".format(self.addrs["ble_sc"]), extra=M)
         self.sensors['ble_sc'].set_addr(self.addrs["ble_sc"])
-        self.log.debug("Starting ble_sc tscead", extra=M)
+        self.log.debug("Starting ble_sc thread", extra=M)
         self.sensors['ble_sc'].start()
+        self.log.debug("Starting bmp183 thread", extra=M)
+        self.sensors['bmp183'].start()
 
         while self.running:
             self.set_ble_host_state()

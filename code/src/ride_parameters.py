@@ -177,6 +177,7 @@ class ride_parameters():
 
         self.ble_hr = self.init_sensor_data("ble_hr")
         self.ble_sc = self.init_sensor_data("ble_sc")
+        self.bmp183 = self.init_sensor_data("bmp183")
         self.log.debug("Setting up event scheduler", extra=M)
         self.event_scheduler.enter(RIDE_PARAMETERS_UPDATE, 1, self.schedule_update_event)
 
@@ -422,7 +423,7 @@ class ride_parameters():
     def set_min(self, param):
         self.p_raw[param + "_min"] = min(self.p_raw[param], self.p_raw[param + "_min"])
 
-    def calculate_avg_temperature(self):
+    '''def calculate_avg_temperature(self):
         dt = self.p_raw["dtime"]
         t = self.p_raw["temperature"]
         ta = self.p_raw["temperature_avg"]
@@ -445,7 +446,7 @@ class ride_parameters():
         # FIXME ridetime doesn't seem to be right
         tt = self.p_raw["ridetime"]
         hr_new = (hr * dt + hra * tt) / (tt + dt)
-        self.p_raw["ble_hr_heart_rate_avg"] = hr_new
+        self.p_raw["ble_hr_heart_rate_avg"] = hr_new'''
 
     def update_altitude(self):
         self.update_param("altitude_gps")
@@ -465,6 +466,7 @@ class ride_parameters():
         self.update_altitude()
         self.update_ble_sc_cadence()
         self.update_ble_hr_heart_rate()
+        self.update_bmp183()
         self.update_param("climb")
         self.update_param("distance")
         self.update_param("ridetime")
@@ -480,7 +482,7 @@ class ride_parameters():
         self.update_param("odometer")
         self.update_param("rider_weight")
         self.update_param("pressure")
-        self.update_temperatures()
+        #self.update_temperatures()
         self.update_param("satellitesused")
         self.update_param("satellites")
         self.update_param("slope")
@@ -581,14 +583,14 @@ class ride_parameters():
         self.params["time"] = strftime("%H:%M:%S")
         self.params["rtc"] = self.params["date"] + " " + self.params["time"]
 
-    def read_bmp183_data(self):
+    '''def read_bmp183_data(self):
         if self.bmp183:
             data = self.bmp183.get_data()
             self.p_raw['pressure'] = data['pressure']
             self.p_raw['temperature'] = data['temperature']
         else:
             self.log.info('BMP183 sensor not set, trying to set it...', extra=M)
-            self.bmp183 = self.sensors.get_sensor('bmp183')
+            self.bmp183 = self.sensors.get_sensor('bmp183')'''
 
     def calculate_altitude(self):
         def calc_alt():
@@ -618,14 +620,14 @@ class ride_parameters():
                 pressure / pow((1 - altitude_home / 44330), 5.255))
         self.log.debug("pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]), extra=M)
 
-    def update_temperatures(self):
+    '''def update_temperatures(self):
         self.set_min("temperature")
         self.set_max("temperature")
         self.calculate_avg_temperature()
         self.update_param("temperature")
         self.update_param("temperature_avg")
         self.update_param("temperature_min")
-        self.update_param("temperature_max")
+        self.update_param("temperature_max")'''
 
     def sanitise(self, param_name):
         if self.params[param_name] == "-0":
@@ -693,6 +695,28 @@ class ride_parameters():
         else:
             self.log.debug("ble_hr_connection lost", extra=M)
         self.log.debug("update_ble_hr_heart_rate finished", extra=M)
+
+    def update_bmp183(self):
+        self.log.debug("update_bmp183 started", extra=M)
+        if self.bmp183:
+            if self.bmp183.is_connected():
+                self.log.debug("Fetching bmp183 prefix & data", extra=M)
+                data = self.bmp183.get_raw_data()
+                prefix = self.bmp183.get_prefix()
+                # Add prefix to keys in the dictionary
+                data_with_prefix = {prefix + "_" + key: value for key, value in data.items()}
+                self.log.debug("{}".format(data_with_prefix), extra=M)
+                for param in data_with_prefix:
+                    self.p_raw[param] = data_with_prefix[param]
+                # FIXME move to ble_hr, sensor module should provide data for display
+                #self.calculate_avg_ble_hr_heart_rate()
+                self.update_param("bmp183_pressure")
+                self.sanitise("bmp183_pressure")
+                self.update_param("bmp183_temperature")
+                self.sanitise("bmp183_temperature")
+        else:
+            self.log.debug("bmp183 connection lost", extra=M)
+        self.log.debug("update_bmp183 finished", extra=M)
 
     def get_editor_name(self, parameter):
         self.log.debug("get_editor_name searching for editor for parameter {}".format(parameter), extra=M)
