@@ -82,14 +82,20 @@ class layout():
             bg_path = self.current_page['background']
             self.bg_image = self.png_to_cairo_surface(bg_path)
         except cairo.Error:
-            self.log.critical("{} Cannot load background image! layout_path = {} background path = {} page_id = {}".format(__name__, self.layout_path, bg_path, page_id), extra=M)
+            self.log.critical("{}: Cannot load background image!".format(__name__,), extra=M)
+            self.log.critical("layout_path = {}".format(self.layout_path), extra=M)
+            self.log.critical("background path = {}".format(self.current_page['background']), extra=M)
+            self.log.critical("page_id = {}".format(page_id), extra=M)
             # That stops occ but not immediately - errors can occur
             self.occ.stop()
         try:
             bt_path = self.current_page['buttons']
             self.bt_image = self.png_to_cairo_surface(bt_path)
         except cairo.Error:
-            self.log.critical("{} Cannot load buttons image! layout_path = {} buttons path = {} page_id = {}".format(__name__, self.layout_path, bt_path, page_id), extra=M)
+            self.log.critical("{}: Cannot load buttons image!".format(__name__,), extra=M)
+            self.log.critical("layout_path = {}".format(self.layout_path), extra=M)
+            self.log.critical("buttons path = {}".format(self.current_page['buttons']), extra=M)
+            self.log.critical("page_id = {}".format(page_id), extra=M)
             self.occ.top()
         self.font = self.current_page['font']
         # Wait for OCC to set rendering module
