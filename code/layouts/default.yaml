@@ -13,11 +13,6 @@ pages:
                   x: 95
                   y: 75
                   font_size: 130
-                  button: 
-                          x0: 0
-                          y0: 0
-                          w: 240
-                          h: 150
 
                 - function: speed_tenths
                   x: 210
@@ -52,7 +47,7 @@ pages:
                   font_size: 30
                   button: 
                           x0: 120
-                          y0: 150
+                          y0: 160
                           w: 119
                           h: 90
 
@@ -160,6 +155,7 @@ pages:
                   x: 218
                   y: 267
                   file: images/ble_hr_heart_rate_icon_20x32.png
+                  resettable: yes
                   variable:
                           name: ble_hr_heart_rate_beat
                           frames: 2
@@ -185,7 +181,7 @@ pages:
                           x0: 0
                           y0: 0
                           w: 240
-                          h: 150
+                          h: 160
                   x: 95
                   y: 75
                   font_size: 130
@@ -221,6 +217,7 @@ pages:
                   font_size: 16
 
                 - function: bmp183_temperature
+                  resettable: yes
                   button:
                           x0: 0
                           y0: 240
@@ -471,7 +468,7 @@ pages:
 
                 - function: odometer
                   editable: yes
-                  x: 180
+                  x: 165
                   y: 215
                   font_size: 20
                   button:
@@ -570,16 +567,16 @@ pages:
          font_size: 16
          fg_colour: FFFFFF
          fields: 
-                - function: load_current_layout
-                  x: 120
-                  y: 40
-                  font_size: 16
-                  text: Load current layout
-                  button:
-                          x0: 0
-                          y0: 0
-                          w: 240
-                          h: 80
+                #- function: load_current_layout
+                #  x: 120
+                #  y: 40
+                #  font_size: 16
+                #  text: Load current layout
+                #  button:
+                #          x0: 0
+                #          y0: 0
+                #          w: 240
+                #          h: 80
 
                 - function: load_default_layout
                   x: 120
@@ -592,16 +589,16 @@ pages:
                           w: 240
                           h: 80
 
-                - function: 
-                  x: 120
-                  y: 200
-                  font_size: 16
-                  text: 
-                  button:
-                          x0: 0
-                          y0: 159
-                          w: 240
-                          h: 80
+                #- function: 
+                #  x: 120
+                #  y: 200
+                #  font_size: 16
+                #  text: 
+                #  button:
+                #          x0: 0
+                #          y0: 159
+                #          w: 240
+                #          h: 80
 
                 - function: debug_level
                   x: 120
