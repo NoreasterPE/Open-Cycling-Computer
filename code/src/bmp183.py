@@ -111,21 +111,15 @@ class bmp183(threading.Thread):
         ## @var measurement_delay
         #  Time between measurements in [s]
         self.measurement_delay = 0.45
-        ## @var temperature
-        #  Measured temperature
-        self.temperature = 0
         ## @var temperature_max_delta
         #  Maximum allowed temperature difference between measurements. Normally temperature doesn't change too quickly
         #  so a sudden change means the measurement if invalid. It a new temperature value differs from the previous velu more than
         #  temperature_max_delta the measurement is ignored.
         self.temperature_max_delta = 10
-        ## @var pressure
-        #  Measured pressure
-        self.pressure = 0
-        self.pressure_unfiltered = 0
-        self.p_formats = dict(pressure='%.0f', temperature='%.1f')
-        self.p_units = dict(pressure='hPa', temperature='C')
-        self.p_raw_units = dict(pressure='Pa', temperature='C')
+        self.reset_data()
+        self.p_formats = dict(pressure='%.0f', pressure_min='%.0f', pressure_max='%.0f', temperature='%.1f', temperature_min='%.1f', temperature_max='%.1f')
+        self.p_units = dict(pressure='hPa', pressure_min='hPa', pressure_max='hPa', temperature='C', temperature_min='C', temperature_max='C')
+        self.p_raw_units = dict(pressure='Pa', pressure_min='Pa', pressure_max='Pa', temperature='C', temperature_min='C', temperature_max='C')
         # Setup Raspberry PINS, as numbered on BOARD
         self.SCK = 40  # GPIO for SCK, other name SCLK
         self.SDO = 38  # GPIO for SDO, other name MISO
@@ -155,9 +149,32 @@ class bmp183(threading.Thread):
 
     def get_raw_data(self):
         self.log.debug('get_raw_data called', extra=M)
-        return dict(time_stamp=time.time(),
+        return dict(time_stamp=self.time_stamp,
                     pressure=self.pressure,
                     temperature=self.temperature)
+
+    def reset_data(self):
+        ## @var temperature
+        #  Measured temperature
+        self.temperature = 0
+        ## @var temperature_min
+        #  Minimum measured temperature
+        self.temperature_min = INF
+        ## @var temperature_max
+        #  Maximum measured temperature
+        self.temperature_max = -INF
+        ## @var pressure
+        #  Measured pressure after Kalman filter
+        self.pressure = NAN
+        ## @var pressure_min
+        #  Minimum measured pressure
+        self.pressure_min = INF
+        ## @var pressure_max
+        #  Maximum measured pressure
+        self.pressure_max = -INF
+        ## @var pressure_unfiltered
+        #  Actual pressure measured by the sensor
+        self.pressure_unfiltered = 0
 
     def get_raw_units(self):
         return self.p_raw_units
@@ -296,6 +313,7 @@ class bmp183(threading.Thread):
             time.sleep(self.BMP183_CMD['OVERSAMPLE_3_WAIT'])
             self.UP = numpy.int32(self.read_word(self.BMP183_REG['DATA'], 3))
             self.calculate_pressure()
+        self.time_stamp = time.time()
 
     def calculate_pressure(self):
         # Calculate atmospheric pressure in [Pa]
@@ -338,6 +356,10 @@ class bmp183(threading.Thread):
             self.measure_pressure()
             self.kalman_update()
             self.log.debug("pressure = {} Pa, temperature = {} degC".format(self.pressure, self.temperature), extra=M)
+            self.pressure_min = min(self.pressure_min, self.pressure)
+            self.pressure_max = max(self.pressure_max, self.pressure)
+            self.temperature_min = min(self.temperature_min, self.temperature)
+            self.temperature_max = max(self.temperature_max, self.temperature)
             time.sleep(self.measurement_delay)
         self.log.debug("Main loop finished", extra=M)
 
