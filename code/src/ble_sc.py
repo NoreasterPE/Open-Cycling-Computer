@@ -232,6 +232,8 @@ class ble_sc(threading.Thread):
             self.log.debug('Device name: {}'.format(name), extra=M)
         except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
             self.handle_exception(e, "get_device_name")
+        if type(name) is bytes:
+            name = name.decode("utf-8")
         return name
 
     def get_battery_level(self):
