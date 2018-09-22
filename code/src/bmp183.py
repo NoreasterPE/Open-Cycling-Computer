@@ -8,8 +8,19 @@ import time
 import numpy
 import threading
 
-NaN = float('nan')
 M = {'module_name': 'bmp183'}
+
+## @var INF_MIN
+# helper variable, minus infinity
+INF_MIN = float("-inf")
+
+## @var INF
+# helper variable, infinity
+INF = float("inf")
+
+## @var NAN
+# helper variable, not-a-number
+NAN = float("nan")
 
 
 ## Class for Bosch BMP183 pressure and temperature sensor with SPI interface as sold by Adafruit
