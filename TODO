@@ -29,7 +29,12 @@ REAL WORLD PROBLEMS:
 9. Pulse heart rate icon every time ble notification is received
 11. Make threads stoppable with feedback for clean exit (low priority)
 12. Use Kalman filter for heart rate - ble_hr goes crazy sometimes
-12. Use Kalman filter for cadence - ble_sc goes crazy sometimes
+13. Use Kalman filter for cadence - ble_sc goes crazy sometimes
+14. Add reset function to bmp183
+15. Quit/Halt should render some exit screen
+16. BLE device name might be too long for assigned space. Split or cur. Use i4oled code if needed.
+17. Average speed units to be changed with speed units. Required cleaning ride_parameters code first.
+18. Verify button size. Some are not matching the boxes.
 
 CODE ERRORS:
 1. Threads write to log aftred log end [ERROR]
