@@ -46,6 +46,7 @@ class rendering(threading.Thread):
                 self.fb_cr.set_source_surface(self.surface, 0, 0)
                 self.fb_cr.rectangle(0, 0, 240, 320)
                 self.fb_cr.fill()
+            #FIXME Set up scheduler instad of waiting
             time.sleep(1.0 / self.fps)
 
     def stop(self):
