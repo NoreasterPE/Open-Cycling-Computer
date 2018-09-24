@@ -104,8 +104,8 @@ class ble_sc(threading.Thread):
             self.log.debug('Initialising connection finished', extra=M)
 
     def handle_exception(self, exception, caller):
-        self.log.critical(exception, extra=M)
-        self.log.critical("{}".format(type(exception)), extra=M)
+        self.log.error(exception, extra=M)
+        self.log.error("{}".format(type(exception)), extra=M)
         self.log.error("Exception {} in {}".format(exception, caller), extra=M)
         try:
             raise (exception)
@@ -123,11 +123,11 @@ class ble_sc(threading.Thread):
                 self.connected = False
                 self.notifications_enabled = False
             elif str(e) == "Helper exited":  # FIXME - what to do with this?
-                self.log.critical(e, extra=M)
+                self.log.error(e, extra=M)
                 self.connected = False
                 self.notifications_enabled = False
             elif str(e) == "Error from Bluetooth stack (badstate)":  # FIXME - what to do with this?
-                self.log.critical(e, extra=M)
+                self.log.error(e, extra=M)
                 self.connected = False
                 self.notifications_enabled = False
             elif (str(e) == "Unexpected response (rd)" or
@@ -135,7 +135,7 @@ class ble_sc(threading.Thread):
                     str(e) == "Unexpected response (wr)"):
                 self.log.info(e, extra=M)
             else:
-                self.log.critical('Uncontrolled error {} in {}'.format(e, caller), extra=M)
+                self.log.error('Uncontrolled error {} in {}'.format(e, caller), extra=M)
                 self.connected = False
                 self.notifications_enabled = False
                 raise
@@ -188,7 +188,7 @@ class ble_sc(threading.Thread):
         except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
             self.log.debug('safe_disconnect 3', extra=M)
             # Not connected yet
-            self.log.critical('{}'.format(e), extra=M)
+            self.log.error('{}'.format(e), extra=M)
             self.log.debug('safe_disconnect 4', extra=M)
             pass
         # Make sure the device is disconnected
