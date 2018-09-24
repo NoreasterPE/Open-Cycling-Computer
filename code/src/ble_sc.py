@@ -425,6 +425,7 @@ class CSC_Delegate(bluepy.btle.DefaultDelegate):
             self.wheel_rev_time = numbers.NAN
             self.crank_rev_time = numbers.NAN
             self.cadence = numbers.NAN
+            self.wheel_last_measurement = time.time()
 
         self.log.debug('Last crank event time: {:10.3f}, delta {:10.3f}'.format(self.crank_last_time_event, self.crank_last_time_delta), extra=M)
         self.log.debug('Crank cumul revs: {:5d}'.format(cr_cr), extra=M)
