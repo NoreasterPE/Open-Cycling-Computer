@@ -357,7 +357,7 @@ class ride_parameters():
         else:
             return empty
 
-    def read_gps_data(self):
+    '''def read_gps_data(self):
         if self.gps:
             data = self.gps.get_data()
             self.p_raw['altitude_gps'] = self.clean_value(data['altitude_gps'])
@@ -388,7 +388,7 @@ class ride_parameters():
                 self.p_raw["speed_gps"] = 0
         else:
             self.log.info('GPS sensor not set, trying to set it...', extra=M)
-            self.gps = self.sensors.get_sensor('gps')
+            self.gps = self.sensors.get_sensor('gps")'''
 
     def split_speed(self, speed_name):
         # FIXME No hardcoded formatting, move to dict
@@ -401,9 +401,9 @@ class ride_parameters():
             self.p_raw["speed_max"] = self.p_raw["speed"]
         self.split_speed("speed_max")
 
-    def update_fix_gps(self):
+    '''def update_fix_gps(self):
         self.params["fix_mode_gps"] = self.p_raw["fix_mode_gps"]
-        self.params["fix_time_gps"] = self.p_raw["fix_time_gps"]
+        self.params["fix_time_gps"] = self.p_raw["fix_time_gps"]'''
 
     def set_max(self, param):
         self.p_raw[param + "_max"] = max(self.p_raw[param], self.p_raw[param + "_max"])
@@ -469,8 +469,6 @@ class ride_parameters():
         self.params["utc"] = self.p_raw["utc"]
         self.update_param("odometer")
         self.update_param("rider_weight")
-        self.update_param("pressure")
-        #self.update_temperatures()
         self.update_param("satellitesused")
         self.update_param("satellites")
         self.update_param("slope")
@@ -577,15 +575,6 @@ class ride_parameters():
         self.params["time"] = strftime("%H:%M:%S")
         self.params["rtc"] = self.params["date"] + " " + self.params["time"]
 
-    '''def read_bmp183_data(self):
-        if self.bmp183:
-            data = self.bmp183.get_data()
-            self.p_raw['pressure'] = data['pressure']
-            self.p_raw['temperature'] = data['temperature']
-        else:
-            self.log.info('BMP183 sensor not set, trying to set it...', extra=M)
-            self.bmp183 = self.sensors.get_sensor('bmp183')'''
-
     def calculate_altitude(self):
         def calc_alt():
             alt = 0
@@ -613,15 +602,6 @@ class ride_parameters():
             self.p_raw["pressure_at_sea_level"] = float(
                 pressure / pow((1 - altitude_home / 44330), 5.255))
         self.log.debug("pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]), extra=M)
-
-    '''def update_temperatures(self):
-        self.set_min("temperature")
-        self.set_max("temperature")
-        self.calculate_avg_temperature()
-        self.update_param("temperature")
-        self.update_param("temperature_avg")
-        self.update_param("temperature_min")
-        self.update_param("temperature_max")'''
 
     def sanitise(self, param_name):
         if self.params[param_name] == "-0":
