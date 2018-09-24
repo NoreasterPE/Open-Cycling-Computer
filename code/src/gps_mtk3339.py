@@ -10,12 +10,10 @@ import mtk3339
 import os
 import threading
 import time
+import numbers
 
 M = {'module_name': 'gps'}
 
-## @var NaN
-# helper variable, non arithmetic number
-NaN = float('nan')
 
 ## @var fix_mode
 # helper variable, modes of GPS fix
@@ -167,21 +165,21 @@ class gps_mtk3339(threading.Thread):
     #  @param self The python object self
     def reset_gps_data(self):
         self.log.debug("Setting null values to GPS params", extra=M)
-        self.latitude = NaN
-        self.longitude = NaN
+        self.latitude = numbers.NAN
+        self.longitude = numbers.NAN
         self.utc = None
-        self.climb_gps = NaN
-        self.speed_gps = NaN
-        self.altitude_gps = NaN
+        self.climb_gps = numbers.NAN
+        self.speed_gps = numbers.NAN
+        self.altitude_gps = numbers.NAN
         self.fix_mode_gps = fix_mode[1]
-        self.fix_time_gps = NaN
+        self.fix_time_gps = numbers.NAN
         self.satellites = 0
         self.satellitesused = 0
-        self.track_gps = NaN
-        self.eps = NaN
-        self.epx = NaN
-        self.epv = NaN
-        self.ept = NaN
+        self.track_gps = numbers.NAN
+        self.eps = numbers.NAN
+        self.epx = numbers.NAN
+        self.epv = numbers.NAN
+        self.ept = numbers.NAN
 
     ## Returns dictionary withvalues describing current location
     #  @param self The python object self
