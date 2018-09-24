@@ -216,6 +216,11 @@ pages:
                   y: 175
                   font_size: 16
 
+                - function: ridetime_total_hms
+                  x: 120
+                  y: 215
+                  font_size: 30
+
                 - function: bmp183_temperature
                   resettable: yes
                   button:
@@ -224,7 +229,7 @@ pages:
                           w: 120
                           h: 80
                   x: 50
-                  y: 290
+                  y: 280
                   font_size: 40
 
                 - function: temperature_icon
@@ -232,40 +237,35 @@ pages:
                   y: 267
                   file: images/temperature_icon_20x32.png
 
-                - function: temperature_min
+                - function: bmp183_temperature_min
                   x: 20
                   y: 255
                   font_size: 16
 
-                - function: temperature_avg
+                - function: bmp183_temperature_avg
                   x: 60
                   y: 255
                   font_size: 16
 
-                - function: temperature_max
+                - function: bmp183_temperature_max
                   x: 100
                   y: 255
                   font_size: 16
 
-                - function: temperature_units
+                - function: bmp183_temperature_units
                   x: 110
                   y: 310
                   font_size: 16
 
                 - function: bmp183_pressure
                   x: 170
-                  y: 290
+                  y: 280
                   font_size: 40
 
-                - function: pressure_units
+                - function: bmp183_pressure_units
                   x: 220
                   y: 310
                   font_size: 16
-
-                - function: ridetime_total_hms
-                  x: 120
-                  y: 215
-                  font_size: 30
        - name: "GPS"
          id: page_2
          number: 2
