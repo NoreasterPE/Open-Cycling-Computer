@@ -10,6 +10,7 @@ import math
 import time
 import sched
 import wheel
+import ride_log
 
 
 M = {"module_name": "ride"}
@@ -40,9 +41,10 @@ class ride_parameters():
         ## @var stopping
         # Variable indicating is stopping is in progress
         self.stopping = False
+        rl = ride_log.ride_log()
         ## @var r
         # Ride logger handle
-        self.r = self.setup_ridelog()
+        self.r = rl.get_logger()
         ## @var uc
         # Units converter
         self.uc = units()
@@ -195,21 +197,6 @@ class ride_parameters():
         self.log.debug("Starting sensors thread", extra=M)
         self.sensors.start()
 
-    def setup_ridelog(self):
-        ride_log_filename = "log/ride." + strftime("%Y-%m-%d-%H:%M:%S") + ".log"
-        logging.getLogger('ride').setLevel(logging.INFO)
-        ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
-        #FIXME ridelog should be defined in config file
-        ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(cadence)-8s,%(ble_hr_heart_rate)-5s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(altitude_gps)-8s,%(distance)-8s,%(slope)-8s,%(climb)-8s,'
-        ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
-        logging.getLogger('ride').addHandler(ride_log_handler)
-        ride_logger = logging.getLogger('ride')
-        ride_logger.info('', extra={'time': "Time", 'dtime': "Delta", 'speed': "Speed",
-                                    'cadence': "Cadence", 'ble_hr_heart_rate': "Heart RT",
-                                    'pressure': "Pressure", 'temperature': "Temp",
-                                    'altitude': "Altitude", 'altitude_gps': "Alt GPS",
-                                    'distance': "Distance", 'slope': "Slope", 'climb': "Climb"})
-        return ride_logger
 
     def stop(self):
         self.stopping = True
