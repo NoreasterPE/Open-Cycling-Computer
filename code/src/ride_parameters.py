@@ -66,46 +66,37 @@ class ride_parameters():
         self.p_raw = dict(time_stamp=time.time(),
                           # Time delta since last p_raw update
                           dtime=1, time_adjustment_delta=0.0,
-                          altitude=0.0, altitude_gps=0.0, altitude_home=0.0, altitude_max=INF_MIN, altitude_min=INF, altitude_previous=0.0,
-                          pressure=0.0, pressure_at_sea_level=0.0,
+                          altitude=0.0, altitude_gps=0.0, altitude_home=0.0, altitude_max=numbers.INF_MIN, altitude_min=numbers.INF, altitude_previous=0.0,
+                          pressure_at_sea_level=0.0,
                           climb=0.0, daltitude=0.0, daltitude_cumulative=0.0,
                           odometer=0.0, ddistance=0.0, ddistance_cumulative=0.0, distance=0.0,
                           eps=0.0, ept=0.0, epv=0.0, epx=0.0, gps_strength=0, fix_mode_gps='', fix_time_gps=0.0, latitude=0.0, longitude=0.0, satellites=0.0, satellitesused=0.0,
-                          ble_data_expiry_time=3.0, time_of_ride_reset=0.0001,
-                          ble_hr_name='', ble_hr_addr='',
-                          ble_sc_name='', ble_sc_addr='',
+                          time_of_ride_reset=0.0001,
                           rider_weight=0.0,
                           ridetime=0.0, ridetime_total=0.0,
                           slope=0.0,
                           speed=0.0, speed_avg=0.0, speed_gps=0.0, speed_max=0.0,
                           speed_gps_low=2.5, speed_gps_noise=1.0, speed_low=1.0,
-                          temperature=0.0, temperature_avg=0.0, temperature_max=INF_MIN, temperature_min=INF,
+                          temperature_avg=0.0,
                           track_gps=0,
                           timeon=0.0001, utc='', rtc='')
 
         # Internal units
         self.p_raw_units = dict(
-            altitude='m', climb='m/s', distance='m', eps='', ept='', epv='', epx='',
-            dtime='s', fix_gps='', latitude='', longitude='', odometer='m', pressure='Pa', rider_weight='kg', wheel_size='',
-            ridetime='s', ridetime_total='s', satellites='', satellitesused='', slope='m/m', speed='m/s',
-            temperature='C', timeon='s', time_of_ride_reset='s', track_gps='')
+            altitude='m', climb='m/s', distance='m', dtime='s', odometer='m', rider_weight='kg', wheel_size='',
+            ridetime='s', ridetime_total='s', slope='m/m', speed='m/s', timeon='s', time_of_ride_reset='s')
 
         # Params of the ride ready for rendering.
         self.params = dict(
-            altitude='-', altitude_gps='-', altitude_home='-', altitude_max='-', altitude_min='-',
-            climb='-', distance=0, eps='-', ept='-', epv='-', epx='-',
-            dtime=0, fix_gps='-', fix_gps_time='-', latitude='-', longitude='-', odometer=0.0,
-            pressure='-', pressure_at_sea_level='-', rider_weight=0.0, wheel_size='', wheel_circ='', ridetime='', ridetime_hms='', ridetime_total='',
-            ridetime_total_hms='', rtc='', satellites='-', satellitesused='-', slope='-', speed='-', speed_avg='-',
+            altitude='-', altitude_home='-', altitude_max='-', altitude_min='-',
+            climb='-', distance=0, dtime=0, odometer=0.0, pressure_at_sea_level='-', rider_weight=0.0,
+            wheel_size='', wheel_circ='', ridetime='', ridetime_hms='', ridetime_total='',
+            ridetime_total_hms='', rtc='', slope='-', speed='-', speed_avg='-',
             speed_avg_digits='-', speed_avg_tenths='-', speed_digits='-', speed_max='-', speed_max_digits='-',
-            speed_max_tenths='-', speed_tenths='-', temperature='', temperature_avg='', temperature_max='',
-            temperature_min='', timeon='', timeon_hms='', time_of_ride_reset='', track_gps='-', utc='',
-            ble_sc_name='', ble_sc_addr='',
+            speed_max_tenths='-', speed_tenths='-', timeon='', timeon_hms='', time_of_ride_reset='', utc='',
             # Editor params
             editor_index=0, variable=None,
-            variable_description=None, variable_raw_value=None, variable_unit=None, variable_value=None,
-            # System params
-            debug_level='')
+            variable_description=None, variable_raw_value=None, variable_unit=None, variable_value=None)
 
         # Formatting strings for params.
         self.p_format = dict(
@@ -113,17 +104,16 @@ class ride_parameters():
             climb='%.1f', distance='%.1f', eps='%.4f', epx='%.4f', epv='%.4f', ept='%.4f',
             dtime='%.2f', fix_gps='', fix_gps_time='',
             latitude='%.4f', longitude='%.4f', odometer='%.0f',
-            pressure='%.0f', pressure_at_sea_level='%.0f', rider_weight='%.1f', ridetime='%.0f', ridetime_hms='', ridetime_total='.0f',
+            pressure_at_sea_level='%.0f', rider_weight='%.1f', ridetime='%.0f', ridetime_hms='', ridetime_total='.0f',
             ridetime_total_hms='', rtc='', satellites='%.0f', satellitesused='%.0f', slope='%.0f', speed='%.1f', speed_avg='%.1f',
             speed_avg_digits='%.0f', speed_avg_tenths='%.0f', speed_digits='%.0f', speed_max='%.1f', speed_max_digits='%.0f', speed_max_tenths='%.0f',
-            speed_tenths='%.0f', temperature='%.0f', temperature_avg='%.1f', temperature_max='%.0f', temperature_min='%.0f',
-            timeon='%.0f', timeon_hms='', time_of_ride_reset='%.0f', track_gps='%.1f', utc='')
+            speed_tenths='%.0f', timeon='%.0f', timeon_hms='', time_of_ride_reset='%.0f', track_gps='%.1f', utc='')
 
         # Units - name has to be identical as in params
         # FIXME rename to p_units for consistency
         self.units = dict(
             altitude='m', climb='m/s', distance='km', eps='', epx='', epv='', ept='',
-            dtime='s', fix_gps='', fix_gps_time='', latitude='', longitude='', odometer='km', pressure='hPa',
+            dtime='s', fix_gps='', fix_gps_time='', latitude='', longitude='', odometer='km',
             rider_weight='kg', wheel_size='', ridetime='s', ridetime_hms='', ridetime_total='s', ridetime_total_hms='', satellites='',
             satellitesused='', slope='%', speed='km/h', temperature='C', timeon='s', timeon_hms='', time_of_ride_reset='s',
             track_gps='')
