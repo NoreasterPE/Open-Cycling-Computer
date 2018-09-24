@@ -437,7 +437,7 @@ class ride_parameters():
 
     def update_params(self):
         self.update_rtc()
-        self.update_fix_gps()
+        #self.update_fix_gps()
         self.update_param("dtime")
         self.update_param("latitude")
         self.update_param("longitude")
