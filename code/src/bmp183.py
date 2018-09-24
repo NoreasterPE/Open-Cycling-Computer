@@ -121,10 +121,10 @@ class bmp183(threading.Thread):
         self.p_units = dict(pressure='hPa', pressure_min='hPa', pressure_max='hPa', temperature='C', temperature_min='C', temperature_max='C')
         self.p_raw_units = dict(pressure='Pa', pressure_min='Pa', pressure_max='Pa', temperature='C', temperature_min='C', temperature_max='C')
         # Setup Raspberry PINS, as numbered on BOARD
-        self.SCK = 40  # GPIO for SCK, other name SCLK
-        self.SDO = 38  # GPIO for SDO, other name MISO
-        self.SDI = 36  # GPIO for SDI, other name MOSI
-        self.CS = 32  # GPIO for CS, other name CE
+        self.SCK = 32  # GPIO for SCK, other name SCLK
+        self.SDO = 36  # GPIO for SDO, other name MISO
+        self.SDI = 38  # GPIO for SDI, other name MOSI
+        self.CS = 40  # GPIO for CS, other name CE
 
         # SCK frequency 1 MHz
         self.delay = 1 / 1000000.0
