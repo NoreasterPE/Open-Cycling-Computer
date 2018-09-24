@@ -489,8 +489,14 @@ class ride_parameters():
         except KeyError:
             cde = "-"
         dte = self.params["dtime"]
-        pre = round(self.p_raw["pressure"], 1)
-        tem = self.p_raw["temperature"]
+        try:
+            pre = round(self.p_raw["pressure"], 1)
+        except KeyError:
+            pre = "-"
+        try:
+            tem = self.p_raw["temperature"]
+        except KeyError:
+            tem = "-"
         alt = self.p_raw["altitude"]
         alg = self.p_raw["altitude_gps"]
         dst = round(self.p_raw["distance"], 0)
