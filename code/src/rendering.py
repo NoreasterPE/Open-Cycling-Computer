@@ -22,7 +22,7 @@ class rendering(threading.Thread):
         self.running = False
         ## @var fps
         #  Variable controlling numver of frames per second
-        self.fps = 5.0
+        self.fps = 10.0
         PiTFT_mem_size = 153600
         self.fb_fd = open("/dev/fb1", "r+")
         self.fb_map = mmap.mmap(self.fb_fd.fileno(), PiTFT_mem_size)
