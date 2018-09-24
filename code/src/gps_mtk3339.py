@@ -140,8 +140,7 @@ class gps_mtk3339(threading.Thread):
                     self.fix_time = time.mktime(time.strptime(
                         data.fix.time, '%Y-%m-%dT%H:%M:%S.%fZ'))
                 except ImportError:
-                    self.log.critical(
-                        "self.fix_time {}".format(self.fix_time))
+                    self.log.critical("self.fix_time {}".format(self.fix_time), extra=M)
                     pass
             if self.set_time:
                 if (self.utc is not None):

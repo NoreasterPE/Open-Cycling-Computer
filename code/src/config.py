@@ -47,8 +47,7 @@ class config(object):
             self.occ.switch_log_level(log_level)
             self.rp.params["debug_level"] = log_level
         except KeyError:
-            self.log.error(
-                "log_level not found in config file. Using debug log level")
+            self.log.error("log_level not found in config file. Using debug log level", extra=M)
             self.occ.switch_log_level("debug")
             self.rp.params["debug_level"] = "debug"
         try:
@@ -56,8 +55,7 @@ class config(object):
             self.log.debug("Setting layout. Path = {}".format(self.occ.layout_path), extra=M)
         except AttributeError:
             self.occ.layout_path = "layouts/default.yaml"
-            self.log.error(
-                "Missing layout path, falling back to {}".format(self.occ.layout_path))
+            self.log.error("Missing layout path, falling back to {}".format(self.occ.layout_path), extra=M)
 
         error_list = []
         try:
