@@ -6,10 +6,11 @@ import logging
 import logging.handlers
 import yaml
 from shutil import copyfile
-from wheel import wheel
+import wheel
 
 
 M = {'module_name': 'config'}
+
 
 ## Main config class
 class config(object):
@@ -63,18 +64,22 @@ class config(object):
         except AttributeError:
             error_list.append("rider_weight")
         try:
-            self.rp.p_raw["wheel_size"] = self.config_params["wheel_size"]
-            self.rp.params["wheel_size"] = self.rp.p_raw["wheel_size"]
-            self.log.info("Wheel size set to {}".format(self.rp.params['wheel_size']), extra=M)
-            w = wheel()
+            wheel_size = self.config_params["wheel_size"]
+        except AttributeError:
+            error_list.append("wheel_size")
+        else:
+            self.log.debug("wheel_size in config file: {}".format(wheel_size), extra=M)
+            self.rp.p_raw["wheel_size"] = wheel_size
+            self.rp.params["wheel_size"] = wheel_size
+            self.log.info("Wheel size set to {}".format(wheel_size), extra=M)
+            w = wheel.wheel()
             try:
-                self.rp.p_raw["wheel_circ"] = w.get_size(self.rp.p_raw["wheel_size"])
+                self.rp.p_raw["wheel_circ"] = w.get_circ(self.rp.p_raw["wheel_size"])
             except KeyError:
                 error_list.append("wheel_circ")
             self.rp.params["wheel_circ"] = self.rp.p_raw["wheel_circ"]
             self.log.info("Wheel circ set to {}".format(self.rp.params['wheel_circ']), extra=M)
-        except AttributeError:
-            error_list.append("wheel_size")
+
         try:
             self.rp.units["rider_weight"] = self.config_params["rider_weight_units"]
         except AttributeError:
