@@ -3,28 +3,18 @@
 ## @package bmp183
 #  Module for handling Bosch BMP183 pressure sensor
 
-import logging
-import time
+#import logging
+import numbers
 import numpy
-import threading
+#import threading
+import time
+import sensor
 
 M = {'module_name': 'bmp183'}
 
-## @var INF_MIN
-# helper variable, minus infinity
-INF_MIN = float("-inf")
-
-## @var INF
-# helper variable, infinity
-INF = float("inf")
-
-## @var NAN
-# helper variable, not-a-number
-NAN = float("nan")
-
 
 ## Class for Bosch BMP183 pressure and temperature sensor with SPI interface as sold by Adafruit
-class bmp183(threading.Thread):
+class bmp183(sensor.sensor):
 
     ## @var BMP183_REG
     # BMP183 registers
@@ -96,17 +86,17 @@ class bmp183(threading.Thread):
         # self.rp = occ.rp
         ## @var l
         #  Handle to system logger
-        self.log = logging.getLogger('system')
-        self.log.debug("Initialising..", extra=M)
+        #self.log = logging.getLogger('system')
+        #self.log.debug("Initialising..", extra=M)
         ## @var simulate
         #  Stores simulate parameter from constructor call
         self.simulate = simulate
         ## @var connected
         #  Set to the constructor sets it to True after succesfull handshake with the sensor. False otherwise.
-        self.connected = False
+        #self.connected = False
         ## @var running
         #  Variable controlling the main sensor handling loop. Setting it to False stops the loop.
-        self.running = False
+        #self.running = False
         self.first_run = True
         ## @var measurement_delay
         #  Time between measurements in [s]
@@ -159,38 +149,37 @@ class bmp183(threading.Thread):
         self.temperature = 0
         ## @var temperature_min
         #  Minimum measured temperature
-        self.temperature_min = INF
+        self.temperature_min = numbers.INF
         ## @var temperature_max
         #  Maximum measured temperature
-        self.temperature_max = -INF
+        self.temperature_max = numbers.INF_MIN
         ## @var pressure
         #  Measured pressure after Kalman filter
-        self.pressure = NAN
+        self.pressure = numbers.NAN
         ## @var pressure_min
         #  Minimum measured pressure
-        self.pressure_min = INF
+        self.pressure_min = numbers.INF
         ## @var pressure_max
         #  Maximum measured pressure
-        self.pressure_max = -INF
+        self.pressure_max = numbers.INF_MIN
         ## @var pressure_unfiltered
         #  Actual pressure measured by the sensor
         self.pressure_unfiltered = 0
 
-    def get_raw_units(self):
-        return self.p_raw_units
+#    def get_raw_units(self):
+#        return self.p_raw_units
 
-    def get_units(self):
-        return self.p_units
+#    def get_units(self):
+#        return self.p_units
 
-    def get_formats(self):
+#    def get_formats(self):
         return self.p_formats
 
     def is_connected(self):
         return self.connected
 
     def stop(self):
-        self.log.debug("Stopping {}".format(__name__), extra=M)
-        self.running = False
+        super(bmp183, self).stop()
         time.sleep(1)
         if not self.simulate:
             self.cleanup_gpio()
