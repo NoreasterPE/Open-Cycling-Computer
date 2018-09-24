@@ -79,8 +79,7 @@ class layout():
         self.current_button_list = []
         self.current_page = self.page_list[page_id]
         try:
-            bg_path = self.current_page['background']
-            self.bg_image = self.png_to_cairo_surface(bg_path)
+            self.background_image = self.load_image(self.current_page['background'])
         except cairo.Error:
             self.log.critical("{}: Cannot load background image!".format(__name__,), extra=M)
             self.log.critical("layout_path = {}".format(self.layout_path), extra=M)
@@ -89,8 +88,7 @@ class layout():
             # That stops occ but not immediately - errors can occur
             self.occ.stop()
         try:
-            bt_path = self.current_page['buttons']
-            self.bt_image = self.png_to_cairo_surface(bt_path)
+            self.buttons_image = self.load_image(self.current_page['buttons'])
         except cairo.Error:
             self.log.critical("{}: Cannot load buttons image!".format(__name__,), extra=M)
             self.log.critical("layout_path = {}".format(self.layout_path), extra=M)
@@ -133,24 +131,24 @@ class layout():
                 #    pass
                 try:
                     if (field['file'] is not None):
-                        self.load_image(field['file'])
+                        self.current_image_list[field['file']] = self.load_image(field['file'])
                 except KeyError:
                     pass
 
     def load_image(self, image_path):
         try:
             image = self.png_to_cairo_surface(image_path)
-            self.current_image_list[image_path] = image
             self.log.debug("Image {} loaded".format(image_path), extra=M)
         except cairo.Error:
             self.log.critical("Cannot load image {}".format(image_path), extra=M)
-            self.current_image_list[image_path] = None
+            image = None
+        return image
 
     def use_main_page(self):
         self.use_page()
 
     def render_background(self):
-        self.cr.set_source_surface(self.bg_image, 0, 0)
+        self.cr.set_source_surface(self.background_image, 0, 0)
         self.cr.rectangle(0, 0, 240, 320)
         self.cr.fill()
 
@@ -200,7 +198,7 @@ class layout():
                 pass
             if image_path is not None:
                 if image_path not in self.current_image_list:
-                    self.load_image(image_path)
+                    self.current_image_list[image_path] = self.load_image(image_path)
                 image = self.current_image_list[image_path]
                 if image is not None:
                     self.image_to_surface(image, position_x, position_y)
