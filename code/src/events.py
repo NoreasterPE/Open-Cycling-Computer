@@ -63,6 +63,7 @@ class events(threading.Thread):
             self.log.debug("Long click: {} {}".format(dt, self.touch_position), extra=M)
             self.layout.check_click(self.touch_position, 'LONG')
             #The finger is still touching the screen, make sure it's ignored to avoid generating ghost events
+            self.reset_motion()
             self.ignore_touch = True
         if (abs(dx)) > SWIPE_LENGTH:
             if dx < 0:
@@ -118,11 +119,11 @@ class events(threading.Thread):
             if self.ignore_touch:
                 self.ignore_touch = False
                 self.released_timestamp = None
+                self.reset_motion()
             self.log.debug("touch end", extra=M)
         if self.ignore_touch:
             self.reset_motion()
         if self.touch_position is not None:
-            self.layout.render_pressed_button(self.touch_position)
             self.screen_touched_handler(t)
 
     ## Resets all parameters related to clicks/swipes
@@ -156,6 +157,9 @@ class events(threading.Thread):
             #self.log.debug("Ride event scheduler, next event in: {0:.3f}".format(t), extra=M)
             if self.layout.render:
                 self.layout.render_page()
+                self.rendering.force_render()
+            if self.touch_position is not None:
+                self.layout.render_pressed_button(self.touch_position)
                 self.rendering.force_render()
         self.log.debug("event loop finsished", extra=M)
         self.touchscreen.stop()
