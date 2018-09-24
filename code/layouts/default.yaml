@@ -615,8 +615,8 @@ pages:
          id: editor_units
          number: 0
          type: editor
-         background: images/occ_editor_background.png
-         buttons: images/occ_editor_buttons.png
+         background: images/occ_units_editor_background.png
+         buttons: images/occ_units_editor_buttons.png
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
@@ -773,6 +773,7 @@ pages:
          background: images/occ_editor_background.png
          buttons: images/occ_editor_buttons.png
          font: "sans-serif"
+         font_size: 16
          fg_colour: FFFFFF
          fields: 
                 - function: ed_accept
