@@ -48,8 +48,8 @@ pages:
                   button: 
                           x0: 120
                           y0: 160
-                          w: 119
-                          h: 90
+                          w: 120
+                          h: 80
 
                 - function: distance_units
                   x: 210
@@ -94,7 +94,7 @@ pages:
                   button: 
                           x0: 0
                           y0: 240
-                          w: 119
+                          w: 120
                           h: 80
 
                 - function: ble_sc_cadence_ave
@@ -128,7 +128,7 @@ pages:
                   button: 
                           x0: 120
                           y0: 240
-                          w: 119
+                          w: 120
                           h: 80
 
                 - function: ble_hr_heart_rate_min
@@ -204,9 +204,9 @@ pages:
                 - function: speed_avg
                   button:
                           x0: 0
-                          y0: 150
-                          w: 239
-                          h: 89
+                          y0: 160
+                          w: 240
+                          h: 80
                   x: 100
                   y: 175
                   font_size: 30
@@ -221,7 +221,7 @@ pages:
                   button:
                           x0: 0
                           y0: 240
-                          w: 119
+                          w: 120
                           h: 80
                   x: 50
                   y: 290
@@ -310,7 +310,7 @@ pages:
                   button:
                           x0: 120
                           y0: 240
-                          w: 119
+                          w: 120
                           h: 80
                   x: 50
                   y: 290
@@ -330,7 +330,7 @@ pages:
                   button:
                           x0: 120
                           y0: 240
-                          w: 119
+                          w: 120
                           h: 80
                   x: 170
                   y: 290
@@ -401,7 +401,7 @@ pages:
                   button:
                           x0: 120
                           y0: 0
-                          w: 119
+                          w: 120
                           h: 80
 
                 - function: altitude_home_units
@@ -629,7 +629,7 @@ pages:
                   button:
                           x0: 0
                           y0: 0
-                          w: 119
+                          w: 120
                           h: 60
 
                 - function: ed_cancel
@@ -640,7 +640,7 @@ pages:
                   button:
                           x0: 120
                           y0: 0
-                          w: 119
+                          w: 120
                           h: 60
 
                 - function: variable_description
@@ -661,7 +661,7 @@ pages:
                   button:
                           x0: 0
                           y0: 260
-                          w: 119
+                          w: 120
                           h: 60
 
                 - function: ed_next_unit
@@ -672,7 +672,7 @@ pages:
                   button:
                           x0: 120
                           y0: 260
-                          w: 119
+                          w: 120
                           h: 60
 
        - name: "Number Editor"
@@ -693,7 +693,7 @@ pages:
                   button:
                           x0: 0
                           y0: 0
-                          w: 119
+                          w: 120
                           h: 60
 
                 - function: ed_cancel
@@ -704,7 +704,7 @@ pages:
                   button:
                           x0: 120
                           y0: 0
-                          w: 119
+                          w: 120
                           h: 60
 
                 - function: variable_description
@@ -730,7 +730,7 @@ pages:
                   button:
                           x0: 0
                           y0: 200
-                          w: 119
+                          w: 120
                           h: 60
 
                 - function: ed_increase
@@ -741,7 +741,7 @@ pages:
                   button:
                           x0: 120
                           y0: 200
-                          w: 119
+                          w: 120
                           h: 60
 
                 - function: ed_prev
@@ -752,7 +752,7 @@ pages:
                   button:
                           x0: 0
                           y0: 260
-                          w: 119
+                          w: 120
                           h: 60
 
                 - function: ed_next
@@ -763,7 +763,7 @@ pages:
                   button:
                           x0: 120
                           y0: 260
-                          w: 119
+                          w: 120
                           h: 60
 
        - name: "List Editor"
@@ -783,7 +783,7 @@ pages:
                   button:
                           x0: 0
                           y0: 0
-                          w: 119
+                          w: 120
                           h: 60
 
                 - function: ed_cancel
@@ -794,7 +794,7 @@ pages:
                   button:
                           x0: 120
                           y0: 0
-                          w: 119
+                          w: 120
                           h: 60
 
                 - function: variable_description
@@ -815,7 +815,7 @@ pages:
                   button:
                           x0: 0
                           y0: 200
-                          w: 119
+                          w: 120
                           h: 60
 
                 - function: ed_increase
@@ -826,7 +826,7 @@ pages:
                   button:
                           x0: 120
                           y0: 200
-                          w: 119
+                          w: 120
                           h: 60
 
                 - function: ed_prev
@@ -837,7 +837,7 @@ pages:
                   button:
                           x0: 0
                           y0: 260
-                          w: 119
+                          w: 120
                           h: 60
 
                 - function: ed_next
@@ -848,7 +848,7 @@ pages:
                   button:
                           x0: 120
                           y0: 260
-                          w: 119
+                          w: 120
                           h: 60
 
        - name: "List Picker"
@@ -869,7 +869,7 @@ pages:
                   button:
                           x0: 0
                           y0: 0
-                          w: 119
+                          w: 120
                           h: 60
 
                 - function: ed_cancel
@@ -880,7 +880,7 @@ pages:
                   button:
                           x0: 120
                           y0: 0
-                          w: 119
+                          w: 120
                           h: 60
 
                 - function: ble_dev_name_1
