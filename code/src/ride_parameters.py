@@ -70,7 +70,6 @@ class ride_parameters():
                           pressure_at_sea_level=0.0,
                           climb=0.0, daltitude=0.0, daltitude_cumulative=0.0,
                           odometer=0.0, ddistance=0.0, ddistance_cumulative=0.0, distance=0.0,
-                          eps=0.0, ept=0.0, epv=0.0, epx=0.0, gps_strength=0, fix_mode_gps='', fix_time_gps=0.0, latitude=0.0, longitude=0.0, satellites=0.0, satellitesused=0.0,
                           time_of_ride_reset=0.0001,
                           rider_weight=0.0,
                           ridetime=0.0, ridetime_total=0.0,
@@ -101,22 +100,18 @@ class ride_parameters():
         # Formatting strings for params.
         self.p_format = dict(
             altitude='%.0f', altitude_gps='%.0f', altitude_home='%.0f', altitude_max='%.0f', altitude_min='%.0f',
-            climb='%.1f', distance='%.1f', eps='%.4f', epx='%.4f', epv='%.4f', ept='%.4f',
-            dtime='%.2f', fix_gps='', fix_gps_time='',
-            latitude='%.4f', longitude='%.4f', odometer='%.0f',
+            climb='%.1f', distance='%.1f', dtime='%.2f', odometer='%.0f',
             pressure_at_sea_level='%.0f', rider_weight='%.1f', ridetime='%.0f', ridetime_hms='', ridetime_total='.0f',
-            ridetime_total_hms='', rtc='', satellites='%.0f', satellitesused='%.0f', slope='%.0f', speed='%.1f', speed_avg='%.1f',
+            ridetime_total_hms='', rtc='', slope='%.0f', speed='%.1f', speed_avg='%.1f',
             speed_avg_digits='%.0f', speed_avg_tenths='%.0f', speed_digits='%.0f', speed_max='%.1f', speed_max_digits='%.0f', speed_max_tenths='%.0f',
-            speed_tenths='%.0f', timeon='%.0f', timeon_hms='', time_of_ride_reset='%.0f', track_gps='%.1f', utc='')
+            speed_tenths='%.0f', timeon='%.0f', timeon_hms='', time_of_ride_reset='%.0f', utc='')
 
         # Units - name has to be identical as in params
         # FIXME rename to p_units for consistency
         self.units = dict(
-            altitude='m', climb='m/s', distance='km', eps='', epx='', epv='', ept='',
-            dtime='s', fix_gps='', fix_gps_time='', latitude='', longitude='', odometer='km',
-            rider_weight='kg', wheel_size='', ridetime='s', ridetime_hms='', ridetime_total='s', ridetime_total_hms='', satellites='',
-            satellitesused='', slope='%', speed='km/h', temperature='C', timeon='s', timeon_hms='', time_of_ride_reset='s',
-            track_gps='')
+            altitude='m', climb='m/s', distance='km', dtime='s', odometer='km',
+            rider_weight='kg', wheel_size='', ridetime='s', ridetime_hms='', ridetime_total='s', ridetime_total_hms='',
+            slope='%', speed='km/h', temperature='C', timeon='s', timeon_hms='', time_of_ride_reset='s')
 
         # Allowed units - user can switch between those when editing value
         # FIXME switch to mi when mi/h are set for speed
@@ -136,8 +131,8 @@ class ride_parameters():
         # Params that can be changed in Settings by user
         self.editors = dict(editor_units=('odometer_units', 'rider_weight_units', 'speed_units', 'temperature_units'),
                             editor_numbers=('altitude_home', 'odometer', 'rider_weight'),
-                            editor_string=('wheel_size',),
-                            ble_selector=('ble_hr_name', 'ble_sc_name'))
+                            editor_string=('wheel_size'))
+                            #ble_selector=('ble_hr_name', 'ble_sc_name'))
 
         # FIXME Use set_nav_speed_threshold(self, treshold=0) from gps module
         self.log.info("GPS low speed treshold preset to {} [NOT USED]".format(self.p_raw['speed_gps_low']), extra=M)
@@ -206,7 +201,7 @@ class ride_parameters():
         logging.getLogger('ride').setLevel(logging.INFO)
         ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
         #FIXME ridelog should be defined in config file
-        ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(cadence)-8s,%(ble_hr_heart_rate)-5s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(altitude_gps)-8s,%(distance)-8s,%(slope)-8s,%(climb)-8s,%(track_gps)-8s,%(eps)-8s,%(epx)-8s,%(epv)-8s,%(ept)-8s'
+        ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(cadence)-8s,%(ble_hr_heart_rate)-5s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(altitude_gps)-8s,%(distance)-8s,%(slope)-8s,%(climb)-8s,'
         ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
         logging.getLogger('ride').addHandler(ride_log_handler)
         ride_logger = logging.getLogger('ride')
@@ -214,9 +209,7 @@ class ride_parameters():
                                     'cadence': "Cadence", 'ble_hr_heart_rate': "Heart RT",
                                     'pressure': "Pressure", 'temperature': "Temp",
                                     'altitude': "Altitude", 'altitude_gps': "Alt GPS",
-                                    'distance': "Distance", 'slope': "Slope", 'climb': "Climb",
-                                    'track_gps': "Track", 'eps': "eps", 'epx': "epx", 'epv': "epv",
-                                    'ept': "ept"})
+                                    'distance': "Distance", 'slope': "Slope", 'climb': "Climb"})
         return ride_logger
 
     def stop(self):
@@ -401,30 +394,30 @@ class ride_parameters():
     def set_min(self, param):
         self.p_raw[param + "_min"] = min(self.p_raw[param], self.p_raw[param + "_min"])
 
-    '''def calculate_avg_temperature(self):
-        dt = self.p_raw["dtime"]
-        t = self.p_raw["temperature"]
-        ta = self.p_raw["temperature_avg"]
-        tt = self.p_raw["ridetime"]
-        ta_new = (t * dt + ta * tt) / (tt + dt)
-        self.p_raw["temperature_avg"] = ta_new
+#   def calculate_avg_temperature(self):
+#       dt = self.p_raw["dtime"]
+#       t = self.p_raw["temperature"]
+#       ta = self.p_raw["temperature_avg"]
+#       tt = self.p_raw["ridetime"]
+#       ta_new = (t * dt + ta * tt) / (tt + dt)
+#       self.p_raw["temperature_avg"] = ta_new
 
-    def calculate_avg_ble_sc_cadence(self):
-        dt = self.p_raw["dtime"]
-        c = self.p_raw["ble_sc_cadence"]
-        ca = self.p_raw["ble_sc_cadence_avg"]
-        tt = self.p_raw["ridetime"]
-        ca_new = (c * dt + ca * tt) / (tt + dt)
-        self.p_raw["ble_sc_cadence_avg"] = ca_new
+#   def calculate_avg_ble_sc_cadence(self):
+#       dt = self.p_raw["dtime"]
+#       c = self.p_raw["ble_sc_cadence"]
+#       ca = self.p_raw["ble_sc_cadence_avg"]
+#       tt = self.p_raw["ridetime"]
+#       ca_new = (c * dt + ca * tt) / (tt + dt)
+#       self.p_raw["ble_sc_cadence_avg"] = ca_new
 
-    def calculate_avg_ble_hr_heart_rate(self):
-        dt = self.p_raw["dtime"]
-        hr = self.p_raw["ble_hr_heart_rate"]
-        hra = self.p_raw["ble_hr_heart_rate_avg"]
-        # FIXME ridetime doesn't seem to be right
-        tt = self.p_raw["ridetime"]
-        hr_new = (hr * dt + hra * tt) / (tt + dt)
-        self.p_raw["ble_hr_heart_rate_avg"] = hr_new'''
+#   def calculate_avg_ble_hr_heart_rate(self):
+#       dt = self.p_raw["dtime"]
+#       hr = self.p_raw["ble_hr_heart_rate"]
+#       hra = self.p_raw["ble_hr_heart_rate_avg"]
+#       # FIXME ridetime doesn't seem to be right
+#       tt = self.p_raw["ridetime"]
+#       hr_new = (hr * dt + hra * tt) / (tt + dt)
+#       self.p_raw["ble_hr_heart_rate_avg"] = hr_new
 
     def update_altitude(self):
         self.update_param("altitude_gps")
@@ -439,8 +432,6 @@ class ride_parameters():
         self.update_rtc()
         #self.update_fix_gps()
         self.update_param("dtime")
-        self.update_param("latitude")
-        self.update_param("longitude")
         self.update_altitude()
         self.update_ble_sc_cadence()
         self.update_ble_hr_heart_rate()
@@ -459,8 +450,6 @@ class ride_parameters():
         self.params["utc"] = self.p_raw["utc"]
         self.update_param("odometer")
         self.update_param("rider_weight")
-        self.update_param("satellitesused")
-        self.update_param("satellites")
         self.update_param("slope")
         self.add_ridelog_entry()
 
@@ -489,16 +478,10 @@ class ride_parameters():
         alg = self.p_raw["altitude_gps"]
         dst = round(self.p_raw["distance"], 0)
         clb = self.p_raw["climb"]
-        trk = self.p_raw["track_gps"]
-        eps = self.p_raw["eps"]
-        epx = self.p_raw["epx"]
-        epv = self.p_raw["epv"]
-        ept = self.p_raw["ept"]
         self.r.info('', extra={'time': tme, 'dtime': dte, 'speed': spd, 'cadence': cde,
                                'ble_hr_heart_rate': hrt, 'pressure': pre, 'temperature': tem,
                                'altitude': alt, 'altitude_gps': alg, 'distance': dst,
-                               'slope': slp, 'climb': clb, 'track_gps': trk, 'eps': eps,
-                               'epx': epx, 'epv': epv, 'ept': ept})
+                               'slope': slp, 'climb': clb})
 
     def strip_end(self, param_name, suffix=None):
         # Make sure there is no _digits, _tenths, _hms at the end

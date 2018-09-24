@@ -172,6 +172,7 @@ if __name__ == "__main__":
     sys_logger = logging.getLogger('system')
     signal.signal(signal.SIGTERM, quit_handler)
     signal.signal(signal.SIGINT, quit_handler)
+
     sys_logger.debug("Log start", extra=M)
     # This is a simple check if we're running on Raspberry PI.
     # Switch to simulation mode if we're not
