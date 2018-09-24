@@ -32,7 +32,6 @@ class layout():
         self.current_image_list = {}
         self.layout_path = layout_path
         self.load_layout(layout_path)
-        self.pressed_pos = None
 
     def load_layout(self, layout_path):
         self.max_page_id = 0
@@ -248,18 +247,12 @@ class layout():
 
     def render_pressed_button(self, pressed_pos):
         self.log.debug("render_pressed_button started", extra=M)
-        if self.pressed_pos:
-            self.log.debug("self.pressed_pos exist", extra=M)
-            for function in self.current_button_list:
-                if self.point_in_rect(self.pressed_pos, self.function_rect_list[function]):
-                    try:
-                        fr = self.function_rect_list[function]
-                        self.cr.set_source_surface(self.bt_image, 0, 0)
-                        self.cr.rectangle(fr[0], fr[1], fr[2], fr[3])
-                        self.pressed_pos = None
-                    except KeyError:
-                        self.log.critical("{} show_pressed_button failed! func ={}".format, __name__, function, extra=M)
-                        self.occ.stop()
+        for function in self.current_button_list:
+            if self.point_in_rect(pressed_pos, self.function_rect_list[function]):
+                fr = self.function_rect_list[function]
+                self.cr.set_source_surface(self.buttons_image, 0, 0)
+                self.cr.rectangle(fr[0], fr[1], fr[2], fr[3])
+                self.cr.fill()
         self.log.debug("render_pressed_button finished", extra=M)
 
     def check_click(self, position, click):
@@ -269,7 +262,6 @@ class layout():
             for function in self.current_button_list:
                 try:
                     if self.point_in_rect(position, self.function_rect_list[function]):
-                        self.pressed_pos = position
                         self.run_function(function)
                         break
                 except KeyError:
@@ -278,7 +270,6 @@ class layout():
             for function in self.current_button_list:
                 if self.point_in_rect(position, self.function_rect_list[function]):
                     self.log.debug("LONG CLICK on {}".format(function), extra=M)
-                    self.pressed_pos = position
                     for f in self.current_page['fields']:
                         if f['function'] == function:
                             try:

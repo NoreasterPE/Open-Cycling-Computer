@@ -122,6 +122,7 @@ class events(threading.Thread):
         if self.ignore_touch:
             self.reset_motion()
         if self.touch_position is not None:
+            self.layout.render_pressed_button(self.touch_position)
             self.screen_touched_handler(t)
 
     ## Resets all parameters related to clicks/swipes
