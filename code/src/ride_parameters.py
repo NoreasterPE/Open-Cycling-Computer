@@ -4,6 +4,7 @@
 #  Module for handling all ride parameters. This is the main module responsible for pulling all data together and preparing values for displaying, logging and saving.
 from time import strftime
 from units import units
+import numbers
 import logging
 import math
 import time
@@ -12,18 +13,6 @@ import wheel
 
 
 M = {"module_name": "ride"}
-
-## @var INF_MIN
-# helper variable, minus infinity
-INF_MIN = float("-inf")
-
-## @var INF
-# helper variable, infinity
-INF = float("inf")
-
-## @var NAN
-# helper variable, not-a-number
-NAN = float("nan")
 
 ## @var RIDE_PARAMETERS_UPDATE
 # Period of time in m between ride parameters update events.
@@ -65,7 +54,6 @@ class ride_parameters():
         ## @var ble_sc
         # Handle of BLE speed and cadence sensor
         self.ble_sc = self.sensors.get_sensor('ble_sc')
-
         ## @var gps
         # Handle of GPS sensor
         self.gps = self.sensors.get_sensor('gps')
@@ -651,7 +639,7 @@ class ride_parameters():
                         self.p_raw[param] = data_with_prefix[param]
                 else:
                     #FIXME Temporary fix for expired data
-                    self.p_raw["ble_sc_heart_rate"] = NAN
+                    self.p_raw["ble_sc_heart_rate"] = numbers.NAN
                     self.log.debug("ble_sc data expired", extra=M)
                 #self.calculate_avg_ble_sc_cadence()
                 #self.set_max("ble_sc_cadence")
@@ -680,7 +668,7 @@ class ride_parameters():
                         self.p_raw[param] = data_with_prefix[param]
                 else:
                     #FIXME Temporary fix for expired data
-                    self.p_raw["ble_hr_heart_rate"] = NAN
+                    self.p_raw["ble_hr_heart_rate"] = numbers.NAN
                     self.log.debug("ble_hr data expired", extra=M)
                 # FIXME move to ble_hr, sensor module should provide data for display
                 #self.calculate_avg_ble_hr_heart_rate()
