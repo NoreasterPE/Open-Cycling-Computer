@@ -155,7 +155,7 @@ class layout():
     def render_page(self):
         self.render_background()
         self.render = True
-        self.render_pressed_button()
+        # LAYOUT DEBUG FUNCION self.render_all_buttons()
         self.render_layout()
 
     def make_image_key(self, image_path, value):
@@ -234,7 +234,19 @@ class layout():
                 self.text_to_surface(rv1, rv1_x, position_y)
                 self.text_to_surface(rv3, rv3_x, position_y)
 
-    def render_pressed_button(self):
+    def render_all_buttons(self):
+        # LAYOUT DEBUG FUNCION
+        for function in self.current_button_list:
+            fr = self.function_rect_list[function]
+            self.cr.set_source_rgb(0.0, 1.0, 0.0)
+            self.cr.rectangle(fr[0], fr[1], fr[2], fr[3])
+            self.cr.fill()
+            self.cr.set_line_width(2.0)
+            self.cr.set_source_rgb(1.0, 0.0, 0.0)
+            self.cr.rectangle(fr[0], fr[1], fr[2], fr[3])
+            self.cr.stroke()
+
+    def render_pressed_button(self, pressed_pos):
         self.log.debug("render_pressed_button started", extra=M)
         if self.pressed_pos:
             self.log.debug("self.pressed_pos exist", extra=M)
