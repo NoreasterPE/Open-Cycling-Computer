@@ -35,6 +35,7 @@ REAL WORLD PROBLEMS:
 16. BLE device name might be too long for assigned space. Split or cur. Use i4oled code if needed.
 17. Average speed units to be changed with speed units. Required cleaning ride_parameters code first.
 18. Verify button size. Some are not matching the boxes.
+19. Set up low battery warning/shutdown. Pimoroni Lipo shim informs about battery state.
 
 CODE ERRORS:
 1. Threads write to log aftred log end [ERROR]
