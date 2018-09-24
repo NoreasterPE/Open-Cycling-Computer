@@ -8,7 +8,7 @@
 #from ble_scanner import ble_scanner
 from config import config
 from events import events
-from layout import layout
+import layout
 from pitft_touchscreen import pitft_touchscreen
 from rendering import rendering
 from ride_parameters import ride_parameters
@@ -86,7 +86,7 @@ class open_cycling_computer(object):
         self.cr = self.rendering.cr
         ## @var layout
         #  Handle to layout instance
-        self.layout = layout(self, self.cr, self.layout_path)
+        self.layout = layout.layout(self, self.cr, self.layout_path)
         self.log.debug("Starting RP sensors", extra=M)
         self.rp.start_sensors()
         self.log.debug("Setting up rendering", extra=M)
