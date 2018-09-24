@@ -133,8 +133,8 @@ class open_cycling_computer(object):
             self.log.debug("Cleaning already in progress", extra=M)
             return
         self.events.stop()
-        time.sleep(2.0)
         self.rp.stop()
+        time.sleep(2.0)
         try:
             self.rendering.stop()
         except AttributeError:
