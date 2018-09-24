@@ -4,22 +4,11 @@
 #  BLE speed and cadence sensor handling module.
 import bluepy.btle
 import logging
+import numbers
 import threading
 import time
 
 M = {'module_name': 'ble_sc'}
-
-## @var INF_MIN
-# helper variable, minus infinity
-INF_MIN = float("-inf")
-
-## @var INF
-# helper variable, infinity
-INF = float("inf")
-
-## @var NAN
-# helper variable, not-a-number
-NAN = float("nan")
 
 
 ## Class for handling BLE speed and cadence sensor
@@ -237,7 +226,7 @@ class ble_sc(threading.Thread):
         return name
 
     def get_battery_level(self):
-        level = NAN
+        level = numbers.NAN
         try:
             b = self.peripherial.getCharacteristics(uuid=bluepy.btle.AssignedNumbers.batteryLevel)
             level = ord(b[0].read())
@@ -252,7 +241,7 @@ class ble_sc(threading.Thread):
     def reset_data(self):
         ## @var name
         # Battery level in %
-        self.battery_level = NAN
+        self.battery_level = numbers.NAN
         ## @var time_stamp
         # Time stamp of the measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
         self.time_stamp = time.time()
@@ -270,7 +259,7 @@ class ble_sc(threading.Thread):
         self.cadence = 0
         ## @var cadence_max
         # Measured cadence
-        self.cadence_max = -INF
+        self.cadence_max = numbers.INF_MIN
         ## @var cadence_beat
         # Cadence icon beat, used to show if ble notifications are coming.
         self.cadence_beat = 0
@@ -393,10 +382,10 @@ class CSC_Delegate(bluepy.btle.DefaultDelegate):
                 self.wheel_last_measurement = self.wheel_time_stamp
             else:
                 if (self.wheel_time_stamp - self.wheel_last_measurement) > self.EXPIRY_TIME:
-                    self.wheel_rev_time = NAN
+                    self.wheel_rev_time = numbers.NAN
         else:
-            self.wheel_time_stamp = NAN
-            self.wheel_rev_time = NAN
+            self.wheel_time_stamp = numbers.NAN
+            self.wheel_rev_time = numbers.NAN
 
         self.log.debug('Last wheel event time: {:10.3f}, delta {:10.3f}'.format(self.wheel_last_time_event, self.wheel_last_time_delta), extra=M)
         self.log.debug('Wheel cumul revs: {:5d}'.format(wh_cr), extra=M)
@@ -424,18 +413,18 @@ class CSC_Delegate(bluepy.btle.DefaultDelegate):
                 self.crank_last_measurement = self.cadence_time_stamp
             else:
                 if (self.cadence_time_stamp - self.crank_last_measurement) > self.EXPIRY_TIME:
-                    self.crank_rev_time = NAN
-                    self.cadence = NAN
+                    self.crank_rev_time = numbers.NAN
+                    self.cadence = numbers.NAN
         else:
-            self.cadence_time_stamp = NAN
-            self.cadence = NAN
+            self.cadence_time_stamp = numbers.NAN
+            self.cadence = numbers.NAN
 
         #Ignore first 3 measurements to avoid "wild" values
         if self.measurement_no < 3:
             self.log.debug('Ignoring measurement no {}'.format(self.measurement_no), extra=M)
-            self.wheel_rev_time = NAN
-            self.crank_rev_time = NAN
-            self.cadence = NAN
+            self.wheel_rev_time = numbers.NAN
+            self.crank_rev_time = numbers.NAN
+            self.cadence = numbers.NAN
 
         self.log.debug('Last crank event time: {:10.3f}, delta {:10.3f}'.format(self.crank_last_time_event, self.crank_last_time_delta), extra=M)
         self.log.debug('Crank cumul revs: {:5d}'.format(cr_cr), extra=M)
