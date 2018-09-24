@@ -6,20 +6,9 @@ import bluepy.btle
 import logging
 import threading
 import time
+import numbers
 
 M = {'module_name': 'ble_hr'}
-
-## @var INF_MIN
-# helper variable, minus infinity
-INF_MIN = float("-inf")
-
-## @var INF
-# helper variable, infinity
-INF = float("inf")
-
-## @var NAN
-# helper variable, not-a-number
-NAN = float("nan")
 
 
 ## Class for handling BLE heart rate sensor
@@ -227,7 +216,7 @@ class ble_hr(threading.Thread):
         return name
 
     def get_battery_level(self):
-        level = NAN
+        level = numbers.NAN
         try:
             b = self.peripherial.getCharacteristics(uuid=bluepy.btle.AssignedNumbers.batteryLevel)
             level = ord(b[0].read())
@@ -242,19 +231,19 @@ class ble_hr(threading.Thread):
     def reset_data(self):
         ## @var name
         # Battery level in %
-        self.battery_level = NAN
+        self.battery_level = numbers.NAN
         ## @var heart_rate
         # Measured current heart rate
-        self.heart_rate = NAN
+        self.heart_rate = numbers.NAN
         ## @var heart_rate_min
         # Minimum measured heart rate since reset
-        self.heart_rate_min = INF
+        self.heart_rate_min = numbers.INF
         ## @var heart_rate_avg
         # Average heart rate since reset
-        self.heart_rate_avg = NAN
+        self.heart_rate_avg = numbers.NAN
         ## @var heart_rate_max
         # Maximum measured heart rate since reset
-        self.heart_rate_max = INF_MIN
+        self.heart_rate_max = numbers.INF_MIN
         ## @var heart_rate_beat
         # Heart rate icon beat, used to show if ble notifications are coming. This is not the real heart rate beat
         self.heart_rate_beat = 0
@@ -310,7 +299,7 @@ class HR_Delegate(bluepy.btle.DefaultDelegate):
         self.log = logging.getLogger('system')
         self.log.debug('Delegate __init__ started', extra=M)
         bluepy.btle.DefaultDelegate.__init__(self)
-        self.heart_rate = NAN
+        self.heart_rate = numbers.NAN
         self.heart_rate_beat = 0
         self.time_stamp = time.time()
         self.measurement_no = 0
@@ -349,7 +338,7 @@ class HR_Delegate(bluepy.btle.DefaultDelegate):
         # 0   RR-Interval values are not present.
         # 1   One or more RR-Interval values are present.
 
-        hr = NAN
+        hr = numbers.NAN
         if data_b[0] & HR_VALUE_FORMAT:
             # UINT16
             hr = 0xff * data_b[2] + data_b[1]
@@ -362,12 +351,12 @@ class HR_Delegate(bluepy.btle.DefaultDelegate):
         if hr != 0:
             self.heart_rate = hr
         else:
-            self.heart_rate = NAN
+            self.heart_rate = numbers.NAN
 
         #Ignore first 3 measurements to avoid "wild" values
         if self.measurement_no < 3:
             self.log.debug('Ignoring measurement no {}'.format(self.measurement_no), extra=M)
-            self.heart_rate = NAN
+            self.heart_rate = numbers.NAN
 
         ts_formatted = time.strftime("%H:%M:%S", time.localtime(self.time_stamp))
         self.log.debug('Delegate: set heart rate {}, time stamp {}'.format(self.heart_rate, ts_formatted), extra=M)
