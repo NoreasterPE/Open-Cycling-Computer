@@ -477,7 +477,7 @@ class layout():
             if variable == "altitude_home":
                 # Force recalculation
                 self.occ.rp.p_raw["pressure_at_sea_level"] = 0
-        if self.editor_name == "editor_list":
+        if self.editor_name == "editor_string":
             self.occ.rp.p_raw[variable] = variable_value
             self.occ.rp.params[variable] = variable_value
         if self.editor_name == "ble_selector":

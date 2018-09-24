@@ -767,11 +767,11 @@ pages:
                           h: 60
 
        - name: "List Editor"
-         id: editor_list
+         id: editor_string
          number: 0
          type: editor
-         background: images/occ_editor_background.png
-         buttons: images/occ_editor_buttons.png
+         background: images/occ_string_editor_background.png
+         buttons: images/occ_string_editor_buttons.png
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
@@ -806,7 +806,7 @@ pages:
                 - function: variable_value
                   x: 120
                   y: 130
-                  font_size: 60
+                  font_size: 40
 
                 - function: ed_decrease
                   x: 60
@@ -823,7 +823,7 @@ pages:
                   x: 180
                   y: 230
                   font_size: 50
-                  text: +
+                  text: "+"
                   button:
                           x0: 120
                           y0: 200
@@ -833,8 +833,8 @@ pages:
                 - function: ed_prev
                   x: 60
                   y: 290
-                  font_size: 30
-                  text: Prev
+                  font_size: 50
+                  text: ⇦
                   button:
                           x0: 0
                           y0: 260
@@ -844,8 +844,8 @@ pages:
                 - function: ed_next
                   x: 180
                   y: 290
-                  font_size: 30
-                  text: Next
+                  font_size: 50
+                  text: ⇨
                   button:
                           x0: 120
                           y0: 260

@@ -131,7 +131,7 @@ class ride_parameters():
         # Params that can be changed in Settings by user
         self.editors = dict(editor_units=('odometer_units', 'rider_weight_units', 'speed_units', 'temperature_units'),
                             editor_numbers=('altitude_home', 'odometer', 'rider_weight'),
-                            editor_list=('wheel_size'))
+                            editor_string=('wheel_size'))
 
         # FIXME Use set_nav_speed_threshold(self, treshold=0) from gps module
         self.log.info("GPS low speed treshold preset to {} [NOT USED]".format(self.p_raw['speed_gps_low']), extra=M)
