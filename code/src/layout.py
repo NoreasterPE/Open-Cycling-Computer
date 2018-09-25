@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 ## @package layout
 #   Module responsible for loading and rendering layouts. Needs heavy cleaning...
-from units import units
+import unit_converter
 import logging
 import os
 import sys
@@ -24,7 +24,7 @@ class layout():
         self.occ = occ
         self.cr = cr
         self.render = False
-        self.units = units()
+        self.uc = unit_converter.unit_converter()
         self.editor_name = ''
         self.page_list = {}
         self.page_index = {}
@@ -470,7 +470,7 @@ class layout():
             unit_raw = self.occ.rp.get_internal_unit(variable)
             value = float(variable_value)
             if unit_raw != variable_unit:
-                value = self.units.convert(value, variable_unit, unit_raw)
+                value = self.uc.convert(value, variable_unit, unit_raw)
             self.occ.rp.set_raw_param(variable, value)
             self.occ.rp.update_param(variable)
             # FIXME - find a better place for it

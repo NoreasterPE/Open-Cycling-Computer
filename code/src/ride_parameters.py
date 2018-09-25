@@ -3,7 +3,7 @@
 ## @package ride_parameters
 #  Module for handling all ride parameters. This is the main module responsible for pulling all data together and preparing values for displaying, logging and saving.
 from time import strftime
-from units import units
+import unit_converter
 import numbers
 import logging
 import math
@@ -47,7 +47,7 @@ class ride_parameters():
         self.r = rl.get_logger()
         ## @var uc
         # Units converter
-        self.uc = units()
+        self.uc = unit_converter.unit_converter()
         self.event_scheduler = sched.scheduler(time.time, time.sleep)
         self.log.info("Initialising sensors", extra=M)
         ## @var sensors
@@ -196,7 +196,6 @@ class ride_parameters():
     def start_sensors(self):
         self.log.debug("Starting sensors thread", extra=M)
         self.sensors.start()
-
 
     def stop(self):
         self.stopping = True

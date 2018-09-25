@@ -4,9 +4,9 @@
 #  Package for converting units. When run independently shows a pseudo-test.
 
 
-## Main units class
+## Main unit converter class
 #  Allows conversion of a value in source unit to target unit.
-class units():
+class unit_converter():
 
     ## The constructor
     #  @param self The python object self
@@ -96,7 +96,7 @@ class units():
 
 
 if __name__ == '__main__':
-    u = units()
+    u = unit_converter()
 
     tC = 20  # C
     print("C: {} F: {}".format(tC, u.convert(tC, "C", "F")))
