@@ -29,5 +29,35 @@ class ride_log():
                                          'altitude': "Altitude", 'altitude_gps': "Alt GPS",
                                          'distance': "Distance", 'slope': "Slope", 'climb': "Climb"})
 
-    def get_logger(self):
-        return self.ride_logger
+    def add_entry(self, params):
+        slp = params["slope"]
+        try:
+            hrt = params["ble_hr_heart_rate"]
+        except KeyError:
+            hrt = "-"
+        tme = params["timeon_hms"]
+        spd = params["speed"]
+        try:
+            cde = params["ble_sc_cadence"]
+        except KeyError:
+            cde = "-"
+        dte = params["dtime"]
+        try:
+            pre = params["pressure"]
+        except KeyError:
+            pre = "-"
+        try:
+            tem = params["temperature"]
+        except KeyError:
+            tem = "-"
+        alt = params["altitude"]
+        try:
+            alg = params["altitude_gps"]
+        except KeyError:
+            alg = "-"
+        dst = params["distance"]
+        clb = params["climb"]
+        self.ride_logger.info('', extra={'time': tme, 'dtime': dte, 'speed': spd, 'cadence': cde,
+                                         'ble_hr_heart_rate': hrt, 'pressure': pre, 'temperature': tem,
+                                         'altitude': alt, 'altitude_gps': alg, 'distance': dst,
+                                         'slope': slp, 'climb': clb})
