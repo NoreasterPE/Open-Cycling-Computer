@@ -186,9 +186,10 @@ class bmp183(sensor.sensor):
         self.log.debug("Stopped {}".format(__name__), extra=M)
 
     def set_up_gpio(self):
-        import RPi.GPIO as GPIO
         self.log.debug("set_up_gpio", extra=M)
+        import RPi.GPIO as GPIO
         # GPIO initialisation
+        GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.SCK, GPIO.OUT, initial=GPIO.HIGH)
         GPIO.setup(self.CS, GPIO.OUT, initial=GPIO.HIGH)
@@ -196,8 +197,8 @@ class bmp183(sensor.sensor):
         GPIO.setup(self.SDO, GPIO.IN)
 
     def cleanup_gpio(self):
-        import RPi.GPIO as GPIO
         self.log.debug("cleanup_gpio", extra=M)
+        import RPi.GPIO as GPIO
         GPIO.cleanup(self.SCK)
         GPIO.cleanup(self.CS)
         GPIO.cleanup(self.SDI)
