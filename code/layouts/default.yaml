@@ -37,7 +37,7 @@ pages:
                   y: 5
                   file: images/ble_icon_32x32.png
                   variable:
-                          name: ble_hr_state
+                          name: ble_host_state
                           frames: 6
 
                 - function: distance

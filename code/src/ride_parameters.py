@@ -294,9 +294,13 @@ class ride_parameters():
         suffixes = ("_min", "_max", "_avg", "_home")
         p = self.strip_end(param_name, suffixes)
         if p.endswith("_units"):
-            return None
+            units = None
         else:
-            return self.p_raw_units[p]
+            try:
+                units = self.p_raw_units[p]
+            except KeyError:
+                units = None
+        return units
 
     def get_description(self, param_name):
         if param_name in self.p_desc:
@@ -361,6 +365,9 @@ class ride_parameters():
         self.update_altitude()
         self.update_ble_sc_cadence()
         self.update_ble_hr_heart_rate()
+        #FIXME temporary fix to show BLE host state
+        self.p_raw["ble_host_state"] = self.sensors.get_ble_host_state() + 3
+        self.update_param("ble_host_state")
         self.update_bmp183()
         #self.calculate_altitude()
         self.update_param("climb")

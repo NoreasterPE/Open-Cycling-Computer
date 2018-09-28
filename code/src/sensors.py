@@ -29,23 +29,23 @@ RECONNECT_DELAY = 2.0
 #  - connected 3 devices (state 6)
 #  - connected 4 devices (state 7)
 
-STATE_HOST = {'disabled': 0,
-              'enabled': 1,
-              'scanning_1': 2,
-              'scanning_2': 3,
-              'connected_1': 4,
-              'connected_2': 5,
-              'connected_3': 6,
-              'connected_4': 7}
+#STATE_HOST = {'disabled': 0,
+#              'enabled': 1,
+#              'scanning_1': 2,
+#              'scanning_2': 3,
+#              'connected_1': 4,
+#              'connected_2': 5,
+#              'connected_3': 6,
+#              'connected_4': 7}
 
 ## @var STATE_DEV
 # BLE device states.
 #  - disconnected (state 0)
 #  - connecting (state 1)
 #  - connected (state 2)
-STATE_DEV = {'disconnected': 0,
-             'connecting': 1,
-             'connected': 2}
+#STATE_DEV = {'disconnected': 0,
+#             'connecting': 1,
+#             'connected': 2}
 
 
 ## Class for handling starting/stopping sensors in separate threads
@@ -79,7 +79,7 @@ class sensors(threading.Thread):
         self.simulate = occ.get_simulate()
         ## @var ble_host_state
         # BLE host state
-        self.ble_host_state = STATE_HOST['enabled']
+        self.ble_host_state = 0
         ## @var no_of_connected
         # Number of connected BLE devices
         self.no_of_connected = 0
@@ -149,33 +149,30 @@ class sensors(threading.Thread):
         self.connecting = False
         for name in self.sensors:
             try:
-                s = self.sensors[name].get_state()
-                if s == 1:
-                    self.connecting = True
-                if s == 2:
+                s = self.sensors[name].is_connected()
+                if s:
                     self.no_of_connected += 1
             except AttributeError:
                 #Sensor is not ready yet, let's wait
                 pass
-        if self.no_of_connected == 0:
-            self.ble_host_state = STATE_HOST['enabled']
-        if self.no_of_connected == 1:
-            self.ble_host_state = STATE_HOST['connected_1']
-        if self.no_of_connected == 2:
-            self.ble_host_state = STATE_HOST['connected_2']
-        if self.no_of_connected == 3:
-            self.ble_host_state = STATE_HOST['connected_3']
-        if self.no_of_connected == 4:
-            self.ble_host_state = STATE_HOST['connected_4']
-        # FIXME Tidy it up - showing "connecting" state doesn't work (blocking
-        # call is the problem)
-        if self.connecting:
-            self.ble_host_state = STATE_HOST['scanning_1']
+        self.ble_host_state = self.no_of_connected
+#        if self.no_of_connected == 0:
+#            self.ble_host_state = STATE_HOST['enabled']
+#        if self.no_of_connected == 1:
+#            self.ble_host_state = STATE_HOST['connected_1']
+#        if self.no_of_connected == 2:
+#            self.ble_host_state = STATE_HOST['connected_2']
+#        if self.no_of_connected == 3:
+#            self.ble_host_state = STATE_HOST['connected_3']
+#        if self.no_of_connected == 4:
+#            self.ble_host_state = STATE_HOST['connected_4']
+#        if self.connecting:
+#            self.ble_host_state = STATE_HOST['scanning_1']
 
     ## Helper function for getting ble_host_state variable.
     #  @param self The python object self
     def get_ble_host_state(self):
-        return STATE_HOST[self.ble_host_state]
+        return self.ble_host_state
 
     ## Helper function for getting sensor handle
     #  @param self The python object self
