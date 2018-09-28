@@ -3,14 +3,13 @@
 ## @package ble_hr
 #  BLE heart rate sensor handling module.
 import bluepy.btle
-import logging
-import threading
 import time
 import numbers
+import sensor
 
 
 ## Class for handling BLE heart rate sensor
-class ble_hr(threading.Thread):
+class ble_hr(sensor.sensor):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': 'ble_hr'}
@@ -26,30 +25,20 @@ class ble_hr(threading.Thread):
     RECONNECT_WAIT_TIME = 3.0
 
     def __init__(self):
-        ## @var log
-        # System logger handle
-        self.log = logging.getLogger('system')
+        super().__init__()
         self.log.debug('WAIT_TIME {}'.format(self.WAIT_TIME), extra=self.extra)
         self.p_formats = dict(heart_rate='%.0f', heart_rate_min='%.0f', heart_rate_max='%.0f', battery_level="%.0f")
         self.p_units = dict(heart_rate='BPM', heart_rate_min='BPM', heart_rate_max='BPM', battery_level="%")
         self.p_raw_units = dict(heart_rate='BPM', heart_rate_min='BPM', heart_rate_max='BPM', battery_level="%")
 
-        ## @var connected
-        # Indicates if sensor is currently connected
-        self.connected = False
-        threading.Thread.__init__(self)
         self.reset_data()
         ## @var addr
         # Address of the heart rate sensor
         self.addr = None
-        ## @var name
-        # Name of the heart rate sensor
-        self.name = None
         ## @var state
         #State of the connection, same as in sensors.py STATE_DEV
         self.state = 0
         self.notifications_enabled = False
-        self.running = False
 
     def set_notifications(self, enable=True):
         # Enable/disable notifications
@@ -72,7 +61,7 @@ class ble_hr(threading.Thread):
             self.log.debug('Initialising connection started', extra=self.extra)
             try:
                 self.log.debug('Setting delegate', extra=self.extra)
-                self.delegate = HR_Delegate()
+                self.delegate = HR_Delegate(self.log)
                 self.log.debug('Setting peripherial', extra=self.extra)
                 self.peripherial = bluepy.btle.Peripheral()
                 self.log.debug('Setting notification handler', extra=self.extra)
@@ -189,9 +178,6 @@ class ble_hr(threading.Thread):
         time.sleep(self.RECONNECT_WAIT_TIME)
         self.log.debug('safe_disconnect finished', extra=self.extra)
 
-    def get_prefix(self):
-        return self.extra["module_name"]
-
     def get_raw_data(self):
         self.log.debug('get_raw_data called', extra=self.extra)
         return dict(name=self.name,
@@ -255,23 +241,12 @@ class ble_hr(threading.Thread):
         # Time stamp of the data reset. Used to calculate average
         self.time_of_reset = time.time()
 
-    def get_raw_units(self):
-        return self.p_raw_units
-
-    def get_units(self):
-        return self.p_units
-
 #    FIXME make decision if get_data and get_raw_data are required
 #    def get_data(self):
 #        return dict(name=self.name, addr=self.addr, state=self.state, time_stamp=self.time_stamp, heart_rate=self.heart_rate, heart_rate_beat=self.heart_rate_beat)
 
-    def get_formats(self):
-        return self.p_formats
-
-    def is_connected(self):
-        return self.connected
-
     def __del__(self):
+        super().stop()
         self.stop()
 
     def set_addr(self, addr):
@@ -279,8 +254,6 @@ class ble_hr(threading.Thread):
         self.addr = addr
 
     def stop(self):
-        self.running = False
-        self.log.debug('Stop started', extra=self.extra)
         self.connected = False
         time.sleep(1)
         self.log.debug('Disabling notifications', extra=self.extra)
@@ -295,9 +268,12 @@ class ble_hr(threading.Thread):
 
 ## Class for handling BLE notifications from heart rate sensor
 class HR_Delegate(bluepy.btle.DefaultDelegate):
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'ble_hr_dgte'}
 
-    def __init__(self):
-        self.log = logging.getLogger('system')
+    def __init__(self, log):
+        self.log = log
         self.log.debug('Delegate __init__ started', extra=self.extra)
         bluepy.btle.DefaultDelegate.__init__(self)
         self.heart_rate = numbers.NAN

@@ -309,6 +309,9 @@ class ble_sc(threading.Thread):
 
 ## Class for handling BLE notifications from cadence and speed sensor
 class CSC_Delegate(bluepy.btle.DefaultDelegate):
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'ble_sc_dgte'}
     WHEEL_REV_DATA_PRESENT = 0x01
     CRANK_REV_DATA_PRESENT = 0x02
     ## @var WAIT_TIME
