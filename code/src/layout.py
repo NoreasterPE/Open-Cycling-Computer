@@ -553,7 +553,7 @@ class layout():
         self.quit()
         time.sleep(2)
         if not self.occ.simulate:
-            os.system("halt")
+            os.system("./halt.sh")
 
     def debug_level(self):
         log_level = self.log.getEffectiveLevel()
