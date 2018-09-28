@@ -3,14 +3,13 @@
 ## @package ble_sc
 #  BLE speed and cadence sensor handling module.
 import bluepy.btle
-import logging
 import numbers
-import threading
 import time
+import sensor
 
 
 ## Class for handling BLE speed and cadence sensor
-class ble_sc(threading.Thread):
+class ble_sc(sensor.sensor):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': 'ble_sc'}
@@ -26,25 +25,16 @@ class ble_sc(threading.Thread):
     RECONNECT_WAIT_TIME = 5.0
 
     def __init__(self):
-        ## @var log
-        # System logger handle
-        self.log = logging.getLogger('system')
+        super().__init__()
         self.log.debug('WAIT_TIME {}'.format(self.WAIT_TIME), extra=self.extra)
         self.p_formats = dict(time_stamp='%.0f', wheel_time_stamp='%.0f', wheel_rev_time='%.0f', cadence_time_stamp='%.0f', cadence="%5.0f", cadence_max="%5.0f", battery_level="%.0f")
         self.p_units = dict(time_stamp='s', wheel_time_stamp='s', wheel_rev_time='s', cadence_time_stamp='s', cadence="RPM", cadence_max="RPM", battery_level="%")
         self.p_raw_units = dict(time_stamp='s', wheel_time_stamp='s', wheel_rev_time='s', cadence_time_stamp='s', cadence="RPM", cadence_max="RPM", battery_level="%")
 
-        ## @var connected
-        # Indicates if sensor is currently connected
-        self.connected = False
-        threading.Thread.__init__(self)
         self.reset_data()
         ## @var addr
         # Address of the cadence and speed sensor
         self.addr = None
-        ## @var name
-        # Name of the cadence and speed sensor
-        self.name = None
         ## @var state
         #State of the connection, same as in sensors.py STATE_DEV
         self.state = 0
@@ -72,7 +62,7 @@ class ble_sc(threading.Thread):
             self.log.debug('Initialising connection started', extra=self.extra)
             try:
                 self.log.debug('Setting delegate', extra=self.extra)
-                self.delegate = CSC_Delegate()
+                self.delegate = CSC_Delegate(self.log)
                 self.log.debug('Setting peripherial', extra=self.extra)
                 self.peripherial = bluepy.btle.Peripheral()
                 self.log.debug('Setting notification handler', extra=self.extra)
@@ -198,9 +188,6 @@ class ble_sc(threading.Thread):
         self.log.debug('safe_disconnect 9', extra=self.extra)
         self.log.debug('safe_disconnect finished', extra=self.extra)
 
-    def get_prefix(self):
-        return self.extra["module_name"]
-
     def get_raw_data(self):
         return dict(name=self.name,
                     addr=self.addr,
@@ -265,19 +252,8 @@ class ble_sc(threading.Thread):
         # Cadence icon beat, used to show if ble notifications are coming.
         self.cadence_beat = 0
 
-    def get_raw_units(self):
-        return self.p_raw_units
-
-    def get_units(self):
-        return self.p_units
-
-    def get_formats(self):
-        return self.p_formats
-
-    def is_connected(self):
-        return self.connected
-
     def __del__(self):
+        super().stop()
         self.stop()
 
     def set_addr(self, addr):
@@ -285,8 +261,6 @@ class ble_sc(threading.Thread):
         self.addr = addr
 
     def stop(self):
-        self.running = False
-        self.log.debug('Stop started', extra=self.extra)
         self.connected = False
         time.sleep(1)
         self.log.debug('Disabling notifications', extra=self.extra)
@@ -318,8 +292,8 @@ class CSC_Delegate(bluepy.btle.DefaultDelegate):
     # Time of waiting for notifications in seconds
     EXPIRY_TIME = 2.0
 
-    def __init__(self):
-        self.log = logging.getLogger('system')
+    def __init__(self, log):
+        self.log = log
         self.log.debug('Delegate __init__ started', extra=self.extra)
         bluepy.btle.DefaultDelegate.__init__(self)
         self.wheel_time_stamp = time.time()
