@@ -3,10 +3,8 @@
 ## @package bmp183
 #  Module for handling Bosch BMP183 pressure sensor
 
-#import logging
 import numbers
 import numpy
-#import threading
 import time
 import sensor
 
@@ -84,20 +82,11 @@ class bmp183(sensor.sensor):
     def __init__(self, simulate=False):
         # Run init for super class
         super().__init__()
-        # self.rp = occ.rp
-        ## @var l
-        #  Handle to system logger
-        #self.log = logging.getLogger('system')
-        #self.log.debug("Initialising..", extra=self.extra)
         ## @var simulate
         #  Stores simulate parameter from constructor call
         self.simulate = simulate
-        ## @var connected
-        #  Set to the constructor sets it to True after succesfull handshake with the sensor. False otherwise.
-        #self.connected = False
-        ## @var running
-        #  Variable controlling the main sensor handling loop. Setting it to False stops the loop.
-        #self.running = False
+        ## @var first_run
+        #  Variable indicating first calculations. Deltas are calculated differently.
         self.first_run = True
         ## @var measurement_delay
         #  Time between measurements in [s]
@@ -130,13 +119,10 @@ class bmp183(sensor.sensor):
             else:
                 self.connected = True
                 self.read_calibration_data()
-                # Proceed with initial pressure/temperature measurement
+        # Proceed with initial pressure/temperature measurement
         self.measure_pressure()
         self.kalman_setup()
         self.log.debug("Initialised.", extra=self.extra)
-
-    def get_prefix(self):
-        return self.extra["module_name"]
 
     def get_raw_data(self):
         self.log.debug('get_raw_data called', extra=self.extra)
@@ -167,20 +153,11 @@ class bmp183(sensor.sensor):
         #  Actual pressure measured by the sensor
         self.pressure_unfiltered = 0
 
-#    def get_raw_units(self):
-#        return self.p_raw_units
-
-#    def get_units(self):
-#        return self.p_units
-
-#    def get_formats(self):
-        return self.p_formats
-
     def is_connected(self):
         return self.connected
 
     def stop(self):
-        super(bmp183, self).stop()
+        super().stop()
         time.sleep(1)
         if not self.simulate:
             self.cleanup_gpio()
