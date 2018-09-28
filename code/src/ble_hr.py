@@ -247,7 +247,6 @@ class ble_hr(sensor.sensor):
 #        return dict(name=self.name, addr=self.addr, state=self.state, time_stamp=self.time_stamp, heart_rate=self.heart_rate, heart_rate_beat=self.heart_rate_beat)
 
     def __del__(self):
-        super().stop()
         self.stop()
 
     def set_addr(self, addr):
@@ -255,7 +254,7 @@ class ble_hr(sensor.sensor):
         self.addr = addr
 
     def stop(self):
-        self.connected = False
+        super().stop()
         time.sleep(1)
         self.log.debug('Disabling notifications', extra=self.extra)
         self.set_notifications(enable=False)

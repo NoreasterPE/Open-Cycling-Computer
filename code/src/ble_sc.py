@@ -254,7 +254,6 @@ class ble_sc(sensor.sensor):
         self.cadence_beat = 0
 
     def __del__(self):
-        super().stop()
         self.stop()
 
     def set_addr(self, addr):
@@ -262,7 +261,7 @@ class ble_sc(sensor.sensor):
         self.addr = addr
 
     def stop(self):
-        self.connected = False
+        super().stop()
         time.sleep(1)
         self.log.debug('Disabling notifications', extra=self.extra)
         self.set_notifications(enable=False)
