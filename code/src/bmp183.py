@@ -126,6 +126,7 @@ class bmp183(sensor.sensor):
 
     def get_raw_data(self):
         self.log.debug('get_raw_data called', extra=self.extra)
+        #FIXME add name, addr, state
         return dict(time_stamp=self.time_stamp,
                     pressure=self.pressure,
                     temperature=self.temperature)
