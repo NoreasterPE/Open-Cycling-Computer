@@ -13,8 +13,6 @@ import wheel
 import ride_log
 
 
-M = {"module_name": "ride"}
-
 ## @var RIDE_PARAMETERS_UPDATE
 # Period of time in m between ride parameters update events.
 RIDE_PARAMETERS_UPDATE = 1.0
@@ -26,6 +24,9 @@ BLE_RECONNECT_DELAY = 30
 
 ## Class for handling all ride parameters
 class ride_parameters():
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'ride_param'}
 
     ## The constructor
     #  @param self The python object self
@@ -48,7 +49,7 @@ class ride_parameters():
         # Units converter
         self.uc = unit_converter.unit_converter()
         self.event_scheduler = sched.scheduler(time.time, time.sleep)
-        self.log.info("Initialising sensors", extra=M)
+        self.log.info("Initialising sensors", extra=self.extra)
         ## @var sensors
         # Handle of sensors instance
         self.sensors = occ.sensors
@@ -133,7 +134,7 @@ class ride_parameters():
         self.update_param("speed_max")
         self.split_speed("speed_max")
         self.update_param("altitude_home")
-        self.log.info("altitude_home set to {}".format(self.params["altitude_home"]), extra=M)
+        self.log.info("altitude_home set to {}".format(self.params["altitude_home"]), extra=self.extra)
 
         #FIXME Use wheel size from config
         w = wheel.wheel()
@@ -142,7 +143,7 @@ class ride_parameters():
         self.ble_hr = self.init_sensor_data("ble_hr")
         self.ble_sc = self.init_sensor_data("ble_sc")
         self.bmp183 = self.init_sensor_data("bmp183")
-        self.log.debug("Setting up event scheduler", extra=M)
+        self.log.debug("Setting up event scheduler", extra=self.extra)
         self.event_scheduler.enter(RIDE_PARAMETERS_UPDATE, 1, self.schedule_update_event)
 
     def init_sensor_data(self, sensor_name):
@@ -175,25 +176,25 @@ class ride_parameters():
         return sensor
 
     def schedule_update_event(self):
-        self.log.debug("Calling update values from event scheduler", extra=M)
+        self.log.debug("Calling update values from event scheduler", extra=self.extra)
         self.update_values()
         self.ride_log.add_entry(self.params)
         if not self.stopping:
             #Setting up next update event
             self.event_scheduler.enter(RIDE_PARAMETERS_UPDATE, 1, self.schedule_update_event)
             t = self.event_scheduler.run(blocking=False)
-            self.log.debug("Event scheduler, next event in: {0:.3f}".format(t), extra=M)
+            self.log.debug("Event scheduler, next event in: {0:.3f}".format(t), extra=self.extra)
 
     def start_sensors(self):
-        self.log.debug("Starting sensors thread", extra=M)
+        self.log.debug("Starting sensors thread", extra=self.extra)
         self.sensors.start()
 
     def stop(self):
         self.stopping = True
-        self.log.debug("Stop started", extra=M)
-        self.log.debug("Stopping sensors thread", extra=M)
+        self.log.debug("Stop started", extra=self.extra)
+        self.log.debug("Stopping sensors thread", extra=self.extra)
         self.sensors.stop()
-        self.log.debug("Stop finished", extra=M)
+        self.log.debug("Stop finished", extra=self.extra)
 
     def __del__(self):
         self.stop()
@@ -206,15 +207,15 @@ class ride_parameters():
         #dt_adjustment = self.p_raw['time_adjustment_delta']
         #if dt_adjustment > 0:
         #    self.p_raw["dtime"] = self.p_raw["dtime"] - dt_adjustment
-        #    self.log.info("dtime adjusted by {}".format(dt_adjustment), extra=M)
+        #    self.log.info("dtime adjusted by {}".format(dt_adjustment), extra=self.extra)
         #    self.sensors['gps'].time_adjustment_delta = 0
         #    # FIXME Correct other parameters like ridetime
-        #self.log.debug("timestamp: {} dtime {:10.3f}".format(time.strftime("%H:%M:%S", time.localtime(t)), self.p_raw["dtime"]), extra=M)
+        #self.log.debug("timestamp: {} dtime {:10.3f}".format(time.strftime("%H:%M:%S", time.localtime(t)), self.p_raw["dtime"]), extra=self.extra)
         try:
-            self.log.debug("speed dt: {}".format(self.p_raw["ble_sc_wheel_time_stamp"] - self.p_raw["time_stamp"]), extra=M)
+            self.log.debug("speed dt: {}".format(self.p_raw["ble_sc_wheel_time_stamp"] - self.p_raw["time_stamp"]), extra=self.extra)
             if self.p_raw["time_stamp"] - self.p_raw["ble_sc_wheel_time_stamp"] < 2.0:
                 self.p_raw['speed'] = self.p_raw["wheel_circ"] / (self.p_raw["ble_sc_wheel_rev_time"])
-                #self.log.debug("speed: {} ts {} {}".format(self.p_raw["speed"], self.p_raw["ble_sc_wheel_time_stamp"], self.p_raw["time_stamp"]), extra=M)
+                #self.log.debug("speed: {} ts {} {}".format(self.p_raw["speed"], self.p_raw["ble_sc_wheel_time_stamp"], self.p_raw["time_stamp"]), extra=self.extra)
                 if math.isnan(self.p_raw["speed"]):
                     self.p_raw["speed"] = 0.0
         except (KeyError, ZeroDivisionError):
@@ -229,10 +230,10 @@ class ride_parameters():
         # delta was grater than 8,4m
         elif self.p_raw["ddistance_cumulative"] > 8.4:
             self.p_raw["slope"] = self.p_raw["daltitude_cumulative"] / self.p_raw["ddistance_cumulative"]
-            self.log.debug("daltitude_cumulative: {} ddistance_cumulative: {}".format(self.p_raw["daltitude_cumulative"], self.p_raw["ddistance_cumulative"]), extra=M)
+            self.log.debug("daltitude_cumulative: {} ddistance_cumulative: {}".format(self.p_raw["daltitude_cumulative"], self.p_raw["ddistance_cumulative"]), extra=self.extra)
             self.p_raw["daltitude_cumulative"] = 0
             self.p_raw["ddistance_cumulative"] = 0
-        self.log.debug("slope: {}".format(self.p_raw["slope"]), extra=M)
+        self.log.debug("slope: {}".format(self.p_raw["slope"]), extra=self.extra)
         self.update_params()
 
     def calculate_time_related_parameters(self):
@@ -259,11 +260,11 @@ class ride_parameters():
             return self.p_raw[param]
 
     def set_raw_param(self, param_name, value):
-        self.log.debug("Setting {} to {} (raw)".format(param_name, value), extra=M)
+        self.log.debug("Setting {} to {} (raw)".format(param_name, value), extra=self.extra)
         self.p_raw[param_name] = value
 
     def set_param(self, param_name, value):
-        self.log.debug("Setting {} to {} ".format(param_name, value), extra=M)
+        self.log.debug("Setting {} to {} ".format(param_name, value), extra=self.extra)
         self.params[param_name] = value
 
     def get_param(self, param):
@@ -274,7 +275,7 @@ class ride_parameters():
             elif param in self.params:
                 value = self.params[param]
         except KeyError:
-            self.log.error("No unit for {}".format(param), extra=M)
+            self.log.error("No unit for {}".format(param), extra=self.extra)
         finally:
             return value
 
@@ -301,7 +302,7 @@ class ride_parameters():
         if param_name in self.p_desc:
             return self.p_desc[param_name]
         else:
-            self.log.error("{} has no description defined".format(param_name), extra=M)
+            self.log.error("{} has no description defined".format(param_name), extra=self.extra)
             return "No description"
 
     def split_speed(self, speed_name):
@@ -396,7 +397,7 @@ class ride_parameters():
         self.ble_sc.reset_data()
 
     def reset_param(self, param_name):
-        self.log.debug("Resetting {}".format(param_name), extra=M)
+        self.log.debug("Resetting {}".format(param_name), extra=self.extra)
         self.p_raw[param_name] = 0
         if param_name in ("ridetime", "distance", "cadence", "ble_hr_heart_rate"):
             self.reset_ride()
@@ -406,7 +407,7 @@ class ride_parameters():
         if param in self.p_format:
             f = self.p_format[param]
         else:
-            self.log.error("Formatting not available: param = {}".format(param), extra=M)
+            self.log.error("Formatting not available: param = {}".format(param), extra=self.extra)
             f = "%.1f"
 
         if self.p_raw[param] != "-":
@@ -418,7 +419,7 @@ class ride_parameters():
             self.params[param] = f % float(value)
         else:
             self.params[param] = '-'
-            self.log.debug("param {} = -".format(param), extra=M)
+            self.log.debug("param {} = -".format(param), extra=self.extra)
 
     def add_zero(self, value):
         if value < 10:
@@ -460,7 +461,7 @@ class ride_parameters():
             self.p_raw["altitude_previous"] = self.p_raw["altitude"]
             self.p_raw["altitude"] = calc_alt()
             self.p_raw["daltitude"] = self.p_raw["altitude"] - self.p_raw["altitude_previous"]
-        self.log.debug("altitude: {}, daltitude {}".format(self.p_raw["altitude"], self.p_raw["daltitude"]), extra=M)
+        self.log.debug("altitude: {}, daltitude {}".format(self.p_raw["altitude"], self.p_raw["daltitude"]), extra=self.extra)
 
     def calculate_pressure_at_sea_level(self):
         # Set pressure_at_sea_level based on given altitude
@@ -469,7 +470,7 @@ class ride_parameters():
         if altitude_home < 43300:
             self.p_raw["pressure_at_sea_level"] = float(
                 pressure / pow((1 - altitude_home / 44330), 5.255))
-        self.log.debug("pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]), extra=M)
+        self.log.debug("pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]), extra=self.extra)
 
     def sanitise(self, param_name):
         if self.params[param_name] == "-0":
@@ -479,22 +480,22 @@ class ride_parameters():
             self.params[param_name] = '-'
 
     def update_ble_sc_cadence(self):
-        self.log.debug("update_ble_sc_cadence started", extra=M)
+        self.log.debug("update_ble_sc_cadence started", extra=self.extra)
         if self.ble_sc:
             if self.ble_sc.is_connected():
-                self.log.debug("Fetching ble_sc prefix & data", extra=M)
+                self.log.debug("Fetching ble_sc prefix & data", extra=self.extra)
                 data = self.ble_sc.get_raw_data()
                 if (time.time() - data["time_stamp"]) < 3.0:  # EXPIRED_DATA_TIME
                     prefix = self.ble_sc.get_prefix()
                     # Add prefix to keys in the dictionary
                     data_with_prefix = {prefix + "_" + key: value for key, value in data.items()}
-                    self.log.debug("{}".format(data_with_prefix), extra=M)
+                    self.log.debug("{}".format(data_with_prefix), extra=self.extra)
                     for param in data_with_prefix:
                         self.p_raw[param] = data_with_prefix[param]
                 else:
                     #FIXME Temporary fix for expired data
                     self.p_raw["ble_sc_heart_rate"] = numbers.NAN
-                    self.log.debug("ble_sc data expired", extra=M)
+                    self.log.debug("ble_sc data expired", extra=self.extra)
                 #self.calculate_avg_ble_sc_cadence()
                 #self.set_max("ble_sc_cadence")
                 self.update_param("ble_sc_cadence")
@@ -504,26 +505,26 @@ class ride_parameters():
                 self.update_param("ble_sc_cadence_max")
                 self.sanitise("ble_sc_cadence_max")
         else:
-            self.log.debug("ble_sc_connection lost", extra=M)
-        self.log.debug("update_ble_sc_cadence finished", extra=M)
+            self.log.debug("ble_sc_connection lost", extra=self.extra)
+        self.log.debug("update_ble_sc_cadence finished", extra=self.extra)
 
     def update_ble_hr_heart_rate(self):
-        self.log.debug("update_ble_hr_heart_rate started", extra=M)
+        self.log.debug("update_ble_hr_heart_rate started", extra=self.extra)
         if self.ble_hr:
             if self.ble_hr.is_connected():
-                self.log.debug("Fetching ble_hr prefix & data", extra=M)
+                self.log.debug("Fetching ble_hr prefix & data", extra=self.extra)
                 data = self.ble_hr.get_raw_data()
                 if (time.time() - data["time_stamp"]) < 3.0:  # EXPIRED_DATA_TIME
                     prefix = self.ble_hr.get_prefix()
                     # Add prefix to keys in the dictionary
                     data_with_prefix = {prefix + "_" + key: value for key, value in data.items()}
-                    self.log.debug("{}".format(data_with_prefix), extra=M)
+                    self.log.debug("{}".format(data_with_prefix), extra=self.extra)
                     for param in data_with_prefix:
                         self.p_raw[param] = data_with_prefix[param]
                 else:
                     #FIXME Temporary fix for expired data
                     self.p_raw["ble_hr_heart_rate"] = numbers.NAN
-                    self.log.debug("ble_hr data expired", extra=M)
+                    self.log.debug("ble_hr data expired", extra=self.extra)
                 # FIXME move to ble_hr, sensor module should provide data for display
                 #self.calculate_avg_ble_hr_heart_rate()
                 self.update_param("ble_hr_heart_rate_min")
@@ -535,40 +536,40 @@ class ride_parameters():
                 self.update_param("ble_hr_heart_rate")
                 self.sanitise("ble_hr_heart_rate")
         else:
-            self.log.debug("ble_hr_connection lost", extra=M)
-        self.log.debug("update_ble_hr_heart_rate finished", extra=M)
+            self.log.debug("ble_hr_connection lost", extra=self.extra)
+        self.log.debug("update_ble_hr_heart_rate finished", extra=self.extra)
 
     def update_bmp183(self):
-        self.log.debug("update_bmp183 started", extra=M)
+        self.log.debug("update_bmp183 started", extra=self.extra)
         if self.bmp183:
             if self.bmp183.is_connected():
-                self.log.debug("Fetching bmp183 prefix & data", extra=M)
+                self.log.debug("Fetching bmp183 prefix & data", extra=self.extra)
                 data = self.bmp183.get_raw_data()
                 prefix = self.bmp183.get_prefix()
                 # Add prefix to keys in the dictionary
                 data_with_prefix = {prefix + "_" + key: value for key, value in data.items()}
-                self.log.debug("{}".format(data_with_prefix), extra=M)
+                self.log.debug("{}".format(data_with_prefix), extra=self.extra)
                 for param in data_with_prefix:
                     self.p_raw[param] = data_with_prefix[param]
-                # FIXME move to ble_hr, sensor module should provide data for display
+                # FIXME move to bmp183, sensor module should provide data for display
                 #self.calculate_avg_ble_hr_heart_rate()
                 self.update_param("bmp183_pressure")
                 self.sanitise("bmp183_pressure")
                 self.update_param("bmp183_temperature")
                 self.sanitise("bmp183_temperature")
         else:
-            self.log.debug("bmp183 connection lost", extra=M)
-        self.log.debug("update_bmp183 finished", extra=M)
+            self.log.debug("bmp183 connection lost", extra=self.extra)
+        self.log.debug("update_bmp183 finished", extra=self.extra)
 
     def get_editor_name(self, parameter):
-        self.log.debug("get_editor_name searching for editor for parameter {}".format(parameter), extra=M)
+        self.log.debug("get_editor_name searching for editor for parameter {}".format(parameter), extra=self.extra)
         editor = None
         for e in self.editors:
             if parameter in self.editors[e]:
                 editor = e
                 break
         if editor:
-            self.log.debug("get_editor_name found editor {} for parameter {}".format(editor, parameter), extra=M)
+            self.log.debug("get_editor_name found editor {} for parameter {}".format(editor, parameter), extra=self.extra)
         else:
-            self.log.debug("get_editor_name didn't find any editor for parameter {}".format(parameter), extra=M)
+            self.log.debug("get_editor_name didn't find any editor for parameter {}".format(parameter), extra=self.extra)
         return editor

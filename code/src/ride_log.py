@@ -6,11 +6,11 @@ from time import strftime
 import logging
 
 
-M = {"module_name": "ride_log"}
-
-
 ## Class for handling ride parameters logging
 class ride_log():
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'ride_log'}
 
     ## The constructor
     #  @param self The python object self

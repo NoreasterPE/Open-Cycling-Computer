@@ -9,11 +9,12 @@ import time
 import yaml
 import cairo
 
-M = {'module_name': 'layout'}
-
 
 ## Class for handling layouts
 class layout():
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'layout'}
     # def __init__(self, occ, layout_path="layouts/current.yaml"):
     # Temporary change
 
@@ -44,9 +45,9 @@ class layout():
                 f.close()
             self.layout_path = layout_path
         except FileNotFoundError:
-            self.log.critical("Loading layout {} failed, falling back to default.yaml".format(__name__, layout_path), extra=M)
+            self.log.critical("Loading layout {} failed, falling back to default.yaml".format(__name__, layout_path), extra=self.extra)
             sys_info = "Error details: {}".format(sys.exc_info()[0])
-            self.log.error(sys_info, extra=M)
+            self.log.error(sys_info, extra=self.extra)
             # Fallback to default layout
             # FIXME - define const file with paths?
             layout_path = "layouts/default.yaml"
@@ -55,7 +56,7 @@ class layout():
                     self.layout_tree = yaml.safe_load(f)
                     f.close()
             except FileNotFoundError:
-                self.log.critical("Loading default layout {} failed, Quitting...".format(__name__, layout_path), extra=M)
+                self.log.critical("Loading default layout {} failed, Quitting...".format(__name__, layout_path), extra=self.extra)
                 self.occ.stop()
 
         for page in self.layout_tree['pages']:
@@ -73,26 +74,26 @@ class layout():
         self.use_page()
 
     def use_page(self, page_id="page_0"):
-        self.log.debug("use_page {}".format(page_id), extra=M)
+        self.log.debug("use_page {}".format(page_id), extra=self.extra)
         self.render = True
         self.current_button_list = []
         self.current_page = self.page_list[page_id]
         try:
             self.background_image = self.load_image(self.current_page['background'])
         except cairo.Error:
-            self.log.critical("{}: Cannot load background image!".format(__name__,), extra=M)
-            self.log.critical("layout_path = {}".format(self.layout_path), extra=M)
-            self.log.critical("background path = {}".format(self.current_page['background']), extra=M)
-            self.log.critical("page_id = {}".format(page_id), extra=M)
+            self.log.critical("{}: Cannot load background image!".format(__name__,), extra=self.extra)
+            self.log.critical("layout_path = {}".format(self.layout_path), extra=self.extra)
+            self.log.critical("background path = {}".format(self.current_page['background']), extra=self.extra)
+            self.log.critical("page_id = {}".format(page_id), extra=self.extra)
             # That stops occ but not immediately - errors can occur
             self.occ.stop()
         try:
             self.buttons_image = self.load_image(self.current_page['buttons'])
         except cairo.Error:
-            self.log.critical("{}: Cannot load buttons image!".format(__name__,), extra=M)
-            self.log.critical("layout_path = {}".format(self.layout_path), extra=M)
-            self.log.critical("buttons path = {}".format(self.current_page['buttons']), extra=M)
-            self.log.critical("page_id = {}".format(page_id), extra=M)
+            self.log.critical("{}: Cannot load buttons image!".format(__name__,), extra=self.extra)
+            self.log.critical("layout_path = {}".format(self.layout_path), extra=self.extra)
+            self.log.critical("buttons path = {}".format(self.current_page['buttons']), extra=self.extra)
+            self.log.critical("page_id = {}".format(page_id), extra=self.extra)
             self.occ.top()
         self.font = self.current_page['font']
         # Wait for OCC to set rendering module
@@ -137,9 +138,9 @@ class layout():
     def load_image(self, image_path):
         try:
             image = self.png_to_cairo_surface(image_path)
-            self.log.debug("Image {} loaded".format(image_path), extra=M)
+            self.log.debug("Image {} loaded".format(image_path), extra=self.extra)
         except cairo.Error:
-            self.log.critical("Cannot load image {}".format(image_path), extra=M)
+            self.log.critical("Cannot load image {}".format(image_path), extra=self.extra)
             image = None
         return image
 
@@ -188,7 +189,7 @@ class layout():
                     # If there is a variable with frames defined prepare path for relevant icon
                     frames = field['variable']['frames']
                     if value > frames:
-                        self.log.error("Variable {} value {} is greater than number of frames ({}) for image file {}".format(variable['name'], value, frames, image_path), extra=M)
+                        self.log.error("Variable {} value {} is greater than number of frames ({}) for image file {}".format(variable['name'], value, frames, image_path), extra=self.extra)
                         value = frames
                     image_path = self.make_image_key(image_path, value)
                 except KeyError:
@@ -246,14 +247,14 @@ class layout():
             self.cr.stroke()
 
     def render_pressed_button(self, pressed_pos):
-        self.log.debug("render_pressed_button started", extra=M)
+        self.log.debug("render_pressed_button started", extra=self.extra)
         for function in self.current_button_list:
             if self.point_in_rect(pressed_pos, self.function_rect_list[function]):
                 fr = self.function_rect_list[function]
                 self.cr.set_source_surface(self.buttons_image, 0, 0)
                 self.cr.rectangle(fr[0], fr[1], fr[2], fr[3])
                 self.cr.fill()
-        self.log.debug("render_pressed_button finished", extra=M)
+        self.log.debug("render_pressed_button finished", extra=self.extra)
 
     def check_click(self, position, click):
         if click == 'SHORT':
@@ -265,11 +266,11 @@ class layout():
                         self.run_function(function)
                         break
                 except KeyError:
-                    self.log.debug("CLICK on non-clickable {}".format(function), extra=M)
+                    self.log.debug("CLICK on non-clickable {}".format(function), extra=self.extra)
         elif click == 'LONG':
             for function in self.current_button_list:
                 if self.point_in_rect(position, self.function_rect_list[function]):
-                    self.log.debug("LONG CLICK on {}".format(function), extra=M)
+                    self.log.debug("LONG CLICK on {}".format(function), extra=self.extra)
                     for f in self.current_page['fields']:
                         if f['function'] == function:
                             try:
@@ -283,14 +284,14 @@ class layout():
                             except KeyError:
                                     editable = False
                             if resettable:
-                                self.log.debug("Resetting {}".format(function), extra=M)
+                                self.log.debug("Resetting {}".format(function), extra=self.extra)
                                 self.occ.rp.reset_param(function)
                             elif editable:
                                 self.editor_name = self.occ.rp.get_editor_name(function)
-                                self.log.debug("Editing {} with self.editor_name".format(function), extra=M)
+                                self.log.debug("Editing {} with self.editor_name".format(function), extra=self.extra)
                                 self.open_editor_page(function)
                             else:
-                                self.log.debug("LONG CLICK on non-clickable {}".format(function), extra=M)
+                                self.log.debug("LONG CLICK on non-clickable {}".format(function), extra=self.extra)
         elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
             self.run_function("next_page")
         elif click == 'L_TO_R':  # Swipe LEFT to RIGHT
@@ -301,7 +302,7 @@ class layout():
             self.run_function("settings")
 
     def open_editor_page(self, function):
-        self.log.debug("Opening editor {} for {}".format(self.editor_name, function), extra=M)
+        self.log.debug("Opening editor {} for {}".format(self.editor_name, function), extra=self.extra)
         self.occ.rp.set_param('variable', function)
         self.occ.rp.set_param('variable_raw_value', self.occ.rp.get_raw_val(function))
         self.occ.rp.set_param('variable_value', self.occ.rp.get_param(function))
@@ -444,7 +445,7 @@ class layout():
         try:
             f = self.occ.rp.p_format[variable]
         except KeyError:
-            self.log.warning("Formatting not available: function ={}".format(variable), extra=M)
+            self.log.warning("Formatting not available: function ={}".format(variable), extra=self.extra)
             f = "%.1f"
         self.occ.rp.params["variable_value"] = float(f % float(variable_value))
         self.occ.rp.params["variable_unit"] = next_unit
@@ -458,12 +459,12 @@ class layout():
         self.render = True
 
     def accept_edit(self):
-        self.log.debug("accept_edit started", extra=M)
+        self.log.debug("accept_edit started", extra=self.extra)
         variable = self.occ.rp.params["variable"]
         variable_unit = self.occ.rp.params["variable_unit"]
         variable_raw_value = self.occ.rp.params["variable_raw_value"]
         variable_value = self.occ.rp.params["variable_value"]
-        self.log.debug("variable: {}, variable_unit: {}, variable_raw_value: {}, variable_value: {}".format(variable, variable_unit, variable_raw_value, variable_value), extra=M)
+        self.log.debug("variable: {}, variable_unit: {}, variable_raw_value: {}, variable_value: {}".format(variable, variable_unit, variable_raw_value, variable_value), extra=self.extra)
         if self.editor_name == "editor_units":
             self.occ.rp.units[variable] = variable_unit
         if self.editor_name == "editor_numbers":
@@ -484,10 +485,10 @@ class layout():
             (name, addr, dev_type) = variable_value
             self.occ.sensors.set_ble_device(name, addr, dev_type)
         self.render = True
-        self.log.debug("accept_edit finished", extra=M)
+        self.log.debug("accept_edit finished", extra=self.extra)
 
     def get_page(self, page_type, page_no):
-        self.log.debug("get_page {} {} ".format(page_type, page_no), extra=M)
+        self.log.debug("get_page {} {} ".format(page_type, page_no), extra=self.extra)
         if page_type == 'normal':
             if page_no == -1:
                 page_no = self.max_page_id
@@ -510,12 +511,12 @@ class layout():
             number = int(self.current_page['number'])
             page_id = self.current_page['id']
             page_type = self.current_page['type']
-            self.log.debug("next_page {} {} {}".format(page_id, page_type, number), extra=M)
+            self.log.debug("next_page {} {} {}".format(page_id, page_type, number), extra=self.extra)
             next_page_id = self.get_page(page_type, number + 1)
             try:
                 self.use_page(next_page_id)
             except KeyError:
-                self.log.critical("Page 0 of type {} not found!".format(page_type), extra=M)
+                self.log.critical("Page 0 of type {} not found!".format(page_type), extra=self.extra)
 
     def prev_page(self):
         # Editor is a special page - it cannot be switched, only cancel or accept
@@ -523,12 +524,12 @@ class layout():
             number = int(self.current_page['number'])
             page_id = self.current_page['id']
             page_type = self.current_page['type']
-            self.log.debug("prev_page {} {} {}".format(page_id, page_type, number), extra=M)
+            self.log.debug("prev_page {} {} {}".format(page_id, page_type, number), extra=self.extra)
             prev_page_id = self.get_page(page_type, number - 1)
             try:
                 self.use_page(prev_page_id)
             except KeyError:
-                self.log.critical("Page {} of type {} not found!".format(self.max_page_id, page_type), extra=M)
+                self.log.critical("Page {} of type {} not found!".format(self.max_page_id, page_type), extra=self.extra)
 
     def load_layout_by_name(self, name):
         self.load_layout("layouts/" + name)
@@ -560,7 +561,7 @@ class layout():
         if log_level > 50:
             log_level = 10
         log_level_name = logging.getLevelName(log_level)
-        self.log.debug("Changing log level to: {}".format(log_level_name), extra=M)
+        self.log.debug("Changing log level to: {}".format(log_level_name), extra=self.extra)
         self.occ.switch_log_level(log_level_name)
         self.occ.rp.params["debug_level"] = log_level_name
 
@@ -595,7 +596,7 @@ class layout():
                 return False
             if point[1] - rect[1] < 0:
                 return False
-            self.log.debug("Point: {} is in rect: {}".format(point, rect), extra=M)
+            self.log.debug("Point: {} is in rect: {}".format(point, rect), extra=self.extra)
             return True
         except TypeError:
             return False

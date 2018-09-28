@@ -14,8 +14,6 @@ import logging
 import threading
 import time
 
-M = {'module_name': 'sensors'}
-
 ## @var RECONNECT_DELAY
 # Time between check if BLE connection need to be re-established
 RECONNECT_DELAY = 2.0
@@ -52,12 +50,15 @@ STATE_DEV = {'disconnected': 0,
 
 ## Class for handling starting/stopping sensors in separate threads
 class sensors(threading.Thread):
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'sensors'}
 
     ## The constructor
     #  @param self The python object self
     #  @param occ OCC instance
     def __init__(self, occ):
-        threading.Thread.__init__(self)
+        super().__init__()
         ## @var l
         # System logger handle
         self.log = logging.getLogger('system')
@@ -88,7 +89,7 @@ class sensors(threading.Thread):
         ## @var connected
         # Dict keeping track of which sensor is connected
         self.connected = dict(ble_sc=False, ble_hr=False, bmp183=False)
-        self.log.info("Initialising bmp183 sensor", extra=M)
+        self.log.info("Initialising bmp183 sensor", extra=self.extra)
         try:
             self.sensors['bmp183'] = bmp183.bmp183(self.simulate)
             self.connected['bmp183'] = True
@@ -121,25 +122,25 @@ class sensors(threading.Thread):
     ## Main loop of sensors module. Constantly tries to reconnect with BLE devices
     #  @param self The python object self
     def run(self):
-        self.log.debug("run started", extra=M)
+        self.log.debug("run started", extra=self.extra)
         self.init_data_from_ride_parameters()
 
-        self.log.debug("Setting ble_hr device address to {}".format(self.addrs["ble_hr"]), extra=M)
+        self.log.debug("Setting ble_hr device address to {}".format(self.addrs["ble_hr"]), extra=self.extra)
         self.sensors['ble_hr'].set_addr(self.addrs["ble_hr"])
-        self.log.debug("Starting ble_hr thread", extra=M)
+        self.log.debug("Starting ble_hr thread", extra=self.extra)
         self.sensors['ble_hr'].start()
 
-        self.log.debug("Setting ble_sc device address to {}".format(self.addrs["ble_sc"]), extra=M)
+        self.log.debug("Setting ble_sc device address to {}".format(self.addrs["ble_sc"]), extra=self.extra)
         self.sensors['ble_sc'].set_addr(self.addrs["ble_sc"])
-        self.log.debug("Starting ble_sc thread", extra=M)
+        self.log.debug("Starting ble_sc thread", extra=self.extra)
         self.sensors['ble_sc'].start()
-        self.log.debug("Starting bmp183 thread", extra=M)
+        self.log.debug("Starting bmp183 thread", extra=self.extra)
         self.sensors['bmp183'].start()
 
         while self.running:
             self.set_ble_host_state()
             time.sleep(1.0)
-        self.log.debug("run finished", extra=M)
+        self.log.debug("run finished", extra=self.extra)
 
     ## Helper function for setting ble_host_state variable.
     #  @param self The python object self
@@ -179,11 +180,11 @@ class sensors(threading.Thread):
     ## Helper function for getting sensor handle
     #  @param self The python object self
     def get_sensor(self, name):
-        self.log.debug('get_sensor called for {}'.format(name), extra=M)
+        self.log.debug('get_sensor called for {}'.format(name), extra=self.extra)
         if name in self.sensors:
             return self.sensors[name]
         else:
-            self.log.debug("Sensor {} not ready or doesn't exist".format(name), extra=M)
+            self.log.debug("Sensor {} not ready or doesn't exist".format(name), extra=self.extra)
             return None
 
     ## The destructor
@@ -194,15 +195,15 @@ class sensors(threading.Thread):
     ## Function stopping all sensors. Called by the destructor
     #  @param self The python object self
     def stop(self):
-        self.log.debug("stop started", extra=M)
+        self.log.debug("stop started", extra=self.extra)
         self.running = False
         for s in self.sensors:
             self.connected[s] = False
-            self.log.debug("Stopping {} thread".format(s), extra=M)
+            self.log.debug("Stopping {} thread".format(s), extra=self.extra)
             try:
                 self.sensors[s].stop()
-                self.log.debug("Stopped {} thread".format(s), extra=M)
+                self.log.debug("Stopped {} thread".format(s), extra=self.extra)
             except AttributeError:
                 pass
             self.sensors[s] = None
-        self.log.debug("stop finished", extra=M)
+        self.log.debug("stop finished", extra=self.extra)

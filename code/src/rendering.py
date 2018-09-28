@@ -15,7 +15,7 @@ class rendering(threading.Thread):
     #  @param self The python object self
     def __init__(self):
         # Run init for super class
-        super(rendering, self).__init__()
+        super().__init__()
         self.render = True
         ## @var running
         #  Variable controlling if rendering module should keep running

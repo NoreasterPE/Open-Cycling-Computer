@@ -19,12 +19,13 @@ import platform
 import signal
 import time
 
-M = {'module_name': 'OCC'}
-
 
 ## Main OpenCyclingComputer class
 # Based on RPI model Zero W and PiTFT 2.8" 320x240
 class open_cycling_computer(object):
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'OCC'}
 
     ## The constructor
     #  @param self The python object self
@@ -52,31 +53,31 @@ class open_cycling_computer(object):
         ## @var height
         #  Window/screen height
         self.height = height
-        self.log.debug("Screen size is {} x {}".format(self.width, self.height), extra=M)
-        self.log.debug("Calling sensors", extra=M)
+        self.log.debug("Screen size is {} x {}".format(self.width, self.height), extra=self.extra)
+        self.log.debug("Calling sensors", extra=self.extra)
         ## @var sensors
         #  Handle to sensors instance
         self.sensors = sensors(self)
-        self.log.debug("Calling ride_parameters", extra=M)
+        self.log.debug("Calling ride_parameters", extra=self.extra)
         ## @var rp
         #  Handle to ride_parameters instance
         self.rp = ride_parameters(self, simulate)
         ## @var layout_path
         #  Path to layout file
         self.layout_path = ''
-        self.log.debug("Initialising config", extra=M)
+        self.log.debug("Initialising config", extra=self.extra)
         ## @var config
         #  Handle to config instance
         self.config = config(self, "config/config.yaml", "config/config_base.yaml")
-        self.log.debug("Reading config", extra=M)
+        self.log.debug("Reading config", extra=self.extra)
         self.config.read_config()
         ## @var ble_scanner
         #  Handle to ble_scanner instance
-        ##self.log.debug("Initialising ble_scanner", extra=M)
+        ##self.log.debug("Initialising ble_scanner", extra=self.extra)
         ##self.ble_scanner = ble_scanner(self)
         ## @var rendering
         #  Handle to rendering instance
-        self.log.debug("Initialising rendering", extra=M)
+        self.log.debug("Initialising rendering", extra=self.extra)
         self.rendering = rendering()
         ## @var surface
         #  Main cairo surface
@@ -87,33 +88,33 @@ class open_cycling_computer(object):
         ## @var layout
         #  Handle to layout instance
         self.layout = layout.layout(self, self.cr, self.layout_path)
-        self.log.debug("Starting RP sensors", extra=M)
+        self.log.debug("Starting RP sensors", extra=self.extra)
         self.rp.start_sensors()
-        self.log.debug("Setting up rendering", extra=M)
-        self.log.debug("Starting rendering thread", extra=M)
+        self.log.debug("Setting up rendering", extra=self.extra)
+        self.log.debug("Starting rendering thread", extra=self.extra)
         self.rendering.start()
         ## @var touchscreen
         #  Handle to touchscreen (pitft_touchscreen module)
-        self.log.debug("Initialising pitft touchscreen", extra=M)
+        self.log.debug("Initialising pitft touchscreen", extra=self.extra)
         self.touchscreen = pitft_touchscreen()
         ## @var events
         #  Handle to events instance
-        self.log.debug("Initialising events", extra=M)
+        self.log.debug("Initialising events", extra=self.extra)
         self.events = events(self.layout, self.touchscreen, self.rp, self.rendering)
-        self.log.debug("Starting events thread", extra=M)
+        self.log.debug("Starting events thread", extra=self.extra)
         self.events.start()
 
     ## Switches logging level
     #  @param self The python object self
     #  @param log_level Log level to be set.
     def switch_log_level(self, log_level):
-        self.log.debug("Switching to log_level {}".format(log_level), extra=M)
+        self.log.debug("Switching to log_level {}".format(log_level), extra=self.extra)
         self.log.setLevel(log_level)
 
     ## Stops main event loop
     #  @param self The python object self
     def stop(self):
-        self.log.debug("occ stop called", extra=M)
+        self.log.debug("occ stop called", extra=self.extra)
         self.cleanup()
         self.running = False
 
@@ -126,11 +127,11 @@ class open_cycling_computer(object):
     #  @param self The python object self
     def cleanup(self):
         if self.cleaning is False:
-            self.log.debug("Cleaning called", extra=M)
+            self.log.debug("Cleaning called", extra=self.extra)
             self.cleaning = True
         elif self.cleaning:
             #Already in progress, ignore
-            self.log.debug("Cleaning already in progress", extra=M)
+            self.log.debug("Cleaning already in progress", extra=self.extra)
             return
         self.events.stop()
         self.rp.stop()
@@ -138,11 +139,11 @@ class open_cycling_computer(object):
         try:
             self.rendering.stop()
         except AttributeError:
-            self.log.debug("self.rendering.stop() produced AttributeError", extra=M)
+            self.log.debug("self.rendering.stop() produced AttributeError", extra=self.extra)
         try:
             self.config.write_config()
         except AttributeError:
-            self.log.debug("self.config.write_config() produced AttributeError", extra=M)
+            self.log.debug("self.config.write_config() produced AttributeError", extra=self.extra)
         # Wait for all processes to finish
         ##time.sleep(5)
 
@@ -173,7 +174,8 @@ if __name__ == "__main__":
     signal.signal(signal.SIGTERM, quit_handler)
     signal.signal(signal.SIGINT, quit_handler)
 
-    sys_logger.debug("Log start", extra=M)
+    ex = {'module_name': 'Main'}
+    sys_logger.debug("Log start", extra=ex)
     # This is a simple check if we're running on Raspberry PI.
     # Switch to simulation mode if we're not
     if (platform.machine() == "armv6l"):
@@ -182,14 +184,14 @@ if __name__ == "__main__":
         simulate = False
     else:
         simulate = True
-        sys_logger.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.", extra=M)
-    sys_logger.debug("simulate = {}".format(simulate), extra=M)
+        sys_logger.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.", extra=ex)
+    sys_logger.debug("simulate = {}".format(simulate), extra=ex)
     ## @var main_window
     # OCC main window. It's instance of open_cycling_computer class
     main_window = open_cycling_computer(simulate)
     while main_window.running:
-        main_window.log.debug("main loop running", extra=M)
+        main_window.log.debug("main loop running", extra=ex)
         time.sleep(2)
     main_window.stop()
-    main_window.log.debug("Log end", extra=M)
+    main_window.log.debug("Log end", extra=ex)
     quit()

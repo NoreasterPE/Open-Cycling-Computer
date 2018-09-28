@@ -10,7 +10,7 @@ import threading
 # Class for handling events from piTFT
 class pitft_touchscreen(threading.Thread):
     def __init__(self, device_path="/dev/input/touchscreen"):
-        super(pitft_touchscreen, self).__init__()
+        super().__init__()
         self.device = evdev.InputDevice(device_path)
         if self.device is None:
             print("Input device {} not found".format(device_path))

@@ -9,6 +9,10 @@ import time
 
 ## Class for MMA8451 Triple-Axis Accelerometer w/ 14-bit ADC with I2C interface as sold by Adafruit'. Not yet used by the OCC
 class mma8451(threading.Thread):
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'mma8451'}
+
     DEVICE_ADDR = 29
     DEVICE_ID = 26
     REG_STATUS = 0
@@ -68,7 +72,7 @@ class mma8451(threading.Thread):
     REG2_SLEEP_OS_LOW_POWER = 24
 
     def __init__(self):
-        super(mma8451, self).__init__()
+        super().__init__()
         self.measurement_delay = 0.01
         self.bus = smbus.SMBus(1)
         self.check_id()

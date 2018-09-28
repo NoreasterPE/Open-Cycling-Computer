@@ -5,8 +5,6 @@
 import bluepy
 import logging
 
-M = {'module_name': 'ble_scanner'}
-
 
 ## Helper class inheriting from bluepy DefaultDelegate
 class ScanDelegate(bluepy.btle.DefaultDelegate):
@@ -23,6 +21,9 @@ class ScanDelegate(bluepy.btle.DefaultDelegate):
 ## BLE Scanner class
 # Scans for and returns list of BLE devices.
 class ble_scanner(object):
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'ble_scanner'}
 
     ## The constructor
     #  @param self The python object self
@@ -53,7 +54,7 @@ class ble_scanner(object):
             devices = self.scanner.scan(timeout)
         except bluepy.btle.BTLEException as exception:
             #Failed to execute mgmt cmd 'le on'
-            self.log.error("Exception {}".format(exception), extra=M)
+            self.log.error("Exception {}".format(exception), extra=self.mod_name)
         else:
             self.dev_list_raw = []
             for dev in devices:
@@ -74,7 +75,7 @@ class ble_scanner(object):
         return dl
 
     def ble_scan(self):
-        self.log.debug("starting BLE scanning", extra=M)
+        self.log.debug("starting BLE scanning", extra=self.mod_name)
         for i in range(5):
             self.rp.set_param('ble_dev_name_' + str(i), "Scanning..")
         self.scan()
@@ -82,11 +83,11 @@ class ble_scanner(object):
             self.rp.set_param('ble_dev_name_' + str(i), "")
         i = 1
         for dev in self.get_dev_list():
-            self.log.debug("BLE device found! Name:\"{}\" addr:\"{}\"".format(dev['name'], dev['addr']), extra=M)
+            self.log.debug("BLE device found! Name:\"{}\" addr:\"{}\"".format(dev['name'], dev['addr']), extra=self.mod_name)
             self.rp.set_param('ble_dev_name_' + str(i), dev['name'])
             self.rp.set_param('ble_dev_addr_' + str(i), dev['addr'])
             i += 1
-        self.log.debug("BLE scanning finished", extra=M)
+        self.log.debug("BLE scanning finished", extra=self.mod_name)
 
     def ble_dev_helper(self, no, master):
         if master == 'ble_hr_name':
@@ -95,7 +96,7 @@ class ble_scanner(object):
             dev_type = 'sc'
         name = self.rp.get_param('ble_dev_name_' + str(no))
         addr = self.rp.get_param('ble_dev_addr_' + str(no))
-        self.log.debug("Selected BLE device {} {}".format(name, addr), extra=M)
+        self.log.debug("Selected BLE device {} {}".format(name, addr), extra=self.mod_name)
         self.rp.set_param("variable_value", (name, addr, dev_type))
         self.occ.layout.ed_accept()
 

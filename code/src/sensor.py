@@ -5,11 +5,12 @@
 import logging
 import threading
 
-M = {'module_name': 'a_sensor'}
-
 
 ## Abstract base class for sensors
 class sensor(threading.Thread):
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'a_sensor'}
 
     def __init__(self):
         ## @var log
@@ -24,7 +25,7 @@ class sensor(threading.Thread):
         self.reset_data()
 
         ## @var name
-        # Name of the heart rate sensor
+        # Name of the sensor
         self.name = None
 
         ## @var running
@@ -32,17 +33,18 @@ class sensor(threading.Thread):
         self.running = False
 
     def run(self):
-        self.log.debug('Starting the main loop for {}'.format(M["module_name"]), extra=M)
+        self.log.debug("Starting the main loop", extra=self.extra)
         self.running = True
         while self.running:
             pass
             # Copy the above code to a real sensor code and replace pass with whatewer the sensor needs to provide data
+        self.log.debug("Main loop finished", extra=self.extra)
 
     def get_prefix(self):
-        return M["module_name"]
+        return self.extra["module_name"]
 
     def get_raw_data(self):
-        self.log.debug('get_raw_data called', extra=M)
+        self.log.debug('get_raw_data called', extra=self.extra)
         return dict(name=self.name,
                     time_stamp=self.time_stamp)
 
@@ -62,7 +64,7 @@ class sensor(threading.Thread):
         return self.connected
 
     def stop(self):
-        self.log.debug('Stop started for {}'.format(M["module_name"]), extra=M)
+        self.log.debug("Stop started", extra=self.extra)
         self.running = False
 
     def __del__(self):

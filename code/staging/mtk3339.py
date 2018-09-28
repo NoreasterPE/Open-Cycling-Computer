@@ -9,6 +9,9 @@ import functools.reduce as reduce
 
 ## Class for handling mtk3339 GPS hardware at serial port level
 class mtk3339():
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'mtk3339'}
 
     def __init__(self, device):
         # NMEA sentences handled by this class

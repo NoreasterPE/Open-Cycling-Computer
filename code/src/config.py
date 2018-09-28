@@ -9,11 +9,11 @@ from shutil import copyfile
 import wheel
 
 
-M = {'module_name': 'config'}
-
-
 ## Main config class
 class config(object):
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'config'}
 
     ## The constructor
     #  @param self The python object self
@@ -29,34 +29,34 @@ class config(object):
     ## Function that reads config file. Currently read values are written directly to destination variables which is not really flexible solution.
     #  @param self The python object self
     def read_config(self):
-        self.log.debug("read_config started", extra=M)
+        self.log.debug("read_config started", extra=self.extra)
         try:
             with open(self.config_file_path) as f:
                 self.config_params = yaml.safe_load(f)
         except IOError:
-            self.log.error("I/O Error when trying to parse config file. Overwriting with copy of base_config", extra=M)
+            self.log.error("I/O Error when trying to parse config file. Overwriting with copy of base_config", extra=self.extra)
             copyfile(self.base_config_file_path, self.config_file_path)
             self.config_file_path = self.config_file_path
             try:
                 with open(self.config_file_path) as f:
                     self.config_params = yaml.safe_load(f)
             except IOError:
-                self.log.exception("I/O Error when trying to parse overwritten config. Quitting!!", extra=M)
+                self.log.exception("I/O Error when trying to parse overwritten config. Quitting!!", extra=self.extra)
                 self.cleanup()
         try:
             log_level = self.config_params["log_level"]
             self.occ.switch_log_level(log_level)
             self.rp.params["debug_level"] = log_level
         except KeyError:
-            self.log.error("log_level not found in config file. Using debug log level", extra=M)
+            self.log.error("log_level not found in config file. Using debug log level", extra=self.extra)
             self.occ.switch_log_level("debug")
             self.rp.params["debug_level"] = "debug"
         try:
             self.occ.layout_path = self.config_params["layout_path"]
-            self.log.debug("Setting layout. Path = {}".format(self.occ.layout_path), extra=M)
+            self.log.debug("Setting layout. Path = {}".format(self.occ.layout_path), extra=self.extra)
         except AttributeError:
             self.occ.layout_path = "layouts/default.yaml"
-            self.log.error("Missing layout path, falling back to {}".format(self.occ.layout_path), extra=M)
+            self.log.error("Missing layout path, falling back to {}".format(self.occ.layout_path), extra=self.extra)
 
         error_list = []
         try:
@@ -68,17 +68,17 @@ class config(object):
         except AttributeError:
             error_list.append("wheel_size")
         else:
-            self.log.debug("wheel_size in config file: {}".format(wheel_size), extra=M)
+            self.log.debug("wheel_size in config file: {}".format(wheel_size), extra=self.extra)
             self.rp.p_raw["wheel_size"] = wheel_size
             self.rp.params["wheel_size"] = wheel_size
-            self.log.info("Wheel size set to {}".format(wheel_size), extra=M)
+            self.log.info("Wheel size set to {}".format(wheel_size), extra=self.extra)
             w = wheel.wheel()
             try:
                 self.rp.p_raw["wheel_circ"] = w.get_circ(self.rp.p_raw["wheel_size"])
             except KeyError:
                 error_list.append("wheel_circ")
             self.rp.params["wheel_circ"] = self.rp.p_raw["wheel_circ"]
-            self.log.info("Wheel circ set to {}".format(self.rp.params['wheel_circ']), extra=M)
+            self.log.info("Wheel circ set to {}".format(self.rp.params['wheel_circ']), extra=self.extra)
 
         try:
             self.rp.units["rider_weight"] = self.config_params["rider_weight_units"]
@@ -118,36 +118,36 @@ class config(object):
             error_list.append("temperature")
         try:
             self.rp.params["ble_hr_name"] = self.config_params["ble_hr_name"]
-            self.log.debug("Read from config file: ble_hr_name = {}".format(self.rp.params["ble_hr_name"]), extra=M)
+            self.log.debug("Read from config file: ble_hr_name = {}".format(self.rp.params["ble_hr_name"]), extra=self.extra)
         except AttributeError:
             error_list.append("ble_hr_name")
         try:
             self.rp.params["ble_hr_addr"] = self.config_params["ble_hr_addr"]
-            self.log.debug("Read from config file: ble_hr_addr = {}".format(self.rp.params["ble_hr_addr"]), extra=M)
+            self.log.debug("Read from config file: ble_hr_addr = {}".format(self.rp.params["ble_hr_addr"]), extra=self.extra)
         except AttributeError:
             error_list.append("ble_hr_addr")
         try:
             self.rp.params["ble_sc_name"] = self.config_params["ble_sc_name"]
-            self.log.debug("Read from config file: ble_sc_name = {}".format(self.rp.params["ble_sc_name"]), extra=M)
+            self.log.debug("Read from config file: ble_sc_name = {}".format(self.rp.params["ble_sc_name"]), extra=self.extra)
         except AttributeError:
             error_list.append("ble_sc_name")
         try:
             self.rp.params["ble_sc_addr"] = self.config_params["ble_sc_addr"]
-            self.log.debug("Read from config file: ble_sc_addr = {}".format(self.rp.params["ble_sc_addr"]), extra=M)
+            self.log.debug("Read from config file: ble_sc_addr = {}".format(self.rp.params["ble_sc_addr"]), extra=self.extra)
         except AttributeError:
             error_list.append("ble_sc_addr")
         self.rp.update_param("speed_max")
         self.rp.split_speed("speed_max")
         if len(error_list) > 0:
             for item in error_list:
-                self.log.error("Missing: {} in config file".format(item), extra=M)
+                self.log.error("Missing: {} in config file".format(item), extra=self.extra)
             error_list = []
-        self.log.debug("read_config started", extra=M)
+        self.log.debug("read_config started", extra=self.extra)
 
     ## Function that writes config file.
     #  @param self The python object self
     def write_config(self):
-        self.log.debug("Writing config file", extra=M)
+        self.log.debug("Writing config file", extra=self.extra)
         log_level = logging.getLevelName(self.log.getEffectiveLevel())
         c = {}
         c["log_level"] = log_level
