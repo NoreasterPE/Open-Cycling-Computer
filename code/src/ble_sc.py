@@ -267,7 +267,10 @@ class ble_sc(sensor.sensor):
         self.set_notifications(enable=False)
         time.sleep(1)
         self.log.debug('Disconnecting', extra=self.extra)
-        self.peripherial.disconnect()
+        try:
+            self.peripherial.disconnect()
+        except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+            self.handle_exception(e, "stop, disconnecting")
         self.state = 0
         self.log.info('{} disconnected'.format(self.name), extra=self.extra)
         self.log.debug('Stop finished', extra=self.extra)
