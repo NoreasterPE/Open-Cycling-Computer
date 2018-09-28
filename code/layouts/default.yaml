@@ -33,7 +33,7 @@ pages:
                           frames: 3
 
                 - function: ble_icon
-                  x: 175
+                  x: 170
                   y: 5
                   file: images/ble_icon_32x32.png
                   variable:
