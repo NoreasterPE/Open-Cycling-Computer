@@ -19,15 +19,14 @@ class ride_log():
         logging.getLogger('ride').setLevel(logging.INFO)
         ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
         #FIXME ridelog should be defined in config file
-        ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(cadence)-8s,%(ble_hr_heart_rate)-5s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(altitude_gps)-8s,%(distance)-8s,%(slope)-8s,%(climb)-8s,'
+        ride_log_format = '%(time)-8s,%(dtime)-8s,%(speed)-8s,%(cadence)-8s,%(ble_hr_heart_rate)-5s,%(pressure)-8s,%(temperature)-8s,%(altitude)-8s,%(distance)-8s,%(slope)-8s,%(climb)-8s,'
         ride_log_handler.setFormatter(logging.Formatter(ride_log_format))
         logging.getLogger('ride').addHandler(ride_log_handler)
         self.ride_logger = logging.getLogger('ride')
         self.ride_logger.info('', extra={'time': "Time", 'dtime': "Delta", 'speed': "Speed",
                                          'cadence': "Cadence", 'ble_hr_heart_rate': "Heart RT",
                                          'pressure': "Pressure", 'temperature': "Temp",
-                                         'altitude': "Altitude", 'altitude_gps': "Alt GPS",
-                                         'distance': "Distance", 'slope': "Slope", 'climb': "Climb"})
+                                         'altitude': "Altitude", 'distance': "Distance", 'slope': "Slope", 'climb': "Climb"})
 
     def add_entry(self, params):
         slp = params["slope"]
@@ -51,13 +50,8 @@ class ride_log():
         except KeyError:
             tem = "-"
         alt = params["altitude"]
-        try:
-            alg = params["altitude_gps"]
-        except KeyError:
-            alg = "-"
         dst = params["distance"]
         clb = params["climb"]
         self.ride_logger.info('', extra={'time': tme, 'dtime': dte, 'speed': spd, 'cadence': cde,
                                          'ble_hr_heart_rate': hrt, 'pressure': pre, 'temperature': tem,
-                                         'altitude': alt, 'altitude_gps': alg, 'distance': dst,
-                                         'slope': slp, 'climb': clb})
+                                         'altitude': alt, 'distance': dst, 'slope': slp, 'climb': clb})

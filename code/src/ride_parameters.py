@@ -55,9 +55,6 @@ class ride_parameters():
         ## @var ble_sc
         # Handle of BLE speed and cadence sensor
         self.ble_sc = self.sensors.get_sensor('ble_sc')
-        ## @var gps
-        # Handle of GPS sensor
-        self.gps = self.sensors.get_sensor('gps')
         ## @var bmp183
         # Handle of bmp183 sensor
         self.bmp183 = self.sensors.get_sensor('bmp183')
@@ -76,9 +73,8 @@ class ride_parameters():
                           ridetime=0.0, ridetime_total=0.0,
                           slope=0.0,
                           speed=0.0, speed_avg=0.0, speed_max=0.0,
-                          speed_gps_low=2.5, speed_gps_noise=1.0, speed_low=1.0,
+                          speed_low=1.0,
                           temperature_avg=0.0,
-                          track_gps=0,
                           timeon=0.0001, utc='', rtc='')
 
         # Internal units
@@ -133,11 +129,6 @@ class ride_parameters():
         self.editors = dict(editor_units=('odometer_units', 'rider_weight_units', 'speed_units', 'temperature_units'),
                             editor_numbers=('altitude_home', 'odometer', 'rider_weight'),
                             editor_string=('wheel_size'))
-
-        # FIXME Use set_nav_speed_threshold(self, treshold=0) from gps module
-        #self.log.info("GPS low speed treshold preset to {} [NOT USED]".format(self.p_raw['speed_gps_low']), extra=M)
-        #self.log.info("GPS speed noise level treshold preset to {}".format(self.p_raw['speed_gps_noise']), extra=M)
-        self.log.info("Speed below {} m/s treshold won't be recorded".format(self.p_raw['speed_low']), extra=M)
 
         self.update_param("speed_max")
         self.split_speed("speed_max")
@@ -211,15 +202,14 @@ class ride_parameters():
         t = time.time()
         self.p_raw["dtime"] = t - self.p_raw["time_stamp"]
         self.p_raw["time_stamp"] = t
-        ##self.read_gps_data()
-        # FIXME Move this to gps module?
-        dt_adjustment = self.p_raw['time_adjustment_delta']
-        if dt_adjustment > 0:
-            self.p_raw["dtime"] = self.p_raw["dtime"] - dt_adjustment
-            self.log.info("dtime adjusted by {}".format(dt_adjustment), extra=M)
-            self.sensors['gps'].time_adjustment_delta = 0
-            # FIXME Correct other parameters like ridetime
-        self.log.debug("timestamp: {} dtime {:10.3f}".format(time.strftime("%H:%M:%S", time.localtime(t)), self.p_raw["dtime"]), extra=M)
+        #FIXME Time adjustment
+        #dt_adjustment = self.p_raw['time_adjustment_delta']
+        #if dt_adjustment > 0:
+        #    self.p_raw["dtime"] = self.p_raw["dtime"] - dt_adjustment
+        #    self.log.info("dtime adjusted by {}".format(dt_adjustment), extra=M)
+        #    self.sensors['gps'].time_adjustment_delta = 0
+        #    # FIXME Correct other parameters like ridetime
+        #self.log.debug("timestamp: {} dtime {:10.3f}".format(time.strftime("%H:%M:%S", time.localtime(t)), self.p_raw["dtime"]), extra=M)
         try:
             self.log.debug("speed dt: {}".format(self.p_raw["ble_sc_wheel_time_stamp"] - self.p_raw["time_stamp"]), extra=M)
             if self.p_raw["time_stamp"] - self.p_raw["ble_sc_wheel_time_stamp"] < 2.0:
@@ -259,10 +249,8 @@ class ride_parameters():
             self.p_raw["speed_avg"] = self.p_raw["distance"] / self.p_raw["ridetime"]
             self.update_param("speed_avg")
             self.split_speed("speed_avg")
-            #self.log.debug("speed_gps: {}, distance: {}, odometer: {}".format(s, self.p_raw["distance"], self.p_raw["odometer"]), extra=M)
         else:
             self.p_raw["ddistance"] = 0
-            #self.log.debug("speed_gps: below speed_low {} m/s treshold".format(self.p_raw['speed_low']), extra=M)
 
     def get_raw_val(self, param):
         if param.endswith("_units"):
@@ -291,7 +279,7 @@ class ride_parameters():
             return value
 
     def get_unit(self, param_name):
-        suffixes = ("_min", "_max", "_avg", "_gps", "_home")
+        suffixes = ("_min", "_max", "_avg", "_home")
         p = self.strip_end(param_name, suffixes)
         if p.endswith("_units"):
             return None
@@ -302,7 +290,7 @@ class ride_parameters():
                 return None
 
     def get_internal_unit(self, param_name):
-        suffixes = ("_min", "_max", "_avg", "_gps", "_home")
+        suffixes = ("_min", "_max", "_avg", "_home")
         p = self.strip_end(param_name, suffixes)
         if p.endswith("_units"):
             return None
@@ -316,45 +304,6 @@ class ride_parameters():
             self.log.error("{} has no description defined".format(param_name), extra=M)
             return "No description"
 
-#    def clean_value(self, variable, empty=0):
-#        if not math.isnan(variable):
-#            return variable
-#        else:
-#            return empty
-
-#    def read_gps_data(self):
-#        if self.gps:
-#            data = self.gps.get_data()
-#            self.p_raw['altitude_gps'] = self.clean_value(data['altitude_gps'])
-#            self.p_raw['climb_gps'] = self.clean_value(data['climb_gps'])
-#            self.p_raw['eps'] = self.clean_value(data['eps'])
-#            self.p_raw['ept'] = self.clean_value(data['ept'])
-#            self.p_raw['epv'] = self.clean_value(data['epv'])
-#            self.p_raw['epx'] = self.clean_value(data['epx'])
-#            self.p_raw['fix_mode_gps'] = data['fix_mode_gps']
-#            self.p_raw['fix_time_gps'] = data['fix_time_gps']
-#            self.p_raw['latitude'] = self.clean_value(data['latitude'])
-#            self.p_raw['longitude'] = self.clean_value(data['longitude'])
-#            self.p_raw['satellites'] = self.clean_value(data['satellites'])
-#            self.p_raw['satellitesused'] = self.clean_value(data['satellitesused'])
-#            self.p_raw['speed_gps'] = self.clean_value(data['speed_gps'])
-#            self.p_raw['track_gps'] = self.clean_value(data['track_gps'])
-#            self.p_raw['utc'] = data['utc']
-#            self.p_raw['time_adjustment_delta'] = data['time_adjustment_delta']
-#
-#            gps_str = self.p_raw["satellitesused"] - 3
-#            if gps_str < 0:
-#                gps_str = 0
-#            if gps_str > 3:
-#                gps_str = 3
-#            self.p_raw["gps_strength"] = gps_str
-#            self.p_raw["speed_gps"] = self.clean_value(self.p_raw["speed_gps"])
-#            if self.p_raw["speed_gps"] < self.p_raw['speed_gps_noise']:
-#                self.p_raw["speed_gps"] = 0
-#        else:
-#            self.log.info('GPS sensor not set, trying to set it...', extra=M)
-#            self.gps = self.sensors.get_sensor('gps")'''
-
     def split_speed(self, speed_name):
         # FIXME No hardcoded formatting, move to dict
         self.params[speed_name + "_digits"] = self.params[speed_name][:-2]
@@ -365,10 +314,6 @@ class ride_parameters():
         if self.p_raw["speed"] > self.p_raw["speed_max"]:
             self.p_raw["speed_max"] = self.p_raw["speed"]
         self.split_speed("speed_max")
-
-    '''def update_fix_gps(self):
-        self.params["fix_mode_gps"] = self.p_raw["fix_mode_gps"]
-        self.params["fix_time_gps"] = self.p_raw["fix_time_gps"]'''
 
     def set_max(self, param):
         self.p_raw[param + "_max"] = max(self.p_raw[param], self.p_raw[param + "_max"])
@@ -402,7 +347,6 @@ class ride_parameters():
 #       self.p_raw["ble_hr_heart_rate_avg"] = hr_new
 
     def update_altitude(self):
-        #self.update_param("altitude_gps")
         self.update_param("altitude_home")
         self.update_param("altitude")
         self.set_max("altitude")
@@ -412,7 +356,6 @@ class ride_parameters():
 
     def update_params(self):
         self.update_rtc()
-        #self.update_fix_gps()
         self.update_param("dtime")
         self.update_altitude()
         self.update_ble_sc_cadence()

@@ -10,8 +10,6 @@ import ble_sc
 import ble_hr
 #from bluepy.btle import BTLEException
 import bmp183
-# Disable GPS (temporary)
-# from gps_mtk3339 import gps_mtk3339
 import logging
 import threading
 import time
@@ -68,13 +66,13 @@ class sensors(threading.Thread):
         self.occ = occ
         ## @var sensors
         # Dict with sensor instances
-        self.sensors = dict(ble_sc=None, ble_hr=None, gps=None, bmp183=None)
+        self.sensors = dict(ble_sc=None, ble_hr=None, bmp183=None)
         ## @var names
         # Dict with names of the sensors
-        self.names = dict(ble_sc='', ble_hr='', gps='', bmp183='')
+        self.names = dict(ble_sc='', ble_hr='', bmp183='')
         ## @var addrs
         # Dict with BLE addresses of the sensors
-        self.addrs = dict(ble_sc='', ble_hr='', gps='', bmp183='')
+        self.addrs = dict(ble_sc='', ble_hr='', bmp183='')
         ## @var simulate
         # Local copy of simulate variable from OCC
         self.simulate = occ.get_simulate()
@@ -89,17 +87,7 @@ class sensors(threading.Thread):
         self.connecting = False
         ## @var connected
         # Dict keeping track of which sensor is connected
-        self.connected = dict(ble_sc=False, ble_hr=False, gps=False, bmp183=False)
-        '''
-        self.log.info("Initialising GPS", extra=M)
-        try:
-            # Disable GPS (temporary)
-            # self.sensors['gps'] = gps_mtk3339(simulate)
-            # self.connected['gps'] = True
-            self.sensors['gps'] = None
-            self.connected['gps'] = False
-        except IOError:
-            self.sensors['gps'] = None'''
+        self.connected = dict(ble_sc=False, ble_hr=False, bmp183=False)
         self.log.info("Initialising bmp183 sensor", extra=M)
         try:
             self.sensors['bmp183'] = bmp183.bmp183(self.simulate)

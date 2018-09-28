@@ -29,7 +29,7 @@ pages:
                   y: 5
                   file: images/gps_icon_32x32.png
                   variable:
-                          name: gps_strength
+#                          name: gps_strength
                           frames: 3
 
                 - function: ble_icon
@@ -276,26 +276,26 @@ pages:
          font_size: 16
          fg_colour: FFFFFF
          fields: 
-                - function: latitude
-                  x: 60
-                  y: 25
-                  font_size: 25
-
-                - function: longitude
-                  x: 60
-                  y: 60
-                  font_size: 25
-
-                - function: fix_time_gps
-                  x: 60
-                  y: 95
-                  font_size: 25
-
-                - function: fix_gps
-                  x: 60
-                  y: 130
-                  font_size: 25
-
+#               - function: latitude
+#                  x: 60
+#                  y: 25
+#                  font_size: 25
+#
+#                - function: longitude
+#                  x: 60
+#                  y: 60
+#                  font_size: 25
+#
+#                - function: fix_time_gps
+#                  x: 60
+#                  y: 95
+#                  font_size: 25
+#
+#                - function: fix_gps
+#                  x: 60
+#                  y: 130
+#                  font_size: 25
+#
                 - function: time
                   x: 120
                   y: 180
@@ -306,25 +306,25 @@ pages:
                   y: 220
                   font_size: 25
 
-                - function: altitude_gps
-                  button:
-                          x0: 120
-                          y0: 240
-                          w: 120
-                          h: 80
-                  x: 50
-                  y: 290
-                  font_size: 40
-
-                - function: altitude_units
-                  x: 110
-                  y: 310
-                  font_size: 1.20
-
-                - function: altitude_gps_icon
-                  x: 97
-                  y: 267
-                  file: images/altitude_gps_icon_20x32.png
+#                - function: altitude_gps
+#                  button:
+#                          x0: 120
+#                          y0: 240
+#                          w: 120
+#                          h: 80
+#                  x: 50
+#                  y: 290
+#                  font_size: 40
+#
+#                - function: altitude_units
+#                  x: 110
+#                  y: 310
+#                  font_size: 1.20
+#
+#                - function: altitude_gps_icon
+#                  x: 97
+#                  y: 267
+#                  file: images/altitude_gps_icon_20x32.png
 
                 - function: altitude
                   button:
