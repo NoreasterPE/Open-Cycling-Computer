@@ -153,6 +153,7 @@ class ble_hr(sensor.sensor):
                 #Waiting for ble address
                 self.log.debug('ble_hr add is None, waiting...', extra=self.extra)
                 time.sleep(5.0)
+            self.log.debug('Main ble_hr loop running {}'.format(self.running), extra=self.extra)
         self.log.debug('Main ble_hr loop finished', extra=self.extra)
 
     def safe_disconnect(self):

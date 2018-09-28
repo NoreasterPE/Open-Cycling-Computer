@@ -154,6 +154,7 @@ class ble_sc(sensor.sensor):
             else:
                 #Waiting for ble address
                 time.sleep(5.0)
+            self.log.debug('Main ble_sc loop running {}'.format(self.running), extra=self.extra)
         self.log.debug('Main ble_sc loop finished', extra=self.extra)
 
     def safe_disconnect(self):
