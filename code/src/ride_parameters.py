@@ -17,10 +17,6 @@ import ride_log
 # Period of time in m between ride parameters update events.
 RIDE_PARAMETERS_UPDATE = 1.0
 
-## @var BLE_RECONNECT_DELAY
-# Disconnect time in seconds. After this time the sensor is considered to be disconnected.
-BLE_RECONNECT_DELAY = 30
-
 
 ## Class for handling all ride parameters
 class ride_parameters():
@@ -48,6 +44,8 @@ class ride_parameters():
         ## @var uc
         # Units converter
         self.uc = unit_converter.unit_converter()
+        ## @var event_scheduler
+        # Event scheduler triggering parameters update and writing ride log entry
         self.event_scheduler = sched.scheduler(time.time, time.sleep)
         self.log.info("Initialising sensors", extra=self.extra)
         ## @var sensors
