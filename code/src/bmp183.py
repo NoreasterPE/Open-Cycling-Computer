@@ -3,10 +3,11 @@
 ## @package bmp183
 #  Module for handling Bosch BMP183 pressure sensor
 
+import math
 import numbers
 import numpy
-import time
 import sensor
+import time
 
 
 ## Class for Bosch BMP183 pressure and temperature sensor with SPI interface as sold by Adafruit
@@ -96,10 +97,21 @@ class bmp183(sensor.sensor):
         #  so a sudden change means the measurement if invalid. It a new temperature value differs from the previous velu more than
         #  temperature_max_delta the measurement is ignored.
         self.temperature_max_delta = 10
-        self.p_formats = dict(pressure='%.0f', pressure_min='%.0f', pressure_max='%.0f', temperature='%.1f', temperature_min='%.1f', temperature_max='%.1f')
-        self.p_units = dict(pressure='hPa', pressure_min='hPa', pressure_max='hPa', temperature='C', temperature_min='C', temperature_max='C')
-        self.p_raw_units = dict(pressure='Pa', pressure_min='Pa', pressure_max='Pa', temperature='C', temperature_min='C', temperature_max='C')
+        self.p_formats = dict(pressure="%.0f", pressure_min="%.0f", pressure_max="%.0f",
+                              temperature="%.1f", temperature_min="%.1f", temperature_max="%.1f",
+                              altitude="%.0f", altitude_delta="%0.2f")
+        self.p_units = dict(pressure="hPa", pressure_min="hPa", pressure_max="hPa",
+                            temperature="C", temperature_min="C", temperature_max="C",
+                            altitude="m", altitude_delta="m")
+        self.p_raw_units = dict(pressure="Pa", pressure_min="Pa", pressure_max="Pa",
+                                temperature="C", temperature_min="C", temperature_max="C",
+                                altitude="m", altitude_delta="m")
+        self.required = dict(altitude_home=numbers.NAN)
         self.reset_data()
+        ## @var altitude_home
+        #  Home altitude. Used as reference altitude for calculation of pressure at sea level and subsequent altitude calculations.
+        #  Use set_home_altitude function to set it
+        self.set_home_altitude(0)
         # Setup Raspberry PINS, as numbered on BOARD
         self.SCK = 32  # GPIO for SCK, other name SCLK
         self.SDO = 36  # GPIO for SDO, other name MISO
@@ -129,7 +141,9 @@ class bmp183(sensor.sensor):
         #FIXME add name, addr, state
         return dict(time_stamp=self.time_stamp,
                     pressure=self.pressure,
-                    temperature=self.temperature)
+                    temperature=self.temperature,
+                    altitude=self.altitude,
+                    altitude_delta=self.altitude_delta)
 
     def reset_data(self):
         ## @var temperature
@@ -153,9 +167,19 @@ class bmp183(sensor.sensor):
         ## @var pressure_unfiltered
         #  Actual pressure measured by the sensor
         self.pressure_unfiltered = 0
+        ## @var altitude
+        #  Altitude calculated on home altitude and current presure
+        self.altitude = numbers.NAN
+        ## @var altitude_delta
+        #  Difference in altitude since last calculations
+        self.altitude_delta = numbers.NAN
 
-    def is_connected(self):
-        return self.connected
+    ## Trigger calculation of pressure at the sea level on change of home altitude
+    #  @param self The python object self
+    def notification(self, required):
+        self.log.debug("required {}".format(required), extra=self.extra)
+        self.set_home_altitude(required["altitude_home"])
+        self.calculate_pressure_at_sea_level()
 
     def stop(self):
         super().stop()
@@ -323,8 +347,12 @@ class bmp183(sensor.sensor):
         self.running = True
         while self.running:
             self.measure_pressure()
+            if math.isnan(self.pressure_at_sea_level):
+                self.calculate_pressure_at_sea_level()
             self.kalman_update()
-            self.log.debug("pressure = {} Pa, temperature = {} degC".format(self.pressure, self.temperature), extra=self.extra)
+            self.calculate_altitude()
+            self.log.debug("pressure = {} [Pa], temperature = {} [C]".format(self.pressure, self.temperature), extra=self.extra)
+            self.log.debug("altitude = {} [m], altitude_delta = {} [m]".format(self.altitude, self.altitude_delta), extra=self.extra)
             self.pressure_min = min(self.pressure_min, self.pressure)
             self.pressure_max = max(self.pressure_max, self.pressure)
             self.temperature_min = min(self.temperature_min, self.temperature)
@@ -366,3 +394,32 @@ class bmp183(sensor.sensor):
         # Calculate new error estimate
         self.P = (1 - self.K) * self.P_previous
         self.pressure = self.pressure_estimate
+
+    ## Sets altitude_home and triggers recalculation of pressure_at_sea_level
+    #  @param self The python object self
+    #  @param altitude_home Home altitude
+    def set_home_altitude(self, altitude_home):
+        self.altitude_home = altitude_home
+
+    ## Calculates pressure at sea level based on given home altitude
+    #  Saves calculated value to self.pressure_at_sea_level
+    #  @param self The python object self
+    #  @param altitude_home Home altitudei
+    def calculate_pressure_at_sea_level(self):
+        self.log.debug("pressure: {}".format(self.pressure), extra=self.extra)
+        if self.altitude_home < 43300:
+            self.pressure_at_sea_level = float(self.pressure / pow((1 - self.altitude_home / 44330), 5.255))
+        else:
+            self.pressure_at_sea_level = numbers.NAN
+            self.log.debug("Home altitude over 43300: {}, refusing to calculate pressure at sea level".format(self.altitude_home), extra=self.extra)
+        self.log.debug("pressure_at_sea_level: {}".format(self.pressure_at_sea_level), extra=self.extra)
+
+    ## Calculates altitude and altitude_delta based on pressure_at_sea_level and current pressure
+    #  Saves calculated value to self.altitude and self.altitude_delta
+    #  @param self The python object self
+    def calculate_altitude(self):
+        altitude_previous = self.altitude
+        if self.pressure != 0:
+            self.altitude = round(44330.0 * (1 - pow((self.pressure / self.pressure_at_sea_level), (1 / 5.255))), 2)
+        self.altitude_delta = self.altitude - altitude_previous
+        self.log.debug("altitude: {}, altitude_delta {}".format(self.altitude, self.altitude_delta), extra=self.extra)

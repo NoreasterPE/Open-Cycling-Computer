@@ -86,8 +86,11 @@ class config(object):
             error_list.append("rider_weight_units")
         try:
             self.rp.p_raw["altitude_home"] = float(self.config_params["altitude_home"])
+            self.rp.p_raw_units["altitude_home"] = "m"
+            self.rp.p_format["altitude_home"] = "%.0f"
+            self.rp.units["altitude_home"] = "m"
         except AttributeError:
-            error_list.append("")
+            error_list.append("altitude_home")
         try:
             self.rp.units["altitude_home"] = self.config_params["altitude_home_units"]
         except AttributeError:

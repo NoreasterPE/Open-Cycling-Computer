@@ -67,7 +67,14 @@ class sensors(threading.Thread):
         self.occ = occ
         ## @var sensors
         # Dict with sensor instances
-        self.sensors = dict(ble_sc=None, ble_hr=None, bmp183=None)
+        self.sensors = dict()
+        #self.sensors = dict(ble_sc=None, ble_hr=None, bmp183=None)
+        ## @var required
+        # Dict with parameters required by sensors
+        self.required = dict()
+        ## @var required_previous
+        # Dict with parameters required by sensors from the previous loop cycle
+        self.required_previous = dict()
         ## @var names
         # Dict with names of the sensors
         self.names = dict(ble_sc='', ble_hr='', bmp183='')
@@ -90,13 +97,23 @@ class sensors(threading.Thread):
         # Dict keeping track of which sensor is connected
         self.connected = dict(ble_sc=False, ble_hr=False, bmp183=False)
         self.log.info("Initialising bmp183 sensor", extra=self.extra)
+        #FIXME make initialisation the same for all sensors
         try:
             self.sensors['bmp183'] = bmp183.bmp183(self.simulate)
+            self.required["bmp183"] = self.sensors['bmp183'].get_required()
+            self.required_previous["bmp183"] = self.sensors['bmp183'].get_required()
             self.connected['bmp183'] = True
         except IOError:
             self.connected['bmp183'] = None
+
         self.sensors['ble_hr'] = ble_hr.ble_hr()
+        self.required["ble_hr"] = self.sensors['ble_hr'].get_required()
+        self.required_previous["ble_hr"] = self.required['ble_hr']
+
         self.sensors['ble_sc'] = ble_sc.ble_sc()
+        self.required["ble_sc"] = self.sensors['ble_sc'].get_required()
+        self.required_previous["ble_sc"] = self.required['ble_sc']
+
         self.running = True
 
     ## Reads BLE devices names/addresses from ride_parameters module
@@ -138,6 +155,21 @@ class sensors(threading.Thread):
         self.sensors['bmp183'].start()
 
         while self.running:
+            # Check if there was a change in parameters required by any of the registered sensors
+            send_notification = False
+            for sensor in self.sensors:
+                for parameter in self.required[sensor]:
+                    try:
+                        value = self.occ.rp.get_raw_val(parameter)
+                    except KeyError:
+                        value = None
+                    if self.required[sensor][parameter] != value:
+                        send_notification = True
+                        self.required_previous[sensor][parameter] = self.required[sensor][parameter]
+                        self.required[sensor][parameter] = value
+                if send_notification:
+                    self.sensors[sensor].notification(self.required[sensor])
+
             self.set_ble_host_state()
             time.sleep(1.0)
         self.log.debug("run finished", extra=self.extra)

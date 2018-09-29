@@ -63,9 +63,7 @@ class ride_parameters():
         self.p_raw = dict(time_stamp=time.time(),
                           # Time delta since last p_raw update
                           dtime=1, time_adjustment_delta=0.0,
-                          altitude=0.0, altitude_home=0.0, altitude_max=numbers.INF_MIN, altitude_min=numbers.INF, altitude_previous=0.0,
-                          pressure_at_sea_level=0.0,
-                          climb=0.0, daltitude=0.0, daltitude_cumulative=0.0,
+                          climb=0.0, daltitude_cumulative=0.0,
                           odometer=0.0, ddistance=0.0, ddistance_cumulative=0.0, distance=0.0,
                           time_of_ride_reset=0.0001,
                           rider_weight=0.0,
@@ -78,13 +76,12 @@ class ride_parameters():
 
         # Internal units
         self.p_raw_units = dict(
-            altitude='m', climb='m/s', distance='m', dtime='s', odometer='m', rider_weight='kg', wheel_size='',
+            climb='m/s', distance='m', dtime='s', odometer='m', rider_weight='kg', wheel_size='',
             ridetime='s', ridetime_total='s', slope='m/m', speed='m/s', timeon='s', time_of_ride_reset='s')
 
         # Params of the ride ready for rendering.
         self.params = dict(
-            altitude='-', altitude_home='-', altitude_max='-', altitude_min='-',
-            climb='-', distance=0, dtime=0, odometer=0.0, pressure_at_sea_level='-', rider_weight=0.0,
+            climb='-', distance=0, dtime=0, odometer=0.0, rider_weight=0.0,
             wheel_size='', wheel_circ='', ridetime='', ridetime_hms='', ridetime_total='',
             ridetime_total_hms='', rtc='', slope='-', speed='-', speed_avg='-',
             speed_avg_digits='-', speed_avg_tenths='-', speed_digits='-', speed_max='-', speed_max_digits='-',
@@ -95,9 +92,8 @@ class ride_parameters():
 
         # Formatting strings for params.
         self.p_format = dict(
-            altitude='%.0f', altitude_home='%.0f', altitude_max='%.0f', altitude_min='%.0f',
             climb='%.1f', distance='%.1f', dtime='%.2f', odometer='%.0f',
-            pressure_at_sea_level='%.0f', rider_weight='%.1f', ridetime='%.0f', ridetime_hms='', ridetime_total='.0f',
+            rider_weight='%.1f', ridetime='%.0f', ridetime_hms='', ridetime_total='.0f',
             ridetime_total_hms='', rtc='', slope='%.0f', speed='%.1f', speed_avg='%.1f',
             speed_avg_digits='%.0f', speed_avg_tenths='%.0f', speed_digits='%.0f', speed_max='%.1f', speed_max_digits='%.0f', speed_max_tenths='%.0f',
             speed_tenths='%.0f', timeon='%.0f', timeon_hms='', time_of_ride_reset='%.0f', utc='')
@@ -105,7 +101,7 @@ class ride_parameters():
         # Units - name has to be identical as in params
         # FIXME rename to p_units for consistency
         self.units = dict(
-            altitude='m', climb='m/s', distance='km', dtime='s', odometer='km',
+            climb='m/s', distance='km', dtime='s', odometer='km',
             rider_weight='kg', wheel_size='', ridetime='s', ridetime_hms='', ridetime_total='s', ridetime_total_hms='',
             slope='%', speed='km/h', temperature='C', timeon='s', timeon_hms='', time_of_ride_reset='s')
 
@@ -120,8 +116,6 @@ class ride_parameters():
 
         self.update_param("speed_max")
         self.split_speed("speed_max")
-        self.update_param("altitude_home")
-        self.log.info("altitude_home set to {}".format(self.params["altitude_home"]), extra=self.extra)
 
         #FIXME Use wheel size from config
         w = wheel.wheel()
@@ -209,18 +203,22 @@ class ride_parameters():
             self.p_raw["speed"] = 0.0
 
         self.calculate_time_related_parameters()
-        self.p_raw["daltitude_cumulative"] += self.p_raw["daltitude"]
-        self.p_raw["ddistance_cumulative"] += self.p_raw["ddistance"]
-        if self.p_raw["ddistance_cumulative"] == 0:
-            self.p_raw["slope"] = 0
-        # FIXME make proper param for tunning. Calculate slope if the distance
-        # delta was grater than 8,4m
-        elif self.p_raw["ddistance_cumulative"] > 8.4:
-            self.p_raw["slope"] = self.p_raw["daltitude_cumulative"] / self.p_raw["ddistance_cumulative"]
-            self.log.debug("daltitude_cumulative: {} ddistance_cumulative: {}".format(self.p_raw["daltitude_cumulative"], self.p_raw["ddistance_cumulative"]), extra=self.extra)
-            self.p_raw["daltitude_cumulative"] = 0
-            self.p_raw["ddistance_cumulative"] = 0
-        self.log.debug("slope: {}".format(self.p_raw["slope"]), extra=self.extra)
+        try:
+            self.p_raw["daltitude_cumulative"] += self.p_raw["altitude_delta"]
+            self.p_raw["ddistance_cumulative"] += self.p_raw["ddistance"]
+            if self.p_raw["ddistance_cumulative"] == 0:
+                self.p_raw["slope"] = 0
+            # FIXME make proper param for tunning. Calculate slope if the distance
+            # delta was grater than 8,4m
+            elif self.p_raw["ddistance_cumulative"] > 8.4:
+                self.p_raw["slope"] = self.p_raw["daltitude_cumulative"] / self.p_raw["ddistance_cumulative"]
+                self.log.debug("daltitude_cumulative: {} ddistance_cumulative: {}".format(self.p_raw["daltitude_cumulative"], self.p_raw["ddistance_cumulative"]), extra=self.extra)
+                self.p_raw["daltitude_cumulative"] = 0
+                self.p_raw["ddistance_cumulative"] = 0
+            self.log.debug("slope: {}".format(self.p_raw["slope"]), extra=self.extra)
+        except KeyError:
+            self.log.debug("FIXME", extra=self.extra)
+            pass
         self.update_params()
 
     def calculate_time_related_parameters(self):
@@ -331,25 +329,16 @@ class ride_parameters():
 #       hr_new = (hr * dt + hra * tt) / (tt + dt)
 #       self.p_raw["ble_hr_heart_rate_avg"] = hr_new
 
-    def update_altitude(self):
-        self.update_param("altitude_home")
-        self.update_param("altitude")
-        self.set_max("altitude")
-        self.set_min("altitude")
-        self.update_param("altitude_min")
-        self.update_param("altitude_max")
-
     def update_params(self):
         self.update_rtc()
         self.update_param("dtime")
-        self.update_altitude()
         self.update_ble_sc_cadence()
         self.update_ble_hr_heart_rate()
         #FIXME temporary fix to show BLE host state
         self.p_raw["ble_host_state"] = self.sensors.get_ble_host_state() + 3
         self.update_param("ble_host_state")
+        self.update_param("altitude_home")
         self.update_bmp183()
-        #self.calculate_altitude()
         self.update_param("climb")
         self.update_param("distance")
         self.update_param("ridetime")
@@ -430,34 +419,6 @@ class ride_parameters():
         self.params["date"] = strftime("%d-%m-%Y")
         self.params["time"] = strftime("%H:%M:%S")
         self.params["rtc"] = self.params["date"] + " " + self.params["time"]
-
-    def calculate_altitude(self):
-        def calc_alt():
-            alt = 0
-            if self.p_raw["pressure"] != 0:
-                alt = round(44330.0 * (1 - pow((self.p_raw["pressure"] /
-                                                self.p_raw["pressure_at_sea_level"]), (1 / 5.255))), 2)
-            return alt
-
-        if self.p_raw["pressure_at_sea_level"] == 0:
-            self.calculate_pressure_at_sea_level()
-            if self.p_raw["pressure_at_sea_level"] != 0:
-                self.p_raw["altitude"] = calc_alt()
-                self.p_raw["altitude_previous"] = self.p_raw["altitude"]
-        else:
-            self.p_raw["altitude_previous"] = self.p_raw["altitude"]
-            self.p_raw["altitude"] = calc_alt()
-            self.p_raw["daltitude"] = self.p_raw["altitude"] - self.p_raw["altitude_previous"]
-        self.log.debug("altitude: {}, daltitude {}".format(self.p_raw["altitude"], self.p_raw["daltitude"]), extra=self.extra)
-
-    def calculate_pressure_at_sea_level(self):
-        # Set pressure_at_sea_level based on given altitude
-        pressure = self.p_raw["pressure"]
-        altitude_home = self.p_raw["altitude_home"]
-        if altitude_home < 43300:
-            self.p_raw["pressure_at_sea_level"] = float(
-                pressure / pow((1 - altitude_home / 44330), 5.255))
-        self.log.debug("pressure_at_sea_level: {}".format(self.p_raw["pressure_at_sea_level"]), extra=self.extra)
 
     def sanitise(self, param_name):
         if self.params[param_name] == "-0":
@@ -543,6 +504,10 @@ class ride_parameters():
                 self.update_param("bmp183_pressure")
                 self.sanitise("bmp183_pressure")
                 self.update_param("bmp183_temperature")
+                self.sanitise("bmp183_temperature")
+                self.update_param("bmp183_altitude")
+                self.sanitise("bmp183_temperature")
+                self.update_param("bmp183_altitude_delta")
                 self.sanitise("bmp183_temperature")
         else:
             self.log.debug("bmp183 connection lost", extra=self.extra)

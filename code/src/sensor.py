@@ -16,12 +16,18 @@ class sensor(threading.Thread):
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
+        threading.Thread.__init__(self)
+
         self.p_formats = dict()
         self.p_units = dict()
         self.p_raw_units = dict()
+        ## @var params_required
+        # List of params required by the sensor to work properly
+        self.required = list()
 
+        ## @var connected
+        # Variable indicating it the sensor hardware is currently connected
         self.connected = False
-        threading.Thread.__init__(self)
         self.reset_data()
 
         ## @var name
@@ -59,6 +65,17 @@ class sensor(threading.Thread):
 
     def get_formats(self):
         return self.p_formats
+
+    ## Return list of parameters required be a sensor to fully work. I.e. pressure sensor might need home altitude to calculate current altitude
+    #  @param self The python object self
+    def get_required(self):
+        return self.required
+
+    ## Useb by module "sensors" to notify about change of a reqired parameter. Overwrite with code that needs to be executed on change of the parameters.
+    #  @param self The python object self
+    #  @param reqired Dict with new values for require parameters
+    def notification(self, required):
+        pass
 
     def is_connected(self):
         return self.connected
