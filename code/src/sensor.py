@@ -35,7 +35,7 @@ class sensor(threading.Thread):
         self.name = None
 
         ## @var running
-        # Variable controlling main loop. Should be set to True when starting the loop.
+        # Variable controlling the main loop. Should be set to True when starting the loop.
         self.running = False
 
     def run(self):

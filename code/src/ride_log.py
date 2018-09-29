@@ -42,14 +42,17 @@ class ride_log():
             cde = "-"
         dte = params["dtime"]
         try:
-            pre = params["pressure"]
+            pre = params["bmp183_pressure"]
         except KeyError:
             pre = "-"
         try:
-            tem = params["temperature"]
+            tem = params["bmp183_temperature"]
         except KeyError:
             tem = "-"
-        alt = params["altitude"]
+        try:
+            alt = params["bmp183_altitude"]
+        except KeyError:
+            alt = "-"
         dst = params["distance"]
         clb = params["climb"]
         self.ride_logger.info('', extra={'time': tme, 'dtime': dte, 'speed': spd, 'cadence': cde,
