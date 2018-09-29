@@ -150,7 +150,7 @@ class sensors(threading.Thread):
         for name in self.sensors:
             try:
                 s = self.sensors[name].is_connected()
-                if s:
+                if s and name.startswith("ble"):
                     self.no_of_connected += 1
             except AttributeError:
                 #Sensor is not ready yet, let's wait
