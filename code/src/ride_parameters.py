@@ -166,10 +166,6 @@ class ride_parameters():
             t = self.event_scheduler.run(blocking=False)
             self.log.debug("Event scheduler, next event in: {0:.3f}".format(t), extra=self.extra)
 
-    def start_sensors(self):
-        self.log.debug("Starting sensors thread", extra=self.extra)
-        self.sensors.start()
-
     def stop(self):
         self.stopping = True
         self.log.debug("Stop started", extra=self.extra)

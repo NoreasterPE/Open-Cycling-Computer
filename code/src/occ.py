@@ -88,9 +88,8 @@ class open_cycling_computer(object):
         ## @var layout
         #  Handle to layout instance
         self.layout = layout.layout(self, self.cr, self.layout_path)
-        self.log.debug("Starting RP sensors", extra=self.extra)
-        self.rp.start_sensors()
-        self.log.debug("Setting up rendering", extra=self.extra)
+        self.log.debug("Starting sensors", extra=self.extra)
+        self.sensors.start()
         self.log.debug("Starting rendering thread", extra=self.extra)
         self.rendering.start()
         ## @var touchscreen
