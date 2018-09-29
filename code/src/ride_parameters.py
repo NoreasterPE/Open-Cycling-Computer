@@ -118,12 +118,6 @@ class ride_parameters():
             wheel_size=[''],
             speed=['km/h', 'm/s', 'mi/h'], temperature=['C', 'F'])
 
-        # Params description FIXME localisation
-        self.p_desc = dict(
-            altitude_home='Home altitude', odometer='Odometer', odometer_units='Odometer units',
-            rider_weight='Rider weight', rider_weight_units='Rider weight units', wheel_size='Wheel size', speed_units='Speed units',
-            temperature_units='Temp. unit')
-
         self.update_param("speed_max")
         self.split_speed("speed_max")
         self.update_param("altitude_home")
@@ -294,13 +288,6 @@ class ride_parameters():
             except KeyError:
                 units = None
         return units
-
-    def get_description(self, param_name):
-        if param_name in self.p_desc:
-            return self.p_desc[param_name]
-        else:
-            self.log.error("{} has no description defined".format(param_name), extra=self.extra)
-            return "No description"
 
     def split_speed(self, speed_name):
         # FIXME No hardcoded formatting, move to dict

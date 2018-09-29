@@ -286,6 +286,11 @@ class layout():
                                     except KeyError:
                                         self.editor_name = None
                                         self.log.critical("Function {} marked as editable, but no editor field found".format(function), extra=self.extra)
+                                    try:
+                                        self.editor_function_description = f["description"]
+                                    except KeyError:
+                                        self.editor_function_description = None
+                                        self.log.critical("Function {} marked as editable, but no description field found".format(function), extra=self.extra)
                             except KeyError:
                                     editable = False
                             if resettable:
@@ -311,7 +316,7 @@ class layout():
         self.occ.rp.set_param('variable_raw_value', self.occ.rp.get_raw_val(function))
         self.occ.rp.set_param('variable_value', self.occ.rp.get_param(function))
         self.occ.rp.set_param('variable_unit', self.occ.rp.get_unit(function))
-        self.occ.rp.set_param('variable_description', self.occ.rp.get_description(function))
+        self.occ.rp.set_param('variable_description', self.editor_function_description)
         self.occ.rp.set_param('editor_index', 0)
 
         if self.editor_name == 'editor_units':
