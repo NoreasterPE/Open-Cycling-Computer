@@ -281,14 +281,18 @@ class layout():
                             try:
                                 if f['editable']:
                                     editable = True
+                                    try:
+                                        self.editor_name = f["editor"]
+                                    except KeyError:
+                                        self.editor_name = None
+                                        self.log.critical("Function {} marked as editable, but no editor field found".format(function), extra=self.extra)
                             except KeyError:
                                     editable = False
                             if resettable:
                                 self.log.debug("Resetting {}".format(function), extra=self.extra)
                                 self.occ.rp.reset_param(function)
                             elif editable:
-                                self.editor_name = self.occ.rp.get_editor_name(function)
-                                self.log.debug("Editing {} with self.editor_name".format(function), extra=self.extra)
+                                self.log.debug("Editing {} with {}".format(function, self.editor_name), extra=self.extra)
                                 self.open_editor_page(function)
                             else:
                                 self.log.debug("LONG CLICK on non-clickable {}".format(function), extra=self.extra)

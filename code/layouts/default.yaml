@@ -373,6 +373,7 @@ pages:
 
                 - function: rider_weight
                   editable: yes
+                  editor: editor_numbers
                   x: 45
                   y: 50
                   font_size: 30
@@ -384,6 +385,7 @@ pages:
 
                 - function: rider_weight_units
                   editable: yes
+                  editor: editor_units
                   x: 100
                   y: 50
                   font_size: 16
@@ -395,6 +397,7 @@ pages:
 
                 - function: altitude_home
                   editable: yes
+                  editor: editor_numbers
                   x: 165
                   y: 50
                   font_size: 30
@@ -417,6 +420,7 @@ pages:
 
                 - function: speed_units
                   editable: yes
+                  editor: editor_units
                   x: 60
                   y: 130
                   font_size: 30
@@ -434,6 +438,7 @@ pages:
 
                 - function: temperature_units
                   editable: yes
+                  editor: editor_units
                   x: 180
                   y: 130
                   font_size: 30
@@ -451,6 +456,7 @@ pages:
 
                 - function: wheel_size
                   editable: yes
+                  editor: editor_numbers
                   x: 60
                   y: 215
                   font_size: 20
@@ -468,6 +474,7 @@ pages:
 
                 - function: odometer
                   editable: yes
+                  editor: editor_numbers
                   x: 165
                   y: 215
                   font_size: 20

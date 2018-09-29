@@ -126,11 +126,6 @@ class ride_parameters():
             rider_weight='Rider weight', rider_weight_units='Rider weight units', wheel_size='Wheel size', speed_units='Speed units',
             temperature_units='Temp. unit')
 
-        # Params that can be changed in Settings by user
-        self.editors = dict(editor_units=('odometer_units', 'rider_weight_units', 'speed_units', 'temperature_units'),
-                            editor_numbers=('altitude_home', 'odometer', 'rider_weight'),
-                            editor_string=('wheel_size'))
-
         self.update_param("speed_max")
         self.split_speed("speed_max")
         self.update_param("altitude_home")
@@ -567,16 +562,3 @@ class ride_parameters():
         else:
             self.log.debug("bmp183 connection lost", extra=self.extra)
         self.log.debug("update_bmp183 finished", extra=self.extra)
-
-    def get_editor_name(self, parameter):
-        self.log.debug("get_editor_name searching for editor for parameter {}".format(parameter), extra=self.extra)
-        editor = None
-        for e in self.editors:
-            if parameter in self.editors[e]:
-                editor = e
-                break
-        if editor:
-            self.log.debug("get_editor_name found editor {} for parameter {}".format(editor, parameter), extra=self.extra)
-        else:
-            self.log.debug("get_editor_name didn't find any editor for parameter {}".format(parameter), extra=self.extra)
-        return editor
