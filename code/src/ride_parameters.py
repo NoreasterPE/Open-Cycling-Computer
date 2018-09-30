@@ -63,11 +63,11 @@ class ride_parameters():
         self.p_raw = dict(time_stamp=time.time(),
                           # Time delta since last p_raw update
                           dtime=1, time_adjustment_delta=0.0,
-                          climb=0.0, daltitude_cumulative=0.0,
-                          odometer=0.0, ddistance=0.0, ddistance_cumulative=0.0, distance=0.0,
-                          time_of_ride_reset=0.0001,
+                          climb=0.0, altitude_delta_cumulative=0.0,
+                          odometer=0.0, distance_delta=0.0, distance_delta_cumulative=0.0, distance=0.0,
+                          ride_time_reset=0.0001,
                           rider_weight=0.0,
-                          ridetime=0.0, ridetime_total=0.0,
+                          ride_time=0.0, ride_time_total=0.0,
                           slope=0.0,
                           speed=0.0, speed_avg=0.0, speed_max=0.0,
                           speed_low=1.0,
@@ -77,15 +77,15 @@ class ride_parameters():
         # Internal units
         self.p_raw_units = dict(
             climb='m/s', distance='m', dtime='s', odometer='m', rider_weight='kg', wheel_size='',
-            ridetime='s', ridetime_total='s', slope='m/m', speed='m/s', timeon='s', time_of_ride_reset='s')
+            ride_time='s', ride_time_total='s', slope='m/m', speed='m/s', timeon='s', ride_time_reset='s')
 
         # Params of the ride ready for rendering.
         self.params = dict(
             climb='-', distance=0, dtime=0, odometer=0.0, rider_weight=0.0,
-            wheel_size='', wheel_circ='', ridetime='', ridetime_hms='', ridetime_total='',
-            ridetime_total_hms='', rtc='', slope='-', speed='-', speed_avg='-',
+            wheel_size='', wheel_circ='', ride_time='', ride_time_hms='', ride_time_total='',
+            ride_time_total_hms='', rtc='', slope='-', speed='-', speed_avg='-',
             speed_avg_digits='-', speed_avg_tenths='-', speed_digits='-', speed_max='-', speed_max_digits='-',
-            speed_max_tenths='-', speed_tenths='-', timeon='', timeon_hms='', time_of_ride_reset='', utc='',
+            speed_max_tenths='-', speed_tenths='-', timeon='', timeon_hms='', ride_time_reset='', utc='',
             # Editor params
             editor_index=0, variable=None,
             variable_description=None, variable_raw_value=None, variable_unit=None, variable_value=None)
@@ -93,17 +93,17 @@ class ride_parameters():
         # Formatting strings for params.
         self.p_format = dict(
             climb='%.1f', distance='%.1f', dtime='%.2f', odometer='%.0f',
-            rider_weight='%.1f', ridetime='%.0f', ridetime_hms='', ridetime_total='.0f',
-            ridetime_total_hms='', rtc='', slope='%.0f', speed='%.1f', speed_avg='%.1f',
+            rider_weight='%.1f', ride_time='%.0f', ride_time_hms='', ride_time_total='.0f',
+            ride_time_total_hms='', rtc='', slope='%.0f', speed='%.1f', speed_avg='%.1f',
             speed_avg_digits='%.0f', speed_avg_tenths='%.0f', speed_digits='%.0f', speed_max='%.1f', speed_max_digits='%.0f', speed_max_tenths='%.0f',
-            speed_tenths='%.0f', timeon='%.0f', timeon_hms='', time_of_ride_reset='%.0f', utc='')
+            speed_tenths='%.0f', timeon='%.0f', timeon_hms='', ride_time_reset='%.0f', utc='')
 
         # Units - name has to be identical as in params
         # FIXME rename to p_units for consistency
         self.units = dict(
             climb='m/s', distance='km', dtime='s', odometer='km',
-            rider_weight='kg', wheel_size='', ridetime='s', ridetime_hms='', ridetime_total='s', ridetime_total_hms='',
-            slope='%', speed='km/h', temperature='C', timeon='s', timeon_hms='', time_of_ride_reset='s')
+            rider_weight='kg', wheel_size='', ride_time='s', ride_time_hms='', ride_time_total='s', ride_time_total_hms='',
+            slope='%', speed='km/h', temperature='C', timeon='s', timeon_hms='', ride_time_reset='s')
 
         # Allowed units - user can switch between those when editing value
         # FIXME switch to mi when mi/h are set for speed
@@ -186,7 +186,7 @@ class ride_parameters():
         #    self.p_raw["dtime"] = self.p_raw["dtime"] - dt_adjustment
         #    self.log.info("dtime adjusted by {}".format(dt_adjustment), extra=self.extra)
         #    self.sensors['gps'].time_adjustment_delta = 0
-        #    # FIXME Correct other parameters like ridetime
+        #    # FIXME Correct other parameters like ride_time
         #self.log.debug("timestamp: {} dtime {:10.3f}".format(time.strftime("%H:%M:%S", time.localtime(t)), self.p_raw["dtime"]), extra=self.extra)
         try:
             self.log.debug("speed dt: {}".format(self.p_raw["ble_sc_wheel_time_stamp"] - self.p_raw["time_stamp"]), extra=self.extra)
@@ -200,17 +200,17 @@ class ride_parameters():
 
         self.calculate_time_related_parameters()
         try:
-            self.p_raw["daltitude_cumulative"] += self.p_raw["altitude_delta"]
-            self.p_raw["ddistance_cumulative"] += self.p_raw["ddistance"]
-            if self.p_raw["ddistance_cumulative"] == 0:
+            self.p_raw["altitude_delta_cumulative"] += self.p_raw["altitude_delta"]
+            self.p_raw["distance_delta_cumulative"] += self.p_raw["distance_delta"]
+            if self.p_raw["distance_delta_cumulative"] == 0:
                 self.p_raw["slope"] = 0
             # FIXME make proper param for tunning. Calculate slope if the distance
-            # delta was grater than 8,4m
-            elif self.p_raw["ddistance_cumulative"] > 8.4:
-                self.p_raw["slope"] = self.p_raw["daltitude_cumulative"] / self.p_raw["ddistance_cumulative"]
-                self.log.debug("daltitude_cumulative: {} ddistance_cumulative: {}".format(self.p_raw["daltitude_cumulative"], self.p_raw["ddistance_cumulative"]), extra=self.extra)
-                self.p_raw["daltitude_cumulative"] = 0
-                self.p_raw["ddistance_cumulative"] = 0
+            # delta was grater than 8,4m. That's related to altimeter accurancy. Calcs to be included in the project.
+            elif self.p_raw["distance_delta_cumulative"] > 8.4:
+                self.p_raw["slope"] = self.p_raw["altitude_delta_cumulative"] / self.p_raw["distance_delta_cumulative"]
+                self.log.debug("altitude_delta_cumulative: {} distance_delta_cumulative: {}".format(self.p_raw["altitude_delta_cumulative"], self.p_raw["distance_delta_cumulative"]), extra=self.extra)
+                self.p_raw["altitude_delta_cumulative"] = 0
+                self.p_raw["distance_delta_cumulative"] = 0
             self.log.debug("slope: {}".format(self.p_raw["slope"]), extra=self.extra)
         except KeyError:
             self.log.debug("FIXME", extra=self.extra)
@@ -223,16 +223,16 @@ class ride_parameters():
         s = self.p_raw["speed"]
         if (s > self.p_raw['speed_low']):
             d = float(dt * s)
-            self.p_raw["ddistance"] = d
+            self.p_raw["distance_delta"] = d
             self.p_raw["distance"] += d
             self.p_raw["odometer"] += d
-            self.p_raw["ridetime"] += dt
-            self.p_raw["ridetime_total"] += dt
-            self.p_raw["speed_avg"] = self.p_raw["distance"] / self.p_raw["ridetime"]
+            self.p_raw["ride_time"] += dt
+            self.p_raw["ride_time_total"] += dt
+            self.p_raw["speed_avg"] = self.p_raw["distance"] / self.p_raw["ride_time"]
             self.update_param("speed_avg")
             self.split_speed("speed_avg")
         else:
-            self.p_raw["ddistance"] = 0
+            self.p_raw["distance_delta"] = 0
 
     def get_raw_val(self, param):
         if param.endswith("_units"):
@@ -304,7 +304,7 @@ class ride_parameters():
 #       dt = self.p_raw["dtime"]
 #       t = self.p_raw["temperature"]
 #       ta = self.p_raw["temperature_avg"]
-#       tt = self.p_raw["ridetime"]
+#       tt = self.p_raw["ride_time"]
 #       ta_new = (t * dt + ta * tt) / (tt + dt)
 #       self.p_raw["temperature_avg"] = ta_new
 
@@ -312,7 +312,7 @@ class ride_parameters():
 #       dt = self.p_raw["dtime"]
 #       c = self.p_raw["ble_sc_cadence"]
 #       ca = self.p_raw["ble_sc_cadence_avg"]
-#       tt = self.p_raw["ridetime"]
+#       tt = self.p_raw["ride_time"]
 #       ca_new = (c * dt + ca * tt) / (tt + dt)
 #       self.p_raw["ble_sc_cadence_avg"] = ca_new
 
@@ -320,8 +320,8 @@ class ride_parameters():
 #       dt = self.p_raw["dtime"]
 #       hr = self.p_raw["ble_hr_heart_rate"]
 #       hra = self.p_raw["ble_hr_heart_rate_avg"]
-#       # FIXME ridetime doesn't seem to be right
-#       tt = self.p_raw["ridetime"]
+#       # FIXME ride_time doesn't seem to be right
+#       tt = self.p_raw["ride_time"]
 #       hr_new = (hr * dt + hra * tt) / (tt + dt)
 #       self.p_raw["ble_hr_heart_rate_avg"] = hr_new
 
@@ -337,9 +337,9 @@ class ride_parameters():
         self.update_bmp183()
         self.update_param("climb")
         self.update_param("distance")
-        self.update_param("ridetime")
-        self.update_hms("ridetime")
-        self.update_hms("ridetime_total")
+        self.update_param("ride_time")
+        self.update_hms("ride_time")
+        self.update_hms("ride_time_total")
         self.update_hms("timeon")
         self.update_param("timeon")
         self.update_max_speed()
@@ -363,7 +363,7 @@ class ride_parameters():
 
     def reset_ride(self):
         self.p_raw["distance"] = 0.0
-        self.p_raw["ridetime"] = 0.0
+        self.p_raw["ride_time"] = 0.0
         #FIXME To be linked with all sensors reset
         self.ble_hr.reset_data()
         self.ble_sc.reset_data()
@@ -371,7 +371,7 @@ class ride_parameters():
     def reset_param(self, param_name):
         self.log.debug("Resetting {}".format(param_name), extra=self.extra)
         self.p_raw[param_name] = 0
-        if param_name in ("ridetime", "distance", "cadence", "ble_hr_heart_rate"):
+        if param_name in ("ride_time", "distance", "cadence", "ble_hr_heart_rate"):
             self.reset_ride()
 
     def update_param(self, param):
