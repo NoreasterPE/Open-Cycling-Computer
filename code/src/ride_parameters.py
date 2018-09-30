@@ -62,8 +62,8 @@ class ride_parameters():
 
         self.p_raw = dict(time_stamp=time.time(),
                           # Time delta since last p_raw update
-                          dtime=1, time_adjustment_delta=0.0,
-                          climb=0.0, altitude_delta_cumulative=0.0,
+                          time_delta=1, time_adjustment_delta=0.0,
+                          altitude_delta_cumulative=0.0,
                           odometer=0.0, distance_delta=0.0, distance_delta_cumulative=0.0, distance=0.0,
                           ride_time_reset=0.0001,
                           rider_weight=0.0,
@@ -76,12 +76,12 @@ class ride_parameters():
 
         # Internal units
         self.p_raw_units = dict(
-            climb='m/s', distance='m', dtime='s', odometer='m', rider_weight='kg', wheel_size='',
+            distance='m', time_delta='s', odometer='m', rider_weight='kg', wheel_size='',
             ride_time='s', ride_time_total='s', slope='m/m', speed='m/s', timeon='s', ride_time_reset='s')
 
         # Params of the ride ready for rendering.
         self.params = dict(
-            climb='-', distance=0, dtime=0, odometer=0.0, rider_weight=0.0,
+            distance=0, time_delta=0, odometer=0.0, rider_weight=0.0,
             wheel_size='', wheel_circ='', ride_time='', ride_time_hms='', ride_time_total='',
             ride_time_total_hms='', rtc='', slope='-', speed='-', speed_avg='-',
             speed_avg_digits='-', speed_avg_tenths='-', speed_digits='-', speed_max='-', speed_max_digits='-',
@@ -92,7 +92,7 @@ class ride_parameters():
 
         # Formatting strings for params.
         self.p_format = dict(
-            climb='%.1f', distance='%.1f', dtime='%.2f', odometer='%.0f',
+            distance='%.1f', time_delta='%.2f', odometer='%.0f',
             rider_weight='%.1f', ride_time='%.0f', ride_time_hms='', ride_time_total='.0f',
             ride_time_total_hms='', rtc='', slope='%.0f', speed='%.1f', speed_avg='%.1f',
             speed_avg_digits='%.0f', speed_avg_tenths='%.0f', speed_digits='%.0f', speed_max='%.1f', speed_max_digits='%.0f', speed_max_tenths='%.0f',
@@ -101,9 +101,9 @@ class ride_parameters():
         # Units - name has to be identical as in params
         # FIXME rename to p_units for consistency
         self.units = dict(
-            climb='m/s', distance='km', dtime='s', odometer='km',
+            distance='km', time_delta='s', odometer='km',
             rider_weight='kg', wheel_size='', ride_time='s', ride_time_hms='', ride_time_total='s', ride_time_total_hms='',
-            slope='%', speed='km/h', temperature='C', timeon='s', timeon_hms='', ride_time_reset='s')
+            slope='%', speed='km/h', timeon='s', timeon_hms='', ride_time_reset='s')
 
         # Allowed units - user can switch between those when editing value
         # FIXME switch to mi when mi/h are set for speed
@@ -335,7 +335,6 @@ class ride_parameters():
         self.update_param("ble_host_state")
         self.update_param("altitude_home")
         self.update_bmp183()
-        self.update_param("climb")
         self.update_param("distance")
         self.update_param("ride_time")
         self.update_hms("ride_time")

@@ -66,16 +66,6 @@ pages:
                   y: 225
                   font_size: 20
 
-                - function: climb
-                  x: 50
-                  y: 180
-                  font_size: 30
-
-                - function: climb_units
-                  x: 100
-                  y: 185
-                  font_size: 16
-
                 - function: slope
                   x: 50
                   y: 215
