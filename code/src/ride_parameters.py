@@ -178,16 +178,16 @@ class ride_parameters():
 
     def update_values(self):
         t = time.time()
-        self.p_raw["dtime"] = t - self.p_raw["time_stamp"]
+        self.p_raw["time_delta"] = t - self.p_raw["time_stamp"]
         self.p_raw["time_stamp"] = t
         #FIXME Time adjustment
         #dt_adjustment = self.p_raw['time_adjustment_delta']
         #if dt_adjustment > 0:
-        #    self.p_raw["dtime"] = self.p_raw["dtime"] - dt_adjustment
-        #    self.log.info("dtime adjusted by {}".format(dt_adjustment), extra=self.extra)
+        #    self.p_raw["time_delta"] = self.p_raw["time_delta"] - dt_adjustment
+        #    self.log.info("time_delta adjusted by {}".format(dt_adjustment), extra=self.extra)
         #    self.sensors['gps'].time_adjustment_delta = 0
         #    # FIXME Correct other parameters like ride_time
-        #self.log.debug("timestamp: {} dtime {:10.3f}".format(time.strftime("%H:%M:%S", time.localtime(t)), self.p_raw["dtime"]), extra=self.extra)
+        #self.log.debug("timestamp: {} time_delta {:10.3f}".format(time.strftime("%H:%M:%S", time.localtime(t)), self.p_raw["time_delta"]), extra=self.extra)
         try:
             self.log.debug("speed dt: {}".format(self.p_raw["ble_sc_wheel_time_stamp"] - self.p_raw["time_stamp"]), extra=self.extra)
             if self.p_raw["time_stamp"] - self.p_raw["ble_sc_wheel_time_stamp"] < 2.0:
@@ -218,7 +218,7 @@ class ride_parameters():
         self.update_params()
 
     def calculate_time_related_parameters(self):
-        dt = self.p_raw["dtime"]
+        dt = self.p_raw["time_delta"]
         self.p_raw["timeon"] += dt
         s = self.p_raw["speed"]
         if (s > self.p_raw['speed_low']):
@@ -301,7 +301,7 @@ class ride_parameters():
         self.p_raw[param + "_min"] = min(self.p_raw[param], self.p_raw[param + "_min"])
 
 #   def calculate_avg_temperature(self):
-#       dt = self.p_raw["dtime"]
+#       dt = self.p_raw["time_delta"]
 #       t = self.p_raw["temperature"]
 #       ta = self.p_raw["temperature_avg"]
 #       tt = self.p_raw["ride_time"]
@@ -309,7 +309,7 @@ class ride_parameters():
 #       self.p_raw["temperature_avg"] = ta_new
 
 #   def calculate_avg_ble_sc_cadence(self):
-#       dt = self.p_raw["dtime"]
+#       dt = self.p_raw["time_delta"]
 #       c = self.p_raw["ble_sc_cadence"]
 #       ca = self.p_raw["ble_sc_cadence_avg"]
 #       tt = self.p_raw["ride_time"]
@@ -317,7 +317,7 @@ class ride_parameters():
 #       self.p_raw["ble_sc_cadence_avg"] = ca_new
 
 #   def calculate_avg_ble_hr_heart_rate(self):
-#       dt = self.p_raw["dtime"]
+#       dt = self.p_raw["time_delta"]
 #       hr = self.p_raw["ble_hr_heart_rate"]
 #       hra = self.p_raw["ble_hr_heart_rate_avg"]
 #       # FIXME ride_time doesn't seem to be right
@@ -327,7 +327,7 @@ class ride_parameters():
 
     def update_params(self):
         self.update_rtc()
-        self.update_param("dtime")
+        self.update_param("time_delta")
         self.update_ble_sc_cadence()
         self.update_ble_hr_heart_rate()
         #FIXME temporary fix to show BLE host state
