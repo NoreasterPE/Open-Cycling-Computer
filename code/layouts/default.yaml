@@ -68,12 +68,12 @@ pages:
 
                 - function: slope
                   x: 50
-                  y: 215
-                  font_size: 30
+                  y: 200
+                  font_size: 60
 
                 - function: slope_units
                   x: 100
-                  y: 220
+                  y: 200
                   font_size: 16
 
                 - function: ble_sc_cadence

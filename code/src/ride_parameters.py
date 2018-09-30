@@ -199,23 +199,25 @@ class ride_parameters():
             self.p_raw["speed"] = 0.0
 
         self.calculate_time_related_parameters()
-        try:
-            self.p_raw["altitude_delta_cumulative"] += self.p_raw["altitude_delta"]
-            self.p_raw["distance_delta_cumulative"] += self.p_raw["distance_delta"]
-            if self.p_raw["distance_delta_cumulative"] == 0:
-                self.p_raw["slope"] = 0
-            # FIXME make proper param for tunning. Calculate slope if the distance
-            # delta was grater than 8,4m. That's related to altimeter accurancy. Calcs to be included in the project.
-            elif self.p_raw["distance_delta_cumulative"] > 8.4:
-                self.p_raw["slope"] = self.p_raw["altitude_delta_cumulative"] / self.p_raw["distance_delta_cumulative"]
-                self.log.debug("altitude_delta_cumulative: {} distance_delta_cumulative: {}".format(self.p_raw["altitude_delta_cumulative"], self.p_raw["distance_delta_cumulative"]), extra=self.extra)
-                self.p_raw["altitude_delta_cumulative"] = 0
-                self.p_raw["distance_delta_cumulative"] = 0
-            self.log.debug("slope: {}".format(self.p_raw["slope"]), extra=self.extra)
-        except KeyError:
-            self.log.debug("FIXME", extra=self.extra)
-            pass
+        self.calculate_slope()
         self.update_params()
+
+    def calculate_slope(self):
+        # FIXME make proper param for tunning. Calculate slope if the distance
+        # delta was grater than 8,4m. That's related to altimeter accurancy. Calcs to be included in the project.
+        try:
+            self.p_raw["altitude_delta_cumulative"] += self.p_raw["bmp183_altitude_delta"]
+        except KeyError:
+            self.log.error("bmp183_altitude_delta doesn't exist", extra=self.extra)
+            return
+        self.p_raw["distance_delta_cumulative"] += self.p_raw["distance_delta"]
+        if self.p_raw["distance_delta_cumulative"] > 8.4:
+            self.p_raw["slope"] = self.p_raw["altitude_delta_cumulative"] / self.p_raw["distance_delta_cumulative"]
+            self.log.debug("altitude_delta_cumulative: {}".format(self.p_raw["altitude_delta_cumulative"]), extra=self.extra)
+            self.log.debug("distance_delta_cumulative: {}".format(self.p_raw["distance_delta_cumulative"]), extra=self.extra)
+            self.p_raw["altitude_delta_cumulative"] = 0
+            self.p_raw["distance_delta_cumulative"] = 0
+        self.log.debug("slope: {}".format(self.p_raw["slope"]), extra=self.extra)
 
     def calculate_time_related_parameters(self):
         dt = self.p_raw["time_delta"]
