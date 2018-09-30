@@ -220,19 +220,14 @@ class ride_parameters():
     def calculate_time_related_parameters(self):
         dt = self.p_raw["time_delta"]
         self.p_raw["timeon"] += dt
-        s = self.p_raw["speed"]
-        if (s > self.p_raw['speed_low']):
-            d = float(dt * s)
-            self.p_raw["distance_delta"] = d
-            self.p_raw["distance"] += d
-            self.p_raw["odometer"] += d
-            self.p_raw["ride_time"] += dt
-            self.p_raw["ride_time_total"] += dt
-            self.p_raw["speed_avg"] = self.p_raw["distance"] / self.p_raw["ride_time"]
-            self.update_param("speed_avg")
-            self.split_speed("speed_avg")
-        else:
-            self.p_raw["distance_delta"] = 0
+        speed = self.p_raw["speed"]
+        dist_delta = float(dt * speed)
+        self.p_raw["distance_delta"] = dist_delta
+        self.p_raw["distance"] += dist_delta
+        self.p_raw["odometer"] += dist_delta
+        self.p_raw["ride_time"] += dt
+        self.p_raw["ride_time_total"] += dt
+        self.p_raw["speed_avg"] = self.p_raw["distance"] / self.p_raw["ride_time"]
 
     def get_raw_val(self, param):
         if param.endswith("_units"):
@@ -345,6 +340,8 @@ class ride_parameters():
         self.update_param("speed")
         self.update_param("speed_max")
         self.split_speed("speed")
+        self.update_param("speed_avg")
+        self.split_speed("speed_avg")
         self.params["utc"] = self.p_raw["utc"]
         self.update_param("odometer")
         self.update_param("rider_weight")
