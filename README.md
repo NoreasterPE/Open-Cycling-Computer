@@ -24,6 +24,9 @@ Future main page of the Open Cycling Computer: http://opencyclingcomputer.eu
 ![DEMO 4](https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/demo_screenshoots/demo_4.png?raw=true)
 ![DEMO 5](https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/demo_screenshoots/demo_5.png?raw=true)
 ![DEMO 6](https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/demo_screenshoots/demo_6.png?raw=true)
+![DEMO 7](https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/demo_screenshoots/demo_7.png?raw=true)
+![DEMO 8](https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/demo_screenshoots/demo_8.png?raw=true)
+![DEMO 9](https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/demo_screenshoots/demo_9.png?raw=true)
 
 Licence CC-SA-BY
 
