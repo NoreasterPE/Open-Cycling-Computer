@@ -66,7 +66,7 @@ class sensor(threading.Thread):
     def get_formats(self):
         return self.p_formats
 
-    ## Return list of parameters required be a sensor to fully work. I.e. pressure sensor might need home altitude to calculate current altitude
+    ## Return list of parameters required be a sensor to fully work. I.e. pressure sensor might need reference altitude to calculate current altitude
     #  @param self The python object self
     def get_required(self):
         return self.required

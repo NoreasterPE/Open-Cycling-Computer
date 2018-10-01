@@ -3,8 +3,8 @@ layout_path: "layouts/default.xml"
 rider_weight: "80.0"
 rider_weight_units: kg
 wheel_size: 700x25C
-altitude_home: "0.0"
-altitude_home_units: m
+reference_altitude: "0.0"
+reference_altitude_units: m
 odometer: "0.0"
 odometer_units: km
 ridetime_total: "0.0"

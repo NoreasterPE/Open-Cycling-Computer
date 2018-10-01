@@ -4,7 +4,7 @@ FIXME - list needs updating, now all external valueas are prefixed with [sensor 
 Valid function names for use in layout files (for now it's the best idea to check default.yaml file with default layout):
 
 altitude		        - current altitude in meters, calculated from pressure
-altitude_home	        - home altitude
+reference_altitude	        - home altitude
 ble_sc_cadence			- cadence from BLE sensor
 date			        - current date
 distance
@@ -12,7 +12,7 @@ slope			        - gradient of the road
 ble_hr_heart_rate
 odometer		        - total distance, editable in Settings page
 bmp183_pressure		    - current atmospheric pressure
-pressure_at_sea_level	- sea level pressure calculated from pressure and given altitude. It's a value fixed at start or updated after user editied altitude_home
+pressure_at_sea_level	- sea level pressure calculated from pressure and given altitude. It's a value fixed at start or updated after user editied reference_altitude
 rider_weight	    	- weight of rider
 rtc			            - combined date + time 
 speed		        	- speed, to be calculated using Kalman filter from gps + wheel sensor - not implemented yet (fixed value)

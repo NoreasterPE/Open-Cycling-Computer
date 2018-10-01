@@ -106,12 +106,12 @@ class bmp183(sensor.sensor):
         self.p_raw_units = dict(pressure="Pa", pressure_min="Pa", pressure_max="Pa",
                                 temperature="C", temperature_min="C", temperature_max="C",
                                 altitude="m", altitude_delta="m")
-        self.required = dict(altitude_home=numbers.NAN)
+        self.required = dict(reference_altitude=numbers.NAN)
         self.reset_data()
-        ## @var altitude_home
+        ## @var reference_altitude
         #  Home altitude. Used as reference altitude for calculation of pressure at sea level and subsequent altitude calculations.
-        #  Use set_home_altitude function to set it
-        self.set_home_altitude(0)
+        #  It is being set through the notification system - see \link notification \endlink function
+        self.reference_altitude = numbers.NAN
         # Setup Raspberry PINS, as numbered on BOARD
         self.SCK = 32  # GPIO for SCK, other name SCLK
         self.SDO = 36  # GPIO for SDO, other name MISO
@@ -168,17 +168,17 @@ class bmp183(sensor.sensor):
         #  Actual pressure measured by the sensor
         self.pressure_unfiltered = 0
         ## @var altitude
-        #  Altitude calculated on home altitude and current presure
+        #  Altitude calculated based on reference altitude and current presure
         self.altitude = numbers.NAN
         ## @var altitude_delta
         #  Difference in altitude since last calculations
         self.altitude_delta = numbers.NAN
 
-    ## Trigger calculation of pressure at the sea level on change of home altitude
+    ## Trigger calculation of pressure at the sea level on change of reference altitude
     #  @param self The python object self
     def notification(self, required):
         self.log.debug("required {}".format(required), extra=self.extra)
-        self.set_home_altitude(required["altitude_home"])
+        self.reference_altitude = required["reference_altitude"]
         self.calculate_pressure_at_sea_level()
 
     def stop(self):
@@ -395,23 +395,17 @@ class bmp183(sensor.sensor):
         self.P = (1 - self.K) * self.P_previous
         self.pressure = self.pressure_estimate
 
-    ## Sets altitude_home and triggers recalculation of pressure_at_sea_level
-    #  @param self The python object self
-    #  @param altitude_home Home altitude
-    def set_home_altitude(self, altitude_home):
-        self.altitude_home = altitude_home
-
-    ## Calculates pressure at sea level based on given home altitude
+    ## Calculates pressure at sea level based on given reference altitude
     #  Saves calculated value to self.pressure_at_sea_level
     #  @param self The python object self
-    #  @param altitude_home Home altitudei
+    #  @param reference_altitude Home altitudei
     def calculate_pressure_at_sea_level(self):
         self.log.debug("pressure: {}".format(self.pressure), extra=self.extra)
-        if self.altitude_home < 43300:
-            self.pressure_at_sea_level = float(self.pressure / pow((1 - self.altitude_home / 44330), 5.255))
+        if self.reference_altitude < 43300:
+            self.pressure_at_sea_level = float(self.pressure / pow((1 - self.reference_altitude / 44330), 5.255))
         else:
             self.pressure_at_sea_level = numbers.NAN
-            self.log.debug("Home altitude over 43300: {}, refusing to calculate pressure at sea level".format(self.altitude_home), extra=self.extra)
+            self.log.debug("Reference altitude over 43300: {}, refusing to calculate pressure at sea level".format(self.reference_altitude), extra=self.extra)
         self.log.debug("pressure_at_sea_level: {}".format(self.pressure_at_sea_level), extra=self.extra)
 
     ## Calculates altitude and altitude_delta based on pressure_at_sea_level and current pressure

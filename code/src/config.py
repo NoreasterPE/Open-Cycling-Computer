@@ -85,16 +85,16 @@ class config(object):
         except AttributeError:
             error_list.append("rider_weight_units")
         try:
-            self.rp.p_raw["altitude_home"] = float(self.config_params["altitude_home"])
-            self.rp.p_raw_units["altitude_home"] = "m"
-            self.rp.p_format["altitude_home"] = "%.0f"
-            self.rp.units["altitude_home"] = "m"
+            self.rp.p_raw["reference_altitude"] = float(self.config_params["reference_altitude"])
+            self.rp.p_raw_units["reference_altitude"] = "m"
+            self.rp.p_format["reference_altitude"] = "%.0f"
+            self.rp.units["reference_altitude"] = "m"
         except AttributeError:
-            error_list.append("altitude_home")
+            error_list.append("reference_altitude")
         try:
-            self.rp.units["altitude_home"] = self.config_params["altitude_home_units"]
+            self.rp.units["reference_altitude"] = self.config_params["reference_altitude_units"]
         except AttributeError:
-            error_list.append("altitude_home")
+            error_list.append("reference_altitude")
         try:
             self.rp.p_raw["odometer"] = float(self.config_params["odometer"])
         except AttributeError:
@@ -158,8 +158,8 @@ class config(object):
         c["rider_weight"] = self.rp.p_raw["rider_weight"]
         c["rider_weight_units"] = self.rp.units["rider_weight"]
         c["wheel_size"] = self.rp.p_raw["wheel_size"]
-        c["altitude_home"] = self.rp.p_raw["altitude_home"]
-        c["altitude_home_units"] = self.rp.units["altitude_home"]
+        c["reference_altitude"] = self.rp.p_raw["reference_altitude"]
+        c["reference_altitude_units"] = self.rp.units["reference_altitude"]
         c["odometer"] = self.rp.p_raw["odometer"]
         c["odometer_units"] = self.rp.units["odometer"]
         c["ridetime_total"] = self.rp.p_raw["ridetime_total"]

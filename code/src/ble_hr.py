@@ -19,10 +19,10 @@ class ble_hr(sensor.sensor):
     HR_DISABLE_HR = bytes("00", 'UTF-8')
     ## @var WAIT_TIME
     # Time of waiting for notifications in seconds
-    WAIT_TIME = 5.0
+    WAIT_TIME = 1.0
     ## @var RECONNECT_WAIT_TIME
     # Time of waiting after an exception has been raiesed or connection lost
-    RECONNECT_WAIT_TIME = 3.0
+    RECONNECT_WAIT_TIME = 1.0
 
     def __init__(self):
         super().__init__()
@@ -146,13 +146,13 @@ class ble_hr(sensor.sensor):
                 else:
                     self.log.debug('ble_hr NOT connected', extra=self.extra)
                     self.initialise_connection()
-                    time.sleep(5.0)
+                    time.sleep(1.0)
                     self.set_notifications(enable=True)
-                    time.sleep(5.0)
+                    time.sleep(1.0)
             else:
                 #Waiting for ble address
                 self.log.debug('ble_hr add is None, waiting...', extra=self.extra)
-                time.sleep(5.0)
+                time.sleep(1.0)
             self.log.debug('Main ble_hr loop running {}'.format(self.running), extra=self.extra)
         self.log.debug('Main ble_hr loop finished', extra=self.extra)
 

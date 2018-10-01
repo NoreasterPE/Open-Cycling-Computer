@@ -66,24 +66,14 @@ pages:
                   y: 225
                   font_size: 20
 
-                - function: climb
-                  x: 50
-                  y: 180
-                  font_size: 30
-
-                - function: climb_units
-                  x: 100
-                  y: 185
-                  font_size: 16
-
                 - function: slope
                   x: 50
-                  y: 215
-                  font_size: 30
+                  y: 200
+                  font_size: 60
 
                 - function: slope_units
                   x: 100
-                  y: 220
+                  y: 200
                   font_size: 16
 
                 - function: ble_sc_cadence
@@ -392,13 +382,13 @@ pages:
                   y: 50
                   font_size: 16
 
-                - function: home_altitude_label
+                - function: reference_altitude_label
                   x: 180
                   y: 15
-                  text: Home altitude
+                  text: Reference alt.
 
-                - function: altitude_home
-                  description: Home altitude
+                - function: reference_altitude
+                  description: Reference alt.
                   editable: yes
                   editor: editor_numbers
                   x: 165
@@ -410,7 +400,7 @@ pages:
                           w: 120
                           h: 80
 
-                - function: altitude_home_units
+                - function: reference_altitude_units
                   x: 220
                   y: 50
                   font_size: 16
