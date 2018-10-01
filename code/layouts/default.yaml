@@ -382,13 +382,13 @@ pages:
                   y: 50
                   font_size: 16
 
-                - function: home_altitude_label
+                - function: reference_altitude_label
                   x: 180
                   y: 15
-                  text: Home altitude
+                  text: Reference alt.
 
-                - function: altitude_home
-                  description: Home altitude
+                - function: reference_altitude
+                  description: Reference alt.
                   editable: yes
                   editor: editor_numbers
                   x: 165
@@ -400,7 +400,7 @@ pages:
                           w: 120
                           h: 80
 
-                - function: altitude_home_units
+                - function: reference_altitude_units
                   x: 220
                   y: 50
                   font_size: 16

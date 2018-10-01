@@ -258,7 +258,7 @@ class ride_parameters():
             return value
 
     def get_unit(self, param_name):
-        suffixes = ("_min", "_max", "_avg", "_home")
+        suffixes = ("_min", "_max", "_avg")
         p = self.strip_end(param_name, suffixes)
         if p.endswith("_units"):
             return None
@@ -269,7 +269,7 @@ class ride_parameters():
                 return None
 
     def get_internal_unit(self, param_name):
-        suffixes = ("_min", "_max", "_avg", "_home")
+        suffixes = ("_min", "_max", "_avg")
         p = self.strip_end(param_name, suffixes)
         if p.endswith("_units"):
             units = None
@@ -330,7 +330,7 @@ class ride_parameters():
         #FIXME temporary fix to show BLE host state
         self.p_raw["ble_host_state"] = self.sensors.get_ble_host_state() + 3
         self.update_param("ble_host_state")
-        self.update_param("altitude_home")
+        self.update_param("reference_altitude")
         self.update_bmp183()
         self.update_param("distance")
         self.update_param("ride_time")

@@ -483,10 +483,6 @@ class layout():
                 value = self.uc.convert(value, variable_unit, unit_raw)
             self.occ.rp.set_raw_param(variable, value)
             self.occ.rp.update_param(variable)
-            # FIXME - find a better place for it
-            if variable == "altitude_home":
-                # Force recalculation
-                self.occ.rp.p_raw["pressure_at_sea_level"] = 0
         if self.editor_name == "editor_string":
             self.occ.rp.p_raw[variable] = variable_value
             self.occ.rp.params[variable] = variable_value
