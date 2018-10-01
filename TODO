@@ -1,56 +1,46 @@
 UI
-1. Consider scroll-over-the-edge to switch pages
-3. Control rounding errors when switching units in editor
-4. New editor layout. Current is confusing.
-5. Click to switch value i.e. click on temperature to cycle over min/average/max
-6. Button maps with colour images
-7. Indicate BLE connection on screen (WIP)
-8. BLE device list expiry time. Currently never expires
-9. There is no way to disconnect from a BLE device
-10. Use real ff fonts instead of the "toy" cairo API
-11. Auto reload layout on date time of modification change might be handy
+- Consider scroll-over-the-edge to switch pages
+- New editor layout. Current is confusing.
+- Click to switch value i.e. click on temperature to cycle over min/average/max
+- Button maps with colour images
+- BLE device list expiry time. Currently never expires
+- There is no way to disconnect from a BLE device
+- Use real ff fonts instead of the "toy" cairo API
+- Auto reload layout on date time of modification change might be handy
 
 CODING STYLE:
-1. Fix inconsistent naming: func, function, param_name
-2. Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
-3. Review & avoid try/catch. It's too expensive [HOLD]
-4. Add a standard parent class for hardware module running in a separate thread (init, start, run, stop, get_data) [IN PROGRESS]
-6. Add new params from modules to ride parameters? Modules to give ready for use values? Help standarisation, but makes splitting code into libs harder.
-7. Define sensor module API (init, get_data, get_formatting, start, stop, get_status) [IN PROGRESS]
-8. Make library for layout handling. Might be useful for other projects like weather station
+- Fix inconsistent naming: func, function, param_name
+- Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
 
 REAL WORLD PROBLEMS:
-1. Max speed will be false sooner or later aftera single invalid measurement. Kalman filter required.
-2. Average cadence to be calculated for ride time (reset with ride time?)
-3. Do not try to initialise subsystems too many times. If BLE/GPS/other sensor is not there it won't magically show up. Log error and give up.
-4. Add a module to allow real live raw data monitoring
-7. Use timestamp to discard false notifications BLE HR/SC
-8. Use Kalman filter for speed - BLE SC goes crazy sometimes
-9. Pulse heart rate icon every time ble notification is received
-11. Make threads stoppable with feedback for clean exit (low priority)
-12. Use Kalman filter for heart rate - ble_hr goes crazy sometimes
-13. Use Kalman filter for cadence - ble_sc goes crazy sometimes
-14. Add reset function to bmp183
-15. Quit/Halt should render some exit screen
-16. BLE device name might be too long for assigned space. Split or cur. Use i4oled code if needed.
-17. Average speed units to be changed with speed units. Required cleaning ride_parameters code first.
-18. Verify button size. Some are not matching the boxes.
-19. Set up low battery warning/shutdown. Pimoroni Lipo shim informs about battery state.
+- Max speed will be false sooner or later after a single invalid measurement. Kalman filter required.
+- Average cadence to be calculated for ride time (reset with ride time?)
+- Do not try to initialise subsystems too many times. If BLE/GPS/other sensor is not there it won't magically show up. Log error and give up.
+- Add a module to allow real live raw data monitoring
+- Use timestamp to discard false notifications BLE HR/SC
+- Use Kalman filter for speed - BLE SC goes crazy sometimes
+- Make threads stoppable with feedback for clean exit (low priority)
+- Use Kalman filter for heart rate - ble_hr goes crazy sometimes
+- Use Kalman filter for cadence - ble_sc goes crazy sometimes
+- Quit/Halt should render some exit screen
+- BLE device name might be too long for assigned space. Split or cut. Use i4oled code if needed.
+- Average speed units to be changed with speed units. Required cleaning ride_parameters code first.
+- Set up low battery warning/shutdown. Pimoroni Lipo shim informs about battery state.
 
 CODE ERRORS:
-1. Threads write to log aftred log end [ERROR]
-4. Setting time from GPS for the first time breaks delta (trip time)
-8. Average cadence and heart rate are invalid
-9. Errors when no bmp183 or gps present
+- Threads write to log aftred log end [ERROR]
+- Setting time from GPS for the first time breaks delta (trip time)
+- Average cadence and heart rate are invalid
+- Errors when no bmp183 or gps present
 
 HARDWARE:
-1. Add backlight control
-2. Is it possible to read date/time from GPS chip with no fix or a separate clock is needed?
-3. Fix lost should be marked in log? {Yes, as DEBUG}
+- Add backlight control
+- Is it possible to read date/time from GPS chip with no fix or a separate clock is needed?
+- Fix lost should be marked in log? {Yes, as DEBUG}
 
 FUTURE
-1. Make libaray for layout design? [IN PROGRESS]
-2. Explore python-osmgpsmap
+- Make library for layout handling. Might be useful for other projects like weather station [IN PROGRESS]
+- Explore python-osmgpsmap
 
 [DONE]
 1. [DONE] Saving setting (i.e. current layout)
@@ -181,3 +171,13 @@ TypeError: argument 1 must be pygame.Surface, not None
 67. [DONE] Pulse speed/cadence icon every time ble notification is received
 68. [DONE] BLE_HR main loop sometimes quit with some unhandled exception
 69. [DONE] Change log formatting. Timestamp should be first in human readable format
+70. [DONE] Indicate BLE connection on screen
+71. [WONTFIX] Control rounding errors when switching units in editor {Concepcion change, no more switching units when editing a number}
+72. [WONTFIX] Review & avoid try/catch. It's too expensive {Lean try-except is OK}
+73. [DONE] Add a standard parent class for hardware module running in a separate thread (init, start, run, stop, get_data) [IN PROGRESS]
+74. [WONTFIX] Add new params from modules to ride parameters? Modules to give ready for use values?
+    Help standarisation, but makes splitting code into libs harder. {Concepcion change, modules where possible}
+75. [DONE] Define sensor module API (init, get_data, get_formatting, start, stop, get_status) [IN PROGRESS]
+76. [DONE] Pulse heart rate icon every time ble notification is received
+77. [DONE] reset function to bmp183
+78- [DONE] Verify button size. Some are not matching the boxes.
