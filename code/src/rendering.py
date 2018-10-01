@@ -47,7 +47,7 @@ class rendering(threading.Thread):
                 self.fb_cr.rectangle(0, 0, 240, 320)
                 self.fb_cr.fill()
                 #Uncomment to generate screenshots, also changes fps to 1 to avoid generating too much images
-                #self.fb_surface.write_to_png("sc_"+str(round(time.time())) + ".png")
+                #self.fb_surface.write_to_png("sc_" + str(round(time.time())) + ".png")
                 #self.fps = 1.0
             #FIXME Set up scheduler instead of waiting
             time.sleep(1.0 / self.fps)
