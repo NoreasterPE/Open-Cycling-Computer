@@ -8,10 +8,11 @@ cd code
 but it is highly experimental and no longer runs in simulation mode. The real hardware (raspberry pi and piTFT) is required.
 
 Drag screen left-right to switch view, drag down to access Options.
-Dragging left-right from Oprions switches to User Preferences
+Dragging left-right from Options switches to User Preferences
 Long click to reset or edit value if editable or resettable.
+GUI diagram [WIP]: https://github.com/PrzemoF/Open-Cycling-Computer/blob/master/Documentation/OCC_GUI.pdf
 
-DOCUMENTATION: http://opencyclingcomputer.eu/Documentation/
+Documentation: http://opencyclingcomputer.eu/Documentation/
 
 Some info about the code can be found here:
 http://blog.firszt.eu/index.php?tag/OpenCyclingComputer
