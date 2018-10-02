@@ -1,0 +1,380 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+## @package ble_sensor
+#  Abstract base BLE sensor handling module.
+import bluepy.btle
+import time
+import math
+import numbers
+import sensor
+
+
+##Abstract base Class for handling BLE sensors
+class ble_sensor(sensor.sensor):
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'ble_sensor'}
+    #Overwrite in real device class
+    HANDLE = 0x000f
+    #Overwrite in real device class
+    ENABLE_NOTIFICATIONS = bytes("10", 'UTF-8')
+    #Overwrite in real device class
+    DISABLE_NOTIFICATIONS = bytes("00", 'UTF-8')
+    ## @var WAIT_TIME
+    # Time of waiting for notifications in seconds
+    WAIT_TIME = 1.0
+    ## @var RECONNECT_WAIT_TIME
+    # Time of waiting after an exception has been raised or connection lost
+    RECONNECT_WAIT_TIME = 1.0
+
+    def __init__(self):
+        super().__init__()
+        self.log.debug('WAIT_TIME {}'.format(self.WAIT_TIME), extra=self.extra)
+        self.p_raw = dict(name="", addr="", state=numbers.NAN, battery_level=numbers.NAN)
+        self.p_formats = dict(name="", addr="", state="", battery_level="%.0f")
+        self.p_units = dict(name="", addr="", state="", battery_level="%")
+        self.p_raw_units = dict(name="", addr="", state="", battery_level="%")
+        self.required = dict()
+
+        self.reset_data()
+        self.notifications_enabled = False
+
+    def set_notifications(self, enable=True):
+        # Enable/disable notifications
+        self.log.debug('Set notifications started. enable={}'.format(enable), extra=self.extra)
+        try:
+            if enable:
+                self.peripherial.writeCharacteristic(self.HANDLE, self.ENABLE_NOTIFICATIONS, False)
+                self.log.debug('Notifications enabled', extra=self.extra)
+                self.notifications_enabled = True
+            else:
+                self.peripherial.writeCharacteristic(self.HANDLE, self.DISABLE_NOTIFICATIONS, False)
+                self.log.debug('Notifications disabled', extra=self.extra)
+                self.notifications_enabled = False
+        except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+            self.handle_exception(e, "set_notifications")
+        self.log.debug('Set notifications finished', extra=self.extra)
+
+    def initialise_connection(self):
+        if self.addr is not None and self.connected is False and self.running:
+            self.log.debug('Initialising connection started', extra=self.extra)
+            try:
+                self.log.debug('Setting delegate', extra=self.extra)
+                self.delegate = Delegate(self.log)
+                self.log.debug('Setting peripherial', extra=self.extra)
+                self.peripherial = bluepy.btle.Peripheral()
+                self.log.debug('Setting notification handler', extra=self.extra)
+                self.peripherial.withDelegate(self.delegate)
+                self.log.debug('Notification handler set', extra=self.extra)
+                self.log.debug('Connecting', extra=self.extra)
+                self.state = 1
+                self.peripherial.connect(self.addr, addrType='random')
+                self.log.debug('Connected', extra=self.extra)
+                self.connected = True
+                self.state = 2
+                self.log.debug('Getting device name', extra=self.extra)
+                self.name = self.get_device_name()
+                self.log.debug('Getting battery level', extra=self.extra)
+                self.battery_level = self.get_battery_level()
+            except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+                self.handle_exception(e, "initialise_connection")
+                self.state = 0
+            self.log.debug('Initialising connection finished', extra=self.extra)
+
+    def handle_exception(self, exception, caller):
+        self.log.error(exception, extra=self.extra)
+        self.log.error("{}".format(type(exception)), extra=self.extra)
+        self.log.error("Exception {} in {}".format(exception, caller), extra=self.extra)
+        try:
+            raise (exception)
+        except bluepy.btle.BTLEException as e:
+            if str(e).startswith("Failed to connect to peripheral"):
+                self.log.info(e, extra=self.extra)
+                self.connected = False
+                self.notifications_enabled = False
+            elif str(e) == "Helper not started (did you call connect()?)":
+                self.log.info(e, extra=self.extra)
+                self.connected = False
+                self.notifications_enabled = False
+            elif str(e) == "Device disconnected":
+                self.log.info(e, extra=self.extra)
+                self.connected = False
+                self.notifications_enabled = False
+            elif str(e) == "Helper exited":  # FIXME - what to do with this?
+                self.log.error(e, extra=self.extra)
+                self.connected = False
+                self.notifications_enabled = False
+            elif (str(e) == "Error from Bluetooth stack (badstate)" or
+                    str(e) == "Error from Bluetooth stack (comerr)"):
+                self.log.error(e, extra=self.extra)
+                self.connected = False
+                self.notifications_enabled = False
+            elif (str(e) == "Unexpected response (rd)" or
+                    str(e) == "Unexpected response (find)" or
+                    str(e) == "Unexpected response (wr)"):
+                self.log.info(e, extra=self.extra)
+            else:
+                self.log.error('Uncontrolled error {} in {}'.format(e, caller), extra=self.extra)
+                self.connected = False
+                self.notifications_enabled = False
+                raise
+        except (BrokenPipeError, AttributeError) as e:
+            self.log.error('{} in {}'.format(e, caller), extra=self.extra)
+            self.connected = False
+            self.notifications_enabled = False
+
+    def run(self):
+        self.log.debug('Starting the main loop', extra=self.extra)
+        self.running = True
+        self.state = 0
+        while self.running:
+            self.log.debug('Address: {}, connected: {}, notifications: {}'.format(self.addr, self.connected, self.notifications_enabled), extra=self.extra)
+            if self.addr is not None:
+                if self.connected and self.notifications_enabled:
+                    try:
+                        if self.peripherial.waitForNotifications(self.WAIT_TIME):
+                            if self.time_stamp != self.delegate.time_stamp:
+                                self.process_delegate_data()
+                    except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+                        self.handle_exception(e, "waitForNotifications")
+                else:
+                    self.log.debug('NOT connected', extra=self.extra)
+                    self.initialise_connection()
+                    time.sleep(1.0)
+                    self.set_notifications(enable=True)
+                    time.sleep(1.0)
+            else:
+                #Waiting for ble address
+                self.log.debug('address is None, waiting...', extra=self.extra)
+                time.sleep(1.0)
+            self.log.debug('Main loop running {}'.format(self.running), extra=self.extra)
+        self.log.debug('Main loop finished', extra=self.extra)
+
+    ## Overwrite in real BLE sensor class
+    #FIXME OR all calcs to be done in the Delegate, pass back complete dict to make code universal across all BLE sensors
+    def process_delegate_data(self):
+        pass
+        #self.time_stamp = self.delegate.time_stamp
+        #self.heart_rate = self.delegate.heart_rate
+        #self.heart_rate_min = min(self.heart_rate_min, self.delegate.heart_rate)
+        #self.heart_rate_avg = self.delegate.heart_rate_avg
+        #self.heart_rate_max = max(self.heart_rate_max, self.delegate.heart_rate)
+        #self.heart_rate_beat = self.delegate.heart_rate_beat
+        #self.log.debug('heart rate = {} @ {}'.format(self.heart_rate, time.strftime("%H:%M:%S", time.localtime(self.time_stamp))), extra=self.extra)
+
+    def safe_disconnect(self):
+        self.connected = False
+        self.notifications_enabled = False
+        self.log.debug('safe_disconnect started', extra=self.extra)
+        # Make sure the device is not sending notifications (is this required?)
+        try:
+            self.set_notifications(enable=False)
+        except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+            # Not connected yet
+            self.log.error('{}'.format(e), extra=self.extra)
+            pass
+        # Make sure the device is disconnected
+        try:
+            self.peripherial.disconnect()
+            self.state = 0
+        except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+            # Not connected yet
+            self.log.error('AttributeError: {}'.format(e), extra=self.extra)
+            pass
+        self.log.debug('State = {}. Waiting {} s to reconnect'.format(self.state, self.RECONNECT_WAIT_TIME), extra=self.extra)
+        time.sleep(self.RECONNECT_WAIT_TIME)
+        self.log.debug('safe_disconnect finished', extra=self.extra)
+
+    def get_raw_data(self):
+        return self.p_raw()
+
+    def get_device_name(self):
+        name = ""
+        try:
+            c = self.peripherial.getCharacteristics(uuid=bluepy.btle.AssignedNumbers.deviceName)
+            name = c[0].read()
+            self.log.debug('Device name: {}'.format(name), extra=self.extra)
+        except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+            self.handle_exception(e, "get_device_name")
+        if type(name) is bytes:
+            name = name.decode("utf-8")
+        return name
+
+    def get_battery_level(self):
+        level = numbers.NAN
+        try:
+            b = self.peripherial.getCharacteristics(uuid=bluepy.btle.AssignedNumbers.batteryLevel)
+            level = ord(b[0].read())
+            self.log.debug('Battery lavel: {}'.format(level), extra=self.extra)
+        except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+            self.handle_exception(e, "get_battery_level")
+        return level
+
+    def get_state(self):
+        return self.state
+
+    def reset_data(self):
+        ## @var name
+        # Battery level in %
+        self.battery_level = numbers.NAN
+        ## @var time_stamp
+        # Time stamp of the measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
+        self.time_stamp = time.time()
+
+    ## Receive updated parameters form sensors module
+    #  @param self The python object self
+    #  @param required Dict with updated by sensonrs module parameters
+    def notification(self, required):
+        self.log.debug("required {}".format(required), extra=self.extra)
+        ride_time = required["ride_time"]
+        self.ride_time_delta = ride_time - self.ride_time
+        self.ride_time = ride_time
+        if math.isnan(self.ride_time_delta):
+            self.ride_time_delta = 0.0
+        self.log.debug("ride_time_delta {}".format(self.ride_time_delta), extra=self.extra)
+#       self.calculate_avg_heart_rate()
+
+#    FIXME make decision if get_data and get_raw_data are required
+#    def get_data(self):
+#        return dict(name=self.name, addr=self.addr, state=self.state, time_stamp=self.time_stamp, heart_rate=self.heart_rate, heart_rate_beat=self.heart_rate_beat)
+
+    def __del__(self):
+        self.stop()
+
+    def set_addr(self, addr):
+        self.log.debug('address set to {}'.format(addr), extra=self.extra)
+        self.addr = addr
+
+    def stop(self):
+        super().stop()
+        time.sleep(1)
+        self.log.debug('Disabling notifications', extra=self.extra)
+        self.set_notifications(enable=False)
+        time.sleep(1)
+        self.log.debug('Disconnecting', extra=self.extra)
+        try:
+            self.peripherial.disconnect()
+        except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
+            self.handle_exception(e, "stop, disconnecting")
+        self.state = 0
+        self.log.info('{} disconnected'.format(self.name), extra=self.extra)
+        self.log.debug('Stop finished', extra=self.extra)
+
+
+class Delegate(bluepy.btle.DefaultDelegate):
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'ble_sensor_dgte'}
+
+    def __init__(self, log):
+        bluepy.btle.DefaultDelegate.__init__(self)
+
+    def handleNotification(self, cHandle, data):
+        pass
+
+
+#Below code needs to be per-characteristic, so for now in the real device class
+'''## Class for handling BLE notifications from heart rate sensor
+class HR_Delegate(bluepy.btle.DefaultDelegate):
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'ble_hr_dgte'}
+
+    def __init__(self, log):
+        self.log = log
+        self.log.debug('Delegate __init__ started', extra=self.extra)
+        bluepy.btle.DefaultDelegate.__init__(self)
+        self.heart_rate = numbers.NAN
+        self.heart_rate_avg = 0.0
+        self.measurement_time = 0.0
+        self.heart_rate_beat = 0
+        self.time_stamp = time.time()
+        self.time_stamp_previous = self.time_stamp
+        self.measurement_no = 0
+        self.log.debug('Delegate __init__ finished', extra=self.extra)
+
+    def handleNotification(self, cHandle, data):
+        self.log.debug('Delegate: handleNotification started', extra=self.extra)
+        self.log.debug('Delegate: Notification received. Handle: {}, data: {}'.format(hex(cHandle), data), extra=self.extra)
+
+        # Heart Rate Measurement from BLE standard
+        # https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.heart_rate_measurement.xml
+        # https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.heart_rate_control_point.xml&u=org.bluetooth.characteristic.heart_rate_control_point.xml
+        #
+        self.time_stamp_previous = self.time_stamp
+        self.time_stamp = time.time()
+        self.measurement_no += 1
+        self.heart_rate_beat = int(not(self.heart_rate_beat))
+
+        i = 0
+        data_b = {}
+        for b in data:
+            data_b[i] = b
+            i += 1
+
+        HR_VALUE_FORMAT = 0b00000001  # 0 UINT8, 1 UINT16
+        # 0   Heart Rate Value Format is set to UINT8. Units: beats per minute (bpm)
+        # 1   Heart Rate Value Format is set to UINT16. Units: beats per minute (bpm)
+        # SENSOR_CONTACT_STATUS = 0b00000110
+        # 0   Sensor Contact feature is not supported in the current connection
+        # 1   Sensor Contact feature is not supported in the current connection
+        # 2   Sensor Contact feature is supported, but contact is not detected
+        # 3   Sensor Contact feature is supported and contact is detected
+        # ENERGY_EXPENDED_STATUS = 0b00001000
+        # 0   Energy Expended field is not present
+        # 1   Energy Expended field is present. Units: kilo Joules
+        # RR_INTERVAL = 0b000100000
+        # 0   RR-Interval values are not present.
+        # 1   One or more RR-Interval values are present.
+
+        hr = numbers.NAN
+        if data_b[0] & HR_VALUE_FORMAT:
+            # UINT16
+            hr = 0xff * data_b[2] + data_b[1]
+        else:
+            # UINT8
+            hr = data_b[1]
+        self.log.debug('Delegate: calculated heart rate {}'.format(hr), extra=self.extra)
+
+        # Sometimes heart rate sensor delivers 0 as heart rate
+        if hr != 0:
+            self.heart_rate = hr
+        else:
+            self.heart_rate = numbers.NAN
+
+        #Ignore first 3 measurements to avoid "wild" values
+        # FIXME Kalman fiter to absolete this piece of code
+        if self.measurement_no < 3:
+            self.log.debug('Ignoring measurement no {}'.format(self.measurement_no), extra=self.extra)
+            self.heart_rate = numbers.NAN
+
+        if (not math.isnan(self.heart_rate) and
+                self.heart_rate != 0):
+            self.calculate_avg_heart_rate()
+
+        ts_formatted = time.strftime("%H:%M:%S", time.localtime(self.time_stamp))
+        self.log.debug('Delegate: set heart rate {}, time stamp {}'.format(self.heart_rate, ts_formatted), extra=self.extra)
+        self.log.debug('Delegate: handleNotification finished', extra=self.extra)
+
+    ## Calculates average heart rate. The calculation will use only time with valid measurements, so it won't be the same as ride time.
+    #  @param self The python object self
+    def calculate_avg_heart_rate(self):
+        self.time_delta = self.time_stamp_previous - self.time_stamp
+        if self.time_delta < 2.0:
+            try:
+                hr_avg = (self.heart_rate * self.time_delta + (self.heart_rate_avg * self.measurement_time)) / (self.measurement_time + self.time_delta)
+                self.measurement_time += self.time_delta
+            except ZeroDivisionError:
+                hr_avg = numbers.NAN
+        self.heart_rate_avg = hr_avg
+        self.log.debug("heart_rate_avg {}".format(self.heart_rate_avg), extra=self.extra)
+
+    ## Resets minimum, average and maximum hear rate
+    #  @param self The python object self
+    def reset_measurement(self):
+        self.heart_rate_min = numbers.INF
+        self.heart_rate_avg = 0.0
+        self.heart_rate_max = numbers.INF_MIN
+        self.measurement_time = 0.0
+        self.time_stamp = time.time()
+        self.time_stamp_previous = self.time_stamp'''
