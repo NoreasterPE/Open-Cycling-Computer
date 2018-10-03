@@ -126,7 +126,7 @@ pages:
                   y: 255
                   font_size: 16
 
-                - function: ble_hr_heart_rate_ave
+                - function: ble_hr_heart_rate_avg
                   x: 180
                   y: 255
                   font_size: 16
