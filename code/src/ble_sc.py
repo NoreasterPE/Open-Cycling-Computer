@@ -3,6 +3,7 @@
 ## @package ble_sc
 #  BLE speed and cadence sensor handling module.
 import bluepy.btle
+import math
 import numbers
 import time
 import sensor
@@ -30,7 +31,12 @@ class ble_sc(sensor.sensor):
         self.p_formats = dict(time_stamp='%.0f', wheel_time_stamp='%.0f', wheel_rev_time='%.0f', cadence_time_stamp='%.0f', cadence="%5.0f", cadence_max="%5.0f", battery_level="%.0f")
         self.p_units = dict(time_stamp='s', wheel_time_stamp='s', wheel_rev_time='s', cadence_time_stamp='s', cadence="RPM", cadence_max="RPM", battery_level="%")
         self.p_raw_units = dict(time_stamp='s', wheel_time_stamp='s', wheel_rev_time='s', cadence_time_stamp='s', cadence="RPM", cadence_max="RPM", battery_level="%")
+        self.required = dict(ride_time=numbers.NAN)
 
+        #self.cadence_avg = numbers.NAN
+        ## @var ride_time
+        # Ride time from sensors module.
+        self.ride_time = numbers.NAN
         self.reset_data()
         ## @var addr
         # Address of the cadence and speed sensor
@@ -253,6 +259,19 @@ class ble_sc(sensor.sensor):
         # Cadence icon beat, used to show if ble notifications are coming.
         self.cadence_beat = 0
 
+    ## Receive updated parameters form sensors module
+    #  @param self The python object self
+    #  @param required Dict with updated by sensonrs module parameters
+    def notification(self, required):
+        self.log.debug("required {}".format(required), extra=self.extra)
+        ride_time = required["ride_time"]
+        self.ride_time_delta = ride_time - self.ride_time
+        self.ride_time = ride_time
+        if math.isnan(self.ride_time_delta):
+            self.ride_time_delta = 0.0
+        self.log.debug("ride_time_delta {}".format(self.ride_time_delta), extra=self.extra)
+        #self.calculate_avg_cadence()
+
     def __del__(self):
         self.stop()
 
@@ -311,6 +330,7 @@ class CSC_Delegate(bluepy.btle.DefaultDelegate):
         self.crank_last_time_delta = 0
         self.crank_rev_time = 0
         self.cadence = 0
+#        self.cadence_avg = 0
         self.cadence_beat = 0
         self.measurement_no = 0
         self.log.debug('Delegate __init__ finished', extra=self.extra)
@@ -415,3 +435,13 @@ class CSC_Delegate(bluepy.btle.DefaultDelegate):
         ts_formatted = time.strftime("%H:%M:%S", time.localtime(self.time_stamp))
         self.log.debug('Delegate: set cadence {}, time stamp {}'.format(self.cadence, ts_formatted), extra=self.extra)
         self.log.debug('Delegate: handleNotification finished', extra=self.extra)
+
+#    def calculate_avg_cadence(self):
+#        if math.isnan(self.cadence_avg):
+#            self.cadence_avg = 0.0
+#        try:
+#            ca_avg = (self.cadence * self.ride_time_delta + (self.cadence_avg * (self.ride_time - self.ride_time_delta))) / self.ride_time
+#        except ZeroDivisionError:
+#            ca_avg = numbers.NAN
+#        self.cadence_avg = ca_avg
+#        self.log.debug("cadence_avg {}".format(self.cadence_avg), extra=self.extra)

@@ -313,15 +313,6 @@ class ride_parameters():
 #       ca_new = (c * dt + ca * tt) / (tt + dt)
 #       self.p_raw["ble_sc_cadence_avg"] = ca_new
 
-#   def calculate_avg_ble_hr_heart_rate(self):
-#       dt = self.p_raw["time_delta"]
-#       hr = self.p_raw["ble_hr_heart_rate"]
-#       hra = self.p_raw["ble_hr_heart_rate_avg"]
-#       # FIXME ride_time doesn't seem to be right
-#       tt = self.p_raw["ride_time"]
-#       hr_new = (hr * dt + hra * tt) / (tt + dt)
-#       self.p_raw["ble_hr_heart_rate_avg"] = hr_new
-
     def update_params(self):
         self.update_rtc()
         self.update_param("time_delta")
@@ -467,12 +458,10 @@ class ride_parameters():
                     #FIXME Temporary fix for expired data
                     self.p_raw["ble_hr_heart_rate"] = numbers.NAN
                     self.log.debug("ble_hr data expired", extra=self.extra)
-                # FIXME move to ble_hr, sensor module should provide data for display
-                #self.calculate_avg_ble_hr_heart_rate()
                 self.update_param("ble_hr_heart_rate_min")
                 self.sanitise("ble_hr_heart_rate_min")
-                #self.update_param("ble_hr_heart_rate_avg")
-                #self.sanitise("ble_hr_heart_rate_avg")
+                self.update_param("ble_hr_heart_rate_avg")
+                self.sanitise("ble_hr_heart_rate_avg")
                 self.update_param("ble_hr_heart_rate_max")
                 self.sanitise("ble_hr_heart_rate_max")
                 self.update_param("ble_hr_heart_rate")

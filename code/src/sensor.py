@@ -18,17 +18,18 @@ class sensor(threading.Thread):
         self.log = logging.getLogger('system')
         threading.Thread.__init__(self)
 
+        self.p_raw = dict()
         self.p_formats = dict()
         self.p_units = dict()
         self.p_raw_units = dict()
         ## @var params_required
-        # List of params required by the sensor to work properly
-        self.required = list()
+        # Dict with params required by the sensor to work properly
+        self.required = dict()
 
         ## @var connected
         # Variable indicating it the sensor hardware is currently connected
         self.connected = False
-        self.reset_data()
+        #self.reset_data()
 
         ## @var name
         # Name of the sensor

@@ -30,14 +30,16 @@ class ble_sensor(sensor.sensor):
     def __init__(self):
         super().__init__()
         self.log.debug('WAIT_TIME {}'.format(self.WAIT_TIME), extra=self.extra)
-        self.p_raw = dict(name="", addr="", state=numbers.NAN, battery_level=numbers.NAN)
-        self.p_formats = dict(name="", addr="", state="", battery_level="%.0f")
-        self.p_units = dict(name="", addr="", state="", battery_level="%")
-        self.p_raw_units = dict(name="", addr="", state="", battery_level="%")
+        self.p_raw = dict(time_stamp=numbers.NAN, name="", addr="", state=numbers.NAN, battery_level=numbers.NAN)
+        self.p_formats = dict(time_stamp="", name="", addr="", state="", battery_level="%.0f")
+        self.p_units = dict(time_stamp="s", name="", addr="", state="", battery_level="%")
+        self.p_raw_units = dict(time_stamp="s", name="", addr="", state="", battery_level="%")
         self.required = dict()
 
-        self.reset_data()
+        #self.reset_data()
         self.notifications_enabled = False
+        #Delegate class handling notification has to be set be the real device class in __init__
+        self.delegate_class = None
 
     def set_notifications(self, enable=True):
         # Enable/disable notifications
@@ -56,29 +58,30 @@ class ble_sensor(sensor.sensor):
         self.log.debug('Set notifications finished', extra=self.extra)
 
     def initialise_connection(self):
-        if self.addr is not None and self.connected is False and self.running:
+        if self.p_raw["addr"] is not None and self.connected is False and self.running:
             self.log.debug('Initialising connection started', extra=self.extra)
             try:
-                self.log.debug('Setting delegate', extra=self.extra)
-                self.delegate = Delegate(self.log)
+                #self.log.debug('Setting delegate', extra=self.extra)
+                self.delegate = self.delegate_class(self.log)
                 self.log.debug('Setting peripherial', extra=self.extra)
                 self.peripherial = bluepy.btle.Peripheral()
                 self.log.debug('Setting notification handler', extra=self.extra)
                 self.peripherial.withDelegate(self.delegate)
                 self.log.debug('Notification handler set', extra=self.extra)
                 self.log.debug('Connecting', extra=self.extra)
-                self.state = 1
-                self.peripherial.connect(self.addr, addrType='random')
+                self.p_raw["state"] = 1
+                self.log.debug('{}'.format(self.p_raw['addr']), extra=self.extra)
+                self.peripherial.connect(self.p_raw["addr"], addrType='random')
                 self.log.debug('Connected', extra=self.extra)
                 self.connected = True
-                self.state = 2
+                self.p_raw["state"] = 2
                 self.log.debug('Getting device name', extra=self.extra)
-                self.name = self.get_device_name()
+                self.p_raw["name"] = self.get_device_name()
                 self.log.debug('Getting battery level', extra=self.extra)
-                self.battery_level = self.get_battery_level()
+                self.p_raw["battery_level"] = self.get_battery_level()
             except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
                 self.handle_exception(e, "initialise_connection")
-                self.state = 0
+                self.p_raw["state"] = 0
             self.log.debug('Initialising connection finished', extra=self.extra)
 
     def handle_exception(self, exception, caller):
@@ -126,10 +129,10 @@ class ble_sensor(sensor.sensor):
     def run(self):
         self.log.debug('Starting the main loop', extra=self.extra)
         self.running = True
-        self.state = 0
+        self.p_raw["state"] = 0
         while self.running:
-            self.log.debug('Address: {}, connected: {}, notifications: {}'.format(self.addr, self.connected, self.notifications_enabled), extra=self.extra)
-            if self.addr is not None:
+            self.log.debug('Address: {}, connected: {}, notifications: {}'.format(self.p_raw["addr"], self.connected, self.notifications_enabled), extra=self.extra)
+            if self.p_raw["addr"] is not None:
                 if self.connected and self.notifications_enabled:
                     try:
                         if self.peripherial.waitForNotifications(self.WAIT_TIME):
@@ -154,13 +157,6 @@ class ble_sensor(sensor.sensor):
     #FIXME OR all calcs to be done in the Delegate, pass back complete dict to make code universal across all BLE sensors
     def process_delegate_data(self):
         pass
-        #self.time_stamp = self.delegate.time_stamp
-        #self.heart_rate = self.delegate.heart_rate
-        #self.heart_rate_min = min(self.heart_rate_min, self.delegate.heart_rate)
-        #self.heart_rate_avg = self.delegate.heart_rate_avg
-        #self.heart_rate_max = max(self.heart_rate_max, self.delegate.heart_rate)
-        #self.heart_rate_beat = self.delegate.heart_rate_beat
-        #self.log.debug('heart rate = {} @ {}'.format(self.heart_rate, time.strftime("%H:%M:%S", time.localtime(self.time_stamp))), extra=self.extra)
 
     def safe_disconnect(self):
         self.connected = False
@@ -176,17 +172,17 @@ class ble_sensor(sensor.sensor):
         # Make sure the device is disconnected
         try:
             self.peripherial.disconnect()
-            self.state = 0
+            self.p_raw["state"] = 0
         except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
             # Not connected yet
             self.log.error('AttributeError: {}'.format(e), extra=self.extra)
             pass
-        self.log.debug('State = {}. Waiting {} s to reconnect'.format(self.state, self.RECONNECT_WAIT_TIME), extra=self.extra)
+        self.log.debug('State = {}. Waiting {} s to reconnect'.format(self.p_raw["state"], self.RECONNECT_WAIT_TIME), extra=self.extra)
         time.sleep(self.RECONNECT_WAIT_TIME)
         self.log.debug('safe_disconnect finished', extra=self.extra)
 
     def get_raw_data(self):
-        return self.p_raw()
+        return self.p_raw
 
     def get_device_name(self):
         name = ""
@@ -211,12 +207,12 @@ class ble_sensor(sensor.sensor):
         return level
 
     def get_state(self):
-        return self.state
+        return self.p_raw["state"]
 
     def reset_data(self):
-        ## @var name
+        ## @var battery_level
         # Battery level in %
-        self.battery_level = numbers.NAN
+        self.p_raw["battery_level"] = numbers.NAN
         ## @var time_stamp
         # Time stamp of the measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
         self.time_stamp = time.time()
@@ -232,7 +228,6 @@ class ble_sensor(sensor.sensor):
         if math.isnan(self.ride_time_delta):
             self.ride_time_delta = 0.0
         self.log.debug("ride_time_delta {}".format(self.ride_time_delta), extra=self.extra)
-#       self.calculate_avg_heart_rate()
 
 #    FIXME make decision if get_data and get_raw_data are required
 #    def get_data(self):
@@ -256,125 +251,18 @@ class ble_sensor(sensor.sensor):
             self.peripherial.disconnect()
         except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
             self.handle_exception(e, "stop, disconnecting")
-        self.state = 0
+        self.p_raw["state"] = 0
         self.log.info('{} disconnected'.format(self.name), extra=self.extra)
         self.log.debug('Stop finished', extra=self.extra)
 
 
-class Delegate(bluepy.btle.DefaultDelegate):
-    ## @var extra
-    # Module name used for logging and prefixing data
-    extra = {'module_name': 'ble_sensor_dgte'}
-
-    def __init__(self, log):
-        bluepy.btle.DefaultDelegate.__init__(self)
-
-    def handleNotification(self, cHandle, data):
-        pass
-
-
-#Below code needs to be per-characteristic, so for now in the real device class
-'''## Class for handling BLE notifications from heart rate sensor
-class HR_Delegate(bluepy.btle.DefaultDelegate):
-    ## @var extra
-    # Module name used for logging and prefixing data
-    extra = {'module_name': 'ble_hr_dgte'}
-
-    def __init__(self, log):
-        self.log = log
-        self.log.debug('Delegate __init__ started', extra=self.extra)
-        bluepy.btle.DefaultDelegate.__init__(self)
-        self.heart_rate = numbers.NAN
-        self.heart_rate_avg = 0.0
-        self.measurement_time = 0.0
-        self.heart_rate_beat = 0
-        self.time_stamp = time.time()
-        self.time_stamp_previous = self.time_stamp
-        self.measurement_no = 0
-        self.log.debug('Delegate __init__ finished', extra=self.extra)
-
-    def handleNotification(self, cHandle, data):
-        self.log.debug('Delegate: handleNotification started', extra=self.extra)
-        self.log.debug('Delegate: Notification received. Handle: {}, data: {}'.format(hex(cHandle), data), extra=self.extra)
-
-        # Heart Rate Measurement from BLE standard
-        # https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.heart_rate_measurement.xml
-        # https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.heart_rate_control_point.xml&u=org.bluetooth.characteristic.heart_rate_control_point.xml
-        #
-        self.time_stamp_previous = self.time_stamp
-        self.time_stamp = time.time()
-        self.measurement_no += 1
-        self.heart_rate_beat = int(not(self.heart_rate_beat))
-
-        i = 0
-        data_b = {}
-        for b in data:
-            data_b[i] = b
-            i += 1
-
-        HR_VALUE_FORMAT = 0b00000001  # 0 UINT8, 1 UINT16
-        # 0   Heart Rate Value Format is set to UINT8. Units: beats per minute (bpm)
-        # 1   Heart Rate Value Format is set to UINT16. Units: beats per minute (bpm)
-        # SENSOR_CONTACT_STATUS = 0b00000110
-        # 0   Sensor Contact feature is not supported in the current connection
-        # 1   Sensor Contact feature is not supported in the current connection
-        # 2   Sensor Contact feature is supported, but contact is not detected
-        # 3   Sensor Contact feature is supported and contact is detected
-        # ENERGY_EXPENDED_STATUS = 0b00001000
-        # 0   Energy Expended field is not present
-        # 1   Energy Expended field is present. Units: kilo Joules
-        # RR_INTERVAL = 0b000100000
-        # 0   RR-Interval values are not present.
-        # 1   One or more RR-Interval values are present.
-
-        hr = numbers.NAN
-        if data_b[0] & HR_VALUE_FORMAT:
-            # UINT16
-            hr = 0xff * data_b[2] + data_b[1]
-        else:
-            # UINT8
-            hr = data_b[1]
-        self.log.debug('Delegate: calculated heart rate {}'.format(hr), extra=self.extra)
-
-        # Sometimes heart rate sensor delivers 0 as heart rate
-        if hr != 0:
-            self.heart_rate = hr
-        else:
-            self.heart_rate = numbers.NAN
-
-        #Ignore first 3 measurements to avoid "wild" values
-        # FIXME Kalman fiter to absolete this piece of code
-        if self.measurement_no < 3:
-            self.log.debug('Ignoring measurement no {}'.format(self.measurement_no), extra=self.extra)
-            self.heart_rate = numbers.NAN
-
-        if (not math.isnan(self.heart_rate) and
-                self.heart_rate != 0):
-            self.calculate_avg_heart_rate()
-
-        ts_formatted = time.strftime("%H:%M:%S", time.localtime(self.time_stamp))
-        self.log.debug('Delegate: set heart rate {}, time stamp {}'.format(self.heart_rate, ts_formatted), extra=self.extra)
-        self.log.debug('Delegate: handleNotification finished', extra=self.extra)
-
-    ## Calculates average heart rate. The calculation will use only time with valid measurements, so it won't be the same as ride time.
-    #  @param self The python object self
-    def calculate_avg_heart_rate(self):
-        self.time_delta = self.time_stamp_previous - self.time_stamp
-        if self.time_delta < 2.0:
-            try:
-                hr_avg = (self.heart_rate * self.time_delta + (self.heart_rate_avg * self.measurement_time)) / (self.measurement_time + self.time_delta)
-                self.measurement_time += self.time_delta
-            except ZeroDivisionError:
-                hr_avg = numbers.NAN
-        self.heart_rate_avg = hr_avg
-        self.log.debug("heart_rate_avg {}".format(self.heart_rate_avg), extra=self.extra)
-
-    ## Resets minimum, average and maximum hear rate
-    #  @param self The python object self
-    def reset_measurement(self):
-        self.heart_rate_min = numbers.INF
-        self.heart_rate_avg = 0.0
-        self.heart_rate_max = numbers.INF_MIN
-        self.measurement_time = 0.0
-        self.time_stamp = time.time()
-        self.time_stamp_previous = self.time_stamp'''
+#class ble_sensor_delegate(bluepy.btle.DefaultDelegate):
+#    ## @var extra
+#    # Module name used for logging and prefixing data
+#    extra = {'module_name': 'ble_sensor_dgte'}
+#
+#    def __init__(self, log):
+#        super().__init__()
+#
+#    def handleNotification(self, cHandle, data):
+#        pass
