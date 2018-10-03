@@ -87,7 +87,7 @@ pages:
                           w: 120
                           h: 80
 
-                - function: ble_sc_cadence_ave
+                - function: ble_sc_cadence_avg
                   x: 60
                   y: 255
                   font_size: 16

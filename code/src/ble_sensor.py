@@ -30,13 +30,12 @@ class ble_sensor(sensor.sensor):
     def __init__(self):
         super().__init__()
         self.log.debug('WAIT_TIME {}'.format(self.WAIT_TIME), extra=self.extra)
-        self.p_raw = dict(time_stamp=numbers.NAN, name="", addr="", state=numbers.NAN, battery_level=numbers.NAN)
+        self.p_raw = dict(time_stamp=numbers.NAN, name=None, addr=None, state=numbers.NAN, battery_level=numbers.NAN)
         self.p_formats = dict(time_stamp="", name="", addr="", state="", battery_level="%.0f")
         self.p_units = dict(time_stamp="s", name="", addr="", state="", battery_level="%")
         self.p_raw_units = dict(time_stamp="s", name="", addr="", state="", battery_level="%")
         self.required = dict()
 
-        #self.reset_data()
         self.notifications_enabled = False
         #Delegate class handling notification has to be set be the real device class in __init__
         self.delegate_class = None
@@ -61,7 +60,7 @@ class ble_sensor(sensor.sensor):
         if self.p_raw["addr"] is not None and self.connected is False and self.running:
             self.log.debug('Initialising connection started', extra=self.extra)
             try:
-                #self.log.debug('Setting delegate', extra=self.extra)
+                self.log.debug('Setting delegate', extra=self.extra)
                 self.delegate = self.delegate_class(self.log)
                 self.log.debug('Setting peripherial', extra=self.extra)
                 self.peripherial = bluepy.btle.Peripheral()
@@ -103,7 +102,7 @@ class ble_sensor(sensor.sensor):
                 self.log.info(e, extra=self.extra)
                 self.connected = False
                 self.notifications_enabled = False
-            elif str(e) == "Helper exited":  # FIXME - what to do with this?
+            elif str(e) == "Helper exited":
                 self.log.error(e, extra=self.extra)
                 self.connected = False
                 self.notifications_enabled = False
@@ -154,7 +153,6 @@ class ble_sensor(sensor.sensor):
         self.log.debug('Main loop finished', extra=self.extra)
 
     ## Overwrite in real BLE sensor class
-    #FIXME OR all calcs to be done in the Delegate, pass back complete dict to make code universal across all BLE sensors
     def process_delegate_data(self):
         pass
 
@@ -162,7 +160,7 @@ class ble_sensor(sensor.sensor):
         self.connected = False
         self.notifications_enabled = False
         self.log.debug('safe_disconnect started', extra=self.extra)
-        # Make sure the device is not sending notifications (is this required?)
+        # Make sure the device is not sending notifications
         try:
             self.set_notifications(enable=False)
         except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
@@ -229,16 +227,12 @@ class ble_sensor(sensor.sensor):
             self.ride_time_delta = 0.0
         self.log.debug("ride_time_delta {}".format(self.ride_time_delta), extra=self.extra)
 
-#    FIXME make decision if get_data and get_raw_data are required
-#    def get_data(self):
-#        return dict(name=self.name, addr=self.addr, state=self.state, time_stamp=self.time_stamp, heart_rate=self.heart_rate, heart_rate_beat=self.heart_rate_beat)
-
     def __del__(self):
         self.stop()
 
     def set_addr(self, addr):
         self.log.debug('address set to {}'.format(addr), extra=self.extra)
-        self.addr = addr
+        self.p_raw["addr"] = addr
 
     def stop(self):
         super().stop()
@@ -254,15 +248,3 @@ class ble_sensor(sensor.sensor):
         self.p_raw["state"] = 0
         self.log.info('{} disconnected'.format(self.name), extra=self.extra)
         self.log.debug('Stop finished', extra=self.extra)
-
-
-#class ble_sensor_delegate(bluepy.btle.DefaultDelegate):
-#    ## @var extra
-#    # Module name used for logging and prefixing data
-#    extra = {'module_name': 'ble_sensor_dgte'}
-#
-#    def __init__(self, log):
-#        super().__init__()
-#
-#    def handleNotification(self, cHandle, data):
-#        pass

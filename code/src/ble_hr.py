@@ -35,12 +35,13 @@ class ble_hr(ble_sensor.ble_sensor):
         self.required.update(dict(ride_time=numbers.NAN))
 
         self.reset_data()
-        self.notifications_enabled = False
+        #FIXME Delegate data (min/avg/max) are lost after disconnection
         self.delegate_class = hr_delegate
 
-    ## Overwrite in real BLE sensor class
-    #FIXME OR all calcs to be done in the Delegate, pass back complete dict to make code universal across all BLE sensors
+    ## Process data delivered from delegate
+    #  @param self The python object self
     def process_delegate_data(self):
+        self.log.debug("{}".format(__name__), extra=self.extra)
         try:
             self.p_raw["time_stamp"] = self.delegate.time_stamp
             self.p_raw["heart_rate"] = self.delegate.heart_rate
@@ -50,7 +51,6 @@ class ble_hr(ble_sensor.ble_sensor):
             self.p_raw["heart_rate_beat"] = self.delegate.heart_rate_beat
         except (AttributeError) as exception:
             self.handle_exception(exception, "process_delegate_data")
-            pass
         self.log.debug("heart rate = {} @ {}".format(self.p_raw["heart_rate"], time.strftime("%H:%M:%S", time.localtime(self.p_raw["time_stamp"]))), extra=self.extra)
 
     def reset_data(self):
@@ -70,41 +70,12 @@ class ble_hr(ble_sensor.ble_sensor):
         ## @var heart_rate_beat
         # Heart rate icon beat, used to show if ble notifications are coming.p_raw[" This is not the real heart rate beat
         self.p_raw["heart_rate_beat"] = 0
-        ## @var time_of_reset
-        # Time stamp of the data reset.p_raw[" Used to calculate average
-        self.p_raw["time_of_reset"] = time.time()
 
     ## Receive updated parameters form sensors module
     #  @param self The python object self
     #  @param required Dict with updated by sensonrs module parameters
     def notification(self, required):
         self.log.debug("required {}".format(required), extra=self.extra)
-
-#    FIXME make decision if get_data and get_raw_data are required
-#    def get_data(self):
-#        return dict(name=self.name, addr=self.addr, state=self.state, time_stamp=self.time_stamp, heart_rate=self.heart_rate, heart_rate_beat=self.heart_rate_beat)
-
-    def __del__(self):
-        self.stop()
-
-    def set_addr(self, addr):
-        self.log.debug('address set to {}'.format(addr), extra=self.extra)
-        self.p_raw["addr"] = addr
-
-    def stop(self):
-        super().stop()
-        time.sleep(1)
-        self.log.debug('Disabling notifications', extra=self.extra)
-        self.set_notifications(enable=False)
-        time.sleep(1)
-        self.log.debug('Disconnecting', extra=self.extra)
-        try:
-            self.peripherial.disconnect()
-        except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
-            self.handle_exception(e, "stop, disconnecting")
-        self.state = 0
-        self.log.info('{} disconnected'.format(self.name), extra=self.extra)
-        self.log.debug('Stop finished', extra=self.extra)
 
 
 ## Class for handling BLE notifications from heart rate sensor
@@ -193,9 +164,9 @@ class hr_delegate(bluepy.btle.DefaultDelegate):
     #  @param self The python object self
     def calculate_avg_heart_rate(self):
         if math.isnan(self.heart_rate_avg):
-           hr_avg_current = 0.0
+            hr_avg_current = 0.0
         else:
-           hr_avg_current = self.heart_rate_avg
+            hr_avg_current = self.heart_rate_avg
         self.time_delta = self.time_stamp_previous - self.time_stamp
         if self.time_delta < 2.0:
             try:
@@ -206,7 +177,7 @@ class hr_delegate(bluepy.btle.DefaultDelegate):
         self.heart_rate_avg = hr_avg
         self.log.debug("heart_rate_avg {}".format(self.heart_rate_avg), extra=self.extra)
 
-    ## Resets minimum, average and maximum hear rate
+    ## Resets minimum, average and maximum heart rate
     #  @param self The python object self
     def reset_measurement(self):
         self.heart_rate_min = numbers.INF

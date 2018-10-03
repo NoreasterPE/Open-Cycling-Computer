@@ -16,7 +16,7 @@ if __name__ == '__main__':
     sys_logger.debug("Log start", extra=ex)
 
     wheel = w()
-    WHEEL_CIRC_700x25 = wheel.get_size("700x25C") / 1000.0
+    WHEEL_CIRC_700x25 = wheel.get_circ("700x25C") / 1000.0
     try:
         sys_logger.debug("Initialising BLE device...", extra=ex)
         ble_sc_device = ble_sc()

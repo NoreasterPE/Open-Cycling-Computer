@@ -305,14 +305,6 @@ class ride_parameters():
 #       ta_new = (t * dt + ta * tt) / (tt + dt)
 #       self.p_raw["temperature_avg"] = ta_new
 
-#   def calculate_avg_ble_sc_cadence(self):
-#       dt = self.p_raw["time_delta"]
-#       c = self.p_raw["ble_sc_cadence"]
-#       ca = self.p_raw["ble_sc_cadence_avg"]
-#       tt = self.p_raw["ride_time"]
-#       ca_new = (c * dt + ca * tt) / (tt + dt)
-#       self.p_raw["ble_sc_cadence_avg"] = ca_new
-
     def update_params(self):
         self.update_rtc()
         self.update_param("time_delta")
@@ -418,6 +410,7 @@ class ride_parameters():
             if self.ble_sc.is_connected():
                 self.log.debug("Fetching ble_sc prefix & data", extra=self.extra)
                 data = self.ble_sc.get_raw_data()
+                self.log.debug("time_stamp {}".format(time.time() - data["time_stamp"]), extra=self.extra)
                 if (time.time() - data["time_stamp"]) < 3.0:  # EXPIRED_DATA_TIME
                     prefix = self.ble_sc.get_prefix()
                     # Add prefix to keys in the dictionary
@@ -427,14 +420,12 @@ class ride_parameters():
                         self.p_raw[param] = data_with_prefix[param]
                 else:
                     #FIXME Temporary fix for expired data
-                    self.p_raw["ble_sc_heart_rate"] = numbers.NAN
+                    self.p_raw["ble_sc_cadence"] = numbers.NAN
                     self.log.debug("ble_sc data expired", extra=self.extra)
-                #self.calculate_avg_ble_sc_cadence()
-                #self.set_max("ble_sc_cadence")
                 self.update_param("ble_sc_cadence")
                 self.sanitise("ble_sc_cadence")
-                #self.update_param("ble_sc_cadence_avg")
-                #self.sanitise("ble_sc_cadence_avg")
+                self.update_param("ble_sc_cadence_avg")
+                self.sanitise("ble_sc_cadence_avg")
                 self.update_param("ble_sc_cadence_max")
                 self.sanitise("ble_sc_cadence_max")
         else:
