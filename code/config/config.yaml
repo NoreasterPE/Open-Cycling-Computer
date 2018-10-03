@@ -4,7 +4,7 @@ ble_sc_addr: FD:DF:0E:4E:76:CF
 ble_sc_name: Lezyne S&C 249
 layout_path: layouts/default.yaml
 log_level: DEBUG
-odometer: 9000.0
+odometer: 1319000.0
 odometer_units: km
 reference_altitude: 53.0
 reference_altitude_units: m

@@ -9,6 +9,7 @@ UI
 - Auto reload layout on date time of modification change might be handy
 
 CODING STYLE:
+- Remove get_raw_data dict definition. Add self.params to sensor class
 - Fix inconsistent naming: func, function, param_name
 - Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
 
