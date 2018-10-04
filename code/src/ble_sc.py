@@ -240,4 +240,5 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
     #  @param self The python object self
     def reset_data(self):
         #FIXME
-        pass
+        self.cadence = 0
+        self.cadence_avg = 0

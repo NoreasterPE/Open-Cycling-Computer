@@ -210,12 +210,19 @@ class ble_sensor(sensor.sensor):
     ## Resets all parameters to the default values
     #  @param self The python object self
     def reset_data(self):
+        #Preserve data
+        addr = self.p_raw["addr"]
+        name = self.p_raw["name"]
+        state = self.p_raw["state"]
         super().reset_data()
         try:
             self.delegate.reset_data()
         except AttributeError:
             self.log.debug("Delegate doesn't exist while calling reset_data", extra=self.extra)
-
+        #Restore data after the reset
+        self.p_raw["addr"] = addr
+        self.p_raw["name"] = name
+        self.p_raw["state"] = state
 
     ## Receive updated parameters from sensors module. Overwrite in real device module.
     #  @param self The python object self
