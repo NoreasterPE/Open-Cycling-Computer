@@ -70,12 +70,17 @@ pages:
                 - function: slope
                   x: 50
                   y: 200
-                  font_size: 60
+                  font_size: 50
 
                 - function: slope_units
-                  x: 100
-                  y: 200
+                  x: 105
+                  y: 230
                   font_size: 16
+
+                - function: slope_icon
+                  x: 98
+                  y: 184
+                  file: images/slope_icon_20x32.png
 
                 - function: ble_sc_cadence
                   resettable: yes
