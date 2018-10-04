@@ -82,7 +82,7 @@ class ride_parameters():
         self.params = dict(
             distance=0, time_delta=0, odometer=0.0, rider_weight=0.0,
             wheel_size='', wheel_circ='', ride_time='', ride_time_hms='', ride_time_total='',
-            ride_time_total_hms='', rtc='', slope='-', speed='-', speed_avg='-',
+            ride_time_total_hms='', rtc='', slope=0.0, speed='-', speed_avg='-',
             speed_avg_digits='-', speed_avg_tenths='-', speed_digits='-', speed_max='-', speed_max_digits='-',
             speed_max_tenths='-', speed_tenths='-', timeon='', timeon_hms='', ride_time_reset='', utc='',
             # Editor params
@@ -317,6 +317,7 @@ class ride_parameters():
         self.params["utc"] = self.p_raw["utc"]
         self.update_param("odometer")
         self.update_param("rider_weight")
+        self.sanitise("slope")
         self.update_param("slope")
 
     def strip_end(self, param_name, suffix=None):
@@ -350,13 +351,17 @@ class ride_parameters():
             self.log.error("Formatting not available: param = {}".format(param), extra=self.extra)
             f = "%.1f"
 
-        if self.p_raw[param] != "-":
+        if self.p_raw[param] is not None:
             unit_raw = self.get_internal_unit(param)
             unit = self.get_unit(param)
             value = self.p_raw[param]
             if unit_raw != unit:
                 value = self.uc.convert(value, unit_raw, unit)
-            self.params[param] = f % float(value)
+            try:
+                self.params[param] = f % float(value)
+            except (ValueError, TypeError):
+                self.params[param] = value
+            self.log.debug("param {} = {} and {}".format(param, value, self.params[param]), extra=self.extra)
         else:
             self.params[param] = '-'
             self.log.debug("param {} = -".format(param), extra=self.extra)
@@ -387,9 +392,13 @@ class ride_parameters():
     def sanitise(self, param_name):
         if self.params[param_name] == "-0":
             self.params[param_name] = "0"
-        if (math.isinf(float(self.params[param_name])) or
-                math.isnan(float(self.params[param_name]))):
-            self.params[param_name] = '-'
+        try:
+            if (math.isinf(float(self.params[param_name])) or
+                    math.isnan(float(self.params[param_name]))):
+                self.params[param_name] = '-'
+        except (ValueError,  TypeError):
+            #Don't deal with invalid types or values
+            pass
 
     def update_ble_sc_cadence(self):
         self.log.debug("update_ble_sc_cadence started", extra=self.extra)
@@ -405,16 +414,12 @@ class ride_parameters():
                     self.log.debug("{}".format(data_with_prefix), extra=self.extra)
                     for param in data_with_prefix:
                         self.p_raw[param] = data_with_prefix[param]
+                        self.update_param(param)
+                        self.sanitise(param)
                 else:
                     #FIXME Temporary fix for expired data
                     self.p_raw["ble_sc_cadence"] = numbers.NAN
                     self.log.debug("ble_sc data expired", extra=self.extra)
-                self.update_param("ble_sc_cadence")
-                self.sanitise("ble_sc_cadence")
-                self.update_param("ble_sc_cadence_avg")
-                self.sanitise("ble_sc_cadence_avg")
-                self.update_param("ble_sc_cadence_max")
-                self.sanitise("ble_sc_cadence_max")
         else:
             self.log.debug("ble_sc_connection lost", extra=self.extra)
         self.log.debug("update_ble_sc_cadence finished", extra=self.extra)
@@ -432,18 +437,12 @@ class ride_parameters():
                     self.log.debug("{}".format(data_with_prefix), extra=self.extra)
                     for param in data_with_prefix:
                         self.p_raw[param] = data_with_prefix[param]
+                        self.update_param(param)
+                        self.sanitise(param)
                 else:
                     #FIXME Temporary fix for expired data
                     self.p_raw["ble_hr_heart_rate"] = numbers.NAN
                     self.log.debug("ble_hr data expired", extra=self.extra)
-                self.update_param("ble_hr_heart_rate_min")
-                self.sanitise("ble_hr_heart_rate_min")
-                self.update_param("ble_hr_heart_rate_avg")
-                self.sanitise("ble_hr_heart_rate_avg")
-                self.update_param("ble_hr_heart_rate_max")
-                self.sanitise("ble_hr_heart_rate_max")
-                self.update_param("ble_hr_heart_rate")
-                self.sanitise("ble_hr_heart_rate")
         else:
             self.log.debug("ble_hr_connection lost", extra=self.extra)
         self.log.debug("update_ble_hr_heart_rate finished", extra=self.extra)
@@ -454,20 +453,18 @@ class ride_parameters():
             if self.bmp183.is_connected():
                 self.log.debug("Fetching bmp183 prefix & data", extra=self.extra)
                 data = self.bmp183.get_raw_data()
-                prefix = self.bmp183.get_prefix()
-                # Add prefix to keys in the dictionary
-                data_with_prefix = {prefix + "_" + key: value for key, value in data.items()}
-                self.log.debug("{}".format(data_with_prefix), extra=self.extra)
-                for param in data_with_prefix:
-                    self.p_raw[param] = data_with_prefix[param]
-                self.update_param("bmp183_pressure")
-                self.sanitise("bmp183_pressure")
-                self.update_param("bmp183_temperature")
-                self.sanitise("bmp183_temperature")
-                self.update_param("bmp183_altitude")
-                self.sanitise("bmp183_temperature")
-                self.update_param("bmp183_altitude_delta")
-                self.sanitise("bmp183_temperature")
+                if (time.time() - data["time_stamp"]) < 3.0:  # EXPIRED_DATA_TIME
+                    prefix = self.bmp183.get_prefix()
+                    # Add prefix to keys in the dictionary
+                    data_with_prefix = {prefix + "_" + key: value for key, value in data.items()}
+                    self.log.debug("{}".format(data_with_prefix), extra=self.extra)
+                    for param in data_with_prefix:
+                        self.p_raw[param] = data_with_prefix[param]
+                        self.update_param(param)
+                        self.sanitise(param)
+                else:
+                    #FIXME Temporary fix for expired data
+                    self.log.debug("bmp183r data expired", extra=self.extra)
         else:
             self.log.debug("bmp183 connection lost", extra=self.extra)
         self.log.debug("update_bmp183 finished", extra=self.extra)
