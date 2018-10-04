@@ -52,7 +52,7 @@ class ble_sc(ble_sensor.ble_sensor):
                                      cadence="RPM",
                                      cadence_avg="RPM",
                                      cadence_max="RPM"))
-        self.required.update(dict(ride_time=numbers.NAN))
+        self.required.update(dict())
 
         self.reset_data()
         #FIXME Delegate data (min/avg/max) are lost after disconnection
@@ -100,12 +100,6 @@ class ble_sc(ble_sensor.ble_sensor):
         ## @var cadence_beat
         # Cadence icon beat, used to show if ble notifications are coming.
         self.p_raw["cadence_beat"] = 0
-
-    ## Receive updated parameters form sensors module
-    #  @param self The python object self
-    #  @param required Dict with updated by sensonrs module parameters
-    def notification(self, required):
-        self.log.debug("required {}".format(required), extra=self.extra)
 
 
 ## Class for handling BLE notifications from cadence and speed sensor

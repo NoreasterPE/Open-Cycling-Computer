@@ -12,6 +12,7 @@ CODING STYLE:
 - Remove get_raw_data dict definition. Add self.params to sensor class
 - Fix inconsistent naming: func, function, param_name
 - Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
+- sensor reset_data should be based on a set of initial values, p_default
 
 REAL WORLD PROBLEMS:
 - Max speed will be false sooner or later after a single invalid measurement. Kalman filter required.

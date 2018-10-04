@@ -32,7 +32,7 @@ class ble_hr(ble_sensor.ble_sensor):
         self.p_formats.update(dict(heart_rate='%.0f', heart_rate_min='%.0f', heart_rate_avg='%.0f', heart_rate_max='%.0f'))
         self.p_units.update(dict(heart_rate='BPM', heart_rate_min='BPM', heart_rate_avg='BPM', heart_rate_max='BPM'))
         self.p_raw_units.update(dict(heart_rate='BPM', heart_rate_min='BPM', heart_rate_avg='BPM', heart_rate_max='BPM'))
-        self.required.update(dict(ride_time=numbers.NAN))
+        self.required.update(dict())
 
         self.reset_data()
         #FIXME Delegate data (min/avg/max) are lost after disconnection
@@ -70,12 +70,6 @@ class ble_hr(ble_sensor.ble_sensor):
         ## @var heart_rate_beat
         # Heart rate icon beat, used to show if ble notifications are coming.p_raw[" This is not the real heart rate beat
         self.p_raw["heart_rate_beat"] = 0
-
-    ## Receive updated parameters form sensors module
-    #  @param self The python object self
-    #  @param required Dict with updated by sensonrs module parameters
-    def notification(self, required):
-        self.log.debug("required {}".format(required), extra=self.extra)
 
 
 ## Class for handling BLE notifications from heart rate sensor
