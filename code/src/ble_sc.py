@@ -18,16 +18,9 @@ class ble_sc(ble_sensor.ble_sensor):
     HANDLE = 0x000f  # FIXME - explain
     ENABLE_NOTIFICATIONS = bytes("10", 'UTF-8')    # FIXME - explain, try "01" is fails
     DISABLE_NOTIFICATIONS = bytes("00", 'UTF-8')
-    ## @var WAIT_TIME
-    # Time of waiting for notifications in seconds
-    WAIT_TIME = 1.0
-    ## @var RECONNECT_WAIT_TIME
-    # Time of waiting after an exception has been raiesed or connection lost
-    RECONNECT_WAIT_TIME = 5.0
 
     def __init__(self):
         super().__init__()
-        self.log.debug('WAIT_TIME {}'.format(self.WAIT_TIME), extra=self.extra)
         self.p_raw.update(dict(wheel_time_stamp=numbers.NAN,
                                wheel_rev_time=numbers.NAN,
                                cadence_time_stamp=numbers.NAN,

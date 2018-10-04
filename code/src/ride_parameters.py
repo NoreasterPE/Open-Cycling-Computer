@@ -9,7 +9,6 @@ import logging
 import math
 import time
 import sched
-import wheel
 import ride_log
 
 
@@ -117,10 +116,6 @@ class ride_parameters():
         self.update_param("speed_max")
         self.split_speed("speed_max")
 
-        #FIXME Use wheel size from config
-        w = wheel.wheel()
-        self.p_raw["wheel_circ"] = w.get_circ("700x25C")
-
         self.ble_hr = self.init_sensor_data("ble_hr")
         self.ble_sc = self.init_sensor_data("ble_sc")
         self.bmp183 = self.init_sensor_data("bmp183")
@@ -134,25 +129,25 @@ class ride_parameters():
         sensor_raw_data = sensor.get_raw_data()
         # Add prefix to keys in the dictionary
         sensor_raw_data = {sensor_prefix + "_" + key: value for key, value in sensor_raw_data.items()}
-        # Add the blr_hr parameters to p_raw
+        # Add the sensor parameters to p_raw
         self.p_raw.update(sensor_raw_data)
 
         sensor_units = sensor.get_units()
         # Add prefix to keys in the dictionary
         sensor_units = {sensor_prefix + "_" + key: value for key, value in sensor_units.items()}
-        # Add the blr_hr parameters to p_raw
+        # Add the sensor parameters to p_raw
         self.units.update(sensor_units)
 
         sensor_raw_units = sensor.get_raw_units()
         # Add prefix to keys in the dictionary
         sensor_raw_units = {sensor_prefix + "_" + key: value for key, value in sensor_raw_units.items()}
-        # Add the blr_hr parameters to p_raw
+        # Add the sensor parameters to p_raw
         self.p_raw_units.update(sensor_raw_units)
 
         sensor_formats = sensor.get_formats()
         # Add prefix to keys in the dictionary
         sensor_formats = {sensor_prefix + "_" + key: value for key, value in sensor_formats.items()}
-        # Add the blr_hr parameters to p_raw
+        # Add the sensor parameters to p_raw
         self.p_format.update(sensor_formats)
         return sensor
 
@@ -296,14 +291,6 @@ class ride_parameters():
 
     def set_min(self, param):
         self.p_raw[param + "_min"] = min(self.p_raw[param], self.p_raw[param + "_min"])
-
-#   def calculate_avg_temperature(self):
-#       dt = self.p_raw["time_delta"]
-#       t = self.p_raw["temperature"]
-#       ta = self.p_raw["temperature_avg"]
-#       tt = self.p_raw["ride_time"]
-#       ta_new = (t * dt + ta * tt) / (tt + dt)
-#       self.p_raw["temperature_avg"] = ta_new
 
     def update_params(self):
         self.update_rtc()
@@ -473,8 +460,6 @@ class ride_parameters():
                 self.log.debug("{}".format(data_with_prefix), extra=self.extra)
                 for param in data_with_prefix:
                     self.p_raw[param] = data_with_prefix[param]
-                # FIXME move to bmp183, sensor module should provide data for display
-                #self.calculate_avg_ble_hr_heart_rate()
                 self.update_param("bmp183_pressure")
                 self.sanitise("bmp183_pressure")
                 self.update_param("bmp183_temperature")

@@ -18,16 +18,9 @@ class ble_hr(ble_sensor.ble_sensor):
     HANDLE = 0x000f  # FIXME - explain
     ENABLE_NOTIFICATIONS = bytes("10", 'UTF-8')    # FIXME - explain, try "01" is fails
     DISABLE_NOTIFICATIONS = bytes("00", 'UTF-8')
-    ## @var WAIT_TIME
-    # Time of waiting for notifications in seconds
-    WAIT_TIME = 1.0
-    ## @var RECONNECT_WAIT_TIME
-    # Time of waiting after an exception has been raiesed or connection lost
-    RECONNECT_WAIT_TIME = 1.0
 
     def __init__(self):
         super().__init__()
-        self.log.debug('WAIT_TIME {}'.format(self.WAIT_TIME), extra=self.extra)
         self.p_raw.update(dict(heart_rate=numbers.NAN, heart_rate_min=numbers.INF, heart_rate_avg=numbers.NAN, heart_rate_max=numbers.INF_MIN))
         self.p_formats.update(dict(heart_rate='%.0f', heart_rate_min='%.0f', heart_rate_avg='%.0f', heart_rate_max='%.0f'))
         self.p_units.update(dict(heart_rate='BPM', heart_rate_min='BPM', heart_rate_avg='BPM', heart_rate_max='BPM'))
