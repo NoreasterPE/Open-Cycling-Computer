@@ -19,6 +19,9 @@ class sensor(threading.Thread):
         threading.Thread.__init__(self)
 
         self.p_raw = dict()
+        ## @var p_defaults
+        # Default values of parameters provided by a sensor. Used as the initial calues and after reset.
+        self.p_defaults = dict()
         self.p_formats = dict()
         self.p_units = dict()
         self.p_raw_units = dict()
@@ -55,8 +58,10 @@ class sensor(threading.Thread):
         return dict(name=self.name,
                     time_stamp=self.time_stamp)
 
+    ## Resets all parameters to the default values
+    #  @param self The python object self
     def reset_data(self):
-        pass
+        self.p_raw.update(dict(self.p_defaults))
 
     def get_raw_units(self):
         return self.p_raw_units

@@ -21,12 +21,13 @@ class ble_sc(ble_sensor.ble_sensor):
 
     def __init__(self):
         super().__init__()
-        self.p_raw.update(dict(wheel_time_stamp=numbers.NAN,
-                               wheel_rev_time=numbers.NAN,
-                               cadence_time_stamp=numbers.NAN,
-                               cadence=numbers.NAN,
-                               cadence_avg=numbers.NAN,
-                               cadence_max=numbers.INF_MIN))
+        self.p_defaults.update(dict(wheel_time_stamp=time.time(),
+                                    wheel_rev_time=0,
+                                    cadence_time_stamp=time.time(),
+                                    cadence=0,
+                                    cadence_max=numbers.INF_MIN,
+                                    cadence_beat=0))
+        self.p_raw.update(dict(self.p_defaults))
         self.p_formats.update(dict(wheel_time_stamp='%.0f',
                                    wheel_rev_time='%.0f',
                                    cadence_time_stamp='%.0,f',
@@ -54,7 +55,6 @@ class ble_sc(ble_sensor.ble_sensor):
     ## Process data delivered from delegate
     #  @param self The python object self
     def process_delegate_data(self):
-        self.log.debug("{}".format(__name__), extra=self.extra)
         try:
             self.p_raw["time_stamp"] = self.delegate.time_stamp
             self.p_raw["wheel_time_stamp"] = self.delegate.wheel_time_stamp
@@ -77,22 +77,6 @@ class ble_sc(ble_sensor.ble_sensor):
         super().reset_data()
         ## @var cadence_time_stamp
         # Time stamp of the wheel rev measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
-        self.p_raw["wheel_time_stamp"] = time.time()
-        ## @var wheel_rev_time
-        # Measured wheel revolution time
-        self.p_raw["wheel_rev_time"] = 0
-        ## @var cadence_time_stamp
-        # Time stamp of the cadence measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
-        self.p_raw["cadence_time_stamp"] = time.time()
-        ## @var cadence
-        # Measured cadence
-        self.p_raw["cadence"] = 0
-        ## @var cadence_max
-        # Measured cadence
-        self.p_raw["cadence_max"] = numbers.INF_MIN
-        ## @var cadence_beat
-        # Cadence icon beat, used to show if ble notifications are coming.
-        self.p_raw["cadence_beat"] = 0
 
 
 ## Class for handling BLE notifications from cadence and speed sensor
@@ -251,3 +235,9 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
                 cd_avg = numbers.NAN
         self.cadence_avg = cd_avg
         self.log.debug("cadence_avg {}".format(self.cadence_avg), extra=self.extra)
+
+    ## Resets average and maximum cadence
+    #  @param self The python object self
+    def reset_data(self):
+        #FIXME
+        pass

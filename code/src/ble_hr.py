@@ -21,7 +21,12 @@ class ble_hr(ble_sensor.ble_sensor):
 
     def __init__(self):
         super().__init__()
-        self.p_raw.update(dict(heart_rate=numbers.NAN, heart_rate_min=numbers.INF, heart_rate_avg=numbers.NAN, heart_rate_max=numbers.INF_MIN))
+        self.p_defaults.update(dict(heart_rate=numbers.NAN,
+                                    heart_rate_min=numbers.INF,
+                                    heart_rate_avg=numbers.NAN,
+                                    heart_rate_max=numbers.INF_MIN,
+                                    heart_rate_beat=0))
+        self.p_raw.update(dict(self.p_defaults))
         self.p_formats.update(dict(heart_rate='%.0f', heart_rate_min='%.0f', heart_rate_avg='%.0f', heart_rate_max='%.0f'))
         self.p_units.update(dict(heart_rate='BPM', heart_rate_min='BPM', heart_rate_avg='BPM', heart_rate_max='BPM'))
         self.p_raw_units.update(dict(heart_rate='BPM', heart_rate_min='BPM', heart_rate_avg='BPM', heart_rate_max='BPM'))
@@ -34,7 +39,6 @@ class ble_hr(ble_sensor.ble_sensor):
     ## Process data delivered from delegate
     #  @param self The python object self
     def process_delegate_data(self):
-        self.log.debug("{}".format(__name__), extra=self.extra)
         try:
             self.p_raw["time_stamp"] = self.delegate.time_stamp
             self.p_raw["heart_rate"] = self.delegate.heart_rate
@@ -45,24 +49,6 @@ class ble_hr(ble_sensor.ble_sensor):
         except (AttributeError) as exception:
             self.handle_exception(exception, "process_delegate_data")
         self.log.debug("heart rate = {} @ {}".format(self.p_raw["heart_rate"], time.strftime("%H:%M:%S", time.localtime(self.p_raw["time_stamp"]))), extra=self.extra)
-
-    def reset_data(self):
-        super().reset_data()
-        ## @var heart_rate
-        # Measured current heart rate
-        self.p_raw["heart_rate"] = numbers.NAN
-        ## @var heart_rate_min
-        # Minimum measured heart rate since reset
-        self.p_raw["heart_rate_min"] = numbers.INF
-        ## @var heart_rate_avg
-        # Average heart rate since reset
-        self.p_raw["heart_rate_avg"] = numbers.NAN
-        ## @var heart_rate_max
-        # Maximum measured heart rate since reset
-        self.p_raw["heart_rate_max"] = numbers.INF_MIN
-        ## @var heart_rate_beat
-        # Heart rate icon beat, used to show if ble notifications are coming.p_raw[" This is not the real heart rate beat
-        self.p_raw["heart_rate_beat"] = 0
 
 
 ## Class for handling BLE notifications from heart rate sensor
@@ -75,12 +61,7 @@ class hr_delegate(bluepy.btle.DefaultDelegate):
         self.log = log
         self.log.debug('Delegate __init__ started', extra=self.extra)
         super().__init__()
-        self.heart_rate = numbers.NAN
-        self.heart_rate_avg = 0.0
-        self.measurement_time = 0.0
-        self.heart_rate_beat = 0
-        self.time_stamp = time.time()
-        self.time_stamp_previous = self.time_stamp
+        self.reset_data()
         self.measurement_no = 0
         self.log.debug('Delegate __init__ finished', extra=self.extra)
 
@@ -161,15 +142,18 @@ class hr_delegate(bluepy.btle.DefaultDelegate):
                 self.measurement_time += self.time_delta
             except ZeroDivisionError:
                 hr_avg = numbers.NAN
-        self.heart_rate_avg = hr_avg
+            self.heart_rate_avg = hr_avg
         self.log.debug("heart_rate_avg {}".format(self.heart_rate_avg), extra=self.extra)
 
     ## Resets minimum, average and maximum heart rate
     #  @param self The python object self
-    def reset_measurement(self):
-        self.heart_rate_min = numbers.INF
-        self.heart_rate_avg = 0.0
-        self.heart_rate_max = numbers.INF_MIN
-        self.measurement_time = 0.0
+    def reset_data(self):
         self.time_stamp = time.time()
         self.time_stamp_previous = self.time_stamp
+        self.heart_rate = numbers.NAN
+        self.heart_rate_min = numbers.INF
+        self.heart_rate_avg = numbers.NAN
+        self.heart_rate_max = numbers.INF_MIN
+        # Internal measuremet time, indicates for how long there was a valid measurement.
+        self.measurement_time = 0.0
+        self.heart_rate_beat = 0

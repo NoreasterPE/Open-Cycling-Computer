@@ -361,10 +361,8 @@ class ride_parameters():
                 self.params[param] = f % float(value)
             except (ValueError, TypeError):
                 self.params[param] = value
-            self.log.debug("param {} = {} and {}".format(param, value, self.params[param]), extra=self.extra)
         else:
             self.params[param] = '-'
-            self.log.debug("param {} = -".format(param), extra=self.extra)
 
     def add_zero(self, value):
         if value < 10:
@@ -419,7 +417,7 @@ class ride_parameters():
                 else:
                     #FIXME Temporary fix for expired data
                     self.p_raw["ble_sc_cadence"] = numbers.NAN
-                    self.log.debug("ble_sc data expired", extra=self.extra)
+                    self.log.debug("Data expired, dt = {}".format(time.time() - data["time_stamp"]), extra=self.extra)
         else:
             self.log.debug("ble_sc_connection lost", extra=self.extra)
         self.log.debug("update_ble_sc_cadence finished", extra=self.extra)
@@ -442,7 +440,7 @@ class ride_parameters():
                 else:
                     #FIXME Temporary fix for expired data
                     self.p_raw["ble_hr_heart_rate"] = numbers.NAN
-                    self.log.debug("ble_hr data expired", extra=self.extra)
+                    self.log.debug("Data expired, dt = {}".format(time.time() - data["time_stamp"]), extra=self.extra)
         else:
             self.log.debug("ble_hr_connection lost", extra=self.extra)
         self.log.debug("update_ble_hr_heart_rate finished", extra=self.extra)
@@ -464,7 +462,7 @@ class ride_parameters():
                         self.sanitise(param)
                 else:
                     #FIXME Temporary fix for expired data
-                    self.log.debug("bmp183r data expired", extra=self.extra)
+                    self.log.debug("Data expired, dt = {}".format(time.time() - data["time_stamp"]), extra=self.extra)
         else:
             self.log.debug("bmp183 connection lost", extra=self.extra)
         self.log.debug("update_bmp183 finished", extra=self.extra)

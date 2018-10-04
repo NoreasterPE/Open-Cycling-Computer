@@ -4,7 +4,6 @@
 #  Abstract base BLE sensor handling module.
 import bluepy.btle
 import time
-import math
 import numbers
 import sensor
 
@@ -30,10 +29,11 @@ class ble_sensor(sensor.sensor):
     def __init__(self):
         super().__init__()
         self.log.debug('WAIT_TIME {}'.format(self.WAIT_TIME), extra=self.extra)
-        self.p_raw = dict(time_stamp=numbers.NAN, name=None, addr=None, state=numbers.NAN, battery_level=numbers.NAN)
-        self.p_formats = dict(time_stamp="", name="", addr="", state="", battery_level="%.0f")
-        self.p_units = dict(time_stamp="s", name="", addr="", state="", battery_level="%")
-        self.p_raw_units = dict(time_stamp="s", name="", addr="", state="", battery_level="%")
+        self.p_defaults = dict(time_stamp=numbers.NAN, name=None, addr=None, state=numbers.NAN, battery_level=numbers.NAN)
+        self.p_raw.update(dict(self.p_defaults))
+        self.p_formats = dict(time_stamp=None, name=None, addr=None, state=None, battery_level="%.0f")
+        self.p_units = dict(time_stamp="s", name=None, addr=None, state=None, battery_level="%")
+        self.p_raw_units = dict(time_stamp="s", name=None, addr=None, state=None, battery_level="%")
         self.required = dict()
 
         self.notifications_enabled = False
@@ -135,8 +135,8 @@ class ble_sensor(sensor.sensor):
                 if self.connected and self.notifications_enabled:
                     try:
                         if self.peripherial.waitForNotifications(self.WAIT_TIME):
-                            if self.time_stamp != self.delegate.time_stamp:
-                                self.process_delegate_data()
+                            #if self.time_stamp != self.delegate.time_stamp:
+                            self.process_delegate_data()
                     except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
                         self.handle_exception(e, "waitForNotifications")
                 else:
@@ -207,13 +207,15 @@ class ble_sensor(sensor.sensor):
     def get_state(self):
         return self.p_raw["state"]
 
+    ## Resets all parameters to the default values
+    #  @param self The python object self
     def reset_data(self):
-        ## @var battery_level
-        # Battery level in %
-        self.p_raw["battery_level"] = numbers.NAN
-        ## @var time_stamp
-        # Time stamp of the measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
-        self.time_stamp = time.time()
+        super().reset_data()
+        try:
+            self.delegate.reset_data()
+        except AttributeError:
+            self.log.debug("Delegate doesn't exist while calling reset_data", extra=self.extra)
+
 
     ## Receive updated parameters from sensors module. Overwrite in real device module.
     #  @param self The python object self
