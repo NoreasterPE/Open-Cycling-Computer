@@ -620,7 +620,7 @@ pages:
          id: editor_units
          number: 0
          type: editor
-         background: images/occ_units_editor_background.png
+         background: images/editor_units_background.png
          buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
@@ -684,7 +684,7 @@ pages:
          id: editor_numbers
          number: 0
          type: editor
-         background: images/occ_number_editor_background.png
+         background: images/editor_number_background.png
          buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
@@ -720,7 +720,7 @@ pages:
                 - function: variable_value
                   x: 120
                   y: 120
-                  font_size: 60
+                  font_size: 50
 
                 - function: variable_unit
                   x: 120
@@ -775,7 +775,7 @@ pages:
          id: editor_string
          number: 0
          type: editor
-         background: images/occ_string_editor_background.png
+         background: images/editor_string_background.png
          buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
