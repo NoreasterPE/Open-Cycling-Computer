@@ -215,17 +215,12 @@ class ble_sensor(sensor.sensor):
         # Time stamp of the measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
         self.time_stamp = time.time()
 
-    ## Receive updated parameters form sensors module
+    ## Receive updated parameters from sensors module. Overwrite in real device module.
     #  @param self The python object self
-    #  @param required Dict with updated by sensonrs module parameters
+    #  @param required Dict with updated by sensors module
     def notification(self, required):
         self.log.debug("required {}".format(required), extra=self.extra)
-        ride_time = required["ride_time"]
-        self.ride_time_delta = ride_time - self.ride_time
-        self.ride_time = ride_time
-        if math.isnan(self.ride_time_delta):
-            self.ride_time_delta = 0.0
-        self.log.debug("ride_time_delta {}".format(self.ride_time_delta), extra=self.extra)
+        pass
 
     def __del__(self):
         self.stop()
