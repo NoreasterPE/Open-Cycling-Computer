@@ -317,8 +317,8 @@ class ride_parameters():
         self.params["utc"] = self.p_raw["utc"]
         self.update_param("odometer")
         self.update_param("rider_weight")
-        self.sanitise("slope")
         self.update_param("slope")
+        self.sanitise("slope")
 
     def strip_end(self, param_name, suffix=None):
         # Make sure there is no _digits, _tenths, _hms at the end
