@@ -4,7 +4,7 @@ pages:
          number: 0
          type: normal
          background: images/occ_page_0_background.png
-         buttons: images/occ_page_0_buttons.png
+         buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 700
          fg_colour: FFFFFF
@@ -155,7 +155,7 @@ pages:
          number: 1
          type: normal
          background: images/occ_page_1_background.png
-         buttons: images/occ_page_1_buttons.png
+         buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
@@ -261,7 +261,7 @@ pages:
          number: 2
          type: normal
          background: images/occ_page_2_background.png
-         buttons: images/occ_page_2_buttons.png
+         buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
@@ -351,7 +351,7 @@ pages:
          number: 0
          type: settings
          background: images/occ_settings_0_background.png
-         buttons: images/occ_settings_0_buttons.png
+         buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
@@ -524,7 +524,7 @@ pages:
          number: 1
          type: settings
          background: images/occ_settings_1_background.png
-         buttons: images/occ_settings_1_buttons.png
+         buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
@@ -567,7 +567,7 @@ pages:
          number: 2
          type: settings
          background: images/occ_settings_2_background.png
-         buttons: images/occ_settings_2_buttons.png
+         buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
@@ -621,7 +621,7 @@ pages:
          number: 0
          type: editor
          background: images/occ_units_editor_background.png
-         buttons: images/occ_units_editor_buttons.png
+         buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
@@ -685,7 +685,7 @@ pages:
          number: 0
          type: editor
          background: images/occ_number_editor_background.png
-         buttons: images/occ_editor_buttons.png
+         buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
@@ -776,7 +776,7 @@ pages:
          number: 0
          type: editor
          background: images/occ_string_editor_background.png
-         buttons: images/occ_string_editor_buttons.png
+         buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
@@ -862,7 +862,7 @@ pages:
          number: 0
          type: editor
          background: images/ble_selector.png
-         buttons: images/occ_settings_2_buttons.png
+         buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
