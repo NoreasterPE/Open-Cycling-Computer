@@ -27,10 +27,11 @@ pages:
                 - function: gps_icon
                   x: 205
                   y: 5
-                  file: images/gps_icon_32x32.png
-                  variable:
+                  file: images/gps_icon_32x32_0.png
+#                  file: images/gps_icon_32x32.png
+#                  variable:
 #                          name: gps_strength
-                          frames: 3
+#                          frames: 3
 
                 - function: ble_icon
                   x: 170
