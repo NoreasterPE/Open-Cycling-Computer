@@ -16,12 +16,12 @@ pages:
 
                 - function: speed_tenths
                   x: 210
-                  y: 115
+                  y: 105
                   font_size: 50
 
                 - function: speed_units
                   x: 205
-                  y: 75
+                  y: 65
                   font_size: 16
 
                 - function: gps_icon
@@ -160,108 +160,129 @@ pages:
          id: page_1
          number: 1
          type: normal
-         background: images/occ_page_1_background.png
+         background: images/stats_background.png
          buttons: images/button_pressed.png
          font: "sans-serif"
-         font_size: 16
+         font_size: 24
          fg_colour: FFFFFF
          fields: 
-                - function: speed_max_label
-                  x: 25
-                  y: 10
-                  font_size: 16
-                  text: Max
-                - function: speed_max_digits
+                - function: odometer_icon
+                  x: 10
+                  y: 4
+                  file: images/odometer_icon_32x32.png
+
+                - function: odometer
+                  x: 100
+                  y: 20
+
+                - function: odometer_units
+                  x: 200
+                  y: 20
+
+                - function: speed_icon
+                  x: 10
+                  y: 44
+                  file: images/speed_icon_32x32.png
+
+                - function: speed_max
                   resettable: yes
                   button:
                           x0: 0
                           y0: 0
                           w: 240
-                          h: 160
-                  x: 95
-                  y: 75
-                  font_size: 130
-
-                - function: speed_max_tenths
-                  x: 210
-                  y: 115
-                  font_size: 50
+                          h: 40
+                  x: 100
+                  y: 60
 
                 - function: speed_units
-                  x: 205
-                  y: 75
-                  font_size: 16
+                  x: 200
+                  y: 60
 
-                - function: speed_avg_label
-                  x: 25
-                  y: 170
-                  font_size: 16
-                  text: Avg
+                - function: speed_avg_icon
+                  x: 10
+                  y: 84
+                  file: images/average_speed_icon_32x32.png
+
                 - function: speed_avg
-                  button:
-                          x0: 0
-                          y0: 160
-                          w: 240
-                          h: 80
                   x: 100
-                  y: 175
-                  font_size: 30
+                  y: 100
 
-                - function: speed_avg_units
-                  x: 210
-                  y: 175
-                  font_size: 16
+                - function: speed_units
+                  x: 200
+                  y: 100
 
-                - function: ridetime_total_hms
-                  x: 120
-                  y: 215
-                  font_size: 30
+                - function: altitude_icon
+                  x: 10
+                  y: 204
+                  file: images/altitude_icon_20x32.png
 
-                - function: bmp183_temperature
-                  resettable: yes
-                  button:
-                          x0: 0
-                          y0: 240
-                          w: 120
-                          h: 80
-                  x: 50
-                  y: 280
-                  font_size: 40
-
-                - function: temperature_icon
-                  x: 98
-                  y: 267
-                  file: images/temperature_icon_20x32.png
-
-                - function: bmp183_temperature_min
-                  x: 20
-                  y: 255
-                  font_size: 16
-
-                - function: bmp183_temperature_avg
-                  x: 60
-                  y: 255
-                  font_size: 16
-
-                - function: bmp183_temperature_max
+                - function: bmp183_altitude
+#                  button:
+#                          x0: 120
+#                          y0: 240
+#                          w: 120
+#                          h: 80
                   x: 100
-                  y: 255
-                  font_size: 16
+                  y: 220
 
-                - function: bmp183_temperature_units
-                  x: 110
-                  y: 310
-                  font_size: 16
+ #               - function: bmp183_altitude_min
+ #                 x: 140
+ #                 y: 255
+
+#                - function: bmp183_altitude_max
+#                  x: 220
+#                  y: 255
+
+                - function: bmp183_altitude_units
+                  x: 200
+                  y: 220
+
+                - function: pressure_icon
+                  x: 4
+                  y: 244
+                  file: images/pressure_icon_32x32.png
 
                 - function: bmp183_pressure
-                  x: 170
-                  y: 280
-                  font_size: 40
+                  x: 100
+                  y: 260
 
                 - function: bmp183_pressure_units
-                  x: 220
-                  y: 310
-                  font_size: 16
+                  x: 200
+                  y: 260
+
+                - function: bmp183_temperature
+#                  resettable: yes
+#                  button:
+#                          x0: 0
+#                          y0: 240
+#                          w: 120
+#                          h: 80
+                  x: 100
+                  y: 300
+
+                - function: temperature_icon
+                  x: 10
+                  y: 284
+                  file: images/temperature_icon_20x32.png
+
+#                - function: bmp183_temperature_min
+#                  x: 20
+#                  y: 300
+
+#                - function: bmp183_temperature_avg
+#                  x: 60
+#                  y: 300
+
+#                - function: bmp183_temperature_max
+#                  x: 100
+#                  y: 300
+
+                - function: bmp183_temperature_units
+                  x: 200
+                  y: 300
+
+
+
        - name: "GPS"
          id: page_2
          number: 2
@@ -292,6 +313,7 @@ pages:
 #                  y: 130
 #                  font_size: 25
 #
+
                 - function: time
                   x: 120
                   y: 180
@@ -321,36 +343,6 @@ pages:
 #                  x: 97
 #                  y: 267
 #                  file: images/altitude_gps_icon_20x32.png
-
-                - function: bmp183_altitude
-                  button:
-                          x0: 120
-                          y0: 240
-                          w: 120
-                          h: 80
-                  x: 170
-                  y: 280
-                  font_size: 40
-
-                - function: bmp183_altitude_min
-                  x: 140
-                  y: 255
-                  font_size: 16
-
-                - function: bmp183_altitude_max
-                  x: 220
-                  y: 255
-                  font_size: 16
-
-                - function: bmp183_altitude_units
-                  x: 230
-                  y: 310
-                  font_size: 16
-
-                - function: altitude_icon
-                  x: 217
-                  y: 267
-                  file: images/altitude_icon_20x32.png
 
        - name: "Settings 0"
          id: settings_0
