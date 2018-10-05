@@ -214,7 +214,7 @@ pages:
                 - function: altitude_icon
                   x: 10
                   y: 204
-                  file: images/altitude_icon_20x32.png
+                  file: images/altitude_icon_32x32.png
 
                 - function: bmp183_altitude
 #                  button:
