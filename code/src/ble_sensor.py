@@ -29,11 +29,11 @@ class ble_sensor(sensor.sensor):
     def __init__(self):
         super().__init__()
         self.log.debug('WAIT_TIME {}'.format(self.WAIT_TIME), extra=self.extra)
-        self.p_defaults = dict(time_stamp=numbers.NAN, name=None, addr=None, state=numbers.NAN, battery_level=numbers.NAN)
+        self.p_defaults = dict(addr=None, battery_level=numbers.NAN)
         self.p_raw.update(dict(self.p_defaults))
-        self.p_formats = dict(time_stamp=None, name=None, addr=None, state=None, battery_level="%.0f")
-        self.p_units = dict(time_stamp="s", name=None, addr=None, state=None, battery_level="%")
-        self.p_raw_units = dict(time_stamp="s", name=None, addr=None, state=None, battery_level="%")
+        self.p_formats = dict(addr=None, battery_level="%.0f")
+        self.p_units = dict(name=None, addr=None, battery_level="%")
+        self.p_raw_units = dict(addr=None, battery_level="%")
         self.required = dict()
 
         self.notifications_enabled = False
@@ -178,9 +178,6 @@ class ble_sensor(sensor.sensor):
         self.log.debug('State = {}. Waiting {} s to reconnect'.format(self.p_raw["state"], self.RECONNECT_WAIT_TIME), extra=self.extra)
         time.sleep(self.RECONNECT_WAIT_TIME)
         self.log.debug('safe_disconnect finished', extra=self.extra)
-
-    def get_raw_data(self):
-        return self.p_raw
 
     def get_device_name(self):
         name = ""

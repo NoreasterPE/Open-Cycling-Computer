@@ -4,6 +4,7 @@
 #  Abstract base class for all sensors.
 import logging
 import threading
+import numbers
 
 
 ## Abstract base class for sensors
@@ -18,13 +19,13 @@ class sensor(threading.Thread):
         self.log = logging.getLogger('system')
         threading.Thread.__init__(self)
 
-        self.p_raw = dict()
         ## @var p_defaults
-        # Default values of parameters provided by a sensor. Used as the initial calues and after reset.
-        self.p_defaults = dict()
-        self.p_formats = dict()
-        self.p_units = dict()
-        self.p_raw_units = dict()
+        # Default values of parameters provided by a sensor. Used as the initial values and after reset.
+        self.p_defaults = dict(time_stamp=numbers.NAN, name=None, state=numbers.NAN)
+        self.p_raw = self.p_defaults.copy()
+        self.p_formats = dict(time_stamp=None, name=None, state=None)
+        self.p_units = dict(time_stamp="s", name=None, state=None)
+        self.p_raw_units = dict(time_stamp="s", name=None, state=None)
         ## @var params_required
         # Dict with params required by the sensor to work properly
         self.required = dict()
@@ -54,9 +55,8 @@ class sensor(threading.Thread):
         return self.extra["module_name"]
 
     def get_raw_data(self):
-        self.log.debug('get_raw_data called', extra=self.extra)
-        return dict(name=self.name,
-                    time_stamp=self.time_stamp)
+        self.log.debug('get_raw_data in sensor.py called {}'.format(self.p_raw), extra=self.extra)
+        return self.p_raw
 
     ## Resets all parameters to the default values
     #  @param self The python object self
