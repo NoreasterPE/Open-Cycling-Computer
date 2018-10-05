@@ -9,11 +9,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="744.09448819"
-   height="1052.3622047"
+   width="32"
+   height="32"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.5 r10040"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="altitude_icon.svg">
   <defs
      id="defs4" />
@@ -24,16 +24,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.2505269"
-     inkscape:cx="446.26681"
-     inkscape:cy="584.26464"
+     inkscape:zoom="8.0240691"
+     inkscape:cx="22.659596"
+     inkscape:cy="19.896769"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1680"
-     inkscape:window-height="984"
+     inkscape:window-height="1013"
      inkscape:window-x="0"
-     inkscape:window-y="27"
+     inkscape:window-y="0"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -43,17 +43,18 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(0,-1020.3622)">
     <path
-       style="fill:none;stroke:#ffffff;stroke-width:24;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 293.7278,579.53243 c 36.67053,-139.54368 48.10994,-143.06177 48.10994,-143.06177 l 27.79136,46.41471 39.33743,-111.87681 67.03629,208.48934 z"
+       style="fill:none;stroke:#ffffff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 2.4108744,1046.7656 c 5.4276199,-14.2594 7.1207706,-14.6187 7.1207706,-14.6187 l 4.113401,4.7429 5.822332,-11.4323 9.922058,21.3046 z"
        id="path3071"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc"
@@ -61,52 +62,12 @@
        inkscape:export-xdpi="6"
        inkscape:export-ydpi="6" />
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:24;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 405.37326,391.13382 c -28.10829,70.5095 -29.03676,72.53844 -29.03676,72.53844 0,0 20.20526,13.67092 21.75271,13.3211 1.54744,-0.34982 10.16893,-12.98527 10.16893,-12.98527 0,0 8.97521,11.47406 10.05842,10.25669 1.08322,-1.21736 17.91724,-17.50494 17.91724,-17.50494 z"
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 9.531645,1032.1469 c -3.0455413,5.2899 -3.1461299,5.4419 -3.1461299,5.4419 0,0 2.1892321,1.0257 2.3568927,0.9995 0.1676685,-0.025 1.1018142,-0.9742 1.1018142,-0.9742 0,0 0.972449,0.8609 1.089823,0.7696 0.117384,-0.091 1.941322,-1.3134 1.941322,-1.3134 z"
        id="path3843"
        inkscape:connector-curvature="0"
        inkscape:export-xdpi="6"
        inkscape:export-ydpi="6"
        inkscape:export-filename="/run/user/1000/gvfs/sftp:host=192.168.1.33,port=33,user=pi/home/pi/OpenCyclingComputer/images/path3957.png" />
-    <path
-       sodipodi:type="star"
-       style="color:#000000;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:#ff0000;stroke-width:24;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="path3956"
-       sodipodi:sides="3"
-       sodipodi:cx="646.02979"
-       sodipodi:cy="348.24136"
-       sodipodi:r1="55.005665"
-       sodipodi:r2="27.502832"
-       sodipodi:arg1="3.1415927"
-       sodipodi:arg2="4.1887902"
-       inkscape:flatsided="true"
-       inkscape:rounded="0"
-       inkscape:randomized="0"
-       d="m 591.02412,348.24136 82.5085,-47.6363 0,95.27261 z"
-       inkscape:transform-center-x="13.751416"
-       transform="translate(-74.726809,22.862486)"
-       inkscape:export-xdpi="6"
-       inkscape:export-ydpi="6"
-       inkscape:export-filename="/run/user/1000/gvfs/sftp:host=192.168.1.33,port=33,user=pi/home/pi/OpenCyclingComputer/images/path3957.png" />
-    <path
-       sodipodi:type="star"
-       style="color:#000000;fill:#000fff;fill-opacity:1;fill-rule:nonzero;stroke:#0100ff;stroke-width:24;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="path3956-1"
-       sodipodi:sides="3"
-       sodipodi:cx="646.02979"
-       sodipodi:cy="348.24136"
-       sodipodi:r1="55.005665"
-       sodipodi:r2="27.502832"
-       sodipodi:arg1="3.1415927"
-       sodipodi:arg2="4.1887902"
-       inkscape:flatsided="true"
-       inkscape:rounded="0"
-       inkscape:randomized="0"
-       d="m 591.02412,348.24136 82.5085,-47.6363 0,95.27261 z"
-       inkscape:transform-center-x="13.751416"
-       transform="translate(-74.726809,216.84986)"
-       inkscape:export-filename="/run/user/1000/gvfs/sftp:host=192.168.1.33,port=33,user=pi/home/pi/OpenCyclingComputer/images/path3957.png"
-       inkscape:export-xdpi="6"
-       inkscape:export-ydpi="6" />
   </g>
 </svg>
