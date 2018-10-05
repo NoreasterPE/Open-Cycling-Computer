@@ -67,12 +67,12 @@ pages:
                   y: 225
                   font_size: 20
 
-                - function: slope
+                - function: compute_slope
                   x: 50
                   y: 200
                   font_size: 50
 
-                - function: slope_units
+                - function: compute_slope_units
                   x: 105
                   y: 230
                   font_size: 16

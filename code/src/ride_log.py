@@ -29,7 +29,10 @@ class ride_log():
                                          'altitude': "Altitude", 'distance': "Distance", 'slope': "Slope"})
 
     def add_entry(self, params):
-        slp = params["slope"]
+        try:
+            slp = params["compute_slope"]
+        except KeyError:
+            slp = "-"
         try:
             hrt = params["ble_hr_heart_rate"]
         except KeyError:

@@ -5,6 +5,7 @@
 import logging
 import threading
 import numbers
+import time
 
 
 ## Abstract base class for sensors
@@ -48,8 +49,8 @@ class sensor(threading.Thread):
         self.log.debug("Starting the main loop", extra=self.extra)
         self.running = True
         while self.running:
-            pass
-            # Copy the above code to a real sensor code and replace pass with whatewer the sensor needs to provide data
+            time.sleep(10)
+            # Copy the above code to a real sensor code and replace sleep with whatewer the sensor needs to provide data
         self.log.debug("Main loop finished", extra=self.extra)
 
     def get_prefix(self):

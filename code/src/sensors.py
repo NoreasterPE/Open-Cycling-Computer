@@ -10,6 +10,7 @@ import ble_sc
 import ble_hr
 #from bluepy.btle import BTLEException
 import bmp183
+import compute
 import logging
 import threading
 import time
@@ -77,10 +78,10 @@ class sensors(threading.Thread):
         self.required_previous = dict()
         ## @var names
         # Dict with names of the sensors
-        self.names = dict(ble_sc='', ble_hr='', bmp183='')
+        self.names = dict(compute='', ble_sc='', ble_hr='', bmp183='')
         ## @var addrs
         # Dict with BLE addresses of the sensors
-        self.addrs = dict(ble_sc='', ble_hr='', bmp183='')
+        self.addrs = dict(compute='', ble_sc='', ble_hr='', bmp183='')
         ## @var simulate
         # Local copy of simulate variable from OCC
         self.simulate = occ.get_simulate()
@@ -98,6 +99,10 @@ class sensors(threading.Thread):
         self.connected = dict(ble_sc=False, ble_hr=False, bmp183=False)
         self.log.info("Initialising bmp183 sensor", extra=self.extra)
         #FIXME make initialisation the same for all sensors
+
+        self.sensors['compute'] = compute.compute()
+        self.required["compute"] = self.sensors['compute'].get_required()
+        self.required_previous["compute"] = self.required['compute']
         try:
             self.sensors['bmp183'] = bmp183.bmp183(self.simulate)
             self.required["bmp183"] = self.sensors['bmp183'].get_required()
@@ -141,6 +146,9 @@ class sensors(threading.Thread):
     def run(self):
         self.log.debug("run started", extra=self.extra)
         self.init_data_from_ride_parameters()
+
+        self.log.debug("Starting compute thread", extra=self.extra)
+        self.sensors['compute'].start()
 
         self.log.debug("Setting ble_hr device address to {}".format(self.addrs["ble_hr"]), extra=self.extra)
         self.sensors['ble_hr'].set_addr(self.addrs["ble_hr"])

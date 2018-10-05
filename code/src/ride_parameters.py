@@ -56,6 +56,9 @@ class ride_parameters():
         ## @var bmp183
         # Handle of bmp183 sensor
         self.bmp183 = self.sensors.get_sensor('bmp183')
+        ## @var compute
+        # Handle of compute module
+        self.compute = self.sensors.get_sensor("compute")
 
         self.suffixes = ("_digits", "_tenths", "_hms")
 
@@ -67,7 +70,6 @@ class ride_parameters():
                           ride_time_reset=0.0001,
                           rider_weight=0.0,
                           ride_time=0.0, ride_time_total=0.0,
-                          slope=0.0,
                           speed=0.0, speed_avg=0.0, speed_max=0.0,
                           speed_low=1.0,
                           temperature_avg=0.0,
@@ -76,13 +78,13 @@ class ride_parameters():
         # Internal units
         self.p_raw_units = dict(
             distance='m', time_delta='s', odometer='m', rider_weight='kg', wheel_size='',
-            ride_time='s', ride_time_total='s', slope='m/m', speed='m/s', timeon='s', ride_time_reset='s')
+            ride_time='s', ride_time_total='s', speed='m/s', timeon='s', ride_time_reset='s')
 
         # Params of the ride ready for rendering.
         self.params = dict(
             distance=0, time_delta=0, odometer=0.0, rider_weight=0.0,
             wheel_size='', wheel_circ='', ride_time='', ride_time_hms='', ride_time_total='',
-            ride_time_total_hms='', rtc='', slope=0.0, speed='-', speed_avg='-',
+            ride_time_total_hms='', rtc='', speed='-', speed_avg='-',
             speed_avg_digits='-', speed_avg_tenths='-', speed_digits='-', speed_max='-', speed_max_digits='-',
             speed_max_tenths='-', speed_tenths='-', timeon='', timeon_hms='', ride_time_reset='', utc='',
             # Editor params
@@ -93,7 +95,7 @@ class ride_parameters():
         self.p_format = dict(
             distance='%.1f', time_delta='%.2f', odometer='%.0f',
             rider_weight='%.1f', ride_time='%.0f', ride_time_hms='', ride_time_total='.0f',
-            ride_time_total_hms='', rtc='', slope='%.0f', speed='%.1f', speed_avg='%.1f',
+            ride_time_total_hms='', rtc='', speed='%.1f', speed_avg='%.1f',
             speed_avg_digits='%.0f', speed_avg_tenths='%.0f', speed_digits='%.0f', speed_max='%.1f', speed_max_digits='%.0f', speed_max_tenths='%.0f',
             speed_tenths='%.0f', timeon='%.0f', timeon_hms='', ride_time_reset='%.0f', utc='')
 
@@ -102,14 +104,13 @@ class ride_parameters():
         self.units = dict(
             distance='km', time_delta='s', odometer='km',
             rider_weight='kg', wheel_size='', ride_time='s', ride_time_hms='', ride_time_total='s', ride_time_total_hms='',
-            slope='%', speed='km/h', timeon='s', timeon_hms='', ride_time_reset='s')
+            speed='km/h', timeon='s', timeon_hms='', ride_time_reset='s')
 
         # Allowed units - user can switch between those when editing value
         # FIXME switch to mi when mi/h are set for speed
         # FIXME switch to mi/h when mi are set for odometer
-        self.units_allowed = dict(
+        self.p_units_allowed = dict(
             odometer=['km', 'mi'], rider_weight=['kg', 'st'],
-            # slope=['%', 'C'],
             wheel_size=[''],
             speed=['km/h', 'm/s', 'mi/h'], temperature=['C', 'F'])
 
@@ -119,6 +120,7 @@ class ride_parameters():
         self.ble_hr = self.init_sensor_data("ble_hr")
         self.ble_sc = self.init_sensor_data("ble_sc")
         self.bmp183 = self.init_sensor_data("bmp183")
+        self.compute = self.init_sensor_data("compute")
         self.log.debug("Setting up event scheduler", extra=self.extra)
         self.event_scheduler.enter(RIDE_PARAMETERS_UPDATE, 1, self.schedule_update_event)
 
@@ -143,6 +145,12 @@ class ride_parameters():
         sensor_raw_units = {sensor_prefix + "_" + key: value for key, value in sensor_raw_units.items()}
         # Add the sensor parameters to p_raw
         self.p_raw_units.update(sensor_raw_units)
+
+        sensor_units_allowed = sensor.get_units_allowed()
+        # Add prefix to keys in the dictionary
+        sensor_units_allowed = {sensor_prefix + "_" + key: value for key, value in sensor_units_allowed.items()}
+        # Add the sensor parameters to p_units_allowed
+        self.p_units_allowed.update(sensor_units_allowed)
 
         sensor_formats = sensor.get_formats()
         # Add prefix to keys in the dictionary
@@ -194,25 +202,8 @@ class ride_parameters():
             self.p_raw["speed"] = 0.0
 
         self.calculate_time_related_parameters()
-        self.calculate_slope()
+#        self.calculate_slope()
         self.update_params()
-
-    def calculate_slope(self):
-        # FIXME make proper param for tunning. Calculate slope if the distance
-        # delta was grater than 8,4m. That's related to altimeter accurancy. Calcs to be included in the project.
-        try:
-            self.p_raw["altitude_delta_cumulative"] += self.p_raw["bmp183_altitude_delta"]
-        except KeyError:
-            self.log.error("bmp183_altitude_delta doesn't exist", extra=self.extra)
-            return
-        self.p_raw["distance_delta_cumulative"] += self.p_raw["distance_delta"]
-        if self.p_raw["distance_delta_cumulative"] > 8.4:
-            self.p_raw["slope"] = self.p_raw["altitude_delta_cumulative"] / self.p_raw["distance_delta_cumulative"]
-            self.log.debug("altitude_delta_cumulative: {}".format(self.p_raw["altitude_delta_cumulative"]), extra=self.extra)
-            self.log.debug("distance_delta_cumulative: {}".format(self.p_raw["distance_delta_cumulative"]), extra=self.extra)
-            self.p_raw["altitude_delta_cumulative"] = 0
-            self.p_raw["distance_delta_cumulative"] = 0
-        self.log.debug("slope: {}".format(self.p_raw["slope"]), extra=self.extra)
 
     def calculate_time_related_parameters(self):
         dt = self.p_raw["time_delta"]
@@ -302,6 +293,7 @@ class ride_parameters():
         self.update_param("ble_host_state")
         self.update_param("reference_altitude")
         self.update_bmp183()
+        self.update_compute()
         self.update_param("distance")
         self.update_param("ride_time")
         self.update_hms("ride_time")
@@ -317,8 +309,8 @@ class ride_parameters():
         self.params["utc"] = self.p_raw["utc"]
         self.update_param("odometer")
         self.update_param("rider_weight")
-        self.update_param("slope")
-        self.sanitise("slope")
+#        self.update_param("slope")
+#        self.sanitise("slope")
 
     def strip_end(self, param_name, suffix=None):
         # Make sure there is no _digits, _tenths, _hms at the end
@@ -394,7 +386,7 @@ class ride_parameters():
             if (math.isinf(float(self.params[param_name])) or
                     math.isnan(float(self.params[param_name]))):
                 self.params[param_name] = '-'
-        except (ValueError,  TypeError):
+        except (ValueError, TypeError):
             #Don't deal with invalid types or values
             pass
 
@@ -466,3 +458,25 @@ class ride_parameters():
         else:
             self.log.debug("bmp183 connection lost", extra=self.extra)
         self.log.debug("update_bmp183 finished", extra=self.extra)
+
+    def update_compute(self):
+        self.log.debug("update_compute started", extra=self.extra)
+        if self.compute:
+            if self.compute.is_connected():
+                self.log.debug("Fetching compute prefix & data", extra=self.extra)
+                data = self.compute.get_raw_data()
+                if (time.time() - data["time_stamp"]) < 3.0:  # EXPIRED_DATA_TIME
+                    prefix = self.compute.get_prefix()
+                    # Add prefix to keys in the dictionary
+                    data_with_prefix = {prefix + "_" + key: value for key, value in data.items()}
+                    self.log.debug("{}".format(data_with_prefix), extra=self.extra)
+                    for param in data_with_prefix:
+                        self.p_raw[param] = data_with_prefix[param]
+                        self.update_param(param)
+                        self.sanitise(param)
+                else:
+                    #FIXME Temporary fix for expired data
+                    self.log.debug("Data expired, dt = {}".format(time.time() - data["time_stamp"]), extra=self.extra)
+        else:
+            self.log.debug("compute connection lost", extra=self.extra)
+        self.log.debug("update_compute finished", extra=self.extra)
