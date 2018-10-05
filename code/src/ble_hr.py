@@ -30,6 +30,7 @@ class ble_hr(ble_sensor.ble_sensor):
         self.p_formats.update(dict(heart_rate='%.0f', heart_rate_min='%.0f', heart_rate_avg='%.0f', heart_rate_max='%.0f'))
         self.p_units.update(dict(heart_rate='BPM', heart_rate_min='BPM', heart_rate_avg='BPM', heart_rate_max='BPM'))
         self.p_raw_units.update(dict(heart_rate='BPM', heart_rate_min='BPM', heart_rate_avg='BPM', heart_rate_max='BPM'))
+        self.p_units_allowed.update(dict(heart_rate='BPM', heart_rate_min='BPM', heart_rate_avg='BPM', heart_rate_max='BPM'))
         self.required.update(dict())
 
         self.reset_data()

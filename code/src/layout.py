@@ -437,20 +437,20 @@ class layout():
         variable = self.occ.rp.params["variable"]
         variable_unit = self.occ.rp.params["variable_unit"]
         variable_value = self.occ.rp.params["variable_raw_value"]
-        current_unit_index = self.occ.rp.units_allowed[
+        current_unit_index = self.occ.rp.p_units_allowed[
             variable].index(variable_unit)
         if direction == 1:
             try:
-                next_unit = self.occ.rp.units_allowed[
+                next_unit = self.occ.rp.p_units_allowed[
                     variable][current_unit_index + 1]
             except IndexError:
-                next_unit = self.occ.rp.units_allowed[variable][0]
+                next_unit = self.occ.rp.p_units_allowed[variable][0]
         else:
             try:
-                next_unit = self.occ.rp.units_allowed[
+                next_unit = self.occ.rp.p_units_allowed[
                     variable][current_unit_index - 1]
             except IndexError:
-                next_unit = self.occ.rp.units_allowed[variable][-1]
+                next_unit = self.occ.rp.p_units_allowed[variable][-1]
         try:
             f = self.occ.rp.p_format[variable]
         except KeyError:

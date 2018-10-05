@@ -26,6 +26,7 @@ class sensor(threading.Thread):
         self.p_formats = dict(time_stamp=None, name=None, state=None)
         self.p_units = dict(time_stamp="s", name=None, state=None)
         self.p_raw_units = dict(time_stamp="s", name=None, state=None)
+        self.p_units_allowed = dict(time_stamp=["s"])
         ## @var params_required
         # Dict with params required by the sensor to work properly
         self.required = dict()
@@ -65,6 +66,9 @@ class sensor(threading.Thread):
 
     def get_raw_units(self):
         return self.p_raw_units
+
+    def get_units_allowed(self):
+        return self.p_units_allowed
 
     def get_units(self):
         return self.p_units

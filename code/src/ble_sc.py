@@ -41,11 +41,17 @@ class ble_sc(ble_sensor.ble_sensor):
                                  cadence_avg="RPM",
                                  cadence_max="RPM"))
         self.p_raw_units.update(dict(wheel_time_stamp='s',
-                                     heel_rev_time='s',
+                                     wheel_rev_time='s',
                                      cadence_time_stamp='s',
                                      cadence="RPM",
                                      cadence_avg="RPM",
                                      cadence_max="RPM"))
+        self.p_units_allowed.update(dict(wheel_time_stamp='s',
+                                         wheel_rev_time='s',
+                                         cadence_time_stamp='s',
+                                         cadence="RPM",
+                                         cadence_avg="RPM",
+                                         cadence_max="RPM"))
         self.required.update(dict())
 
         self.reset_data()
