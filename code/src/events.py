@@ -28,7 +28,7 @@ CONFIG_SAVE_TIME = 15
 
 ## Events  class
 # Handle input and internal events
-class events(threading.Thread):
+class events():
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': 'events'}

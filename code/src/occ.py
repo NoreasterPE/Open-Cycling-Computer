@@ -100,8 +100,6 @@ class open_cycling_computer(object):
         #  Handle to events instance
         self.log.debug("Initialising events", extra=self.extra)
         self.events = events(self.layout, self.touchscreen, self.rp, self.rendering)
-        self.log.debug("Starting events thread", extra=self.extra)
-        self.events.start()
 
     ## Switches logging level
     #  @param self The python object self
@@ -188,9 +186,8 @@ if __name__ == "__main__":
     ## @var main_window
     # OCC main window. It's instance of open_cycling_computer class
     main_window = open_cycling_computer(simulate)
-    while main_window.running:
-        main_window.log.debug("main loop running", extra=ex)
-        time.sleep(2)
+    main_window.log.debug("Starting events loop", extra=ex)
+    main_window.events.run()
     main_window.stop()
     main_window.log.debug("Log end", extra=ex)
     quit()
