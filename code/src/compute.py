@@ -49,8 +49,7 @@ class compute(sensor.sensor):
         try:
             self.p_raw["altitude_delta_cumulative"] += self.altitude_delta
             self.p_raw["distance_delta_cumulative"] += self.distance_delta
-            if self.p_raw["distance_delta_cumulative"] > 8.4:
-                self.calculate_slope()
+            self.calculate_slope()
         except TypeError:
             self.log.debug("Data not suitable for calculationsi {}".format(required), extra=self.extra)
             pass
@@ -62,12 +61,18 @@ class compute(sensor.sensor):
             time.sleep(10)
         self.log.debug("Main loop finished", extra=self.extra)
 
+    ## Calculate slope. Current values are matched with Bosch BMP183 sensor (0.18 m of resolution). To be changed if sensor is upgraded to BMP280
+    #  @param self The python object self
     def calculate_slope(self):
-        # FIXME make proper param for tunning. Calculate slope if the distance delta
-        # was grater than 8,4m. That's related to altimeter accurancy. Calcs to be included in the project.
-        self.p_raw["slope"] = self.p_raw["altitude_delta_cumulative"] / self.p_raw["distance_delta_cumulative"]
-        self.log.debug("altitude_delta_cumulative: {}".format(self.p_raw["altitude_delta_cumulative"]), extra=self.extra)
-        self.log.debug("distance_delta_cumulative: {}".format(self.p_raw["distance_delta_cumulative"]), extra=self.extra)
+        if self.p_raw["distance_delta_cumulative"] > 8.4:
+            self.p_raw["slope"] = self.p_raw["altitude_delta_cumulative"] / self.p_raw["distance_delta_cumulative"]
+        if abs(self.p_raw["slope"]) < 0.02:
+            #If slope is less than 2% wait for more cumulative distance/altitude
+            self.p_raw["slope"] = 0.0
+        else:
+            #If slope is less more 2%, use calculated value and reset cumulative variables
+            self.log.debug("altitude_delta_cumulative: {}".format(self.p_raw["altitude_delta_cumulative"]), extra=self.extra)
+            self.log.debug("distance_delta_cumulative: {}".format(self.p_raw["distance_delta_cumulative"]), extra=self.extra)
+            self.p_raw["altitude_delta_cumulative"] = 0
+            self.p_raw["distance_delta_cumulative"] = 0
         self.log.debug("slope: {}".format(self.p_raw["slope"]), extra=self.extra)
-        self.p_raw["altitude_delta_cumulative"] = 0
-        self.p_raw["distance_delta_cumulative"] = 0
