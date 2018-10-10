@@ -6,7 +6,7 @@ import logging
 import logging.handlers
 import yaml
 from shutil import copyfile
-import wheel
+import sensors
 
 
 ## Main config class
@@ -25,6 +25,7 @@ class config(object):
         self.rp = occ.rp
         self.config_file_path = config_file_path
         self.base_config_file_path = base_config_file_path
+        self.s = sensors.sensors()
 
     ## Function that reads config file. Currently read values are written directly to destination variables which is not really flexible solution.
     #  @param self The python object self
@@ -60,117 +61,118 @@ class config(object):
 
         error_list = []
         try:
-            self.rp.p_raw["rider_weight"] = float(self.config_params["rider_weight"])
+            self.s.register_parameter("rider_weight", self.extra["module_name"])
+            self.s.update_parameter("rider_weight", self.config_params["rider_weight"])
+
         except AttributeError:
             error_list.append("rider_weight")
-        try:
-            wheel_size = self.config_params["wheel_size"]
-        except AttributeError:
-            error_list.append("wheel_size")
-        else:
-            self.log.debug("wheel_size in config file: {}".format(wheel_size), extra=self.extra)
-            self.rp.p_raw["wheel_size"] = wheel_size
-            self.rp.params["wheel_size"] = wheel_size
-            self.log.info("Wheel size set to {}".format(wheel_size), extra=self.extra)
-            w = wheel.wheel()
-            try:
-                self.rp.p_raw["wheel_circ"] = w.get_circ(self.rp.p_raw["wheel_size"])
-            except KeyError:
-                error_list.append("wheel_circ")
-            self.rp.params["wheel_circ"] = self.rp.p_raw["wheel_circ"]
-            self.log.info("Wheel circ set to {}".format(self.rp.params['wheel_circ']), extra=self.extra)
 
         try:
-            self.rp.units["rider_weight"] = self.config_params["rider_weight_units"]
+            self.s.update_parameter("wheel_size", self.config_params["wheel_size"])
         except AttributeError:
-            error_list.append("rider_weight_units")
+            error_list.append("wheel_size")
         try:
-            self.rp.p_raw["reference_altitude"] = float(self.config_params["reference_altitude"])
-            self.rp.p_raw_units["reference_altitude"] = "m"
-            self.rp.p_format["reference_altitude"] = "%.0f"
-            self.rp.units["reference_altitude"] = "m"
+            import wheel
+            w = wheel.wheel()
+            self.s.register_parameter("wheel_circumference",
+                                      self.extra["module_name"],
+                                      raw_unit="m")
+            wc = w.get_circumference(self.s.parameters["wheel_size"]["value"])
+            self.s.update_parameter("wheel_circumference", dict(value=w.get_circumference(self.s.parameters["wheel_size"]["value"])))
+        except AttributeError:
+            error_list.append("wheel_circumference")
+
+        try:
+            self.s.update_parameter("reference_altitude", self.config_params["reference_altitude"])
         except AttributeError:
             error_list.append("reference_altitude")
+
         try:
-            self.rp.units["reference_altitude"] = self.config_params["reference_altitude_units"]
-        except AttributeError:
-            error_list.append("reference_altitude")
-        try:
-            self.rp.p_raw["odometer"] = float(self.config_params["odometer"])
+            self.s.update_parameter("odometer", self.config_params["odometer"])
         except AttributeError:
             error_list.append("odometer")
+
+#        try:
+#            self.s.update_parameter("total_ride_time", self.config_params["total_ride_time"])
+#            self.s.update_parameter("total_ride_time",
+#                                    dict(value=float(self.config_params["total_ride_time"]),
+#                                         raw_unit="s"))
+#        except AttributeError:
+#            error_list.append("total_ride_time")
+
         try:
-            self.rp.units["odometer"] = self.config_params["odometer_units"]
-        except AttributeError:
-            error_list.append("odometer")
-        try:
-            self.rp.p_raw["ridetime_total"] = float(self.config_params["ridetime_total"])
-        except AttributeError:
-            error_list.append("ridetime_total")
-        try:
-            self.rp.p_raw["speed_max"] = float(self.config_params["speed_max"])
-        except AttributeError:
-            error_list.append("speed_max")
-        try:
-            self.rp.units["speed"] = self.config_params["speed_units"]
+            self.s.update_parameter("speed", self.config_params["speed"])
         except AttributeError:
             error_list.append("speed")
+
         try:
-            self.rp.units["temperature"] = self.config_params["temperature_units"]
+            self.s.update_parameter("temperature", self.config_params["temperature"])
         except AttributeError:
             error_list.append("temperature")
+
         try:
-            self.rp.params["ble_hr_name"] = self.config_params["ble_hr_name"]
-            self.log.debug("Read from config file: ble_hr_name = {}".format(self.rp.params["ble_hr_name"]), extra=self.extra)
+            self.s.update_parameter("heart_rate_device_name", self.config_params["heart_rate_device_name"])
         except AttributeError:
-            error_list.append("ble_hr_name")
+            error_list.append("heart_rate_device_name")
+
         try:
-            self.rp.params["ble_hr_addr"] = self.config_params["ble_hr_addr"]
-            self.log.debug("Read from config file: ble_hr_addr = {}".format(self.rp.params["ble_hr_addr"]), extra=self.extra)
+            self.s.register_parameter("heart_rate_device_name", self.extra["module_name"])
+            self.s.update_parameter("heart_rate_device_address", self.config_params["heart_rate_device_address"])
         except AttributeError:
-            error_list.append("ble_hr_addr")
+            error_list.append("heart_rate_device_address")
+
         try:
-            self.rp.params["ble_sc_name"] = self.config_params["ble_sc_name"]
-            self.log.debug("Read from config file: ble_sc_name = {}".format(self.rp.params["ble_sc_name"]), extra=self.extra)
+            self.s.update_parameter("cadence_speed_device_name", self.config_params["cadence_speed_device_name"])
         except AttributeError:
-            error_list.append("ble_sc_name")
+            error_list.append("cadence_speed_device_name")
+
         try:
-            self.rp.params["ble_sc_addr"] = self.config_params["ble_sc_addr"]
-            self.log.debug("Read from config file: ble_sc_addr = {}".format(self.rp.params["ble_sc_addr"]), extra=self.extra)
+            self.s.register_parameter("cadence_speed_device_address", self.extra["module_name"])
+            self.s.update_parameter("cadence_speed_device_address", self.config_params["cadence_speed_device_address"])
         except AttributeError:
-            error_list.append("ble_sc_addr")
-        self.rp.update_param("speed_max")
-        self.rp.split_speed("speed_max")
+            error_list.append("cadence_speed_device_address")
+
         if len(error_list) > 0:
             for item in error_list:
-                self.log.error("Missing: {} in config file".format(item), extra=self.extra)
+                self.log.error("Missing or invalid: {} in config file".format(item), extra=self.extra)
             error_list = []
-        self.log.debug("read_config started", extra=self.extra)
+        self.log.debug("read_config finished", extra=self.extra)
 
     ## Function that writes config file.
     #  @param self The python object self
     def write_config(self):
-        self.log.debug("Writing config file", extra=self.extra)
+        self.log.debug("Writing config file started", extra=self.extra)
         log_level = logging.getLevelName(self.log.getEffectiveLevel())
         c = {}
         c["log_level"] = log_level
+        self.log.debug("1", extra=self.extra)
         c["layout_path"] = self.occ.layout_path
-        c["rider_weight"] = self.rp.p_raw["rider_weight"]
-        c["rider_weight_units"] = self.rp.units["rider_weight"]
-        c["wheel_size"] = self.rp.p_raw["wheel_size"]
-        c["reference_altitude"] = self.rp.p_raw["reference_altitude"]
-        c["reference_altitude_units"] = self.rp.units["reference_altitude"]
-        c["odometer"] = self.rp.p_raw["odometer"]
-        c["odometer_units"] = self.rp.units["odometer"]
-        c["ridetime_total"] = self.rp.p_raw["ridetime_total"]
-        c["speed_max"] = self.rp.p_raw["speed_max"]
-        c["speed_units"] = self.rp.units["speed"]
-        c["temperature_units"] = self.rp.units["temperature"]
-        c["ble_hr_name"] = self.rp.params["ble_hr_name"]
-        c["ble_hr_addr"] = self.rp.params["ble_hr_addr"]
-        c["ble_sc_name"] = self.rp.params["ble_sc_name"]
-        c["ble_sc_addr"] = self.rp.params["ble_sc_addr"]
+        self.log.debug("2", extra=self.extra)
+        c["rider_weight"] = self.s.parameters["rider_weight"]
+        self.log.debug("3", extra=self.extra)
+        c["wheel_size"] = self.s.parameters["wheel_size"]
+        self.log.debug("4", extra=self.extra)
+        c["reference_altitude"] = self.s.parameters["reference_altitude"]
+        self.log.debug("5", extra=self.extra)
+        c["odometer"] = self.s.parameters["odometer"]
+        self.log.debug("6", extra=self.extra)
+        #c["total_ride_time"] = self.s.parameters["total_ride_time"]
+        c["speed"] = self.s.parameters["speed"]
+        self.log.debug("7", extra=self.extra)
+        c["temperature"] = self.s.parameters["temperature"]
+        self.log.debug("8", extra=self.extra)
+        c["heart_rate_device_name"] = self.s.parameters["heart_rate_device_name"]
+        self.log.debug("9", extra=self.extra)
+        c["heart_rate_device_address"] = self.s.parameters["heart_rate_device_address"]
+        self.log.debug("10", extra=self.extra)
+        c["cadence_speed_device_name"] = self.s.parameters["cadence_speed_device_name"]
+        self.log.debug("11", extra=self.extra)
+        c["cadence_speed_device_address"] = self.s.parameters["cadence_speed_device_address"]
+        self.log.debug("Data ready for config file", extra=self.extra)
         # FIXME error handling for file operation
         f = open(self.config_file_path, "w")
+        self.log.debug("Writing config file", extra=self.extra)
         yaml.dump(c, f, default_flow_style=False, allow_unicode=True)
+        self.log.debug("Closing config file", extra=self.extra)
         f.close()
+        self.log.debug("Writing config file finished", extra=self.extra)

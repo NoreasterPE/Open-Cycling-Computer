@@ -3,9 +3,9 @@
 ## @package ble_sensor
 #  Abstract base BLE sensor handling module.
 import bluepy.btle
-import time
 import numbers
 import sensor
+import time
 
 
 ##Abstract base Class for handling BLE sensors
@@ -29,13 +29,16 @@ class ble_sensor(sensor.sensor):
     def __init__(self):
         super().__init__()
         self.log.debug('WAIT_TIME {}'.format(self.WAIT_TIME), extra=self.extra)
-        self.p_defaults.update(dict(addr=None, battery_level=numbers.NAN))
-        self.p_raw.update(dict(self.p_defaults))
-        self.p_formats.update(dict(addr=None, battery_level="%.0f"))
-        self.p_units.update(dict(name=None, addr=None, battery_level="%"))
-        self.p_raw_units.update(dict(addr=None, battery_level="%"))
-        self.p_units_allowed.update(dict(addr=None, battery_level="%"))
+
+        #self.p_defaults.update(dict(addr=None, battery_level=numbers.NAN))
+        #self.p_raw.update(dict(self.p_defaults))
+        #self.p_formats.update(dict(addr=None, battery_level="%.0f"))
+        #self.p_units.update(dict(name=None, addr=None, battery_level="%"))
+        #self.p_raw_units.update(dict(addr=None, battery_level="%"))
+        #self.p_units_allowed.update(dict(addr=None, battery_level="%"))
         self.required.update(dict())
+        self.state = 0
+        self.device_address = None
 
         self.notifications_enabled = False
         #Delegate class handling notification has to be set be the real device class in __init__
@@ -58,7 +61,7 @@ class ble_sensor(sensor.sensor):
         self.log.debug('Set notifications finished', extra=self.extra)
 
     def initialise_connection(self):
-        if self.p_raw["addr"] is not None and self.connected is False and self.running:
+        if self.device_address is not None and self.connected is False and self.running:
             self.log.debug('Initialising connection started', extra=self.extra)
             try:
                 self.log.debug('Setting delegate', extra=self.extra)
@@ -69,19 +72,21 @@ class ble_sensor(sensor.sensor):
                 self.peripherial.withDelegate(self.delegate)
                 self.log.debug('Notification handler set', extra=self.extra)
                 self.log.debug('Connecting', extra=self.extra)
-                self.p_raw["state"] = 1
-                self.log.debug('{}'.format(self.p_raw['addr']), extra=self.extra)
-                self.peripherial.connect(self.p_raw["addr"], addrType='random')
+                self.state = 1
+                
+                self.log.debug('{}'.format(self.device_address), extra=self.extra)
+                self.log.debug('{}'.format(type(self.device_address)), extra=self.extra)
+                self.peripherial.connect(self.device_address, addrType='random')
                 self.log.debug('Connected', extra=self.extra)
                 self.connected = True
-                self.p_raw["state"] = 2
+                self.state = 2
                 self.log.debug('Getting device name', extra=self.extra)
-                self.p_raw["name"] = self.get_device_name()
+                self.name = self.get_device_name()
                 self.log.debug('Getting battery level', extra=self.extra)
                 self.p_raw["battery_level"] = self.get_battery_level()
             except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
                 self.handle_exception(e, "initialise_connection")
-                self.p_raw["state"] = 0
+                self.state = 0
             self.log.debug('Initialising connection finished', extra=self.extra)
 
     def handle_exception(self, exception, caller):
@@ -129,10 +134,10 @@ class ble_sensor(sensor.sensor):
     def run(self):
         self.log.debug('Starting the main loop', extra=self.extra)
         self.running = True
-        self.p_raw["state"] = 0
+        self.state = 0
         while self.running:
-            self.log.debug('Address: {}, connected: {}, notifications: {}'.format(self.p_raw["addr"], self.connected, self.notifications_enabled), extra=self.extra)
-            if self.p_raw["addr"] is not None:
+            self.log.debug('Address: {}, connected: {}, notifications: {}'.format(self.device_address, self.connected, self.notifications_enabled), extra=self.extra)
+            if self.device_address is not None:
                 if self.connected and self.notifications_enabled:
                     try:
                         if self.peripherial.waitForNotifications(self.WAIT_TIME):
@@ -171,12 +176,12 @@ class ble_sensor(sensor.sensor):
         # Make sure the device is disconnected
         try:
             self.peripherial.disconnect()
-            self.p_raw["state"] = 0
+            self.state = 0
         except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
             # Not connected yet
             self.log.error('AttributeError: {}'.format(e), extra=self.extra)
             pass
-        self.log.debug('State = {}. Waiting {} s to reconnect'.format(self.p_raw["state"], self.RECONNECT_WAIT_TIME), extra=self.extra)
+        self.log.debug('State = {}. Waiting {} s to reconnect'.format(self.state, self.RECONNECT_WAIT_TIME), extra=self.extra)
         time.sleep(self.RECONNECT_WAIT_TIME)
         self.log.debug('safe_disconnect finished', extra=self.extra)
 
@@ -203,38 +208,41 @@ class ble_sensor(sensor.sensor):
         return level
 
     def get_state(self):
-        return self.p_raw["state"]
+        return self.state
 
     ## Resets all parameters to the default values
     #  @param self The python object self
     def reset_data(self):
         #Preserve data
-        addr = self.p_raw["addr"]
-        name = self.p_raw["name"]
-        state = self.p_raw["state"]
+        addr = self.device_address
+        name = self.name
+        state = self.state
         super().reset_data()
         try:
             self.delegate.reset_data()
         except AttributeError:
             self.log.debug("Delegate doesn't exist while calling reset_data", extra=self.extra)
         #Restore data after the reset
-        self.p_raw["addr"] = addr
-        self.p_raw["name"] = name
-        self.p_raw["state"] = state
+        self.device_address = addr
+        self.name = name
+        self.state = state
 
     ## Receive updated parameters from sensors module. Overwrite in real device module.
     #  @param self The python object self
     #  @param required Dict with updated by sensors module
-    def notification(self, required):
-        self.log.debug("required {}".format(required), extra=self.extra)
-        pass
+    def notification(self):
+        self.log.debug("notification received", extra=self.extra)
+        #FIXME on device_address change initialise connection to the new device
+        #self.device_address = self.s.parameters["device_address"]["value"]
+        self.initialise_connection()
+        #pass
 
     def __del__(self):
         self.stop()
 
     def set_addr(self, addr):
         self.log.debug('address set to {}'.format(addr), extra=self.extra)
-        self.p_raw["addr"] = addr
+        self.device_address = addr
 
     def stop(self):
         super().stop()
@@ -247,6 +255,6 @@ class ble_sensor(sensor.sensor):
             self.peripherial.disconnect()
         except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
             self.handle_exception(e, "stop, disconnecting")
-        self.p_raw["state"] = 0
+        self.state = 0
         self.log.info('{} disconnected'.format(self.name), extra=self.extra)
         self.log.debug('Stop finished', extra=self.extra)

@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 ## @package ble_sc
 #  BLE speed and cadence sensor handling module.
+import ble_sensor
 import bluepy.btle
 import math
 import numbers
+import sensors
 import time
-import ble_sensor
 
 
 ## Class for handling BLE speed and cadence sensor
@@ -21,40 +22,21 @@ class ble_sc(ble_sensor.ble_sensor):
 
     def __init__(self):
         super().__init__()
-        self.p_defaults.update(dict(wheel_time_stamp=time.time(),
-                                    wheel_rev_time=0,
-                                    cadence_time_stamp=time.time(),
-                                    cadence=0,
-                                    cadence_max=numbers.INF_MIN,
-                                    cadence_beat=0))
-        self.p_raw.update(dict(self.p_defaults))
-        self.p_formats.update(dict(wheel_time_stamp='%.0f',
-                                   wheel_rev_time='%.0f',
-                                   cadence_time_stamp='%.0,f',
-                                   cadence="%5.0f",
-                                   cadence_avg="%5.0f",
-                                   cadence_max="%5.0f"))
-        self.p_units.update(dict(wheel_time_stamp='s',
-                                 wheel_rev_time='s',
-                                 cadence_time_stamp='s',
-                                 cadence="RPM",
-                                 cadence_avg="RPM",
-                                 cadence_max="RPM"))
-        self.p_raw_units.update(dict(wheel_time_stamp='s',
-                                     wheel_rev_time='s',
-                                     cadence_time_stamp='s',
-                                     cadence="RPM",
-                                     cadence_avg="RPM",
-                                     cadence_max="RPM"))
-        self.p_units_allowed.update(dict(wheel_time_stamp='s',
-                                         wheel_rev_time='s',
-                                         cadence_time_stamp='s',
-                                         cadence="RPM",
-                                         cadence_avg="RPM",
-                                         cadence_max="RPM"))
-        self.required.update(dict())
+        self.log.debug("{} __init__ started".format(__name__), extra=self.extra)
+        self.s = sensors.sensors()
+        self.s.register_parameter("cadence_speed_device_name", self.extra["module_name"])
+        self.s.register_parameter("wheel_revolution_time", self.extra["module_name"], raw_unit="s")
+        self.s.register_parameter("wheel_revolutions", self.extra["module_name"])
+        self.s.register_parameter("odometer", self.extra["module_name"], raw_unit="m", unit="km")
+        self.s.register_parameter("cadence", self.extra["module_name"], raw_unit="RPM")
+        self.s.register_parameter("cadence_icon_beat", self.extra["module_name"])
+        self.s.request_parameter("cadence_speed_device_address", self.extra["module_name"])
+        ## @var device_address
+        #  BLE device address
+        self.device_address = None
+        self.s.request_parameter("wheel_circumference", self.extra["module_name"])
 
-        self.reset_data()
+        #self.reset_data()
         #FIXME Delegate data (min/avg/max) are lost after disconnection
         self.delegate_class = sc_delegate
 
@@ -62,22 +44,36 @@ class ble_sc(ble_sensor.ble_sensor):
     #  @param self The python object self
     def process_delegate_data(self):
         try:
-            self.p_raw["time_stamp"] = self.delegate.time_stamp
-            self.p_raw["wheel_time_stamp"] = self.delegate.wheel_time_stamp
-            self.p_raw["wheel_rev_time"] = self.delegate.wheel_rev_time
-            self.p_raw["cadence_time_stamp"] = self.delegate.cadence_time_stamp
-            self.p_raw["cadence"] = self.delegate.cadence
-            self.p_raw["cadence_avg"] = self.delegate.cadence_avg
-            self.p_raw["cadence_max"] = max(self.p_raw["cadence_max"], self.delegate.cadence)
+            if self.delegate.wheel_time_stamp == self.delegate.wheel_revolution_time_stamp:
+                self.s.parameters["wheel_revolution_time"]["time_stamp"] = self.delegate.wheel_revolution_time_stamp
+                self.s.parameters["wheel_revolution_time"]["value"] = self.delegate.wheel_revolution_time
+                self.log.debug('wheel_revolution_time {}'.format(self.s.parameters["wheel_revolution_time"]["value"]), extra=self.extra)
+                self.s.parameters["speed"]["value"] = self.s.parameters["wheel_circumference"]["value"] / self.s.parameters["wheel_revolution_time"]["value"]
+                self.s.parameters["speed"]["value_max"] = max(self.s.parameters["speed"]["value_max"], self.s.parameters["speed"]["value"] )
+            else:
+                self.s.parameters["speed"]["value"] = 0.0
+            self.s.parameters["speed"]["time_stamp"] = self.delegate.wheel_time_stamp
+
+            if self.s.parameters["wheel_revolutions"]["value"] != self.delegate.wheel_revolutions:
+                self.log.debug('wheel_revolutions {}'.format(self.s.parameters["wheel_revolutions"]["value"]), extra=self.extra)
+                try:
+                    self.s.parameters["odometer"]["value"] += (self.delegate.wheel_revolutions -
+                                                               self.s.parameters["wheel_revolutions"]["value"]) * self.s.parameters["wheel_circumference"]["value"]
+                except TypeError:
+                    pass
+                self.s.parameters["wheel_revolutions"]["value"] = self.delegate.wheel_revolutions
+
+            self.s.parameters["cadence"]["time_stamp"] = self.delegate.cadence_time_stamp
+            self.s.parameters["cadence"]["value"] = self.delegate.cadence
+            self.s.parameters["cadence"]["value_avg"] = self.delegate.cadence_avg
+            self.s.parameters["cadence"]["value_max"] = max(self.s.parameters["cadence"]["value_max"], self.delegate.cadence)
+            self.s.parameters["cadence_icon_beat"]["value"] = self.delegate.cadence_icon_beat
         except (AttributeError) as exception:
             self.handle_exception(exception, "process_delegate_data")
-        self.log.debug("time_stamp {}".format(self.p_raw["time_stamp"]), extra=self.extra)
-        self.log.debug("wheel_time_stamp {}".format(self.p_raw["wheel_time_stamp"]), extra=self.extra)
-        self.log.debug("wheel_rev_time".format(self.p_raw["wheel_rev_time"]), extra=self.extra)
-        self.log.debug("cadence_time_stamp".format(self.p_raw["cadence_time_stamp"]), extra=self.extra)
-        self.log.debug("cadence".format(self.p_raw["cadence"]), extra=self.extra)
-        self.log.debug("cadence_avg".format(self.p_raw["cadence_avg"]), extra=self.extra)
-        self.log.debug("cadence_max".format(self.p_raw["cadence_max"]), extra=self.extra)
+
+    def notification(self):
+        if self.s.parameters["cadence_speed_device_address"]["value"] != self.device_address:
+            self.device_address = self.s.parameters["cadence_speed_device_address"]["value"]
 
     def reset_data(self):
         super().reset_data()
@@ -94,17 +90,17 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
     CRANK_REV_DATA_PRESENT = 0x02
     ## @var WAIT_TIME
     # Time of waiting for notifications in seconds
-    EXPIRY_TIME = 2.0
+    EXPIRY_TIME = 3.0
 
     def __init__(self, log):
         self.log = log
         self.log.debug('Delegate __init__ started', extra=self.extra)
         super().__init__()
         self.wheel_time_stamp = time.time()
-        self.wheel_cumul = 0
+        self.wheel_revolutions = 0
         self.wheel_last_time_event = 0
         self.wheel_last_time_delta = 0
-        self.wheel_rev_time = 0
+        self.wheel_revolution_time = 0
         self.cadence_time_stamp = time.time()
         self.last_measurement = self.cadence_time_stamp
         self.crank_cumul = 0
@@ -114,7 +110,7 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
         self.cadence = 0
         self.cadence_avg = 0
         self.measurement_time = 0.0
-        self.cadence_beat = 0
+        self.cadence_icon_beat = 0
         self.measurement_no = 0
         self.time_stamp = time.time()
         self.time_stamp_previous = self.time_stamp
@@ -136,7 +132,7 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
         self.time_stamp_previous = self.time_stamp
         self.time_stamp = time.time()
         self.measurement_no += 1
-        self.cadence_beat = int(not(self.cadence_beat))
+        self.cadence_icon_beat = int(not(self.cadence_icon_beat))
 
         i = 0
         data_b = {}
@@ -150,33 +146,32 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
             # cr - cumularive revolutions
             # le - last event time
             # dt - time delta
-            wh_cr = 0xff0000 * data_b[4] + 0xff00 * \
-                data_b[3] + 0xff * data_b[2] + data_b[1]
+            wh_cr = 0xff0000 * data_b[4] + 0xff00 * data_b[3] + 0xff * data_b[2] + data_b[1]
             wh_le = (1.0 / 1024) * (0xff * data_b[6] + data_b[5])
             wh_dt = wh_le - self.wheel_last_time_event
 
             if wh_dt < 0:
                 wh_dt = 64 + wh_le - self.wheel_last_time_event
 
-            if (self.wheel_cumul != wh_cr) and (self.wheel_last_time_event != wh_le):
-                rt = wh_dt / (wh_cr - self.wheel_cumul)
+            if (self.wheel_revolutions != wh_cr) and (self.wheel_last_time_event != wh_le):
+                rt = wh_dt / (wh_cr - self.wheel_revolutions)
 
                 self.wheel_time_stamp = self.time_stamp
                 self.wheel_last_time_event = wh_le
                 self.wheel_last_time_delta = wh_dt
-                self.wheel_rev_time = rt
-                self.wheel_cumul = wh_cr
-                self.wheel_last_measurement = self.wheel_time_stamp
+                self.wheel_revolution_time = rt
+                self.wheel_revolutions = wh_cr
+                self.wheel_revolution_time_stamp = self.wheel_time_stamp
             else:
-                if (self.wheel_time_stamp - self.wheel_last_measurement) > self.EXPIRY_TIME:
-                    self.wheel_rev_time = numbers.NAN
+                if (self.wheel_time_stamp - self.wheel_revolution_time_stamp) > self.EXPIRY_TIME:
+                    self.wheel_revolution_time = numbers.NAN
         else:
             self.wheel_time_stamp = numbers.NAN
-            self.wheel_rev_time = numbers.NAN
+            self.wheel_revolution_time = numbers.NAN
 
         self.log.debug('Last wheel event time: {:10.3f}, delta {:10.3f}'.format(self.wheel_last_time_event, self.wheel_last_time_delta), extra=self.extra)
         self.log.debug('Wheel cumul revs: {:5d}'.format(wh_cr), extra=self.extra)
-        self.log.debug('Last wheel rev time: {:10.3f}'.format(self.wheel_rev_time), extra=self.extra)
+        self.log.debug('Last wheel rev time: {:10.3f}'.format(self.wheel_revolution_time), extra=self.extra)
 
         if (data_b[0] & self.CRANK_REV_DATA_PRESENT):
             self.log.debug('CRANK_REV_DATA_PRESENT', extra=self.extra)
@@ -209,10 +204,10 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
         #Ignore first 3 measurements to avoid "wild" values
         if self.measurement_no < 3:
             self.log.debug('Ignoring measurement no {}'.format(self.measurement_no), extra=self.extra)
-            self.wheel_rev_time = numbers.NAN
+            self.wheel_revolution_time = numbers.NAN
             self.crank_rev_time = numbers.NAN
             self.cadence = numbers.NAN
-            self.wheel_last_measurement = time.time()
+            self.wheel_revolution_time_stamp = time.time()
 
         if (not math.isnan(self.cadence)):
             self.calculate_avg_cadence()
@@ -241,10 +236,3 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
                 cd_avg = numbers.NAN
         self.cadence_avg = cd_avg
         self.log.debug("cadence_avg {}".format(self.cadence_avg), extra=self.extra)
-
-    ## Resets average and maximum cadence
-    #  @param self The python object self
-    def reset_data(self):
-        #FIXME
-        self.cadence = 0
-        self.cadence_avg = 0

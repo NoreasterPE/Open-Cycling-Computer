@@ -3,8 +3,9 @@
 ## @package compute
 #  Module for handling calculations that require more than sensor data
 
-import numbers
+#import numbers
 import sensor
+import sensors
 import time
 
 
@@ -20,38 +21,39 @@ class compute(sensor.sensor):
         # Run init for super class
         super().__init__()
 
-        self.p_defaults.update(dict(slope=numbers.NAN,
-                                    altitude_delta_cumulative=numbers.NAN,
-                                    distance_delta_cumulative=numbers.NAN))
-        self.p_raw.update(dict(self.p_defaults))
-        self.p_formats.update(dict(slope='%.0f',
-                                   altitude_delta_cumulative="%.3f",
-                                   distance_delta_cumulative="%.3f"))
-        self.p_units.update(dict(slope='%',
-                                 altitude_delta_cumulative="m",
-                                 distance_delta_cumulative="m"))
-        self.p_units_allowed.update(dict(slope=["%", "m/m"]))
-        self.p_raw_units.update(dict(slope="m/m",
-                                     altitude_delta_cumulative="m",
-                                     distance_delta_cumulative="m"))
-        self.required = dict(bmp183_altitude_delta=numbers.NAN,
-                             bmp183_distance_delta=numbers.NAN)
-
+        self.s = sensors.sensors()
+        self.s.register_parameter("slope", self.extra["module_name"], raw_unit="m/m", unit="%", units_allowed=["m/m", "%"])
+        self.s.register_parameter("speed", self.extra["module_name"], raw_unit="m/s", unit="km/h", units_allowed=["m/s", "km/h", "mi/h"])
+        self.s.request_parameter("odometer", self.extra["module_name"])
+        self.odometer = None
+        self.odometer_delta_cumulative = 0.0
+        self.odometer_delta = 0.0
+        self.s.request_parameter("altitude", self.extra["module_name"])
+        self.altitude = None
+        self.altitude_delta_cumulative = 0.0
+        self.s.request_parameter("wheel_revolution_time", self.extra["module_name"])
+        self.wheel_revolution_time = None
         self.reset_data()
         self.log.debug("Initialised.", extra=self.extra)
 
     ## Trigger calculation of slope on cumulative change of distance and altitude
     #  @param self The python object self
-    def notification(self, required):
-        self.log.debug("required {}".format(required), extra=self.extra)
-        self.altitude_delta = self.required["bmp183_altitude_delta"]
-        self.distance_delta = self.required["bmp183_distance_delta"]
+    def notification(self):
+        self.log.debug("notification received", extra=self.extra)
+        previous_altitude = self.altitude
+        self.altitude = self.s.parameters["altitude"]["value"]
         try:
-            self.p_raw["altitude_delta_cumulative"] += self.altitude_delta
-            self.p_raw["distance_delta_cumulative"] += self.distance_delta
+            self.altitude_delta = self.altitude - previous_altitude
+        except TypeError:
+            self.altitude_delta = 0.0
+        previous_wheel_rev_time = self.wheel_revolution_time
+        self.wheel_revolution_time = self.s.parameters["wheel_revolution_time"]["value"]
+        try:
+            self.wheel_revolution_time_delta = self.wheel_revolution_time - previous_wheel_rev_time
+            self.altitude_delta_cumulative += self.altitude_delta
+            self.odometer_delta_cumulative += self.odometer_delta
             self.calculate_slope()
         except TypeError:
-            self.log.debug("Data not suitable for calculationsi {}".format(required), extra=self.extra)
             pass
 
     def run(self):
@@ -64,15 +66,15 @@ class compute(sensor.sensor):
     ## Calculate slope. Current values are matched with Bosch BMP183 sensor (0.18 m of resolution). To be changed if sensor is upgraded to BMP280
     #  @param self The python object self
     def calculate_slope(self):
-        if self.p_raw["distance_delta_cumulative"] > 8.4:
-            self.p_raw["slope"] = self.p_raw["altitude_delta_cumulative"] / self.p_raw["distance_delta_cumulative"]
-        if abs(self.p_raw["slope"]) < 0.02:
+        if self.odometer_delta_cumulative > 8.4:
+            self.s.parameters["slope"]["value"] = self.altitude_delta_cumulative / self.odometer_delta_cumulative
+        if abs(self.s.parameters["slope"]["value"]) < 0.02:
             #If slope is less than 2% wait for more cumulative distance/altitude
-            self.p_raw["slope"] = 0.0
+            self.s.parameters["slope"]["value"] = 0.0
         else:
             #If slope is less more 2%, use calculated value and reset cumulative variables
-            self.log.debug("altitude_delta_cumulative: {}".format(self.p_raw["altitude_delta_cumulative"]), extra=self.extra)
-            self.log.debug("distance_delta_cumulative: {}".format(self.p_raw["distance_delta_cumulative"]), extra=self.extra)
-            self.p_raw["altitude_delta_cumulative"] = 0
-            self.p_raw["distance_delta_cumulative"] = 0
-        self.log.debug("slope: {}".format(self.p_raw["slope"]), extra=self.extra)
+            self.log.debug("altitude_delta_cumulative: {}".format(self.altitude_delta_cumulative), extra=self.extra)
+            self.log.debug("odometer_delta_cumulative: {}".format(self.odometer_delta_cumulative), extra=self.extra)
+            self.altitude_delta_cumulative = 0.0
+            self.odometer_delta_cumulative = 0.0
+        self.log.debug("slope: {}".format(self.s.parameters["slope"]["value"]), extra=self.extra)

@@ -12,7 +12,7 @@ import layout
 from pitft_touchscreen import pitft_touchscreen
 from rendering import rendering
 from ride_parameters import ride_parameters
-from sensors import sensors
+import sensors
 import logging
 import logging.handlers
 import platform
@@ -20,9 +20,18 @@ import signal
 import time
 
 
+class singleton(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+
 ## Main OpenCyclingComputer class
 # Based on RPI model Zero W and PiTFT 2.8" 320x240
-class open_cycling_computer(object):
+class open_cycling_computer(object, metaclass=singleton):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': 'OCC'}
@@ -57,7 +66,7 @@ class open_cycling_computer(object):
         self.log.debug("Calling sensors", extra=self.extra)
         ## @var sensors
         #  Handle to sensors instance
-        self.sensors = sensors(self)
+        self.sensors = sensors.sensors(self)
         self.log.debug("Calling ride_parameters", extra=self.extra)
         ## @var rp
         #  Handle to ride_parameters instance
@@ -88,8 +97,6 @@ class open_cycling_computer(object):
         ## @var layout
         #  Handle to layout instance
         self.layout = layout.layout(self, self.cr, self.layout_path)
-        self.log.debug("Starting sensors", extra=self.extra)
-        self.sensors.start()
         self.log.debug("Starting rendering thread", extra=self.extra)
         self.rendering.start()
         ## @var touchscreen
@@ -183,11 +190,15 @@ if __name__ == "__main__":
         simulate = True
         sys_logger.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.", extra=ex)
     sys_logger.debug("simulate = {}".format(simulate), extra=ex)
+    sys_logger.debug("Setting up sensors", extra=ex)
+    sensor_manager = sensors.sensors()
+    sys_logger.debug("Starting sensors", extra=ex)
+    sensor_manager.start()
     ## @var main_window
     # OCC main window. It's instance of open_cycling_computer class
     main_window = open_cycling_computer(simulate)
-    main_window.log.debug("Starting events loop", extra=ex)
+    sys_logger.debug("Starting events loop", extra=ex)
     main_window.events.run()
     main_window.stop()
-    main_window.log.debug("Log end", extra=ex)
+    sys_logger.debug("Log end", extra=ex)
     quit()

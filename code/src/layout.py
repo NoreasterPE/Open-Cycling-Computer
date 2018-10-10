@@ -1,13 +1,14 @@
 #!/usr/bin/python3
 ## @package layout
 #   Module responsible for loading and rendering layouts. Needs heavy cleaning...
-import unit_converter
+import cairo
 import logging
+import numbers
 import os
 import sys
 import time
+import unit_converter
 import yaml
-import cairo
 
 
 ## Class for handling layouts
@@ -116,12 +117,19 @@ class layout():
                 b = field['button']
             except KeyError:
                 b = None
+            try:
+                s = field['show']
+            except KeyError:
+                s = None
             if (b is not None):
                 x0 = int(b.get('x0'))
                 y0 = int(b.get('y0'))
                 w = int(b.get('w'))
                 h = int(b.get('h'))
-                name = field.get('function')
+                if s is not None:
+                    name = field.get('function') + "_" + s
+                else:
+                    name = field.get('function')
                 rect = (x0, y0, w, h)
                 self.function_rect_list[name] = rect
                 self.current_button_list.append(name)
@@ -155,7 +163,8 @@ class layout():
     def render_page(self):
         self.render_background()
         self.render = True
-        # LAYOUT DEBUG FUNCION self.render_all_buttons()
+        # LAYOUT DEBUG FUNCION
+        self.render_all_buttons()
         self.render_layout()
 
     def make_image_key(self, image_path, value):
@@ -166,16 +175,80 @@ class layout():
 
     def render_layout(self):
         for field in self.current_page['fields']:
+            #print("{}".format(field))
             function = field['function']
+            #print("{}".format(function))
             position_x = field['x']
             position_y = field['y']
-            value = self.occ.rp.get_param(function)
+            try:
+                show = field["show"]
+            except KeyError:
+                show = "value"
+            if show == "value":
+                try:
+                    v = self.occ.sensors.parameters[function]["value"]
+                    ru = self.occ.sensors.parameters[function]["raw_unit"]
+                    u = self.occ.sensors.parameters[function]["unit"]
+                    value = self.uc.convert(v, ru, u)
+                    value = numbers.sanitise(value)
+                    #print("{} v {} value {}".format(function, v, value))
+                except (KeyError, TypeError):
+                    value = None
+            elif show == "tenths":
+                try:
+                    v = self.occ.sensors.parameters[function]["value"]
+                    ru = self.occ.sensors.parameters[function]["raw_unit"]
+                    u = self.occ.sensors.parameters[function]["unit"]
+                    value = self.uc.convert(v, ru, u)
+                    tenths_string = "{}".format(value - int(value))
+                    value = format(tenths_string)[2:3]
+                except (KeyError, TypeError):
+                    value = None
+            elif show == "unit":
+                try:
+                    value = self.occ.sensors.parameters[function]["unit"]
+                except KeyError:
+                    value = None
+            elif show == "minimum":
+                try:
+                    v = self.occ.sensors.parameters[function]["value_min"]
+                    ru = self.occ.sensors.parameters[function]["raw_unit"]
+                    u = self.occ.sensors.parameters[function]["unit"]
+                    value = self.uc.convert(v, ru, u)
+                    value = numbers.sanitise(value)
+                except KeyError:
+                    value = None
+            elif show == "average":
+                try:
+                    v = self.occ.sensors.parameters[function]["value_avg"]
+                    ru = self.occ.sensors.parameters[function]["raw_unit"]
+                    u = self.occ.sensors.parameters[function]["unit"]
+                    value = self.uc.convert(v, ru, u)
+                    value = numbers.sanitise(value)
+                except KeyError:
+                    value = None
+            elif show == "maximum":
+                try:
+                    v = self.occ.sensors.parameters[function]["value_max"]
+                    ru = self.occ.sensors.parameters[function]["raw_unit"]
+                    u = self.occ.sensors.parameters[function]["unit"]
+                    value = self.uc.convert(v, ru, u)
+                    value = numbers.sanitise(value)
+                except KeyError:
+                    value = None
             if value is None:
                 try:
                     value = field['text']
                 except KeyError:
                     value = ""
-            uv = format(value)
+            try:
+                string_format = field["format"]
+            except KeyError:
+                string_format = "%.0f"
+            try:
+                uv = string_format % float(value)
+            except (TypeError, ValueError):
+                uv = format(value)
             variable = None
             # Get icon image
             try:
@@ -184,7 +257,8 @@ class layout():
                 image_path = None
             try:
                 variable = field['variable']
-                value = self.occ.rp.get_raw_val(variable['name'])
+                #print("{} variable {}".format(function, variable))
+                value = self.occ.sensors.parameters[variable["name"]]["value"]
                 try:
                     # If there is a variable with frames defined prepare path for relevant icon
                     frames = field['variable']['frames']
@@ -194,7 +268,7 @@ class layout():
                     image_path = self.make_image_key(image_path, value)
                 except KeyError:
                     pass
-            except KeyError:
+            except (KeyError, TypeError):
                 pass
             if image_path is not None:
                 if image_path not in self.current_image_list:
@@ -313,24 +387,25 @@ class layout():
     def open_editor_page(self, function):
         self.log.debug("Opening editor {} for {}".format(self.editor_name, function), extra=self.extra)
         self.occ.rp.set_param('variable', function)
-        self.occ.rp.set_param('variable_raw_value', self.occ.rp.get_raw_val(function))
+        self.occ.rp.set_param('variable_raw_value', self.occ.sensors.parameters[function]["value"])
         self.occ.rp.set_param('variable_value', self.occ.rp.get_param(function))
-        self.occ.rp.set_param('variable_unit', self.occ.rp.get_unit(function))
+        self.occ.rp.set_param('variable_unit', self.occ.sensors.parameters[function]["unit"])
         self.occ.rp.set_param('variable_description', self.editor_function_description)
         self.occ.rp.set_param('editor_index', 0)
 
         if self.editor_name == 'editor_units':
             name = self.occ.rp.params["variable"]
             # FIXME make a stripping function
-            na = name.find("_")
-            if na > -1:
-                n = name[:na]
-            else:
-                n = name
+            #na = name.find("_")
+            #if na > -1:
+            #    n = name[:na]
+            #else:
+            #    n = name
+            n = name
             unit = self.occ.rp.get_unit(n)
             self.occ.rp.set_param('variable', n)
             self.occ.rp.set_param('variable_unit', unit)
-            self.occ.rp.set_param('variable_value', 0)
+            self.occ.rp.set_param('variable_value', unit)
         self.use_page(self.editor_name)
 
     def run_function(self, name):
@@ -350,6 +425,7 @@ class layout():
                      "load_current_layout": self.load_current_layout,
                      "next_page": self.next_page,
                      "prev_page": self.prev_page,
+                     "write_config": self.write_config,
                      "reboot": self.reboot,
                      "quit": self.quit}
         functions[name]()
@@ -437,18 +513,16 @@ class layout():
         variable = self.occ.rp.params["variable"]
         variable_unit = self.occ.rp.params["variable_unit"]
         variable_value = self.occ.rp.params["variable_raw_value"]
-        current_unit_index = self.occ.rp.p_units_allowed[
-            variable].index(variable_unit)
+        current_unit_index = self.occ.rp.p_units_allowed[variable].index(variable_unit)
+        self.log.debug("variable: {} p_units_allowed: {}".format(variable, self.occ.rp.p_units_allowed[variable]), extra=self.extra)
         if direction == 1:
             try:
-                next_unit = self.occ.rp.p_units_allowed[
-                    variable][current_unit_index + 1]
+                next_unit = self.occ.rp.p_units_allowed[variable][current_unit_index + 1]
             except IndexError:
                 next_unit = self.occ.rp.p_units_allowed[variable][0]
         else:
             try:
-                next_unit = self.occ.rp.p_units_allowed[
-                    variable][current_unit_index - 1]
+                next_unit = self.occ.rp.p_units_allowed[variable][current_unit_index - 1]
             except IndexError:
                 next_unit = self.occ.rp.p_units_allowed[variable][-1]
         try:
@@ -475,7 +549,8 @@ class layout():
         variable_value = self.occ.rp.params["variable_value"]
         self.log.debug("variable: {}, variable_unit: {}, variable_raw_value: {}, variable_value: {}".format(variable, variable_unit, variable_raw_value, variable_value), extra=self.extra)
         if self.editor_name == "editor_units":
-            self.occ.rp.units[variable] = variable_unit
+            self.occ.rp.p_units[variable] = variable_unit
+            self.log.debug("accept_edit sets {} units to {}".format(variable, variable_unit), extra=self.extra)
         if self.editor_name == "editor_numbers":
             unit_raw = self.occ.rp.get_internal_unit(variable)
             value = float(variable_value)
@@ -486,9 +561,9 @@ class layout():
         if self.editor_name == "editor_string":
             self.occ.rp.p_raw[variable] = variable_value
             self.occ.rp.params[variable] = variable_value
-        if self.editor_name == "ble_selector":
-            (name, addr, dev_type) = variable_value
-            self.occ.sensors.set_ble_device(name, addr, dev_type)
+#        if self.editor_name == "ble_selector":
+#            (name, addr, dev_type) = variable_value
+#            self.occ.sensors.set_ble_device(name, addr, dev_type)
         self.render = True
         self.log.debug("accept_edit finished", extra=self.extra)
 
@@ -547,6 +622,9 @@ class layout():
 
     def quit(self):
         self.occ.stop()
+
+    def write_config(self):
+        self.occ.config.write_config()
 
     def reboot(self):
         self.quit()

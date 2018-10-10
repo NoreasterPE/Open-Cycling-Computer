@@ -12,7 +12,6 @@ CODING STYLE:
 - Remove get_raw_data dict definition. Add self.params to sensor class
 - Fix inconsistent naming: func, function, param_name
 - Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
-- sensor reset_data should be based on a set of initial values, p_default
 
 REAL WORLD PROBLEMS:
 - Max speed will be false sooner or later after a single invalid measurement. Kalman filter required.
@@ -28,12 +27,20 @@ REAL WORLD PROBLEMS:
 - BLE device name might be too long for assigned space. Split or cut. Use i4oled code if needed.
 - Average speed units to be changed with speed units. Required cleaning ride_parameters code first.
 - Set up low battery warning/shutdown. Pimoroni Lipo shim informs about battery state.
+- Ride log configuration in a config file
+- Loading sensor modules from files in a sub-directory
+- pressure_at_sea_level is sometimes updated even if there was no change in reference_altitude
+- define universal parameters set, so 3rd party modules or upgrades won't require changes. Currently parameters are hard prefixed with module name.
+       solutions:
+            - config file with mapping i.e. temperature = bmp183_temperature
+            - prefix in dictionary and keep generic names. It would required some parameter registration (check linux kernel and driver reqistration)
+- ride_parameters to be reduced/removed when compute module takes over all calcs
+- units_allowed should come from unit_converter
 
 CODE ERRORS:
 - Threads write to log aftred log end [ERROR]
 - Setting time from GPS for the first time breaks delta (trip time)
 - Average cadence and heart rate are invalid
-- Errors when no bmp183 or gps present
 
 HARDWARE:
 - Add backlight control
@@ -183,3 +190,7 @@ TypeError: argument 1 must be pygame.Surface, not None
 76. [DONE] Pulse heart rate icon every time ble notification is received
 77. [DONE] reset function to bmp183
 78- [DONE] Verify button size. Some are not matching the boxes.
+79. [DONE] Sensor reset_data should be based on a set of initial values, p_default
+89. [DONE] Errors when no bmp183 or gps present
+90. [DONE] Slope to be ignored if t's less than 2%. bmp183 sensor resolution is 0.18m and on distance 8.4m that gives 2.14%,
+  distance 8.3m allows to give one measurement per second at 30 km/h. Upgrade to bmp280 should make significant improvement.

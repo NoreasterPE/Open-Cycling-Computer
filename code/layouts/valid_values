@@ -1,17 +1,17 @@
 Use default.yaml as a template.
-FIXME - list needs updating, now all external valueas are prefixed with [sensor name]_ i.e. pressure from bmp183 is bmp183_pressure
+FIXME - list needs updating
 
 Valid function names for use in layout files (for now it's the best idea to check default.yaml file with default layout):
 
 altitude		        - current altitude in meters, calculated from pressure
 reference_altitude	        - home altitude
-ble_sc_cadence			- cadence from BLE sensor
+cadence			- cadence from BLE sensor
 date			        - current date
 distance
 slope			        - gradient of the road
-ble_hr_heart_rate
+heart_rate
 odometer		        - total distance, editable in Settings page
-bmp183_pressure		    - current atmospheric pressure
+pressure		    - current atmospheric pressure
 pressure_at_sea_level	- sea level pressure calculated from pressure and given altitude. It's a value fixed at start or updated after user editied reference_altitude
 rider_weight	    	- weight of rider
 rtc			            - combined date + time 

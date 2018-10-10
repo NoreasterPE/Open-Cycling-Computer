@@ -15,10 +15,10 @@ class sensor(threading.Thread):
     extra = {'module_name': 'a_sensor'}
 
     def __init__(self):
+        super().__init__()
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
-        threading.Thread.__init__(self)
 
         ## @var p_defaults
         # Default values of parameters provided by a sensor. Used as the initial values and after reset.
@@ -53,39 +53,39 @@ class sensor(threading.Thread):
             # Copy the above code to a real sensor code and replace sleep with whatewer the sensor needs to provide data
         self.log.debug("Main loop finished", extra=self.extra)
 
-    def get_prefix(self):
-        return self.extra["module_name"]
+#    def get_prefix(self):
+#        return self.extra["module_name"]
 
-    def get_raw_data(self):
-        self.log.debug('get_raw_data in sensor.py called {}'.format(self.p_raw), extra=self.extra)
-        return self.p_raw
+#    def get_raw_data(self):
+#        self.log.debug('get_raw_data in sensor.py called {}'.format(self.p_raw), extra=self.extra)
+#        return self.p_raw
 
     ## Resets all parameters to the default values
     #  @param self The python object self
     def reset_data(self):
         self.p_raw.update(dict(self.p_defaults))
 
-    def get_raw_units(self):
-        return self.p_raw_units
+#    def get_raw_units(self):
+#        return self.p_raw_units
 
-    def get_units_allowed(self):
-        return self.p_units_allowed
+#    def get_units_allowed(self):
+#        return self.p_units_allowed
 
-    def get_units(self):
-        return self.p_units
+#    def get_units(self):
+#        return self.p_units
 
-    def get_formats(self):
-        return self.p_formats
+#    def get_formats(self):
+#        return self.p_formats
 
-    ## Return list of parameters required be a sensor to fully work. I.e. pressure sensor might need reference altitude to calculate current altitude
-    #  @param self The python object self
-    def get_required(self):
-        return self.required
+#    ## Return list of parameters required be a sensor to fully work. I.e. pressure sensor might need reference altitude to calculate current altitude
+#    #  @param self The python object self
+#    def get_required(self):
+#        return self.required
 
     ## Useb by module "sensors" to notify about change of a reqired parameter. Overwrite with code that needs to be executed on change of the parameters.
     #  @param self The python object self
     #  @param reqired Dict with new values for require parameters
-    def notification(self, required):
+    def notification(self):
         pass
 
     def is_connected(self):

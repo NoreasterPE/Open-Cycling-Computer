@@ -37,8 +37,14 @@ class ride_log():
             hrt = params["ble_hr_heart_rate"]
         except KeyError:
             hrt = "-"
-        tme = params["timeon_hms"]
-        spd = params["speed"]
+        try:
+            tme = params["timeon_hms"]
+        except KeyError:
+            tme = "-"
+        try:
+            spd = params["speed"]
+        except KeyError:
+            spd = "-"
         try:
             cde = params["ble_sc_cadence"]
         except KeyError:
@@ -59,7 +65,10 @@ class ride_log():
             alt = params["bmp183_altitude"]
         except KeyError:
             alt = "-"
-        dst = params["distance"]
+        try:
+            dst = params["distance"]
+        except KeyError:
+            dst = "-"
         self.ride_logger.info('', extra={'time': tme, 'dtime': dte, 'speed': spd, 'cadence': cde,
                                          'ble_hr_heart_rate': hrt, 'pressure': pre, 'temperature': tem,
                                          'altitude': alt, 'distance': dst, 'slope': slp})

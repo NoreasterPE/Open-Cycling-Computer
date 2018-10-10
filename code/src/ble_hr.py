@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 ## @package ble_hr
 #  BLE heart rate sensor handling module.
+import ble_sensor
 import bluepy.btle
-import time
 import math
 import numbers
-import ble_sensor
+import sensors
+import time
 
 
 ## Class for handling BLE heart rate sensor
@@ -21,19 +22,16 @@ class ble_hr(ble_sensor.ble_sensor):
 
     def __init__(self):
         super().__init__()
-        self.p_defaults.update(dict(heart_rate=numbers.NAN,
-                                    heart_rate_min=numbers.INF,
-                                    heart_rate_avg=numbers.NAN,
-                                    heart_rate_max=numbers.INF_MIN,
-                                    heart_rate_beat=0))
-        self.p_raw.update(dict(self.p_defaults))
-        self.p_formats.update(dict(heart_rate='%.0f', heart_rate_min='%.0f', heart_rate_avg='%.0f', heart_rate_max='%.0f'))
-        self.p_units.update(dict(heart_rate='BPM', heart_rate_min='BPM', heart_rate_avg='BPM', heart_rate_max='BPM'))
-        self.p_raw_units.update(dict(heart_rate='BPM', heart_rate_min='BPM', heart_rate_avg='BPM', heart_rate_max='BPM'))
-        self.p_units_allowed.update(dict(heart_rate='BPM', heart_rate_min='BPM', heart_rate_avg='BPM', heart_rate_max='BPM'))
-        self.required.update(dict())
+        self.s = sensors.sensors()
+        self.s.register_parameter("heart_rate_device_name", self.extra["module_name"])
+        self.s.register_parameter("heart_rate", self.extra["module_name"], raw_unit="BPM", unit="BPM", units_allowed=["BMP"])
+        self.s.register_parameter("heart_rate_beat", self.extra["module_name"])
+        self.s.request_parameter("heart_rate_device_address", self.extra["module_name"])
+        ## @var device_address
+        #  BLE device address
+        self.device_address = None
 
-        self.reset_data()
+        #self.reset_data()
         #FIXME Delegate data (min/avg/max) are lost after disconnection
         self.delegate_class = hr_delegate
 
@@ -41,15 +39,19 @@ class ble_hr(ble_sensor.ble_sensor):
     #  @param self The python object self
     def process_delegate_data(self):
         try:
-            self.p_raw["time_stamp"] = self.delegate.time_stamp
-            self.p_raw["heart_rate"] = self.delegate.heart_rate
-            self.p_raw["heart_rate_min"] = min(self.p_raw["heart_rate_min"], self.delegate.heart_rate)
-            self.p_raw["heart_rate_avg"] = self.delegate.heart_rate_avg
-            self.p_raw["heart_rate_max"] = max(self.p_raw["heart_rate_max"], self.delegate.heart_rate)
-            self.p_raw["heart_rate_beat"] = self.delegate.heart_rate_beat
+            self.s.parameters["heart_rate"]["time_stamp"] = self.delegate.time_stamp
+            self.s.parameters["heart_rate"]["value"] = self.delegate.heart_rate
+            self.s.parameters["heart_rate"]["value_min"] = min(self.s.parameters["heart_rate"]["value_min"], self.delegate.heart_rate)
+            self.s.parameters["heart_rate"]["value_avg"] = self.delegate.heart_rate_avg
+            self.s.parameters["heart_rate"]["value_max"] = max(self.s.parameters["heart_rate"]["value_max"], self.delegate.heart_rate)
+            self.s.parameters["heart_rate_beat"]["value"] = self.delegate.heart_rate_beat
         except (AttributeError) as exception:
             self.handle_exception(exception, "process_delegate_data")
-        self.log.debug("heart rate = {} @ {}".format(self.p_raw["heart_rate"], time.strftime("%H:%M:%S", time.localtime(self.p_raw["time_stamp"]))), extra=self.extra)
+        self.log.debug("heart rate = {} @ {}".format(self.s.parameters["heart_rate"]["value"], time.strftime("%H:%M:%S", time.localtime(self.s.parameters["heart_rate"]["time_stamp"]))), extra=self.extra)
+
+    def notification(self):
+        if self.s.parameters["heart_rate_device_address"]["value"] != self.device_address:
+            self.device_address = self.s.parameters["heart_rate_device_address"]["value"]
 
 
 ## Class for handling BLE notifications from heart rate sensor

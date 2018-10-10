@@ -1,17 +1,148 @@
-ble_hr_addr: D6:90:A8:08:F0:E4
-ble_hr_name: Tacx HRB 04741
-ble_sc_addr: FD:DF:0E:4E:76:CF
-ble_sc_name: Lezyne S&C 249
+cadence_speed_device_address:
+  force_notification: false
+  raw_unit: null
+  required_by:
+  - ble_sc
+  sensor_name: null
+  time_stamp: 0.0
+  unit: null
+  units_allowed: null
+  value: FD:DF:0E:4E:76:CF
+  value_avg: .nan
+  value_default: null
+  value_max: -.inf
+  value_min: .inf
+cadence_speed_device_name:
+  force_notification: false
+  raw_unit: null
+  required_by:
+  - ble_sc
+  sensor_name: null
+  time_stamp: 0.0
+  unit: null
+  units_allowed: null
+  value: null
+  value_avg: .nan
+  value_default: null
+  value_max: -.inf
+  value_min: .inf
+heart_rate_device_address:
+  force_notification: false
+  raw_unit: null
+  required_by:
+  - ble_hr
+  sensor_name: null
+  time_stamp: 0.0
+  unit: null
+  units_allowed: null
+  value: D6:90:A8:08:F0:E4
+  value_avg: .nan
+  value_default: null
+  value_max: -.inf
+  value_min: .inf
+heart_rate_device_name:
+  force_notification: false
+  raw_unit: null
+  required_by: null
+  sensor_name: null
+  time_stamp: 0.0
+  unit: null
+  units_allowed: null
+  value: null
+  value_avg: .nan
+  value_default: null
+  value_max: -.inf
+  value_min: .inf
 layout_path: layouts/default.yaml
 log_level: DEBUG
-odometer: 1319000.0
-odometer_units: km
-reference_altitude: 53.0
-reference_altitude_units: m
-rider_weight: 78.0
-rider_weight_units: kg
-ridetime_total: 1730.0425462722778
-speed_max: 5.402305764411028
-speed_units: km/h
-temperature_units: C
-wheel_size: 700x25C
+odometer:
+  force_notification: false
+  raw_unit: m
+  required_by: null
+  sensor_name: null
+  time_stamp: 0.0
+  unit: km
+  units_allowed:
+  - m
+  - km
+  - mi
+  value: 500.9900000000002
+  value_avg: .nan
+  value_default: null
+  value_max: -.inf
+  value_min: .inf
+reference_altitude:
+  force_notification: false
+  raw_unit: m
+  required_by:
+  - bmp183
+  sensor_name: null
+  time_stamp: 0.0
+  unit: m
+  units_allowed:
+  - m
+  - km
+  value: 54.0
+  value_avg: .nan
+  value_default: null
+  value_max: -.inf
+  value_min: .inf
+rider_weight:
+  force_notification: false
+  raw_unit: kg
+  required_by: null
+  sensor_name: null
+  time_stamp: 0.0
+  unit: kg
+  units_allowed:
+  - kg
+  - lb
+  value: '80.0'
+  value_avg: .nan
+  value_default: null
+  value_max: -.inf
+  value_min: .inf
+speed:
+  force_notification: false
+  raw_unit: m/s
+  required_by: null
+  sensor_name: null
+  time_stamp: 1539541698.1684253
+  unit: km/h
+  units_allowed:
+  - m/s
+  - km/h
+  - mi/h
+  value: 0.0
+  value_avg: .nan
+  value_default: null
+  value_max: -.inf
+  value_min: .inf
+temperature:
+  force_notification: false
+  raw_unit: C
+  required_by: null
+  sensor_name: null
+  time_stamp: 0.0
+  unit: C
+  units_allowed:
+  - C
+  - F
+  value: 22.375627907331467
+  value_avg: .nan
+  value_default: null
+  value_max: 22.664821138556682
+  value_min: 22.28938536445903
+wheel_size:
+  force_notification: false
+  raw_unit: null
+  required_by: null
+  sensor_name: null
+  time_stamp: 0.0
+  unit: null
+  units_allowed: null
+  value: 700x25C
+  value_avg: .nan
+  value_default: null
+  value_max: -.inf
+  value_min: .inf

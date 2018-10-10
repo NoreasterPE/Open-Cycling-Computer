@@ -3,7 +3,8 @@ cadence_speed_device_address:
   raw_unit: null
   required_by:
   - ble_sc
-  sensor_name: null
+  - ble_sc
+  sensor_name: config
   time_stamp: 0.0
   unit: null
   units_allowed: null
@@ -15,12 +16,12 @@ cadence_speed_device_address:
 cadence_speed_device_name:
   force_notification: false
   raw_unit: null
-  required_by:
+  required_by: &id001
   - ble_sc
-  sensor_name: null
+  sensor_name: ble_sc
   time_stamp: 0.0
   unit: null
-  units_allowed: null
+  units_allowed: &id002 []
   value: null
   value_avg: .nan
   value_default: null
@@ -31,7 +32,8 @@ heart_rate_device_address:
   raw_unit: null
   required_by:
   - ble_hr
-  sensor_name: null
+  - ble_hr
+  sensor_name: config
   time_stamp: 0.0
   unit: null
   units_allowed: null
@@ -43,11 +45,11 @@ heart_rate_device_address:
 heart_rate_device_name:
   force_notification: false
   raw_unit: null
-  required_by: null
-  sensor_name: null
+  required_by: *id001
+  sensor_name: config
   time_stamp: 0.0
   unit: null
-  units_allowed: null
+  units_allowed: *id002
   value: null
   value_avg: .nan
   value_default: null
@@ -59,14 +61,14 @@ odometer:
   force_notification: false
   raw_unit: m
   required_by: null
-  sensor_name: null
+  sensor_name: compute
   time_stamp: 0.0
   unit: km
   units_allowed:
   - m
   - km
   - mi
-  value: 0.0
+  value: 319.0
   value_avg: .nan
   value_default: null
   value_max: -.inf
@@ -76,7 +78,7 @@ reference_altitude:
   raw_unit: m
   required_by:
   - bmp183
-  sensor_name: null
+  sensor_name: config
   time_stamp: 0.0
   unit: m
   units_allowed:
@@ -91,7 +93,7 @@ rider_weight:
   force_notification: false
   raw_unit: kg
   required_by: null
-  sensor_name: null
+  sensor_name: config
   time_stamp: 0.0
   unit: kg
   units_allowed:
@@ -106,7 +108,7 @@ speed:
   force_notification: false
   raw_unit: m/s
   required_by: null
-  sensor_name: null
+  sensor_name: compute
   time_stamp: 0.0
   unit: km/h
   units_allowed:
@@ -122,22 +124,22 @@ temperature:
   force_notification: false
   raw_unit: C
   required_by: null
-  sensor_name: null
+  sensor_name: bmp183
   time_stamp: 0.0
   unit: C
   units_allowed:
   - C
   - F
-  value: 21.36862706260178
+  value: 10
   value_avg: .nan
   value_default: null
-  value_max: -.inf
-  value_min: .inf
+  value_max: 10
+  value_min: 10
 wheel_size:
   force_notification: false
   raw_unit: null
   required_by: null
-  sensor_name: null
+  sensor_name: config
   time_stamp: 0.0
   unit: null
   units_allowed: null
