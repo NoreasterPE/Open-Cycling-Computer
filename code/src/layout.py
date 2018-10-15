@@ -165,7 +165,7 @@ class layout():
         self.render_background()
         self.render = True
         # LAYOUT DEBUG FUNCION
-        self.render_all_buttons()
+        #self.render_all_buttons()
         self.render_layout()
 
     def make_image_key(self, image_path, value):

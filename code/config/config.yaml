@@ -128,11 +128,11 @@ temperature:
   units_allowed:
   - C
   - F
-  value: 22.375627907331467
+  value: 22.19076595672388
   value_avg: .nan
   value_default: null
-  value_max: 22.664821138556682
-  value_min: 22.28938536445903
+  value_max: 26.036583890000617
+  value_min: 22.02420838559018
 wheel_size:
   force_notification: false
   raw_unit: null

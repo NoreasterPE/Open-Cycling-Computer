@@ -181,22 +181,22 @@ pages:
          fields: 
                 - function: odometer_icon
                   x: 10
-                  y: 4
+                  y: 84
                   file: images/odometer_icon_32x32.png
 
                 - function: odometer
                   format: "%.1f"
                   x: 100
-                  y: 20
+                  y: 100
 
                 - function: odometer
                   show: unit
                   x: 200
-                  y: 20
+                  y: 100
 
                 - function: speed_icon
                   x: 10
-                  y: 44
+                  y: 124
                   file: images/speed_icon_32x32.png
 
                 - function: speed
@@ -209,16 +209,16 @@ pages:
                           w: 240
                           h: 40
                   x: 100
-                  y: 60
+                  y: 140
 
                 - function: speed
                   show: unit
                   x: 200
-                  y: 60
+                  y: 140
 
                 - function: speed_avg_icon
                   x: 10
-                  y: 84
+                  y: 164
                   file: images/average_speed_icon_32x32.png
 
                 - function: speed
@@ -230,22 +230,22 @@ pages:
                           w: 240
                           h: 40
                   x: 100
-                  y: 100
-
-                - function: real_time
-                  format: time
-                  x: 120
-                  y: 140
-
-                - function: real_time
-                  format: date
-                  x: 120
                   y: 180
 
                 - function: speed
                   show: unit
                   x: 200
-                  y: 100
+                  y: 180
+
+                - function: real_time
+                  format: time
+                  x: 120
+                  y: 60
+
+                - function: real_time
+                  format: date
+                  x: 120
+                  y: 20
 
                 - function: altitude_icon
                   x: 10
@@ -356,15 +356,15 @@ pages:
 #                  font_size: 25
 #
 
-                - function: time
-                  x: 120
-                  y: 180
-                  font_size: 25
+#                - function: time
+#                  x: 120
+#                  y: 180
+#                  font_size: 25
 
-                - function: date
-                  x: 120
-                  y: 220
-                  font_size: 25
+#                - function: date
+#                  x: 120
+#                  y: 220
+#                  font_size: 25
 
 #                - function: altitude_gps
 #                  button:
