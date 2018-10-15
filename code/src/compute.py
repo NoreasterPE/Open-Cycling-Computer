@@ -22,6 +22,7 @@ class compute(sensor.sensor):
         super().__init__()
 
         self.s = sensors.sensors()
+        self.s.register_parameter("real_time", self.extra["module_name"])
         self.s.register_parameter("slope", self.extra["module_name"], raw_unit="m/m", unit="%", units_allowed=["m/m", "%"])
         self.s.register_parameter("speed", self.extra["module_name"], raw_unit="m/s", unit="km/h", units_allowed=["m/s", "km/h", "mi/h"])
         self.s.register_parameter("start_time", self.extra["module_name"], raw_unit="s")
@@ -65,6 +66,7 @@ class compute(sensor.sensor):
         self.running = True
         while self.running:
             self.s.parameters["session_time"]["value"] = time.time() - self.s.parameters["start_time"]["value"]
+            self.s.parameters["real_time"]["value"] = time.time()
             time.sleep(0.1)
         self.log.debug("Main loop finished", extra=self.extra)
 

@@ -63,7 +63,7 @@ pages:
                   font_size: 20
 
                 - function: session_time
-                  format: hour-minute-second
+                  format: hhmmss
                   x: 180
                   y: 225
                   font_size: 20
@@ -231,6 +231,16 @@ pages:
                           h: 40
                   x: 100
                   y: 100
+
+                - function: real_time
+                  format: time
+                  x: 120
+                  y: 140
+
+                - function: real_time
+                  format: date
+                  x: 120
+                  y: 180
 
                 - function: speed
                   show: unit

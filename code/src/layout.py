@@ -2,6 +2,7 @@
 ## @package layout
 #   Module responsible for loading and rendering layouts. Needs heavy cleaning...
 import cairo
+import datetime
 import logging
 import numbers
 import os
@@ -243,18 +244,22 @@ class layout():
                     value = ""
             try:
                 string_format = field["format"]
-                if string_format == "hour-minute-second":
+                if string_format == "hhmmss":
                     try:
-                        t = divmod(int(value), 3600)
-                        hours = t[0]
-                        t = divmod(t[1], 60)
-                        minutes = t[0]
-                        seconds = t[1]
-                        hours = '{:02.0f}'.format(hours)
-                        minutes = '{:02.0f}'.format(minutes)
-                        seconds = '{:02.0f}'.format(seconds)
-                        value = "{}:{}:{}".format(hours, minutes, seconds)
+                        minutes, seconds = divmod(int(value), 60)
+                        hours, minutes = divmod(minutes, 60)
+                        value = "{:02.0f}:{:02.0f}:{:02.0f}".format(hours, minutes, seconds)
                     except TypeError:
+                        pass
+                elif string_format == "time":
+                    try:
+                        value = datetime.datetime.fromtimestamp(int(value)).strftime('%H:%M:%S')
+                    except TypeError:
+                        pass
+                elif string_format == "date":
+                    try:
+                        value = datetime.datetime.fromtimestamp(int(value)).strftime('%Y-%m-%d')
+                    except (ValueError, TypeError):
                         pass
             except KeyError:
                 string_format = "%.0f"
