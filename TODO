@@ -50,6 +50,7 @@ HARDWARE:
 FUTURE
 - Make library for layout handling. Might be useful for other projects like weather station [IN PROGRESS]
 - Explore python-osmgpsmap
+- Use METAR to calibrate altitude (internet connecion needed)
 
 [DONE]
 1. [DONE] Saving setting (i.e. current layout)
