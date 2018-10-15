@@ -62,7 +62,8 @@ pages:
                   y: 205
                   font_size: 20
 
-                - function: timeon_hms
+                - function: session_time
+                  format: hour-minute-second
                   x: 180
                   y: 225
                   font_size: 20

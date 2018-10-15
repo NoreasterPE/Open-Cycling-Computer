@@ -24,6 +24,10 @@ class compute(sensor.sensor):
         self.s = sensors.sensors()
         self.s.register_parameter("slope", self.extra["module_name"], raw_unit="m/m", unit="%", units_allowed=["m/m", "%"])
         self.s.register_parameter("speed", self.extra["module_name"], raw_unit="m/s", unit="km/h", units_allowed=["m/s", "km/h", "mi/h"])
+        self.s.register_parameter("start_time", self.extra["module_name"], raw_unit="s")
+        self.s.parameters["start_time"]["value"] = time.time()
+        self.s.register_parameter("session_time", self.extra["module_name"], raw_unit="s")
+        self.s.parameters["session_time"]["value"] = 0.0
         self.s.request_parameter("odometer", self.extra["module_name"])
         self.odometer = None
         self.odometer_delta_cumulative = 0.0
@@ -60,7 +64,8 @@ class compute(sensor.sensor):
         self.log.debug("Main loop started", extra=self.extra)
         self.running = True
         while self.running:
-            time.sleep(10)
+            self.s.parameters["session_time"]["value"] = time.time() - self.s.parameters["start_time"]["value"]
+            time.sleep(0.1)
         self.log.debug("Main loop finished", extra=self.extra)
 
     ## Calculate slope. Current values are matched with Bosch BMP183 sensor (0.18 m of resolution). To be changed if sensor is upgraded to BMP280
