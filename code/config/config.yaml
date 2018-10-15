@@ -54,7 +54,19 @@ heart_rate_device_name:
   value_max: -.inf
   value_min: .inf
 layout_path: layouts/default.yaml
-log_level: DEBUG
+log_level:
+  force_notification: false
+  raw_unit: null
+  required_by: null
+  sensor_name: null
+  time_stamp: 0.0
+  unit: null
+  units_allowed: null
+  value: DEBUG
+  value_avg: .nan
+  value_default: null
+  value_max: -.inf
+  value_min: .inf
 odometer:
   force_notification: false
   raw_unit: m
@@ -128,7 +140,7 @@ temperature:
   units_allowed:
   - C
   - F
-  value: 22.19076595672388
+  value: 22.33867245629454
   value_avg: .nan
   value_default: null
   value_max: 26.036583890000617

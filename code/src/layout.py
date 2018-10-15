@@ -29,6 +29,7 @@ class layout():
         self.render = False
         self.uc = unit_converter.unit_converter()
         self.editor_name = ''
+        self.editor_fields = None
         self.page_list = {}
         self.page_index = {}
         self.function_rect_list = {}
@@ -96,7 +97,7 @@ class layout():
             self.log.critical("layout_path = {}".format(self.layout_path), extra=self.extra)
             self.log.critical("buttons path = {}".format(self.current_page['buttons']), extra=self.extra)
             self.log.critical("page_id = {}".format(page_id), extra=self.extra)
-            self.occ.top()
+            self.occ.stop()
         self.font = self.current_page['font']
         # Wait for OCC to set rendering module
         try:
@@ -242,6 +243,8 @@ class layout():
                     value = field['text']
                 except KeyError:
                     value = ""
+            if self.current_page["type"] == "editor" and value == "":
+                value = self.editor_fields[function]
             try:
                 string_format = field["format"]
                 if string_format == "hhmmss":
@@ -300,11 +303,12 @@ class layout():
                 # Fall back to page font size
                 fs = self.page_font_size
             self.cr.set_font_size(fs)
-            if function != "variable_value":
+            if string_format != "editor":
                 #FIXME Colour ignored for now
                 self.text_to_surface(uv, position_x, position_y)
             else:
-                i = self.occ.rp.params["editor_index"]
+                uv = self.editor_fields["value"]
+                i = self.editor_fields["index"]
                 #Head
                 rv1 = uv[:i]
                 te1 = self.cr.text_extents(rv1)
@@ -373,16 +377,21 @@ class layout():
                             try:
                                 if f['editable']:
                                     editable = True
+                                    self.editor_fields = dict()
                                     try:
                                         self.editor_name = f["editor"]
                                     except KeyError:
                                         self.editor_name = None
                                         self.log.critical("Function {} marked as editable, but no editor field found".format(function), extra=self.extra)
                                     try:
-                                        self.editor_function_description = f["description"]
+                                        self.editor_fields["description"] = f["description"]
                                     except KeyError:
-                                        self.editor_function_description = None
+                                        self.editor_fields["description"] = None
                                         self.log.critical("Function {} marked as editable, but no description field found".format(function), extra=self.extra)
+                                    try:
+                                        self.editor_fields["format"] = f["format"]
+                                    except KeyError:
+                                        pass
                             except KeyError:
                                     editable = False
                             if resettable:
@@ -404,12 +413,14 @@ class layout():
 
     def open_editor_page(self, function):
         self.log.debug("Opening editor {} for {}".format(self.editor_name, function), extra=self.extra)
-        self.occ.rp.set_param('variable', function)
-        self.occ.rp.set_param('variable_raw_value', self.occ.sensors.parameters[function]["value"])
-        self.occ.rp.set_param('variable_value', self.occ.rp.get_param(function))
-        self.occ.rp.set_param('variable_unit', self.occ.sensors.parameters[function]["unit"])
-        self.occ.rp.set_param('variable_description', self.editor_function_description)
-        self.occ.rp.set_param('editor_index', 0)
+        self.editor_fields["function"] = function
+        self.editor_fields["raw_value"] = self.occ.sensors.parameters[function]["value"]
+        value = self.uc.convert(self.occ.sensors.parameters[function]["value"],
+                                self.occ.sensors.parameters[function]["raw_unit"],
+                                self.occ.sensors.parameters[function]["unit"])
+        self.editor_fields["value"] = format(value)
+        self.editor_fields["unit"] = self.occ.sensors.parameters[function]["unit"]
+        self.editor_fields["index"] = 0
 
         if self.editor_name == 'editor_units':
             name = self.occ.rp.params["variable"]
@@ -429,7 +440,7 @@ class layout():
     def run_function(self, name):
         functions = {"page_0": self.load_page_0,
                      "settings": self.load_settings_page,
-                     "debug_level": self.debug_level,
+                     "log_level": self.log_level,
                      "ed_accept": self.ed_accept,
                      "ed_cancel": self.ed_cancel,
                      "ed_decrease": self.ed_decrease,
@@ -456,14 +467,16 @@ class layout():
 
     def ed_accept(self):
         self.accept_edit()
+        self.editor_fields = None
         self.use_main_page()
 
     def ed_cancel(self):
+        self.editor_fields = None
         self.use_main_page()
 
     def ed_decrease(self):
-        u = format(self.occ.rp.params["variable_value"])
-        i = self.occ.rp.params["editor_index"]
+        u = self.editor_fields["value"]
+        i = self.editor_fields["index"]
         ui = u[i]
         if ui == "0":
             ui = "9"
@@ -473,12 +486,12 @@ class layout():
             except ValueError:
                 pass
         un = u[:i] + ui + u[i + 1:]
-        self.occ.rp.params["variable_value"] = un
+        self.editor_fields["value"] = un
         self.render = True
 
     def ed_increase(self):
-        u = format(self.occ.rp.params["variable_value"])
-        i = self.occ.rp.params["editor_index"]
+        u = self.editor_fields["value"]
+        i = self.editor_fields["index"]
         ui = u[i]
         if ui == "9":
             ui = "0"
@@ -488,15 +501,15 @@ class layout():
             except ValueError:
                 pass
         un = u[:i] + ui + u[i + 1:]
-        self.occ.rp.params["variable_value"] = un
+        self.editor_fields["value"] = un
         self.render = True
 
     def ed_next(self):
-        u = format(self.occ.rp.params["variable_value"])
-        i = self.occ.rp.params["editor_index"]
+        u = self.editor_fields["value"]
+        i = self.editor_fields["index"]
         if u[0] == '0':
             u = u[1:]
-            self.occ.rp.params["variable_value"] = u
+            self.editor_fields["value"] = u
         else:
             i += 1
         le = len(u) - 1
@@ -507,23 +520,23 @@ class layout():
             # FIXME localisation points to be used here
             if (ui == ".") or (ui == ","):
                 i += 1
-        self.occ.rp.params["editor_index"] = i
+        self.editor_fields["index"] = i
         self.render = True
 
     def ed_prev(self):
-        u = format(self.occ.rp.params["variable_value"])
-        i = self.occ.rp.params["editor_index"]
+        u = self.editor_fields["value"]
+        i = self.editor_fields["index"]
         i -= 1
         if i < 0:
             i = 0
             uv = "0" + u
-            self.occ.rp.params["variable_value"] = uv
+            self.editor_fields["value"] = uv
         else:
             ui = u[i]
             # FIXME localisation points to be used here
             if (ui == ".") or (ui == ","):
                 i -= 1
-        self.occ.rp.params["editor_index"] = i
+        self.editor_fields["index"] = i
         self.render = True
 
     def ed_change_unit(self, direction):
@@ -561,24 +574,20 @@ class layout():
 
     def accept_edit(self):
         self.log.debug("accept_edit started", extra=self.extra)
-        variable = self.occ.rp.params["variable"]
-        variable_unit = self.occ.rp.params["variable_unit"]
-        variable_raw_value = self.occ.rp.params["variable_raw_value"]
-        variable_value = self.occ.rp.params["variable_value"]
-        self.log.debug("variable: {}, variable_unit: {}, variable_raw_value: {}, variable_value: {}".format(variable, variable_unit, variable_raw_value, variable_value), extra=self.extra)
+        #FIXME names!!
+        variable = self.editor_fields["function"]
+        variable_unit = self.editor_fields["unit"]
+        #variable_raw_value = self.editor_fields["raw_value"]
+        variable_value = self.editor_fields["value"]
+        self.log.debug("variable: {}, variable_unit: {}, variable_value: {}".format(variable, variable_unit, variable_value), extra=self.extra)
         if self.editor_name == "editor_units":
-            self.occ.rp.p_units[variable] = variable_unit
-            self.log.debug("accept_edit sets {} units to {}".format(variable, variable_unit), extra=self.extra)
+            self.sensors.parameters[variable]["unit"] = variable_unit
         if self.editor_name == "editor_numbers":
-            unit_raw = self.occ.rp.get_internal_unit(variable)
-            value = float(variable_value)
-            if unit_raw != variable_unit:
-                value = self.uc.convert(value, variable_unit, unit_raw)
-            self.occ.rp.set_raw_param(variable, value)
-            self.occ.rp.update_param(variable)
+            unit_raw = self.occ.sensors.parameters[variable]["raw_unit"]
+            value = self.uc.convert(float(variable_value), variable_unit, unit_raw)
+            self.occ.sensors.parameters[variable]["value"] = format(value)
         if self.editor_name == "editor_string":
-            self.occ.rp.p_raw[variable] = variable_value
-            self.occ.rp.params[variable] = variable_value
+            self.occ.sensors.parameters[variable]["value"] = variable_value
 #        if self.editor_name == "ble_selector":
 #            (name, addr, dev_type) = variable_value
 #            self.occ.sensors.set_ble_device(name, addr, dev_type)
@@ -656,7 +665,7 @@ class layout():
         if not self.occ.simulate:
             os.system("./halt.sh")
 
-    def debug_level(self):
+    def log_level(self):
         log_level = self.log.getEffectiveLevel()
         log_level += 10
         if log_level > 50:
@@ -664,7 +673,7 @@ class layout():
         log_level_name = logging.getLevelName(log_level)
         self.log.debug("Changing log level to: {}".format(log_level_name), extra=self.extra)
         self.occ.switch_log_level(log_level_name)
-        self.occ.rp.params["debug_level"] = log_level_name
+        self.occ.sensors.parameters["log_level"]["value"] = log_level_name
 
     def png_to_cairo_surface(self, file_path):
         png_surface = cairo.ImageSurface.create_from_png(file_path)

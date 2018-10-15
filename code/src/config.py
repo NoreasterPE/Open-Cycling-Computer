@@ -44,14 +44,15 @@ class config(object):
             except IOError:
                 self.log.exception("I/O Error when trying to parse overwritten config. Quitting!!", extra=self.extra)
                 self.cleanup()
+        self.s.register_parameter("log_level", self.extra["module_name"])
         try:
             log_level = self.config_params["log_level"]
-            self.occ.switch_log_level(log_level)
-            self.rp.params["debug_level"] = log_level
+            self.s.update_parameter("log_level", log_level)
+            self.occ.switch_log_level(log_level["value"])
         except KeyError:
             self.log.error("log_level not found in config file. Using debug log level", extra=self.extra)
             self.occ.switch_log_level("debug")
-            self.rp.params["debug_level"] = "debug"
+            self.s.parameters["log_level"]["value"] = "debug"
         try:
             self.occ.layout_path = self.config_params["layout_path"]
             self.log.debug("Setting layout. Path = {}".format(self.occ.layout_path), extra=self.extra)
@@ -77,7 +78,6 @@ class config(object):
             self.s.register_parameter("wheel_circumference",
                                       self.extra["module_name"],
                                       raw_unit="m")
-            wc = w.get_circumference(self.s.parameters["wheel_size"]["value"])
             self.s.update_parameter("wheel_circumference", dict(value=w.get_circumference(self.s.parameters["wheel_size"]["value"])))
         except AttributeError:
             error_list.append("wheel_circumference")
@@ -142,9 +142,8 @@ class config(object):
     #  @param self The python object self
     def write_config(self):
         self.log.debug("Writing config file started", extra=self.extra)
-        log_level = logging.getLevelName(self.log.getEffectiveLevel())
         c = {}
-        c["log_level"] = log_level
+        c["log_level"] = self.s.parameters["log_level"]
         self.log.debug("1", extra=self.extra)
         c["layout_path"] = self.occ.layout_path
         self.log.debug("2", extra=self.extra)

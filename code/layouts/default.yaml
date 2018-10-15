@@ -402,7 +402,6 @@ pages:
                   text: Rider weight
 
                 - function: rider_weight
-                  format: "%.1f"
                   description: Rider weight
                   editable: yes
                   editor: editor_numbers
@@ -662,7 +661,7 @@ pages:
                 #          w: 240
                 #          h: 80
 
-                - function: debug_level
+                - function: log_level
                   x: 120
                   y: 280
                   font_size: 16
@@ -769,17 +768,18 @@ pages:
                           w: 120
                           h: 60
 
-                - function: variable_description
+                - function: description
                   x: 120
                   y: 70
                   font_size: 16
 
-                - function: variable_value
+                - function: value
+                  format: editor
                   x: 120
                   y: 120
                   font_size: 50
 
-                - function: variable_unit
+                - function: unit
                   x: 120
                   y: 180
                   font_size: 30
