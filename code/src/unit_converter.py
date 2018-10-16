@@ -3,6 +3,7 @@
 ## @package units
 #  Package for converting units. When run independently shows a pseudo-test.
 
+import numbers
 
 ## Main unit converter class
 #  Allows conversion of a value in source unit to target unit.
@@ -26,6 +27,14 @@ class unit_converter():
     def convert(self, value, source_unit, target_unit):
         if source_unit == target_unit:
             return value
+        if value is None:
+            return value
+        if source_unit is None or target_unit is None:
+            return None
+        try:
+            value = float(value)
+        except TypeError:
+            print("Can't convert value: {} to float".format(value))
         if ((source_unit in self.distance) and (target_unit in self.distance)):
             return self.convert_distance(value, source_unit, target_unit)
         if ((source_unit in self.temperature) and (target_unit in self.temperature)):
@@ -40,7 +49,12 @@ class unit_converter():
             return self.convert_pressure(value, source_unit, target_unit)
 
     def convert_distance(self, value, source_unit, target_unit):
-        return value * self.distance[source_unit] / self.distance[target_unit]
+        result = numbers.NAN
+        try:
+            result = value * self.distance[source_unit] / self.distance[target_unit]
+        except TypeError:
+            print("Failed to convert distance value {}, source unit: {}, target_unit: {}".format(value, source_unit, target_unit))
+        return result
 
     ## Temperature conversion
     #  @param self The python object self
@@ -48,12 +62,16 @@ class unit_converter():
     #  @param source_unit source unit
     #  @param target_unit target unit
     def convert_temperature(self, value, source_unit, target_unit):
-        if source_unit == target_unit:
-            result = value
-        elif target_unit == "C":
-            result = (value - 32) / 1.8
-        elif target_unit == "F":
-            result = (value * 1.8) + 32
+        result = numbers.NAN
+        try:
+            if source_unit == target_unit:
+                result = value
+            elif target_unit == "C":
+                result = (value - 32) / 1.8
+            elif target_unit == "F":
+                result = (value * 1.8) + 32
+        except TypeError:
+            print("Failed to convert temperature value {}, source unit: {}, target_unit: {}".format(value, source_unit, target_unit))
         return result
 
     ## Speed conversion
@@ -62,7 +80,12 @@ class unit_converter():
     #  @param source_unit source unit
     #  @param target_unit target unit
     def convert_speed(self, value, source_unit, target_unit):
-        return value * self.speed[source_unit] / self.speed[target_unit]
+        result = numbers.NAN
+        try:
+            result = value * self.speed[source_unit] / self.speed[target_unit]
+        except TypeError:
+            print("Failed to convert speed value {}, source unit: {}, target_unit: {}".format(value, source_unit, target_unit))
+        return result
 
     ## Mass conversion
     #  @param self The python object self
@@ -70,7 +93,12 @@ class unit_converter():
     #  @param source_unit source unit
     #  @param target_unit target unit
     def convert_mass(self, value, source_unit, target_unit):
-        return value * self.mass[source_unit] / self.mass[target_unit]
+        result = numbers.NAN
+        try:
+            result = value * self.mass[source_unit] / self.mass[target_unit]
+        except TypeError:
+            print("Failed to convert mass value {}, source unit: {}, target_unit: {}".format(value, source_unit, target_unit))
+        return result
 
     ## Slope conversion
     #  @param self The python object self
@@ -78,12 +106,16 @@ class unit_converter():
     #  @param source_unit source unit
     #  @param target_unit target unit
     def convert_slope(self, value, source_unit, target_unit):
-        if source_unit == target_unit:
-            result = value
-        elif target_unit == "%":
-            result = 100 * value
-        elif target_unit == "m/m":
-            result = 0.01 * value
+        result = numbers.NAN
+        try:
+            if source_unit == target_unit:
+                result = value
+            elif target_unit == "%":
+                result = 100 * value
+            elif target_unit == "m/m":
+                result = 0.01 * value
+        except TypeError:
+            print("Failed to convert slope value {}, source unit: {}, target_unit: {}".format(value, source_unit, target_unit))
         return result
 
     ## Pressure conversion
@@ -92,7 +124,12 @@ class unit_converter():
     #  @param source_unit source unit
     #  @param target_unit target unit
     def convert_pressure(self, value, source_unit, target_unit):
-        return value * self.pressure[source_unit] / self.pressure[target_unit]
+        result = numbers.NAN
+        try:
+            result = value * self.pressure[source_unit] / self.pressure[target_unit]
+        except TypeError:
+            print("Failed to convert mass value {}, source unit: {}, target_unit: {}".format(value, source_unit, target_unit))
+        return result
 
 
 if __name__ == '__main__':
@@ -111,7 +148,7 @@ if __name__ == '__main__':
     print("kg: {} st: {}".format(mass, u.convert(mass, "kg", "st")))
 
     speed = 10  # m/s
-    print("m/s: {} km/h: {} mi/hh: {}".format(speed, u.convert(speed, "m/s", "km/h"), u.convert(speed, "m/s", "mi/h")))
+    print("m/s: {} km/h: {} mi/h: {}".format(speed, u.convert(speed, "m/s", "km/h"), u.convert(speed, "m/s", "mi/h")))
 
     slope = 0.013  # m/m
     print("m/m: {} %: {}".format(slope, u.convert(slope, "m/m", "%")))
