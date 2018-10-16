@@ -300,7 +300,7 @@ class layout():
                 # Fall back to page font size
                 fs = self.page_font_size
             self.cr.set_font_size(fs)
-            if string_format != "editor":
+            if string_format != "zoomed_digit":
                 #FIXME Colour ignored for now
                 self.text_to_surface(uv, position_x, position_y)
             else:

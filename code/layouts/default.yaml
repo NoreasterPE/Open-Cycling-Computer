@@ -767,7 +767,7 @@ pages:
                   font_size: 24
 
                 - function: value
-                  format: editor
+                  format: zoomed_digit
                   x: 120
                   y: 120
                   font_size: 50
