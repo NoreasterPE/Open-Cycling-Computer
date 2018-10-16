@@ -48,6 +48,7 @@ class ble_sc(ble_sensor.ble_sensor):
                 self.s.parameters["wheel_revolution_time"]["time_stamp"] = self.delegate.wheel_revolution_time_stamp
                 self.s.parameters["wheel_revolution_time"]["value"] = self.delegate.wheel_revolution_time
                 self.log.debug('wheel_revolution_time {}'.format(self.s.parameters["wheel_revolution_time"]["value"]), extra=self.extra)
+                # Move to compute module
                 self.s.parameters["speed"]["value"] = self.s.parameters["wheel_circumference"]["value"] / self.s.parameters["wheel_revolution_time"]["value"]
                 self.s.parameters["speed"]["value_max"] = max(self.s.parameters["speed"]["value_max"], self.s.parameters["speed"]["value"] )
             else:

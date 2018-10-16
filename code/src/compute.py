@@ -33,6 +33,7 @@ class compute(sensor.sensor):
         self.s.request_parameter("odometer", self.extra["module_name"])
         self.odometer = None
         self.odometer_delta_cumulative = 0.0
+        # FIXME Currently not calculated
         self.odometer_delta = 0.0
         self.s.request_parameter("altitude", self.extra["module_name"])
         self.altitude = None
@@ -52,9 +53,12 @@ class compute(sensor.sensor):
             self.altitude_delta = self.altitude - previous_altitude
         except TypeError:
             self.altitude_delta = 0.0
+        # FIXME wtf?
         previous_wheel_rev_time = self.wheel_revolution_time
+        # FIXME wtf?
         self.wheel_revolution_time = self.s.parameters["wheel_revolution_time"]["value"]
         try:
+            # FIXME wtf?
             self.wheel_revolution_time_delta = self.wheel_revolution_time - previous_wheel_rev_time
             self.altitude_delta_cumulative += self.altitude_delta
             self.odometer_delta_cumulative += self.odometer_delta
