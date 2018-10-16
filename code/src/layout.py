@@ -417,10 +417,8 @@ class layout():
             long_click_data_ready = False
             self.log.debug("Opening editor {} for {}".format(self.editor_fields["editor"], self.editor_fields["function"]), extra=self.extra)
             f = self.editor_fields["function"]
-            if self.editor_fields["editor"] == 'editor_units':
-                self.editor_fields["value"] = self.occ.sensors.parameters[f]["unit"]
-                self.editor_fields["unit"] = self.occ.sensors.parameters[f]["unit"]
-            else:
+            self.editor_fields["unit"] = self.occ.sensors.parameters[f]["unit"]
+            if self.editor_fields["editor"] == 'editor_numbers':
                 self.editor_fields["raw_value"] = self.occ.sensors.parameters[f]["value"]
                 value = self.uc.convert(self.occ.sensors.parameters[f]["value"],
                                         self.occ.sensors.parameters[f]["raw_unit"],
@@ -429,7 +427,11 @@ class layout():
                     self.editor_fields["value"] = self.editor_fields["format"] % value
                 except TypeError:
                     self.editor_fields["value"] = value
-                self.editor_fields["unit"] = self.occ.sensors.parameters[f]["unit"]
+            elif self.editor_fields["editor"] == 'editor_string':
+                self.editor_fields["value"] = self.occ.sensors.parameters[f]["value"]
+            else:
+                self.log.critical("Unknown editor {} called for function {}, ignoring".format(self.editor_fields["editor"], self.editor_fields["function"]), extra=self.extra)
+                return
             self.editor_fields["index"] = 0
             self.use_page(self.editor_fields["editor"])
 
@@ -454,9 +456,12 @@ class layout():
                      "reboot": self.reboot,
                      "quit": self.quit}
         try:
-            functions[function]()
+            if functions[function] is not None:
+                self.log.debug("Calling function {}".format(function), extra=self.extra)
         except KeyError:
             self.log.debug("CLICK on non-clickable {}".format(function), extra=self.extra)
+            return
+        functions[function]()
 
     def load_page_0(self):
         self.use_main_page()
@@ -477,13 +482,18 @@ class layout():
         u = self.editor_fields["value"]
         i = self.editor_fields["index"]
         ui = u[i]
-        if ui == "0":
-            ui = "9"
-        else:
-            try:
+        if str.isdigit(ui):
+            if ui == "0":
+                ui = "9"
+            else:
                 ui = format(int(ui) - 1)
-            except ValueError:
-                pass
+        elif str.isupper(ui):
+            ui = format(chr(ord(ui) - 1))
+            if not str.isalpha(ui):
+                ui = "Z"
+        else:
+            # Not a letter or digit, ignore
+            pass
         un = u[:i] + ui + u[i + 1:]
         self.editor_fields["value"] = un
         self.render = True
@@ -492,13 +502,18 @@ class layout():
         u = self.editor_fields["value"]
         i = self.editor_fields["index"]
         ui = u[i]
-        if ui == "9":
-            ui = "0"
-        else:
-            try:
+        if str.isdigit(ui):
+            if ui == "9":
+                ui = "0"
+            else:
                 ui = format(int(ui) + 1)
-            except ValueError:
-                pass
+        elif str.isupper(ui):
+            ui = format(chr(ord(ui) + 1))
+            if not str.isalpha(ui):
+                ui = "A"
+        else:
+            # Not a capital letter or digit, ignore
+            pass
         un = u[:i] + ui + u[i + 1:]
         self.editor_fields["value"] = un
         self.render = True

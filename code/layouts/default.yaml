@@ -493,7 +493,7 @@ pages:
                 - function: wheel_size
                   description: Wheel size
                   editable: yes
-                  editor: editor_numbers
+                  editor: editor_string
                   x: 60
                   y: 215
                   font_size: 20
@@ -852,12 +852,13 @@ pages:
                           w: 120
                           h: 60
 
-                - function: variable_description
+                - function: description
                   x: 120
                   y: 90
                   font_size: 16
 
-                - function: variable_value
+                - function: value
+                  format: zoomed_digit
                   x: 120
                   y: 130
                   font_size: 40
