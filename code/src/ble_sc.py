@@ -28,7 +28,7 @@ class ble_sc(ble_sensor.ble_sensor):
         self.s.register_parameter("wheel_revolution_time", self.extra["module_name"], raw_unit="s")
         self.s.register_parameter("wheel_revolutions", self.extra["module_name"])
         self.s.register_parameter("odometer", self.extra["module_name"], raw_unit="m", unit="km")
-        self.s.register_parameter("cadence", self.extra["module_name"], raw_unit="RPM")
+        self.s.register_parameter("cadence", self.extra["module_name"], value=numbers.NAN, raw_unit="RPM")
         self.s.register_parameter("cadence_icon_beat", self.extra["module_name"])
         self.s.request_parameter("cadence_speed_device_address", self.extra["module_name"])
         ## @var device_address

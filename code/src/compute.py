@@ -4,6 +4,7 @@
 #  Module for handling calculations that require more than sensor data
 
 #import numbers
+import numbers
 import sensor
 import sensors
 import time
@@ -23,8 +24,8 @@ class compute(sensor.sensor):
 
         self.s = sensors.sensors()
         self.s.register_parameter("real_time", self.extra["module_name"])
-        self.s.register_parameter("slope", self.extra["module_name"], raw_unit="m/m", unit="%", units_allowed=["m/m", "%"])
-        self.s.register_parameter("speed", self.extra["module_name"], raw_unit="m/s", unit="km/h", units_allowed=["m/s", "km/h", "mi/h"])
+        self.s.register_parameter("slope", self.extra["module_name"], value=numbers.NAN, raw_unit="m/m", unit="%", units_allowed=["m/m", "%"])
+        self.s.register_parameter("speed", self.extra["module_name"], value=numbers.NAN, raw_unit="m/s", unit="km/h", units_allowed=["m/s", "km/h", "mi/h"])
         self.s.register_parameter("start_time", self.extra["module_name"], raw_unit="s")
         self.s.parameters["start_time"]["value"] = time.time()
         self.s.register_parameter("session_time", self.extra["module_name"], raw_unit="s")

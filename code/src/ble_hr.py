@@ -24,7 +24,7 @@ class ble_hr(ble_sensor.ble_sensor):
         super().__init__()
         self.s = sensors.sensors()
         self.s.register_parameter("heart_rate_device_name", self.extra["module_name"])
-        self.s.register_parameter("heart_rate", self.extra["module_name"], raw_unit="BPM", unit="BPM", units_allowed=["BMP"])
+        self.s.register_parameter("heart_rate", self.extra["module_name"], value=numbers.NAN, raw_unit="BPM", unit="BPM", units_allowed=["BMP"])
         self.s.register_parameter("heart_rate_beat", self.extra["module_name"])
         self.s.request_parameter("heart_rate_device_address", self.extra["module_name"])
         ## @var device_address
