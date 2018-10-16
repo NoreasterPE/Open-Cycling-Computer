@@ -113,32 +113,25 @@ class layout():
         r, g, b = [int(n, 16) for n in (r, g, b)]
         self.fg_colour = (r, g, b)
         self.function_rect_list = {}
-        for field in self.current_page['fields']:
-            try:
-                b = field['button']
-            except KeyError:
-                b = None
-            try:
-                s = field['show']
-            except KeyError:
-                s = None
-            if (b is not None):
-                x0 = int(b.get('x0'))
-                y0 = int(b.get('y0'))
-                w = int(b.get('w'))
-                h = int(b.get('h'))
-                name = field.get('function')
-                if s is not None:
-                    meta_name = name + "_" + s
-                else:
-                    meta_name = name
-                rect = (x0, y0, w, h)
-                self.function_rect_list[meta_name] = (name, rect)
+        if self.current_page['fields'] is not None:
+            for field in self.current_page['fields']:
                 try:
-                    if (field['file'] is not None):
-                        self.current_image_list[field['file']] = self.load_image(field['file'])
+                    b = field['button']
                 except KeyError:
-                    pass
+                    b = None
+                if (b is not None):
+                    rect = (int(b.get('x0')), int(b.get('y0')), int(b.get('w')), int(b.get('h')))
+                    name = field.get('function')
+                    try:
+                        meta_name = name + "_" + field['show']
+                    except KeyError:
+                        meta_name = name
+                    self.function_rect_list[meta_name] = (name, rect)
+                    try:
+                        if (field['file'] is not None):
+                            self.current_image_list[field['file']] = self.load_image(field['file'])
+                    except KeyError:
+                        pass
 
     def load_image(self, image_path):
         try:
@@ -162,7 +155,8 @@ class layout():
         self.render = True
         # LAYOUT DEBUG FUNCION
         #self.render_all_buttons()
-        self.render_layout()
+        if self.current_page['fields'] is not None:
+            self.render_layout()
 
     def make_image_key(self, image_path, value):
         suffix = "_" + format(value)
@@ -393,7 +387,7 @@ class layout():
                                     try:
                                         self.editor_fields["format"] = f["format"]
                                     except KeyError:
-                                        pass
+                                        self.editor_fields["format"] = "%.0f"
                             except KeyError:
                                     editable = False
                             if resettable:
@@ -427,7 +421,10 @@ class layout():
                 value = self.uc.convert(self.occ.sensors.parameters[f]["value"],
                                         self.occ.sensors.parameters[f]["raw_unit"],
                                         self.occ.sensors.parameters[f]["unit"])
-                self.editor_fields["value"] = format(value)
+                try:
+                    self.editor_fields["value"] = self.editor_fields["format"] % value
+                except TypeError:
+                    self.editor_fields["value"] = value
                 self.editor_fields["unit"] = self.occ.sensors.parameters[f]["unit"]
             self.editor_fields["index"] = 0
             self.use_page(self.editor_fields["editor"])
