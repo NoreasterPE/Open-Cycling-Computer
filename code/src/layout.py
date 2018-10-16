@@ -28,7 +28,6 @@ class layout():
         self.cr = cr
         self.render = False
         self.uc = unit_converter.unit_converter()
-        self.editor_name = ''
         self.editor_fields = None
         self.page_list = {}
         self.page_index = {}
@@ -79,7 +78,6 @@ class layout():
     def use_page(self, page_id="page_0"):
         self.log.debug("use_page {}".format(page_id), extra=self.extra)
         self.render = True
-        self.current_button_list = []
         self.current_page = self.page_list[page_id]
         try:
             self.background_image = self.load_image(self.current_page['background'])
@@ -114,6 +112,7 @@ class layout():
         r, g, b = fg_colour_rgb[:2], fg_colour_rgb[2:4], fg_colour_rgb[4:]
         r, g, b = [int(n, 16) for n in (r, g, b)]
         self.fg_colour = (r, g, b)
+        self.function_rect_list = {}
         for field in self.current_page['fields']:
             try:
                 b = field['button']
@@ -128,17 +127,13 @@ class layout():
                 y0 = int(b.get('y0'))
                 w = int(b.get('w'))
                 h = int(b.get('h'))
+                name = field.get('function')
                 if s is not None:
-                    name = field.get('function') + "_" + s
+                    meta_name = name + "_" + s
                 else:
-                    name = field.get('function')
+                    meta_name = name
                 rect = (x0, y0, w, h)
-                self.function_rect_list[name] = rect
-                self.current_button_list.append(name)
-                # try:
-                #    position = (field['x'], field['y'])
-                # except KeyError:
-                #    pass
+                self.function_rect_list[meta_name] = (name, rect)
                 try:
                     if (field['file'] is not None):
                         self.current_image_list[field['file']] = self.load_image(field['file'])
@@ -182,20 +177,26 @@ class layout():
             #print("{}".format(function))
             position_x = field['x']
             position_y = field['y']
+            # Show value of function by default
             try:
                 show = field["show"]
             except KeyError:
                 show = "value"
             if show == "value":
-                try:
-                    v = self.occ.sensors.parameters[function]["value"]
-                    ru = self.occ.sensors.parameters[function]["raw_unit"]
-                    u = self.occ.sensors.parameters[function]["unit"]
-                    value = self.uc.convert(v, ru, u)
-                    value = numbers.sanitise(value)
-                    #print("{} v {} value {}".format(function, v, value))
-                except (KeyError, TypeError):
-                    value = None
+                if self.current_page["type"] == "editor":
+                    try:
+                        value = self.editor_fields[function]
+                    except (KeyError, TypeError):
+                        value = None
+                else:
+                    try:
+                        v = self.occ.sensors.parameters[function]["value"]
+                        ru = self.occ.sensors.parameters[function]["raw_unit"]
+                        u = self.occ.sensors.parameters[function]["unit"]
+                        value = self.uc.convert(v, ru, u)
+                        value = numbers.sanitise(value)
+                    except (KeyError, TypeError):
+                        value = None
             elif show == "tenths":
                 try:
                     v = self.occ.sensors.parameters[function]["value"]
@@ -243,8 +244,6 @@ class layout():
                     value = field['text']
                 except KeyError:
                     value = ""
-            if self.current_page["type"] == "editor" and value == "":
-                value = self.editor_fields[function]
             try:
                 string_format = field["format"]
                 if string_format == "hhmmss":
@@ -332,8 +331,8 @@ class layout():
 
     def render_all_buttons(self):
         # LAYOUT DEBUG FUNCION
-        for function in self.current_button_list:
-            fr = self.function_rect_list[function]
+        for function, r in self.function_rect_list.items():
+            fr = r[1]
             self.cr.set_source_rgb(0.0, 1.0, 0.0)
             self.cr.rectangle(fr[0], fr[1], fr[2], fr[3])
             self.cr.fill()
@@ -344,31 +343,34 @@ class layout():
 
     def render_pressed_button(self, pressed_pos):
         self.log.debug("render_pressed_button started", extra=self.extra)
-        for function in self.current_button_list:
-            if self.point_in_rect(pressed_pos, self.function_rect_list[function]):
-                fr = self.function_rect_list[function]
+        for function, r in self.function_rect_list.items():
+            if self.point_in_rect(pressed_pos, r[1]):
+                fr = r[1]
                 self.cr.set_source_surface(self.buttons_image, 0, 0)
                 self.cr.rectangle(fr[0], fr[1], fr[2], fr[3])
                 self.cr.fill()
         self.log.debug("render_pressed_button finished", extra=self.extra)
 
     def check_click(self, position, click):
+        long_click_data_ready = False
         if click == 'SHORT':
-            # Short click
-            # FIXME Search through function_rect_list directly? TBD
-            for function in self.current_button_list:
-                try:
-                    if self.point_in_rect(position, self.function_rect_list[function]):
-                        self.run_function(function)
-                        break
-                except KeyError:
-                    self.log.debug("CLICK on non-clickable {}".format(function), extra=self.extra)
+            clicked_function = None
+            for function, r in self.function_rect_list.items():
+                if self.point_in_rect(position, r[1]):
+                    self.log.debug("CLICK on {} {}".format(function, r), extra=self.extra)
+                    clicked_function = function
+            if clicked_function:
+                self.log.debug("run_function for {}".format(clicked_function), extra=self.extra)
+                self.run_function(clicked_function)
         elif click == 'LONG':
-            for function in self.current_button_list:
-                if self.point_in_rect(position, self.function_rect_list[function]):
-                    self.log.debug("LONG CLICK on {}".format(function), extra=self.extra)
+            for function, r in self.function_rect_list.items():
+                if self.point_in_rect(position, r[1]):
                     for f in self.current_page['fields']:
-                        if f['function'] == function:
+                        try:
+                            _f = f['function'] + "_" + f["show"]
+                        except KeyError:
+                            _f = f['function']
+                        if _f == function:
                             try:
                                 if f['resettable']:
                                     resettable = True
@@ -379,9 +381,9 @@ class layout():
                                     editable = True
                                     self.editor_fields = dict()
                                     try:
-                                        self.editor_name = f["editor"]
+                                        self.editor_fields["editor"] = f["editor"]
                                     except KeyError:
-                                        self.editor_name = None
+                                        self.editor_fields["editor"] = None
                                         self.log.critical("Function {} marked as editable, but no editor field found".format(function), extra=self.extra)
                                     try:
                                         self.editor_fields["description"] = f["description"]
@@ -395,13 +397,15 @@ class layout():
                             except KeyError:
                                     editable = False
                             if resettable:
-                                self.log.debug("Resetting {}".format(function), extra=self.extra)
-                                self.occ.rp.reset_param(function)
+                                self.log.debug("Resetting {}".format(r[0]), extra=self.extra)
+                                print("resetting function {} {} not yet ready".format(function, r[0]))
+                                #self.occ.rp.reset_param(r[0])
                             elif editable:
-                                self.log.debug("Editing {} with {}".format(function, self.editor_name), extra=self.extra)
-                                self.open_editor_page(function)
+                                self.editor_fields["function"] = r[0]
+                                long_click_data_ready = True
+                                break
                             else:
-                                self.log.debug("LONG CLICK on non-clickable {}".format(function), extra=self.extra)
+                                self.log.debug("LONG CLICK on non-clickable {}".format(r[0]), extra=self.extra)
         elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
             self.run_function("next_page")
         elif click == 'L_TO_R':  # Swipe LEFT to RIGHT
@@ -411,33 +415,24 @@ class layout():
         elif click == 'T_TO_B':  # Swipe TOP to BOTTOM
             self.run_function("settings")
 
-    def open_editor_page(self, function):
-        self.log.debug("Opening editor {} for {}".format(self.editor_name, function), extra=self.extra)
-        self.editor_fields["function"] = function
-        self.editor_fields["raw_value"] = self.occ.sensors.parameters[function]["value"]
-        value = self.uc.convert(self.occ.sensors.parameters[function]["value"],
-                                self.occ.sensors.parameters[function]["raw_unit"],
-                                self.occ.sensors.parameters[function]["unit"])
-        self.editor_fields["value"] = format(value)
-        self.editor_fields["unit"] = self.occ.sensors.parameters[function]["unit"]
-        self.editor_fields["index"] = 0
+        if long_click_data_ready:
+            long_click_data_ready = False
+            self.log.debug("Opening editor {} for {}".format(self.editor_fields["editor"], self.editor_fields["function"]), extra=self.extra)
+            f = self.editor_fields["function"]
+            if self.editor_fields["editor"] == 'editor_units':
+                self.editor_fields["value"] = self.occ.sensors.parameters[f]["unit"]
+                self.editor_fields["unit"] = self.occ.sensors.parameters[f]["unit"]
+            else:
+                self.editor_fields["raw_value"] = self.occ.sensors.parameters[f]["value"]
+                value = self.uc.convert(self.occ.sensors.parameters[f]["value"],
+                                        self.occ.sensors.parameters[f]["raw_unit"],
+                                        self.occ.sensors.parameters[f]["unit"])
+                self.editor_fields["value"] = format(value)
+                self.editor_fields["unit"] = self.occ.sensors.parameters[f]["unit"]
+            self.editor_fields["index"] = 0
+            self.use_page(self.editor_fields["editor"])
 
-        if self.editor_name == 'editor_units':
-            name = self.occ.rp.params["variable"]
-            # FIXME make a stripping function
-            #na = name.find("_")
-            #if na > -1:
-            #    n = name[:na]
-            #else:
-            #    n = name
-            n = name
-            unit = self.occ.rp.get_unit(n)
-            self.occ.rp.set_param('variable', n)
-            self.occ.rp.set_param('variable_unit', unit)
-            self.occ.rp.set_param('variable_value', unit)
-        self.use_page(self.editor_name)
-
-    def run_function(self, name):
+    def run_function(self, function):
         functions = {"page_0": self.load_page_0,
                      "settings": self.load_settings_page,
                      "log_level": self.log_level,
@@ -457,7 +452,10 @@ class layout():
                      "write_config": self.write_config,
                      "reboot": self.reboot,
                      "quit": self.quit}
-        functions[name]()
+        try:
+            functions[function]()
+        except KeyError:
+            self.log.debug("CLICK on non-clickable {}".format(function), extra=self.extra)
 
     def load_page_0(self):
         self.use_main_page()
@@ -541,28 +539,23 @@ class layout():
 
     def ed_change_unit(self, direction):
         # direction to be 1 (next) or 0 (previous)
-        variable = self.occ.rp.params["variable"]
-        variable_unit = self.occ.rp.params["variable_unit"]
-        variable_value = self.occ.rp.params["variable_raw_value"]
-        current_unit_index = self.occ.rp.p_units_allowed[variable].index(variable_unit)
-        self.log.debug("variable: {} p_units_allowed: {}".format(variable, self.occ.rp.p_units_allowed[variable]), extra=self.extra)
+        variable = self.editor_fields["function"]
+        variable_unit = self.editor_fields["unit"]
+        variable_value = self.editor_fields["value"]
+        current_unit_index = self.occ.sensors.parameters[self.editor_fields["function"]]["units_allowed"].index(variable_unit)
+        self.log.debug("variable: {} units_allowed: {}".format(variable, self.occ.sensors.parameters[self.editor_fields["function"]]["units_allowed"]), extra=self.extra)
         if direction == 1:
             try:
-                next_unit = self.occ.rp.p_units_allowed[variable][current_unit_index + 1]
+                next_unit = self.occ.sensors.parameters[self.editor_fields["function"]]["units_allowed"][current_unit_index + 1]
             except IndexError:
-                next_unit = self.occ.rp.p_units_allowed[variable][0]
+                next_unit = self.occ.sensors.parameters[self.editor_fields["function"]]["units_allowed"][0]
         else:
             try:
-                next_unit = self.occ.rp.p_units_allowed[variable][current_unit_index - 1]
+                next_unit = self.occ.sensors.parameters[self.editor_fields["function"]]["units_allowed"][current_unit_index - 1]
             except IndexError:
-                next_unit = self.occ.rp.p_units_allowed[variable][-1]
-        try:
-            f = self.occ.rp.p_format[variable]
-        except KeyError:
-            self.log.warning("Formatting not available: function ={}".format(variable), extra=self.extra)
-            f = "%.1f"
-        self.occ.rp.params["variable_value"] = float(f % float(variable_value))
-        self.occ.rp.params["variable_unit"] = next_unit
+                next_unit = self.occ.sensors.parameters[self.editor_fields["function"]]["units_allowed"][-1]
+        self.editor_fields["unit"] = next_unit
+        self.editor_fields["value"] = variable_value
 
     def ed_next_unit(self):
         self.ed_change_unit(1)
@@ -574,22 +567,20 @@ class layout():
 
     def accept_edit(self):
         self.log.debug("accept_edit started", extra=self.extra)
-        #FIXME names!!
-        variable = self.editor_fields["function"]
-        variable_unit = self.editor_fields["unit"]
-        #variable_raw_value = self.editor_fields["raw_value"]
-        variable_value = self.editor_fields["value"]
-        self.log.debug("variable: {}, variable_unit: {}, variable_value: {}".format(variable, variable_unit, variable_value), extra=self.extra)
-        if self.editor_name == "editor_units":
-            self.sensors.parameters[variable]["unit"] = variable_unit
-        if self.editor_name == "editor_numbers":
-            unit_raw = self.occ.sensors.parameters[variable]["raw_unit"]
-            value = self.uc.convert(float(variable_value), variable_unit, unit_raw)
-            self.occ.sensors.parameters[variable]["value"] = format(value)
-        if self.editor_name == "editor_string":
-            self.occ.sensors.parameters[variable]["value"] = variable_value
-#        if self.editor_name == "ble_selector":
-#            (name, addr, dev_type) = variable_value
+        parameter = self.editor_fields["function"]
+        parameter_unit = self.editor_fields["unit"]
+        parameter_value = self.editor_fields["value"]
+        self.log.debug("parameter: {}, parameter_unit: {}, parameter_value: {}".format(parameter, parameter_unit, parameter_value), extra=self.extra)
+        if self.editor_fields["editor"] == "editor_units":
+            self.occ.sensors.parameters[parameter]["unit"] = parameter_unit
+        if self.editor_fields["editor"] == "editor_numbers":
+            unit_raw = self.occ.sensors.parameters[parameter]["raw_unit"]
+            value = self.uc.convert(float(parameter_value), parameter_unit, unit_raw)
+            self.occ.sensors.parameters[parameter]["value"] = format(value)
+        if self.editor_fields["editor"] == "editor_string":
+            self.occ.sensors.parameters[parameter]["value"] = parameter_value
+#        if self.self.editor_fields["ediotr"] == "ble_selector":
+#            (name, addr, dev_type) = parameter_value
 #            self.occ.sensors.set_ble_device(name, addr, dev_type)
         self.render = True
         self.log.debug("accept_edit finished", extra=self.extra)

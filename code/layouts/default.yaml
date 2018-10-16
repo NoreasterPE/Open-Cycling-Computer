@@ -416,9 +416,6 @@ pages:
 
                 - function: rider_weight
                   show: unit
-                  description: Rider weight units
-                  #editable: yes
-                  #editor: editor_units
                   x: 100
                   y: 50
                   font_size: 16
@@ -679,71 +676,7 @@ pages:
          background: images/editor_units_background.png
          buttons: images/button_pressed.png
          font: "sans-serif"
-         font_size: 16
-         fg_colour: FFFFFF
-         fields: 
-                - function: ed_accept
-                  x: 60
-                  y: 30
-                  font_size: 30
-                  text: Accept
-                  button:
-                          x0: 0
-                          y0: 0
-                          w: 120
-                          h: 60
-
-                - function: ed_cancel
-                  x: 180
-                  y: 30
-                  font_size: 30
-                  text: Cancel
-                  button:
-                          x0: 120
-                          y0: 0
-                          w: 120
-                          h: 60
-
-                - function: variable_description
-                  x: 120
-                  y: 70
-                  font_size: 16
-
-                - function: variable_unit
-                  x: 120
-                  y: 115
-                  font_size: 60
-
-                - function: ed_prev_unit
-                  x: 60
-                  y: 290
-                  font_size: 50
-                  text: ⇦
-                  button:
-                          x0: 0
-                          y0: 260
-                          w: 120
-                          h: 60
-
-                - function: ed_next_unit
-                  x: 180
-                  y: 290
-                  font_size: 50
-                  text: ⇨
-                  button:
-                          x0: 120
-                          y0: 260
-                          w: 120
-                          h: 60
-
-       - name: "Number Editor"
-         id: editor_numbers
-         number: 0
-         type: editor
-         background: images/editor_number_background.png
-         buttons: images/button_pressed.png
-         font: "sans-serif"
-         font_size: 16
+         font_size: 50
          fg_colour: FFFFFF
          fields: 
                 - function: ed_accept
@@ -770,8 +703,68 @@ pages:
 
                 - function: description
                   x: 120
+                  y: 100
+                  font_size: 24
+
+                - function: unit
+                  x: 120
+                  y: 160
+                  font_size: 60
+
+                - function: ed_prev_unit
+                  x: 60
+                  y: 290
+                  text: ⇦
+                  button:
+                          x0: 0
+                          y0: 260
+                          w: 120
+                          h: 60
+
+                - function: ed_next_unit
+                  x: 180
+                  y: 290
+                  text: ⇨
+                  button:
+                          x0: 120
+                          y0: 260
+                          w: 120
+                          h: 60
+
+       - name: "Number Editor"
+         id: editor_numbers
+         number: 0
+         type: editor
+         background: images/editor_number_background.png
+         buttons: images/button_pressed.png
+         font: "sans-serif"
+         font_size: 30
+         fg_colour: FFFFFF
+         fields: 
+                - function: ed_accept
+                  x: 60
+                  y: 30
+                  text: Accept
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 120
+                          h: 60
+
+                - function: ed_cancel
+                  x: 180
+                  y: 30
+                  text: Cancel
+                  button:
+                          x0: 120
+                          y0: 0
+                          w: 120
+                          h: 60
+
+                - function: description
+                  x: 120
                   y: 70
-                  font_size: 16
+                  font_size: 24
 
                 - function: value
                   format: editor
@@ -782,7 +775,6 @@ pages:
                 - function: unit
                   x: 120
                   y: 180
-                  font_size: 30
 
                 - function: ed_decrease
                   x: 60
