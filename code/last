@@ -1,0 +1,1 @@
+ls -1t log/debug.* | head -n1
