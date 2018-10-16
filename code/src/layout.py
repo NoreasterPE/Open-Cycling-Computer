@@ -78,7 +78,11 @@ class layout():
     def use_page(self, page_id="page_0"):
         self.log.debug("use_page {}".format(page_id), extra=self.extra)
         self.render = True
-        self.current_page = self.page_list[page_id]
+        try:
+            self.current_page = self.page_list[page_id]
+        except KeyError:
+            self.log.critical("Cannot load page {}, loading start page".format(page_id), extra=self.extra)
+            self.use_page()
         try:
             self.background_image = self.load_image(self.current_page['background'])
         except cairo.Error:
