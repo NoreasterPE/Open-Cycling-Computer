@@ -3,7 +3,7 @@ THIS IS WORK IN PROGRESS!
 Code can be run with
 ```
 cd code
-./start_occ.sh
+./occ.sh
 ```
 but it is highly experimental and no longer runs in simulation mode. The real hardware (raspberry pi and piTFT) is required.
 
