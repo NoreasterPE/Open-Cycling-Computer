@@ -39,6 +39,7 @@ class ble_sensor(sensor.sensor):
         self.required.update(dict())
         self.state = 0
         self.device_address = None
+        self.device_name = None
 
         self.notifications_enabled = False
         #Delegate class handling notification has to be set be the real device class in __init__
