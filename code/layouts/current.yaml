@@ -3,7 +3,7 @@ pages:
          id: page_0
          number: 0
          type: normal
-         background: images/occ_page_0_background.png
+         background: images/page_0_background.png
          buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
@@ -68,11 +68,6 @@ pages:
                   y: 225
                   font_size: 20
 
-#                - parameter: wheel_revolutions
-#                  x: 120
-#                  y: 150
-#                  font_size: 20
-
                 - parameter: slope
                   x: 50
                   y: 200
@@ -120,9 +115,9 @@ pages:
                 - parameter: cadence_icon
                   x: 98
                   y: 267
-                  file: images/ble_sc_cadence_icon_20x32.png
+                  file: images/cadence_icon_20x32.png
                   variable:
-                          name: cadence_icon_beat
+                          name: cadence_notification_beat
                           frames: 2
 
                 - parameter: heart_rate
@@ -163,10 +158,9 @@ pages:
                 - parameter: heart_rate_icon
                   x: 218
                   y: 267
-                  file: images/ble_hr_heart_rate_icon_20x32.png
-                  resettable: yes
+                  file: images/heart_rate_icon_20x32.png
                   variable:
-                          name: heart_rate_icon_beat
+                          name: heart_rate_notification_beat
                           frames: 2
 
        - name: "Statistics"
@@ -185,9 +179,17 @@ pages:
                   file: images/odometer_icon_32x32.png
 
                 - parameter: odometer
+                  description: Odometer
+                  editable: yes
+                  editor: editor_numbers
                   format: "%.1f"
                   x: 100
                   y: 100
+                  button:
+                          x0: 0
+                          y0: 80
+                          w: 240
+                          h: 40
 
                 - parameter: odometer
                   show: unit
@@ -205,7 +207,7 @@ pages:
                   resettable: yes
                   button:
                           x0: 0
-                          y0: 40
+                          y0: 80
                           w: 240
                           h: 40
                   x: 100
@@ -226,7 +228,7 @@ pages:
                   resettable: yes
                   button:
                           x0: 0
-                          y0: 80
+                          y0: 120
                           w: 240
                           h: 40
                   x: 100
@@ -254,21 +256,8 @@ pages:
 
                 - parameter: altitude
                   format: "%.0f"
-#                  button:
-#                          x0: 120
-#                          y0: 240
-#                          w: 120
-#                          h: 80
                   x: 100
                   y: 220
-
- #               - parameter: bmp183_altitude_min
- #                 x: 140
- #                 y: 255
-
-#                - parameter: bmp183_altitude_max
-#                  x: 220
-#                  y: 255
 
                 - parameter: altitude
                   show: unit
@@ -292,12 +281,6 @@ pages:
 
                 - parameter: temperature
                   format: "%.1f"
-#                  resettable: yes
-#                  button:
-#                          x0: 0
-#                          y0: 240
-#                          w: 120
-#                          h: 80
                   x: 100
                   y: 300
 
@@ -306,18 +289,6 @@ pages:
                   y: 284
                   file: images/temperature_icon_20x32.png
 
-#                - parameter: bmp183_temperature_min
-#                  x: 20
-#                  y: 300
-
-#                - parameter: bmp183_temperature_avg
-#                  x: 60
-#                  y: 300
-
-#                - parameter: bmp183_temperature_max
-#                  x: 100
-#                  y: 300
-
                 - parameter: temperature
                   show: unit
                   x: 200
@@ -325,11 +296,11 @@ pages:
 
 
 
-       - name: "GPS"
+       - name: "Blank"
          id: page_2
          number: 2
          type: normal
-         background: images/occ_page_2_background.png
+         background: images/page_2_background.png
          buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
@@ -390,7 +361,7 @@ pages:
          id: settings_0
          number: 0
          type: settings
-         background: images/occ_settings_0_background.png
+         background: images/settings_0_background.png
          buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
@@ -468,7 +439,7 @@ pages:
                   x: 180
                   y: 95
                   font_size: 16
-                  text: Temperature
+                  text: Temp. unit
 
                 - parameter: temperature
                   show: unit
@@ -507,29 +478,23 @@ pages:
                   x: 180
                   y: 175
                   font_size: 16
-                  text: Odometer
+                  text: Odometer unit
 
                 - parameter: odometer
-                  description: Odometer
+                  show: unit
+                  description: Odometer unit
                   editable: yes
-                  editor: editor_numbers
-                  x: 165
+                  editor: editor_units
+                  x: 180
                   y: 215
-                  font_size: 20
+                  font_size: 30
                   button:
                           x0: 120
                           y0: 160
                           w: 120
                           h: 80
 
-                - parameter: odometer
-                  show: unit
-                  description: Odometer units
-                  x: 220
-                  y: 215
-                  font_size: 16
-
-                - parameter: ble_hr_label
+                - parameter: hr_label
                   x: 60
                   y: 255
                   font_size: 16
@@ -545,7 +510,7 @@ pages:
                           w: 120
                           h: 80
 
-                - parameter: ble_sc_label
+                - parameter: sc_label
                   x: 180
                   y: 255
                   font_size: 16
@@ -565,7 +530,7 @@ pages:
          id: settings_1
          number: 1
          type: settings
-         background: images/occ_settings_1_background.png
+         background: images/settings_1_background.png
          buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
@@ -619,7 +584,7 @@ pages:
          id: settings_2
          number: 2
          type: settings
-         background: images/occ_settings_2_background.png
+         background: images/settings_2_background.png
          buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
