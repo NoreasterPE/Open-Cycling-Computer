@@ -21,7 +21,7 @@ cadence_speed_device_name:
   time_stamp: 0.0
   unit: null
   units_allowed: null
-  value: null
+  value: Lezyne S&C 249
   value_avg: .nan
   value_default: null
   value_max: -.inf
@@ -48,7 +48,7 @@ heart_rate_device_name:
   time_stamp: 0.0
   unit: null
   units_allowed: null
-  value: null
+  value: Tacx HRB 04741
   value_avg: .nan
   value_default: null
   value_max: -.inf
@@ -78,7 +78,7 @@ odometer:
   - m
   - km
   - mi
-  value: 500.9900000000002
+  value: 545.1950000000004
   value_avg: .nan
   value_default: null
   value_max: -.inf
@@ -119,7 +119,7 @@ speed:
   raw_unit: m/s
   required_by: null
   sensor_name: null
-  time_stamp: 1539541698.1684253
+  time_stamp: 1539777458.018691
   unit: km/h
   units_allowed:
   - m/s
@@ -128,7 +128,7 @@ speed:
   value: 0.0
   value_avg: .nan
   value_default: null
-  value_max: -.inf
+  value_max: 6.054831460674158
   value_min: .inf
 temperature:
   force_notification: false
@@ -140,7 +140,7 @@ temperature:
   units_allowed:
   - C
   - F
-  value: 22.634080346318175
+  value: 23.088455440043695
   value_avg: .nan
   value_default: null
   value_max: 26.036583890000617
