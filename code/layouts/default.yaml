@@ -185,9 +185,17 @@ pages:
                   file: images/odometer_icon_32x32.png
 
                 - parameter: odometer
+                  description: Odometer
+                  editable: yes
+                  editor: editor_numbers
                   format: "%.1f"
                   x: 100
                   y: 100
+                  button:
+                          x0: 0
+                          y0: 80
+                          w: 240
+                          h: 40
 
                 - parameter: odometer
                   show: unit
