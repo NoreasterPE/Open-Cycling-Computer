@@ -476,7 +476,7 @@ pages:
                   x: 180
                   y: 95
                   font_size: 16
-                  text: Temperature
+                  text: Temp. unit
 
                 - parameter: temperature
                   show: unit
@@ -515,27 +515,21 @@ pages:
                   x: 180
                   y: 175
                   font_size: 16
-                  text: Odometer
+                  text: Odometer unit
 
                 - parameter: odometer
-                  description: Odometer
+                  show: unit
+                  description: Odometer unit
                   editable: yes
-                  editor: editor_numbers
-                  x: 165
+                  editor: editor_units
+                  x: 180
                   y: 215
-                  font_size: 20
+                  font_size: 30
                   button:
                           x0: 120
                           y0: 160
                           w: 120
                           h: 80
-
-                - parameter: odometer
-                  show: unit
-                  description: Odometer units
-                  x: 220
-                  y: 215
-                  font_size: 16
 
                 - parameter: ble_hr_label
                   x: 60
