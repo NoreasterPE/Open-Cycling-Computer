@@ -68,11 +68,6 @@ pages:
                   y: 225
                   font_size: 20
 
-#                - parameter: wheel_revolutions
-#                  x: 120
-#                  y: 150
-#                  font_size: 20
-
                 - parameter: slope
                   x: 50
                   y: 200
@@ -164,7 +159,6 @@ pages:
                   x: 218
                   y: 267
                   file: images/ble_hr_heart_rate_icon_20x32.png
-                  resettable: yes
                   variable:
                           name: heart_rate_notification_beat
                           frames: 2
@@ -262,21 +256,8 @@ pages:
 
                 - parameter: altitude
                   format: "%.0f"
-#                  button:
-#                          x0: 120
-#                          y0: 240
-#                          w: 120
-#                          h: 80
                   x: 100
                   y: 220
-
- #               - parameter: bmp183_altitude_min
- #                 x: 140
- #                 y: 255
-
-#                - parameter: bmp183_altitude_max
-#                  x: 220
-#                  y: 255
 
                 - parameter: altitude
                   show: unit
@@ -300,12 +281,6 @@ pages:
 
                 - parameter: temperature
                   format: "%.1f"
-#                  resettable: yes
-#                  button:
-#                          x0: 0
-#                          y0: 240
-#                          w: 120
-#                          h: 80
                   x: 100
                   y: 300
 
@@ -314,18 +289,6 @@ pages:
                   y: 284
                   file: images/temperature_icon_20x32.png
 
-#                - parameter: bmp183_temperature_min
-#                  x: 20
-#                  y: 300
-
-#                - parameter: bmp183_temperature_avg
-#                  x: 60
-#                  y: 300
-
-#                - parameter: bmp183_temperature_max
-#                  x: 100
-#                  y: 300
-
                 - parameter: temperature
                   show: unit
                   x: 200
@@ -333,7 +296,7 @@ pages:
 
 
 
-       - name: "GPS"
+       - name: "Blank"
          id: page_2
          number: 2
          type: normal
