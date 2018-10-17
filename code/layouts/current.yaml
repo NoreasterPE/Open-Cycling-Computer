@@ -1,0 +1,984 @@
+pages: 
+       - name: Main
+         id: page_0
+         number: 0
+         type: normal
+         background: images/occ_page_0_background.png
+         buttons: images/button_pressed.png
+         font: "sans-serif"
+         font_size: 16
+         fg_colour: FFFFFF
+         fields: 
+                - parameter: speed
+                  x: 95
+                  y: 75
+                  font_size: 130
+
+                - parameter: speed
+                  show: tenths
+                  x: 210
+                  y: 105
+                  font_size: 50
+
+                - parameter: speed
+                  show: unit
+                  x: 205
+                  y: 65
+
+                - parameter: gps_icon
+                  x: 205
+                  y: 5
+                  file: images/gps_icon_32x32_0.png
+#                  file: images/gps_icon_32x32.png
+#                  variable:
+#                          name: gps_strength
+#                          frames: 3
+
+                - parameter: ble_icon
+                  x: 170
+                  y: 5
+                  file: images/ble_icon_32x32.png
+                  variable:
+                          name: ble_host_state
+                          frames: 6
+
+                - parameter: distance
+                  resettable: yes
+                  x: 170
+                  y: 180
+                  font_size: 30
+                  button: 
+                          x0: 120
+                          y0: 160
+                          w: 120
+                          h: 80
+
+                - parameter: distance_units
+                  x: 210
+                  y: 175
+
+                - parameter: ridetime_hms
+                  x: 180
+                  y: 205
+                  font_size: 20
+
+                - parameter: session_time
+                  format: hhmmss
+                  x: 180
+                  y: 225
+                  font_size: 20
+
+#                - parameter: wheel_revolutions
+#                  x: 120
+#                  y: 150
+#                  font_size: 20
+
+                - parameter: slope
+                  x: 50
+                  y: 200
+                  font_size: 50
+
+                - parameter: slope
+                  show: unit
+                  x: 105
+                  y: 230
+
+                - parameter: slope_icon
+                  x: 98
+                  y: 184
+                  file: images/slope_icon_20x32.png
+
+                - parameter: cadence
+                  resettable: yes
+                  x: 50
+                  y: 290
+                  font_size: 40
+                  button: 
+                          x0: 0
+                          y0: 240
+                          w: 120
+                          h: 80
+
+                - parameter: cadence
+                  show: average
+                  x: 60
+                  y: 255
+                  font_size: 16
+
+                - parameter: cadence
+                  show: maximum
+                  x: 100
+                  y: 255
+                  font_size: 16
+
+                - parameter: cadence
+                  show: unit
+                  x: 105
+                  y: 310
+                  font_size: 12
+
+                - parameter: cadence_icon
+                  x: 98
+                  y: 267
+                  file: images/ble_sc_cadence_icon_20x32.png
+                  variable:
+                          name: cadence_icon_beat
+                          frames: 2
+
+                - parameter: heart_rate
+                  resettable: yes
+                  x: 171
+                  y: 290
+                  font_size: 40
+                  button: 
+                          x0: 120
+                          y0: 240
+                          w: 120
+                          h: 80
+
+                - parameter: heart_rate
+                  show: minimum
+                  x: 140
+                  y: 255
+                  font_size: 16
+
+                - parameter: heart_rate
+                  show: average
+                  x: 180
+                  y: 255
+                  font_size: 16
+
+                - parameter: heart_rate
+                  show: maximum
+                  x: 220
+                  y: 255
+                  font_size: 16
+
+                - parameter: heart_rate
+                  show: unit
+                  x: 225
+                  y: 310
+                  font_size: 12
+
+                - parameter: heart_rate_icon
+                  x: 218
+                  y: 267
+                  file: images/ble_hr_heart_rate_icon_20x32.png
+                  resettable: yes
+                  variable:
+                          name: heart_rate_icon_beat
+                          frames: 2
+
+       - name: "Statistics"
+         id: page_1
+         number: 1
+         type: normal
+         background: images/stats_background.png
+         buttons: images/button_pressed.png
+         font: "sans-serif"
+         font_size: 24
+         fg_colour: FFFFFF
+         fields: 
+                - parameter: odometer_icon
+                  x: 10
+                  y: 84
+                  file: images/odometer_icon_32x32.png
+
+                - parameter: odometer
+                  format: "%.1f"
+                  x: 100
+                  y: 100
+
+                - parameter: odometer
+                  show: unit
+                  x: 200
+                  y: 100
+
+                - parameter: speed_icon
+                  x: 10
+                  y: 124
+                  file: images/speed_icon_32x32.png
+
+                - parameter: speed
+                  show: maximum
+                  format: "%.1f"
+                  resettable: yes
+                  button:
+                          x0: 0
+                          y0: 40
+                          w: 240
+                          h: 40
+                  x: 100
+                  y: 140
+
+                - parameter: speed
+                  show: unit
+                  x: 200
+                  y: 140
+
+                - parameter: speed_avg_icon
+                  x: 10
+                  y: 164
+                  file: images/average_speed_icon_32x32.png
+
+                - parameter: speed
+                  show: average
+                  resettable: yes
+                  button:
+                          x0: 0
+                          y0: 80
+                          w: 240
+                          h: 40
+                  x: 100
+                  y: 180
+
+                - parameter: speed
+                  show: unit
+                  x: 200
+                  y: 180
+
+                - parameter: real_time
+                  format: time
+                  x: 120
+                  y: 60
+
+                - parameter: real_time
+                  format: date
+                  x: 120
+                  y: 20
+
+                - parameter: altitude_icon
+                  x: 10
+                  y: 204
+                  file: images/altitude_icon_32x32.png
+
+                - parameter: altitude
+                  format: "%.0f"
+#                  button:
+#                          x0: 120
+#                          y0: 240
+#                          w: 120
+#                          h: 80
+                  x: 100
+                  y: 220
+
+ #               - parameter: bmp183_altitude_min
+ #                 x: 140
+ #                 y: 255
+
+#                - parameter: bmp183_altitude_max
+#                  x: 220
+#                  y: 255
+
+                - parameter: altitude
+                  show: unit
+                  x: 200
+                  y: 220
+
+                - parameter: pressure_icon
+                  x: 4
+                  y: 244
+                  file: images/pressure_icon_32x32.png
+
+                - parameter: pressure
+                  format: "%.1f"
+                  x: 100
+                  y: 260
+
+                - parameter: pressure
+                  show: unit
+                  x: 200
+                  y: 260
+
+                - parameter: temperature
+                  format: "%.1f"
+#                  resettable: yes
+#                  button:
+#                          x0: 0
+#                          y0: 240
+#                          w: 120
+#                          h: 80
+                  x: 100
+                  y: 300
+
+                - parameter: temperature_icon
+                  x: 10
+                  y: 284
+                  file: images/temperature_icon_20x32.png
+
+#                - parameter: bmp183_temperature_min
+#                  x: 20
+#                  y: 300
+
+#                - parameter: bmp183_temperature_avg
+#                  x: 60
+#                  y: 300
+
+#                - parameter: bmp183_temperature_max
+#                  x: 100
+#                  y: 300
+
+                - parameter: temperature
+                  show: unit
+                  x: 200
+                  y: 300
+
+
+
+       - name: "GPS"
+         id: page_2
+         number: 2
+         type: normal
+         background: images/occ_page_2_background.png
+         buttons: images/button_pressed.png
+         font: "sans-serif"
+         font_size: 16
+         fg_colour: FFFFFF
+         fields: 
+#               - parameter: latitude
+#                  x: 60
+#                  y: 25
+#                  font_size: 25
+#
+#                - parameter: longitude
+#                  x: 60
+#                  y: 60
+#                  font_size: 25
+#
+#                - parameter: fix_time_gps
+#                  x: 60
+#                  y: 95
+#                  font_size: 25
+#
+#                - parameter: fix_gps
+#                  x: 60
+#                  y: 130
+#                  font_size: 25
+#
+
+#                - parameter: time
+#                  x: 120
+#                  y: 180
+#                  font_size: 25
+
+#                - parameter: date
+#                  x: 120
+#                  y: 220
+#                  font_size: 25
+
+#                - parameter: altitude_gps
+#                  button:
+#                          x0: 120
+#                          y0: 240
+#                          w: 120
+#                          h: 80
+#                  x: 50
+#                  y: 290
+#                  font_size: 40
+#
+#                - parameter: altitude_units
+#                  x: 110
+#                  y: 310
+#                  font_size: 1.20
+#
+#                - parameter: altitude_gps_icon
+#                  x: 97
+#                  y: 267
+#                  file: images/altitude_gps_icon_20x32.png
+
+       - name: "Settings 0"
+         id: settings_0
+         number: 0
+         type: settings
+         background: images/occ_settings_0_background.png
+         buttons: images/button_pressed.png
+         font: "sans-serif"
+         font_size: 16
+         fg_colour: FFFFFF
+         fields: 
+                - parameter: label
+                  x: 60
+                  y: 15
+                  text: Rider weight
+
+                - parameter: rider_weight
+                  description: Rider weight
+                  editable: yes
+                  editor: editor_numbers
+                  x: 45
+                  y: 50
+                  font_size: 30
+                  button: 
+                          x0: 0
+                          y0: 0
+                          w: 120
+                          h: 80
+
+                - parameter: rider_weight
+                  show: unit
+                  x: 100
+                  y: 50
+                  font_size: 16
+
+                - parameter: reference_altitude_label
+                  x: 180
+                  y: 15
+                  text: Reference alt.
+
+                - parameter: reference_altitude
+                  description: Reference alt.
+                  editable: yes
+                  editor: editor_numbers
+                  x: 165
+                  y: 50
+                  font_size: 30
+                  button:
+                          x0: 120
+                          y0: 0
+                          w: 120
+                          h: 80
+
+                - parameter: reference_altitude
+                  show: unit
+                  x: 220
+                  y: 50
+                  font_size: 16
+
+                - parameter: speed_label
+                  x: 60
+                  y: 95
+                  font_size: 16
+                  text: Speed
+
+                - parameter: speed
+                  show: unit
+                  description: Speed units
+                  editable: yes
+                  editor: editor_units
+                  x: 60
+                  y: 130
+                  font_size: 30
+                  button:
+                          x0: 0
+                          y0: 80
+                          w: 120
+                          h: 80
+
+                - parameter: temperature_label
+                  x: 180
+                  y: 95
+                  font_size: 16
+                  text: Temperature
+
+                - parameter: temperature
+                  show: unit
+                  description: Temperature units
+                  editable: yes
+                  editor: editor_units
+                  x: 180
+                  y: 130
+                  font_size: 30
+                  button:
+                          x0: 120
+                          y0: 80
+                          w: 120
+                          h: 80
+
+                - parameter: wheel_size_label
+                  x: 60
+                  y: 175
+                  font_size: 16
+                  text: Wheel size
+
+                - parameter: wheel_size
+                  description: Wheel size
+                  editable: yes
+                  editor: editor_string
+                  x: 60
+                  y: 215
+                  font_size: 20
+                  button:
+                          x0: 0
+                          y0: 160
+                          w: 120
+                          h: 80
+
+                - parameter: odometer_label
+                  x: 180
+                  y: 175
+                  font_size: 16
+                  text: Odometer
+
+                - parameter: odometer
+                  description: Odometer
+                  editable: yes
+                  editor: editor_numbers
+                  x: 165
+                  y: 215
+                  font_size: 20
+                  button:
+                          x0: 120
+                          y0: 160
+                          w: 120
+                          h: 80
+
+                - parameter: odometer
+                  show: unit
+                  description: Odometer units
+                  x: 220
+                  y: 215
+                  font_size: 16
+
+                - parameter: ble_hr_label
+                  x: 60
+                  y: 255
+                  font_size: 16
+                  text: Heart rate 
+
+                - parameter: heart_rate_device_name
+                  x: 60
+                  y: 290
+                  font_size: 12
+                  button:
+                          x0: 0
+                          y0: 240
+                          w: 120
+                          h: 80
+
+                - parameter: ble_sc_label
+                  x: 180
+                  y: 255
+                  font_size: 16
+                  text: Spd/cadence
+
+                - parameter: cadence_speed_device_name
+                  x: 180
+                  y: 290
+                  font_size: 12
+                  button:
+                          x0: 120
+                          y0: 240
+                          w: 120
+                          h: 80
+
+       - name: "Settings 1"
+         id: settings_1
+         number: 1
+         type: settings
+         background: images/occ_settings_1_background.png
+         buttons: images/button_pressed.png
+         font: "sans-serif"
+         font_size: 16
+         fg_colour: FFFFFF
+         fields: 
+                - parameter: halt
+                  x: 120
+                  y: 40
+                  font_size: 16
+                  text: Halt
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 240
+                          h: 80
+
+                - parameter: reboot
+                  x: 120
+                  y: 120
+                  font_size: 16
+                  text: Reboot
+                  button:
+                          x0: 0
+                          y0: 79
+                          w: 240
+                          h: 80
+
+                - parameter: quit
+                  x: 120
+                  y: 200
+                  font_size: 16
+                  text: Quit
+                  button:
+                          x0: 0
+                          y0: 159
+                          w: 240
+                          h: 80
+
+                - parameter: write_config
+                  x: 120
+                  y: 280
+                  font_size: 16
+                  text: Write config
+                  button:
+                          x0: 0
+                          y0: 239
+                          w: 240
+                          h: 80
+
+       - name: "Settings 2"
+         id: settings_2
+         number: 2
+         type: settings
+         background: images/occ_settings_2_background.png
+         buttons: images/button_pressed.png
+         font: "sans-serif"
+         font_size: 16
+         fg_colour: FFFFFF
+         fields: 
+                #- parameter: load_current_layout
+                #  x: 120
+                #  y: 40
+                #  font_size: 16
+                #  text: Load current layout
+                #  button:
+                #          x0: 0
+                #          y0: 0
+                #          w: 240
+                #          h: 80
+
+                - parameter: load_default_layout
+                  x: 120
+                  y: 120
+                  font_size: 16
+                  text: Load default layout
+                  button:
+                          x0: 0
+                          y0: 79
+                          w: 240
+                          h: 80
+
+                #- parameter: 
+                #  x: 120
+                #  y: 200
+                #  font_size: 16
+                #  text: 
+                #  button:
+                #          x0: 0
+                #          y0: 159
+                #          w: 240
+                #          h: 80
+
+                - parameter: log_level
+                  x: 120
+                  y: 280
+                  font_size: 16
+                  text: 
+                  button:
+                          x0: 0
+                          y0: 239
+                          w: 240
+                          h: 80
+
+       - name: "Unit Editor"
+         id: editor_units
+         number: 0
+         type: editor
+         background: images/editor_units_background.png
+         buttons: images/button_pressed.png
+         font: "sans-serif"
+         font_size: 50
+         fg_colour: FFFFFF
+         fields: 
+                - parameter: ed_accept
+                  x: 60
+                  y: 30
+                  font_size: 30
+                  text: Accept
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 120
+                          h: 60
+
+                - parameter: ed_cancel
+                  x: 180
+                  y: 30
+                  font_size: 30
+                  text: Cancel
+                  button:
+                          x0: 120
+                          y0: 0
+                          w: 120
+                          h: 60
+
+                - parameter: description
+                  x: 120
+                  y: 100
+                  font_size: 24
+
+                - parameter: unit
+                  x: 120
+                  y: 160
+                  font_size: 60
+
+                - parameter: ed_prev_unit
+                  x: 60
+                  y: 290
+                  text: ⇦
+                  button:
+                          x0: 0
+                          y0: 260
+                          w: 120
+                          h: 60
+
+                - parameter: ed_next_unit
+                  x: 180
+                  y: 290
+                  text: ⇨
+                  button:
+                          x0: 120
+                          y0: 260
+                          w: 120
+                          h: 60
+
+       - name: "Number Editor"
+         id: editor_numbers
+         number: 0
+         type: editor
+         background: images/editor_number_background.png
+         buttons: images/button_pressed.png
+         font: "sans-serif"
+         font_size: 30
+         fg_colour: FFFFFF
+         fields: 
+                - parameter: ed_accept
+                  x: 60
+                  y: 30
+                  text: Accept
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 120
+                          h: 60
+
+                - parameter: ed_cancel
+                  x: 180
+                  y: 30
+                  text: Cancel
+                  button:
+                          x0: 120
+                          y0: 0
+                          w: 120
+                          h: 60
+
+                - parameter: description
+                  x: 120
+                  y: 70
+                  font_size: 24
+
+                - parameter: value
+                  format: zoomed_digit
+                  x: 120
+                  y: 120
+                  font_size: 50
+
+                - parameter: unit
+                  x: 120
+                  y: 180
+
+                - parameter: ed_decrease
+                  x: 60
+                  y: 230
+                  font_size: 50
+                  text: "-"
+                  button:
+                          x0: 0
+                          y0: 200
+                          w: 120
+                          h: 60
+
+                - parameter: ed_increase
+                  x: 180
+                  y: 230
+                  font_size: 50
+                  text: "+"
+                  button:
+                          x0: 120
+                          y0: 200
+                          w: 120
+                          h: 60
+
+                - parameter: ed_prev
+                  x: 60
+                  y: 290
+                  font_size: 50
+                  text: ⇦
+                  button:
+                          x0: 0
+                          y0: 260
+                          w: 120
+                          h: 60
+
+                - parameter: ed_next
+                  x: 180
+                  y: 290
+                  font_size: 50
+                  text: ⇨
+                  button:
+                          x0: 120
+                          y0: 260
+                          w: 120
+                          h: 60
+
+       - name: "List Editor"
+         id: editor_string
+         number: 0
+         type: editor
+         background: images/editor_string_background.png
+         buttons: images/button_pressed.png
+         font: "sans-serif"
+         font_size: 16
+         fg_colour: FFFFFF
+         fields: 
+                - parameter: ed_accept
+                  x: 60
+                  y: 30
+                  font_size: 30
+                  text: Accept
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 120
+                          h: 60
+
+                - parameter: ed_cancel
+                  x: 180
+                  y: 30
+                  font_size: 30
+                  text: Cancel
+                  button:
+                          x0: 120
+                          y0: 0
+                          w: 120
+                          h: 60
+
+                - parameter: description
+                  x: 120
+                  y: 90
+                  font_size: 16
+
+                - parameter: value
+                  format: zoomed_digit
+                  x: 120
+                  y: 130
+                  font_size: 40
+
+                - parameter: ed_decrease
+                  x: 60
+                  y: 230
+                  font_size: 50
+                  text: "-"
+                  button:
+                          x0: 0
+                          y0: 200
+                          w: 120
+                          h: 60
+
+                - parameter: ed_increase
+                  x: 180
+                  y: 230
+                  font_size: 50
+                  text: "+"
+                  button:
+                          x0: 120
+                          y0: 200
+                          w: 120
+                          h: 60
+
+                - parameter: ed_prev
+                  x: 60
+                  y: 290
+                  font_size: 50
+                  text: ⇦
+                  button:
+                          x0: 0
+                          y0: 260
+                          w: 120
+                          h: 60
+
+                - parameter: ed_next
+                  x: 180
+                  y: 290
+                  font_size: 50
+                  text: ⇨
+                  button:
+                          x0: 120
+                          y0: 260
+                          w: 120
+                          h: 60
+
+       - name: "List Picker"
+         id: ble_selector
+         number: 0
+         type: editor
+         background: images/ble_selector.png
+         buttons: images/button_pressed.png
+         font: "sans-serif"
+         font_size: 16
+         fg_colour: FFFFFF
+         fields: 
+                - parameter: ble_scan
+                  x: 60
+                  y: 30
+                  font_size: 30
+                  text: Scan
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 120
+                          h: 60
+
+                - parameter: ed_cancel
+                  x: 180
+                  y: 30
+                  font_size: 30
+                  text: Cancel
+                  button:
+                          x0: 120
+                          y0: 0
+                          w: 120
+                          h: 60
+
+                - parameter: ble_dev_name_1
+                  x: 120
+                  y: 96
+                  font_size: 16
+                  text: Device ?
+                  button:
+                          x0: 0
+                          y0: 64
+                          w: 240
+                          h: 63
+
+                - parameter: ble_dev_name_2
+                  x: 120
+                  y: 160
+                  font_size: 16
+                  text: Device ?
+                  button:
+                          x0: 0
+                          y0: 128
+                          w: 240
+                          h: 63
+
+                - parameter: ble_dev_name_3
+                  x: 120
+                  y: 224
+                  font_size: 16
+                  text: Device ?
+                  button:
+                          x0: 0
+                          y0: 192
+                          w: 240
+                          h: 63
+
+                - parameter: ble_dev_name_4
+                  x: 120
+                  y: 288
+                  font_size: 16
+                  text: Device ?
+                  button:
+                          x0: 0
+                          y0: 256
+                          w: 240
+                          h: 63
