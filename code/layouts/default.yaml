@@ -122,7 +122,7 @@ pages:
                   y: 267
                   file: images/ble_sc_cadence_icon_20x32.png
                   variable:
-                          name: cadence_icon_beat
+                          name: cadence_notification_beat
                           frames: 2
 
                 - function: heart_rate
@@ -166,7 +166,7 @@ pages:
                   file: images/ble_hr_heart_rate_icon_20x32.png
                   resettable: yes
                   variable:
-                          name: heart_rate_icon_beat
+                          name: heart_rate_notification_beat
                           frames: 2
 
        - name: "Statistics"

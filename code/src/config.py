@@ -83,6 +83,9 @@ class config(object):
             error_list.append("wheel_circumference")
 
         try:
+            self.s.register_parameter("reference_altitude",
+                                      self.extra["module_name"],
+                                      raw_unit="m")
             self.s.update_parameter("reference_altitude", self.config_params["reference_altitude"])
         except AttributeError:
             error_list.append("reference_altitude")
@@ -116,7 +119,7 @@ class config(object):
             error_list.append("heart_rate_device_name")
 
         try:
-            self.s.register_parameter("heart_rate_device_name", self.extra["module_name"])
+            self.s.register_parameter("heart_rate_device_address", self.extra["module_name"])
             self.s.update_parameter("heart_rate_device_address", self.config_params["heart_rate_device_address"])
         except AttributeError:
             error_list.append("heart_rate_device_address")

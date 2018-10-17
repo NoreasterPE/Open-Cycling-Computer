@@ -1,9 +1,3 @@
-src/occ.py 		- main module, handles events, config reading/saving
-src/layout.py		- module responsible for rendering layout
-src/rendering.py	- module for rendering on PiTFT display
-src/ride_parameters.py	- all ride parameters read from sensors are handled here
-src/gps_mtk3339.py	- module to talk to gps and parse data received from gps
-src/bmp183.py		- module for handling pressure and temperature reading from bmp183 sensor
-src/test_bmp183.py	- test modules for bmp183 sensor
-src/test_gps.py		- test modules for gps hardware
-
+Most up to date documentation can be generated with generate_doc.sh
+t's also here:
+http://opencyclingcomputer.eu/Documentation/

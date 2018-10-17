@@ -1,30 +1,55 @@
 Use default.yaml as a template.
-FIXME - list needs updating
 
-Valid function names for use in layout files (for now it's the best idea to check default.yaml file with default layout):
+Valid parameter names for use in layout files (for now it's the best idea to check default.yaml file with the default layout):
 
-altitude		        - current altitude in meters, calculated from pressure
-reference_altitude	        - home altitude
-cadence			- cadence from BLE sensor
-date			        - current date
-distance
-slope			        - gradient of the road
-heart_rate
-odometer		        - total distance, editable in Settings page
-pressure		    - current atmospheric pressure
-pressure_at_sea_level	- sea level pressure calculated from pressure and given altitude. It's a value fixed at start or updated after user editied reference_altitude
-rider_weight	    	- weight of rider
-rtc			            - combined date + time 
-speed		        	- speed, to be calculated using Kalman filter from gps + wheel sensor - not implemented yet (fixed value)
-speed_tenths        	- first decimal place of speed
-time	        		- current time
-utc		            	- utc time as reported by gps unit
+Parameters provided by modules:
+Module name   Parameter name:
+ble_hr        heart_rate                        - current heart rate for BLE sensor
+ble_hr        heart_rate_notification_beat      - indicate is notifications from the sensor keep coming. Every received notification flips the state between 0 and 1
+ble_hr        heart_rate_device_name            - name of BLE heart rate sensor, as reported by the device
+ble_sc        cadence                           - cadence from BLE sensor
+ble_sc        cadence_notification_beat         - indicate is notifications from the sensor keep coming. Every received notification flips the state between 0 and 1
+ble_sc        cadence_speed_device_name         - name of BLE cadence/speed sensor, as reported by the device
+ble_sc        odometer                          - total distance, editable in Settings page
+ble_sc        wheel_revolution_time             - time of last wheel revolution
+ble_sc        wheel_revolutions                 - total number of wheel revolutions for BLE sensor 
+bmp183        altitude                          - current altitude, calculated from pressure
+bmp183        pressure                          - current atmospheric pressure
+bmp183        temperature                       - current temperature
+compute       real_time                         - current time
+compute       session_time                      - time since the start of compute module
+compute       slope                             - gradient of the road, claculated from altitude change and odometer change
+compute       speed                             - ground speed, calculated from wheel size and wheel revolution time
+compute       start_time                        - time stamp of compute module start
+config        cadence_speed_device_address      - BLE address of speed/cadence sensor
+config        heart_rate_device_address         - BLE address of heart rate sensor
+config        log_level                         - logging level
+bmp183        reference_altitude                - reference (home) altitude used to calculate mean sea level pressure
+config        rider_weight                      - rider weight, currently not used
+config        wheel_circumference               - circumference of wheel, calculated from wheel size (see wheel module for the details)
 
-...and many more FIXME!
+Parameters stored in config file:
+config        log_level
+config        rider_weight
+config        wheel_size
+config        wheel_circumference
+config        reference_altitude
+config        odometer
+config        speed
+config        temperature
+config        heart_rate_device_name
+config        heart_rate_device_address
+config        cadence_speed_device_name
+config        cadence_speed_device_address
 
-Units:
-Each parameter from above list has to have an unit defined. The name has to be the same as parameter name + _unit
-i.e for speed is is speed_unit.
+Parameters needed by modules:
+ble_hr        heart_rate_device_address
+ble_sc        cadence_speed_device_address
+ble_sc        wheel_circumference
+bmp183        reference_altitude
+compute       altitude
+compute       odometer
+compute       wheel_revolution_time
 
 Functions:
 FIXME - udate list of functions
@@ -40,3 +65,5 @@ satellites
 satellites_used
 satellites_visible
 speed_gps       		- speed, reported by gps
+
+

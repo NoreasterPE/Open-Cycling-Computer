@@ -1,17 +1,13 @@
 1. /boot/cmdline added for splashscreen: quiet
 
-2. sudo apt-get install fbi omxplayer vim mc i2c-tools python-lxml python-pygame bluepy python-pip libglib2.0-dev python-gps python-serial git
+2. [FIXME - update] sudo apt-get install fbi omxplayer vim mc i2c-tools bluepy python-pip libglib2.0-dev python-gps python-serial git
 
-3. pip install bluepy
+3. pip3 install bluepy
 
 4. Add i2c-dev to /etc/modules
-
-5. tslib libts-bin
 
 /etc/udev/rules.d/95-ft6236.rules
 
 SUBSYSTEM=="input", ATTRS{name}=="ft6236", ENV{DEVNAME}=="*event*", SYMLINK+="input/touchscreen"
 
 /boot/overlays (add)
-
-force sdl1.2 with script

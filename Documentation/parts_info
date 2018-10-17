@@ -1,12 +1,7 @@
 RPI Zero W
-Weight:		9 g (TBC)
+Weight:		9 g
 DimensionsA:	65 mm × 30 mm × 5 mm
-Current:	120 mA
-
-[OBSOLETE] RPI A+
-Weight:		23 g
-DimensionsA:	65 mm × 56.5 mm × 10 mm 
-Current:	120 mA
+Current:	100 - 140 mA
 
 PiTFT
 Weight:		82 g
@@ -24,31 +19,32 @@ Weight:		52 g
 Dimensions:	51 x 65 x 8 mm
 Output:		2500 mAh at 3.7 V nominal
 
-GPS
+Pimoroni Lipo-Zero:
+https://shop.pimoroni.com/products/zero-lipo
+https://pinout.xyz/pinout/zero_lipo#
+
+GPS [TBC, Matek Ublox SAM-M8Q  might be the replacement]
 http://www.adafruit.com/products/746
 Weight:		8.5 g
 Dimensions:	25.5 x 35 x 6.5 mm
 Current:	20 mA
 
-Altimetr + Thermometer
+Matek Ublox SAM-M8Q [FUTURE]
+https://www.unmannedtechshop.co.uk/matek-ublox-sam-m8q-gps-module/
+Weight:		7 g
+Dimensions:	26 x 16 x 7 mm
+Current:	29 mA (continuous), 9mA (1Hz, power save)
+
+
+BMP183 Altimetr + Thermometer [TBC, BMP260 has better parameters]
 http://www.adafruit.com/products/1900
 Dimensions:	18 × 18 × 2 mm
 Weight: 	1 g
 Current:	1 mA
-
-[OBSOLETE] Buetooth Low Energy Module
-http://www.adafruit.com/products/1697
-Weight:		1.8 g
-Dimensions:	29 x 28 x 0.8 mm
-Current:	TBC
 
 Case:
 TBD
 
 Connectors:
 TBD
-
-Pimoroni Lipo-Zero:
-https://shop.pimoroni.com/products/zero-lipo
-https://pinout.xyz/pinout/zero_lipo#
 

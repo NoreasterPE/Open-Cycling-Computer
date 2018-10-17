@@ -140,7 +140,7 @@ temperature:
   units_allowed:
   - C
   - F
-  value: 22.33867245629454
+  value: 22.634080346318175
   value_avg: .nan
   value_default: null
   value_max: 26.036583890000617

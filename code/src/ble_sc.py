@@ -29,7 +29,7 @@ class ble_sc(ble_sensor.ble_sensor):
         self.s.register_parameter("wheel_revolutions", self.extra["module_name"])
         self.s.register_parameter("odometer", self.extra["module_name"], raw_unit="m", unit="km")
         self.s.register_parameter("cadence", self.extra["module_name"], value=numbers.NAN, raw_unit="RPM")
-        self.s.register_parameter("cadence_icon_beat", self.extra["module_name"])
+        self.s.register_parameter("cadence_notification_beat", self.extra["module_name"])
         self.s.request_parameter("cadence_speed_device_address", self.extra["module_name"])
         ## @var device_address
         #  BLE device address
@@ -68,7 +68,7 @@ class ble_sc(ble_sensor.ble_sensor):
             self.s.parameters["cadence"]["value"] = self.delegate.cadence
             self.s.parameters["cadence"]["value_avg"] = self.delegate.cadence_avg
             self.s.parameters["cadence"]["value_max"] = max(self.s.parameters["cadence"]["value_max"], self.delegate.cadence)
-            self.s.parameters["cadence_icon_beat"]["value"] = self.delegate.cadence_icon_beat
+            self.s.parameters["cadence_notification_beat"]["value"] = self.delegate.cadence_notification_beat
         except (AttributeError) as exception:
             self.handle_exception(exception, "process_delegate_data")
 
@@ -111,7 +111,7 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
         self.cadence = 0
         self.cadence_avg = 0
         self.measurement_time = 0.0
-        self.cadence_icon_beat = 0
+        self.cadence_notification_beat = 0
         self.measurement_no = 0
         self.time_stamp = time.time()
         self.time_stamp_previous = self.time_stamp
@@ -133,7 +133,7 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
         self.time_stamp_previous = self.time_stamp
         self.time_stamp = time.time()
         self.measurement_no += 1
-        self.cadence_icon_beat = int(not(self.cadence_icon_beat))
+        self.cadence_notification_beat = int(not(self.cadence_notification_beat))
 
         i = 0
         data_b = {}

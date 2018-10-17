@@ -1,12 +1,27 @@
-Changelog v0.04:
+v0.09:
+- Change to notification system, code hardening and lot, lot of code cleaning
+
+v0.08:
+- Added slope calculation, new stats page, lot of code cleaning
+
+v0.07:
+- Added altitude calculation, BLE icon now shows number of connected bluetooth devices
+
+v0.06:
+- Added schematic (KiCad), multpile layout changes, code cleaning, fixed ghost click, bmp183 sensor activated
+
+v0.05:
+- pygame replaced with cairo and python-evdev, python3 migration, BLE connection hardening
+
+v0.04:
 - Convert config and layout files to yaml
 
-Changelog v0.03:
+v0.03:
 - Add working BLE scanner / selector
 
-Changelog v0.02:
+v0.02:
 - Lot of BLE changes, (heart rate sensor, icon showing connection states)
 
-Changelog v0.01:
+v0.01:
 - BLE connectivity to speed & cadence sensor (initial version, hardcoded address)
 - various bug fixes & code cleaning
