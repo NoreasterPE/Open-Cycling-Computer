@@ -25,7 +25,7 @@ class ble_hr(ble_sensor.ble_sensor):
         self.s = sensors.sensors()
         self.s.register_parameter("heart_rate_device_name", self.extra["module_name"])
         self.s.register_parameter("heart_rate", self.extra["module_name"], value=numbers.NAN, raw_unit="BPM", unit="BPM", units_allowed=["BMP"])
-        self.s.register_parameter("heart_rate_notifications_beat", self.extra["module_name"])
+        self.s.register_parameter("heart_rate_notification_beat", self.extra["module_name"])
         self.s.request_parameter("heart_rate_device_address", self.extra["module_name"])
         ## @var device_address
         #  BLE device address
@@ -44,7 +44,7 @@ class ble_hr(ble_sensor.ble_sensor):
             self.s.parameters["heart_rate"]["value_min"] = min(self.s.parameters["heart_rate"]["value_min"], self.delegate.heart_rate)
             self.s.parameters["heart_rate"]["value_avg"] = self.delegate.heart_rate_avg
             self.s.parameters["heart_rate"]["value_max"] = max(self.s.parameters["heart_rate"]["value_max"], self.delegate.heart_rate)
-            self.s.parameters["heart_rate_notifications_beat"]["value"] = self.delegate.heart_rate_notifications_beat
+            self.s.parameters["heart_rate_notification_beat"]["value"] = self.delegate.heart_rate_notification_beat
             if self.s.parameters["heart_rate_device_name"]["value"] != self.device_name:
                 self.s.parameters["heart_rate_device_name"]["value"] = self.device_name
         except (AttributeError) as exception:
@@ -81,7 +81,7 @@ class hr_delegate(bluepy.btle.DefaultDelegate):
         self.time_stamp_previous = self.time_stamp
         self.time_stamp = time.time()
         self.measurement_no += 1
-        self.heart_rate_notifications_beat = int(not(self.heart_rate_notifications_beat))
+        self.heart_rate_notification_beat = int(not(self.heart_rate_notification_beat))
 
         i = 0
         data_b = {}
@@ -161,4 +161,4 @@ class hr_delegate(bluepy.btle.DefaultDelegate):
         self.heart_rate_max = numbers.INF_MIN
         # Internal measuremet time, indicates for how long there was a valid measurement.
         self.measurement_time = 0.0
-        self.heart_rate_notifications_beat = 0
+        self.heart_rate_notification_beat = 0
