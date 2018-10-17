@@ -416,19 +416,21 @@ class layout():
         if long_click_data_ready:
             long_click_data_ready = False
             self.log.debug("Opening editor {} for {}".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
-            f = self.editor_fields["parameter"]
-            self.editor_fields["unit"] = self.occ.sensors.parameters[f]["unit"]
+            p = self.editor_fields["parameter"]
+            self.editor_fields["unit"] = self.occ.sensors.parameters[p]["unit"]
             if self.editor_fields["editor"] == 'editor_numbers':
-                self.editor_fields["raw_value"] = self.occ.sensors.parameters[f]["value"]
-                value = self.uc.convert(self.occ.sensors.parameters[f]["value"],
-                                        self.occ.sensors.parameters[f]["raw_unit"],
-                                        self.occ.sensors.parameters[f]["unit"])
+                self.editor_fields["raw_value"] = self.occ.sensors.parameters[p]["value"]
+                value = self.uc.convert(self.occ.sensors.parameters[p]["value"],
+                                        self.occ.sensors.parameters[p]["raw_unit"],
+                                        self.occ.sensors.parameters[p]["unit"])
                 try:
                     self.editor_fields["value"] = self.editor_fields["format"] % value
                 except TypeError:
                     self.editor_fields["value"] = value
-            elif self.editor_fields["editor"] == 'editor_string':
-                self.editor_fields["value"] = self.occ.sensors.parameters[f]["value"]
+            elif (self.editor_fields["editor"] == 'editor_string' or
+                  self.editor_fields["editor"] == 'editor_units'):
+                self.editor_fields["value"] = self.occ.sensors.parameters[p]["value"]
+                pass
             else:
                 self.log.critical("Unknown editor {} called for parameter {}, ignoring".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
                 return
