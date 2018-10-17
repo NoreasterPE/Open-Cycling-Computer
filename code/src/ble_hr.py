@@ -45,6 +45,8 @@ class ble_hr(ble_sensor.ble_sensor):
             self.s.parameters["heart_rate"]["value_avg"] = self.delegate.heart_rate_avg
             self.s.parameters["heart_rate"]["value_max"] = max(self.s.parameters["heart_rate"]["value_max"], self.delegate.heart_rate)
             self.s.parameters["heart_rate_notifications_beat"]["value"] = self.delegate.heart_rate_notifications_beat
+            if self.s.parameters["heart_rate_device_name"]["value"] != self.device_name:
+                self.s.parameters["heart_rate_device_name"]["value"] = self.device_name
         except (AttributeError) as exception:
             self.handle_exception(exception, "process_delegate_data")
         self.log.debug("heart rate = {} @ {}".format(self.s.parameters["heart_rate"]["value"], time.strftime("%H:%M:%S", time.localtime(self.s.parameters["heart_rate"]["time_stamp"]))), extra=self.extra)

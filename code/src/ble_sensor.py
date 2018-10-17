@@ -81,7 +81,7 @@ class ble_sensor(sensor.sensor):
                 self.connected = True
                 self.state = 2
                 self.log.debug('Getting device name', extra=self.extra)
-                self.name = self.get_device_name()
+                self.device_name = self.get_device_name()
                 self.log.debug('Getting battery level', extra=self.extra)
                 self.p_raw["battery_level"] = self.get_battery_level()
             except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
@@ -215,7 +215,7 @@ class ble_sensor(sensor.sensor):
     def reset_data(self):
         #Preserve data
         addr = self.device_address
-        name = self.name
+        name = self.name_device
         state = self.state
         super().reset_data()
         try:
@@ -224,7 +224,7 @@ class ble_sensor(sensor.sensor):
             self.log.debug("Delegate doesn't exist while calling reset_data", extra=self.extra)
         #Restore data after the reset
         self.device_address = addr
-        self.name = name
+        self.name_device = name
         self.state = state
 
     ## Receive updated parameters from sensors module. Overwrite in real device module.
@@ -256,5 +256,5 @@ class ble_sensor(sensor.sensor):
         except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
             self.handle_exception(e, "stop, disconnecting")
         self.state = 0
-        self.log.info('{} disconnected'.format(self.name), extra=self.extra)
+        self.log.info('{} disconnected'.format(self.device_name), extra=self.extra)
         self.log.debug('Stop finished', extra=self.extra)
