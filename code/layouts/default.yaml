@@ -9,23 +9,23 @@ pages:
          font_size: 16
          fg_colour: FFFFFF
          fields: 
-                - function: speed
+                - parameter: speed
                   x: 95
                   y: 75
                   font_size: 130
 
-                - function: speed
+                - parameter: speed
                   show: tenths
                   x: 210
                   y: 105
                   font_size: 50
 
-                - function: speed
+                - parameter: speed
                   show: unit
                   x: 205
                   y: 65
 
-                - function: gps_icon
+                - parameter: gps_icon
                   x: 205
                   y: 5
                   file: images/gps_icon_32x32_0.png
@@ -34,7 +34,7 @@ pages:
 #                          name: gps_strength
 #                          frames: 3
 
-                - function: ble_icon
+                - parameter: ble_icon
                   x: 170
                   y: 5
                   file: images/ble_icon_32x32.png
@@ -42,7 +42,7 @@ pages:
                           name: ble_host_state
                           frames: 6
 
-                - function: distance
+                - parameter: distance
                   resettable: yes
                   x: 170
                   y: 180
@@ -53,42 +53,42 @@ pages:
                           w: 120
                           h: 80
 
-                - function: distance_units
+                - parameter: distance_units
                   x: 210
                   y: 175
 
-                - function: ridetime_hms
+                - parameter: ridetime_hms
                   x: 180
                   y: 205
                   font_size: 20
 
-                - function: session_time
+                - parameter: session_time
                   format: hhmmss
                   x: 180
                   y: 225
                   font_size: 20
 
-#                - function: wheel_revolutions
+#                - parameter: wheel_revolutions
 #                  x: 120
 #                  y: 150
 #                  font_size: 20
 
-                - function: slope
+                - parameter: slope
                   x: 50
                   y: 200
                   font_size: 50
 
-                - function: slope
+                - parameter: slope
                   show: unit
                   x: 105
                   y: 230
 
-                - function: slope_icon
+                - parameter: slope_icon
                   x: 98
                   y: 184
                   file: images/slope_icon_20x32.png
 
-                - function: cadence
+                - parameter: cadence
                   resettable: yes
                   x: 50
                   y: 290
@@ -99,25 +99,25 @@ pages:
                           w: 120
                           h: 80
 
-                - function: cadence
+                - parameter: cadence
                   show: average
                   x: 60
                   y: 255
                   font_size: 16
 
-                - function: cadence
+                - parameter: cadence
                   show: maximum
                   x: 100
                   y: 255
                   font_size: 16
 
-                - function: cadence
+                - parameter: cadence
                   show: unit
                   x: 105
                   y: 310
                   font_size: 12
 
-                - function: cadence_icon
+                - parameter: cadence_icon
                   x: 98
                   y: 267
                   file: images/ble_sc_cadence_icon_20x32.png
@@ -125,7 +125,7 @@ pages:
                           name: cadence_notification_beat
                           frames: 2
 
-                - function: heart_rate
+                - parameter: heart_rate
                   resettable: yes
                   x: 171
                   y: 290
@@ -136,31 +136,31 @@ pages:
                           w: 120
                           h: 80
 
-                - function: heart_rate
+                - parameter: heart_rate
                   show: minimum
                   x: 140
                   y: 255
                   font_size: 16
 
-                - function: heart_rate
+                - parameter: heart_rate
                   show: average
                   x: 180
                   y: 255
                   font_size: 16
 
-                - function: heart_rate
+                - parameter: heart_rate
                   show: maximum
                   x: 220
                   y: 255
                   font_size: 16
 
-                - function: heart_rate
+                - parameter: heart_rate
                   show: unit
                   x: 225
                   y: 310
                   font_size: 12
 
-                - function: heart_rate_icon
+                - parameter: heart_rate_icon
                   x: 218
                   y: 267
                   file: images/ble_hr_heart_rate_icon_20x32.png
@@ -179,27 +179,27 @@ pages:
          font_size: 24
          fg_colour: FFFFFF
          fields: 
-                - function: odometer_icon
+                - parameter: odometer_icon
                   x: 10
                   y: 84
                   file: images/odometer_icon_32x32.png
 
-                - function: odometer
+                - parameter: odometer
                   format: "%.1f"
                   x: 100
                   y: 100
 
-                - function: odometer
+                - parameter: odometer
                   show: unit
                   x: 200
                   y: 100
 
-                - function: speed_icon
+                - parameter: speed_icon
                   x: 10
                   y: 124
                   file: images/speed_icon_32x32.png
 
-                - function: speed
+                - parameter: speed
                   show: maximum
                   format: "%.1f"
                   resettable: yes
@@ -211,17 +211,17 @@ pages:
                   x: 100
                   y: 140
 
-                - function: speed
+                - parameter: speed
                   show: unit
                   x: 200
                   y: 140
 
-                - function: speed_avg_icon
+                - parameter: speed_avg_icon
                   x: 10
                   y: 164
                   file: images/average_speed_icon_32x32.png
 
-                - function: speed
+                - parameter: speed
                   show: average
                   resettable: yes
                   button:
@@ -232,27 +232,27 @@ pages:
                   x: 100
                   y: 180
 
-                - function: speed
+                - parameter: speed
                   show: unit
                   x: 200
                   y: 180
 
-                - function: real_time
+                - parameter: real_time
                   format: time
                   x: 120
                   y: 60
 
-                - function: real_time
+                - parameter: real_time
                   format: date
                   x: 120
                   y: 20
 
-                - function: altitude_icon
+                - parameter: altitude_icon
                   x: 10
                   y: 204
                   file: images/altitude_icon_32x32.png
 
-                - function: altitude
+                - parameter: altitude
                   format: "%.0f"
 #                  button:
 #                          x0: 120
@@ -262,35 +262,35 @@ pages:
                   x: 100
                   y: 220
 
- #               - function: bmp183_altitude_min
+ #               - parameter: bmp183_altitude_min
  #                 x: 140
  #                 y: 255
 
-#                - function: bmp183_altitude_max
+#                - parameter: bmp183_altitude_max
 #                  x: 220
 #                  y: 255
 
-                - function: altitude
+                - parameter: altitude
                   show: unit
                   x: 200
                   y: 220
 
-                - function: pressure_icon
+                - parameter: pressure_icon
                   x: 4
                   y: 244
                   file: images/pressure_icon_32x32.png
 
-                - function: pressure
+                - parameter: pressure
                   format: "%.1f"
                   x: 100
                   y: 260
 
-                - function: pressure
+                - parameter: pressure
                   show: unit
                   x: 200
                   y: 260
 
-                - function: temperature
+                - parameter: temperature
                   format: "%.1f"
 #                  resettable: yes
 #                  button:
@@ -301,24 +301,24 @@ pages:
                   x: 100
                   y: 300
 
-                - function: temperature_icon
+                - parameter: temperature_icon
                   x: 10
                   y: 284
                   file: images/temperature_icon_20x32.png
 
-#                - function: bmp183_temperature_min
+#                - parameter: bmp183_temperature_min
 #                  x: 20
 #                  y: 300
 
-#                - function: bmp183_temperature_avg
+#                - parameter: bmp183_temperature_avg
 #                  x: 60
 #                  y: 300
 
-#                - function: bmp183_temperature_max
+#                - parameter: bmp183_temperature_max
 #                  x: 100
 #                  y: 300
 
-                - function: temperature
+                - parameter: temperature
                   show: unit
                   x: 200
                   y: 300
@@ -335,38 +335,38 @@ pages:
          font_size: 16
          fg_colour: FFFFFF
          fields: 
-#               - function: latitude
+#               - parameter: latitude
 #                  x: 60
 #                  y: 25
 #                  font_size: 25
 #
-#                - function: longitude
+#                - parameter: longitude
 #                  x: 60
 #                  y: 60
 #                  font_size: 25
 #
-#                - function: fix_time_gps
+#                - parameter: fix_time_gps
 #                  x: 60
 #                  y: 95
 #                  font_size: 25
 #
-#                - function: fix_gps
+#                - parameter: fix_gps
 #                  x: 60
 #                  y: 130
 #                  font_size: 25
 #
 
-#                - function: time
+#                - parameter: time
 #                  x: 120
 #                  y: 180
 #                  font_size: 25
 
-#                - function: date
+#                - parameter: date
 #                  x: 120
 #                  y: 220
 #                  font_size: 25
 
-#                - function: altitude_gps
+#                - parameter: altitude_gps
 #                  button:
 #                          x0: 120
 #                          y0: 240
@@ -376,12 +376,12 @@ pages:
 #                  y: 290
 #                  font_size: 40
 #
-#                - function: altitude_units
+#                - parameter: altitude_units
 #                  x: 110
 #                  y: 310
 #                  font_size: 1.20
 #
-#                - function: altitude_gps_icon
+#                - parameter: altitude_gps_icon
 #                  x: 97
 #                  y: 267
 #                  file: images/altitude_gps_icon_20x32.png
@@ -396,12 +396,12 @@ pages:
          font_size: 16
          fg_colour: FFFFFF
          fields: 
-                - function: label
+                - parameter: label
                   x: 60
                   y: 15
                   text: Rider weight
 
-                - function: rider_weight
+                - parameter: rider_weight
                   description: Rider weight
                   editable: yes
                   editor: editor_numbers
@@ -414,18 +414,18 @@ pages:
                           w: 120
                           h: 80
 
-                - function: rider_weight
+                - parameter: rider_weight
                   show: unit
                   x: 100
                   y: 50
                   font_size: 16
 
-                - function: reference_altitude_label
+                - parameter: reference_altitude_label
                   x: 180
                   y: 15
                   text: Reference alt.
 
-                - function: reference_altitude
+                - parameter: reference_altitude
                   description: Reference alt.
                   editable: yes
                   editor: editor_numbers
@@ -438,19 +438,19 @@ pages:
                           w: 120
                           h: 80
 
-                - function: reference_altitude
+                - parameter: reference_altitude
                   show: unit
                   x: 220
                   y: 50
                   font_size: 16
 
-                - function: speed_label
+                - parameter: speed_label
                   x: 60
                   y: 95
                   font_size: 16
                   text: Speed
 
-                - function: speed
+                - parameter: speed
                   show: unit
                   description: Speed units
                   editable: yes
@@ -464,13 +464,13 @@ pages:
                           w: 120
                           h: 80
 
-                - function: temperature_label
+                - parameter: temperature_label
                   x: 180
                   y: 95
                   font_size: 16
                   text: Temperature
 
-                - function: temperature
+                - parameter: temperature
                   show: unit
                   description: Temperature units
                   editable: yes
@@ -484,13 +484,13 @@ pages:
                           w: 120
                           h: 80
 
-                - function: wheel_size_label
+                - parameter: wheel_size_label
                   x: 60
                   y: 175
                   font_size: 16
                   text: Wheel size
 
-                - function: wheel_size
+                - parameter: wheel_size
                   description: Wheel size
                   editable: yes
                   editor: editor_string
@@ -503,13 +503,13 @@ pages:
                           w: 120
                           h: 80
 
-                - function: odometer_label
+                - parameter: odometer_label
                   x: 180
                   y: 175
                   font_size: 16
                   text: Odometer
 
-                - function: odometer
+                - parameter: odometer
                   description: Odometer
                   editable: yes
                   editor: editor_numbers
@@ -522,20 +522,20 @@ pages:
                           w: 120
                           h: 80
 
-                - function: odometer
+                - parameter: odometer
                   show: unit
                   description: Odometer units
                   x: 220
                   y: 215
                   font_size: 16
 
-                - function: ble_hr_label
+                - parameter: ble_hr_label
                   x: 60
                   y: 255
                   font_size: 16
                   text: Heart rate 
 
-                - function: heart_rate_device_name
+                - parameter: heart_rate_device_name
                   x: 60
                   y: 290
                   font_size: 12
@@ -545,13 +545,13 @@ pages:
                           w: 120
                           h: 80
 
-                - function: ble_sc_label
+                - parameter: ble_sc_label
                   x: 180
                   y: 255
                   font_size: 16
                   text: Spd/cadence
 
-                - function: cadence_speed_device_name
+                - parameter: cadence_speed_device_name
                   x: 180
                   y: 290
                   font_size: 12
@@ -571,7 +571,7 @@ pages:
          font_size: 16
          fg_colour: FFFFFF
          fields: 
-                - function: halt
+                - parameter: halt
                   x: 120
                   y: 40
                   font_size: 16
@@ -582,7 +582,7 @@ pages:
                           w: 240
                           h: 80
 
-                - function: reboot
+                - parameter: reboot
                   x: 120
                   y: 120
                   font_size: 16
@@ -593,7 +593,7 @@ pages:
                           w: 240
                           h: 80
 
-                - function: quit
+                - parameter: quit
                   x: 120
                   y: 200
                   font_size: 16
@@ -604,7 +604,7 @@ pages:
                           w: 240
                           h: 80
 
-                - function: write_config
+                - parameter: write_config
                   x: 120
                   y: 280
                   font_size: 16
@@ -625,7 +625,7 @@ pages:
          font_size: 16
          fg_colour: FFFFFF
          fields: 
-                #- function: load_current_layout
+                #- parameter: load_current_layout
                 #  x: 120
                 #  y: 40
                 #  font_size: 16
@@ -636,7 +636,7 @@ pages:
                 #          w: 240
                 #          h: 80
 
-                - function: load_default_layout
+                - parameter: load_default_layout
                   x: 120
                   y: 120
                   font_size: 16
@@ -647,7 +647,7 @@ pages:
                           w: 240
                           h: 80
 
-                #- function: 
+                #- parameter: 
                 #  x: 120
                 #  y: 200
                 #  font_size: 16
@@ -658,7 +658,7 @@ pages:
                 #          w: 240
                 #          h: 80
 
-                - function: log_level
+                - parameter: log_level
                   x: 120
                   y: 280
                   font_size: 16
@@ -679,7 +679,7 @@ pages:
          font_size: 50
          fg_colour: FFFFFF
          fields: 
-                - function: ed_accept
+                - parameter: ed_accept
                   x: 60
                   y: 30
                   font_size: 30
@@ -690,7 +690,7 @@ pages:
                           w: 120
                           h: 60
 
-                - function: ed_cancel
+                - parameter: ed_cancel
                   x: 180
                   y: 30
                   font_size: 30
@@ -701,17 +701,17 @@ pages:
                           w: 120
                           h: 60
 
-                - function: description
+                - parameter: description
                   x: 120
                   y: 100
                   font_size: 24
 
-                - function: unit
+                - parameter: unit
                   x: 120
                   y: 160
                   font_size: 60
 
-                - function: ed_prev_unit
+                - parameter: ed_prev_unit
                   x: 60
                   y: 290
                   text: ⇦
@@ -721,7 +721,7 @@ pages:
                           w: 120
                           h: 60
 
-                - function: ed_next_unit
+                - parameter: ed_next_unit
                   x: 180
                   y: 290
                   text: ⇨
@@ -741,7 +741,7 @@ pages:
          font_size: 30
          fg_colour: FFFFFF
          fields: 
-                - function: ed_accept
+                - parameter: ed_accept
                   x: 60
                   y: 30
                   text: Accept
@@ -751,7 +751,7 @@ pages:
                           w: 120
                           h: 60
 
-                - function: ed_cancel
+                - parameter: ed_cancel
                   x: 180
                   y: 30
                   text: Cancel
@@ -761,22 +761,22 @@ pages:
                           w: 120
                           h: 60
 
-                - function: description
+                - parameter: description
                   x: 120
                   y: 70
                   font_size: 24
 
-                - function: value
+                - parameter: value
                   format: zoomed_digit
                   x: 120
                   y: 120
                   font_size: 50
 
-                - function: unit
+                - parameter: unit
                   x: 120
                   y: 180
 
-                - function: ed_decrease
+                - parameter: ed_decrease
                   x: 60
                   y: 230
                   font_size: 50
@@ -787,7 +787,7 @@ pages:
                           w: 120
                           h: 60
 
-                - function: ed_increase
+                - parameter: ed_increase
                   x: 180
                   y: 230
                   font_size: 50
@@ -798,7 +798,7 @@ pages:
                           w: 120
                           h: 60
 
-                - function: ed_prev
+                - parameter: ed_prev
                   x: 60
                   y: 290
                   font_size: 50
@@ -809,7 +809,7 @@ pages:
                           w: 120
                           h: 60
 
-                - function: ed_next
+                - parameter: ed_next
                   x: 180
                   y: 290
                   font_size: 50
@@ -830,7 +830,7 @@ pages:
          font_size: 16
          fg_colour: FFFFFF
          fields: 
-                - function: ed_accept
+                - parameter: ed_accept
                   x: 60
                   y: 30
                   font_size: 30
@@ -841,7 +841,7 @@ pages:
                           w: 120
                           h: 60
 
-                - function: ed_cancel
+                - parameter: ed_cancel
                   x: 180
                   y: 30
                   font_size: 30
@@ -852,18 +852,18 @@ pages:
                           w: 120
                           h: 60
 
-                - function: description
+                - parameter: description
                   x: 120
                   y: 90
                   font_size: 16
 
-                - function: value
+                - parameter: value
                   format: zoomed_digit
                   x: 120
                   y: 130
                   font_size: 40
 
-                - function: ed_decrease
+                - parameter: ed_decrease
                   x: 60
                   y: 230
                   font_size: 50
@@ -874,7 +874,7 @@ pages:
                           w: 120
                           h: 60
 
-                - function: ed_increase
+                - parameter: ed_increase
                   x: 180
                   y: 230
                   font_size: 50
@@ -885,7 +885,7 @@ pages:
                           w: 120
                           h: 60
 
-                - function: ed_prev
+                - parameter: ed_prev
                   x: 60
                   y: 290
                   font_size: 50
@@ -896,7 +896,7 @@ pages:
                           w: 120
                           h: 60
 
-                - function: ed_next
+                - parameter: ed_next
                   x: 180
                   y: 290
                   font_size: 50
@@ -917,7 +917,7 @@ pages:
          font_size: 16
          fg_colour: FFFFFF
          fields: 
-                - function: ble_scan
+                - parameter: ble_scan
                   x: 60
                   y: 30
                   font_size: 30
@@ -928,7 +928,7 @@ pages:
                           w: 120
                           h: 60
 
-                - function: ed_cancel
+                - parameter: ed_cancel
                   x: 180
                   y: 30
                   font_size: 30
@@ -939,7 +939,7 @@ pages:
                           w: 120
                           h: 60
 
-                - function: ble_dev_name_1
+                - parameter: ble_dev_name_1
                   x: 120
                   y: 96
                   font_size: 16
@@ -950,7 +950,7 @@ pages:
                           w: 240
                           h: 63
 
-                - function: ble_dev_name_2
+                - parameter: ble_dev_name_2
                   x: 120
                   y: 160
                   font_size: 16
@@ -961,7 +961,7 @@ pages:
                           w: 240
                           h: 63
 
-                - function: ble_dev_name_3
+                - parameter: ble_dev_name_3
                   x: 120
                   y: 224
                   font_size: 16
@@ -972,7 +972,7 @@ pages:
                           w: 240
                           h: 63
 
-                - function: ble_dev_name_4
+                - parameter: ble_dev_name_4
                   x: 120
                   y: 288
                   font_size: 16
