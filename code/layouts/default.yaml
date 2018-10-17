@@ -207,7 +207,7 @@ pages:
                   resettable: yes
                   button:
                           x0: 0
-                          y0: 40
+                          y0: 80
                           w: 240
                           h: 40
                   x: 100
@@ -228,7 +228,7 @@ pages:
                   resettable: yes
                   button:
                           x0: 0
-                          y0: 80
+                          y0: 120
                           w: 240
                           h: 40
                   x: 100
