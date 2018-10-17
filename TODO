@@ -10,6 +10,7 @@ CODING STYLE:
 - Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
 
 REAL WORLD PROBLEMS:
+- Use time_stamp for all parameters
 - Max speed will be false sooner or later after a single invalid measurement. Kalman filter required.
 - Average cadence to be calculated for ride time (reset with ride time?)
 - Do not try to initialise subsystems too many times. If BLE/GPS/other sensor is not there it won't magically show up. Log error and give up.

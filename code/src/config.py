@@ -81,6 +81,9 @@ class config(object):
         except AttributeError:
             error_list.append("wheel_circumference")
 
+        ## @var reference_altitude
+        #  Home altitude. Used as reference altitude for calculation of pressure at sea level and subsequent altitude calculations.
+        #  It is being set through the notification system - see \link notification \endlink function
         try:
             self.s.register_parameter("reference_altitude",
                                       self.extra["module_name"],

@@ -8,6 +8,7 @@
 
 #from bluepy.btle import BTLEException
 import bmp183
+import copy
 import compute
 import logging
 import numbers
@@ -150,17 +151,18 @@ class sensors(threading.Thread, metaclass=Singleton):
         self.log.debug("Starting bmp183 thread", extra=self.extra)
         self.sensors['bmp183'].start()
 
+        self.local_data = threading.local()
         self.running = True
-        #self.previous_parameters = dict()
-        self.previous_parameters = self.parameters.copy()
+        self.previous_parameters = dict()
+        self.local_data.previous_parameters = copy.deepcopy(self.parameters)
         while self.running:
             self.log.debug("running...", extra=self.extra)
-            self.previous_parameters = self.parameters.copy()
+            self.local_data.previous_parameters = copy.deepcopy(self.parameters)
             time.sleep(1.0)
             notify = list()
             for parameter, content in self.parameters.items():
-                if (self.previous_parameters[parameter]["force_notification"] or
-                   self.previous_parameters[parameter]["value"] != content["value"]):
+                if (self.local_data.previous_parameters[parameter]["force_notification"] or
+                   self.local_data.previous_parameters[parameter]["value"] != content["value"]):
                     self.parameters[parameter]["force_notification"] = False
                     if content["required_by"] is not None:
                         for m in content["required_by"]:

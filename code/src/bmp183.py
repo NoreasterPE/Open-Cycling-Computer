@@ -104,10 +104,6 @@ class bmp183(sensor.sensor):
         self.s.register_parameter("temperature", self.extra["module_name"], raw_unit="C", unit="C", units_allowed=["C", "F"])
         self.s.register_parameter("altitude", self.extra["module_name"], raw_unit="m", unit="m", units_allowed=["m"])
         self.s.request_parameter("reference_altitude", self.extra["module_name"])
-        ## @var reference_altitude
-        #  Home altitude. Used as reference altitude for calculation of pressure at sea level and subsequent altitude calculations.
-        #  It is being set through the notification system - see \link notification \endlink function
-        self.reference_altitude = None
         self.reset_data()
         ## @var pressure_at_sea_level
         #  Mean sea-level pressure. Calculations are based on reference altitude
@@ -140,7 +136,6 @@ class bmp183(sensor.sensor):
     #  @param self The python object self
     def notification(self):
         self.log.debug("notification received", extra=self.extra)
-        self.reference_altitude = self.s.parameters["reference_altitude"]["value"]
         self.calculate_pressure_at_sea_level()
 
     def stop(self):
@@ -363,14 +358,18 @@ class bmp183(sensor.sensor):
     def calculate_pressure_at_sea_level(self):
         self.log.debug("pressure: {}".format(self.s.parameters["pressure"]["value"]), extra=self.extra)
         try:
-            if self.reference_altitude < 43300:
-                self.log.debug("pressure3", extra=self.extra)
+            ref_alt = float(self.s.parameters["reference_altitude"]["value"])
+        except ValueError:
+            ref_alt = 0.0
+            self.log.debug("Reference altitude: {}, can't convert to float. Using 0 m".format(self.s.parameters["reference_altitude"]["value"]), extra=self.extra)
+        try:
+            if ref_alt < 43300.0:
                 try:
-                    self.pressure_at_sea_level = float(self.s.parameters["pressure"]["value"] / pow((1 - self.reference_altitude / 44330), 5.255))
+                    self.pressure_at_sea_level = float(self.s.parameters["pressure"]["value"] / pow((1 - ref_alt / 44330), 5.255))
                 except TypeError:
                     self.pressure_at_sea_level = numbers.NAN
             else:
-                self.log.debug("Reference altitude over 43300: {}, refusing to calculate pressure at sea level".format(self.reference_altitude), extra=self.extra)
+                self.log.debug("Reference altitude over 43300: {}, can't calculate pressure at sea level".format(ref_alt), extra=self.extra)
                 self.pressure_at_sea_level = numbers.NAN
         except TypeError:
             pass

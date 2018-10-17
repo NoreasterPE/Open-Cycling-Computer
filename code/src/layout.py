@@ -600,6 +600,7 @@ class layout():
 #        if self.self.editor_fields["ediotr"] == "ble_selector":
 #            (name, addr, dev_type) = parameter_value
 #            self.occ.sensors.set_ble_device(name, addr, dev_type)
+        self.occ.sensors.parameters[parameter]["time_stamp"] = time.time()
         self.render = True
         self.log.debug("accept_edit finished", extra=self.extra)
 
