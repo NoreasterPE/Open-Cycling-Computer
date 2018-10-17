@@ -6,7 +6,6 @@
 
 import logging
 import operator
-import threading
 import time
 
 ## @var LONG_CLICK
@@ -35,7 +34,7 @@ class events():
 
     ## The constructor
     #  @param self The python object self
-    def __init__(self, layout, touchscreen, ride_parameters, rendering):
+    def __init__(self, layout, touchscreen, ride_log, rendering):
         ## @var l
         # System logger handle
         self.log = logging.getLogger('system')
@@ -44,7 +43,7 @@ class events():
         self.layout = layout
         self.touchscreen = touchscreen
         self.rendering = rendering
-        self.rp = ride_parameters
+        self.ride_log = ride_log
         self.running = False
         self.ignore_touch = False
 
@@ -152,8 +151,7 @@ class events():
             while not self.touchscreen.queue_empty():
                 for e in self.touchscreen.get_event():
                     self.input_event_handler(e)
-            #t = self.rp.event_scheduler.run(blocking=False)
-            self.rp.event_scheduler.run(blocking=False)
+            self.ride_log.event_scheduler.run(blocking=False)
             time.sleep(MAIN_LOOP_BEAT)
             #self.log.debug("Ride event scheduler, next event in: {0:.3f}".format(t), extra=self.extra)
             if self.layout.render:

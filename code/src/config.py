@@ -22,7 +22,6 @@ class config(object):
     def __init__(self, occ, config_file_path, base_config_file_path):
         self.log = logging.getLogger('system')
         self.occ = occ
-        self.rp = occ.rp
         self.config_file_path = config_file_path
         self.base_config_file_path = base_config_file_path
         self.s = sensors.sensors()
