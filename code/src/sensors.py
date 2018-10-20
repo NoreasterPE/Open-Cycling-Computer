@@ -72,9 +72,6 @@ class sensors(threading.Thread, metaclass=Singleton):
         ## @var l
         # System logger handle
         self.log = logging.getLogger('system')
-        ## @var occ
-        # OCC Handle
-        #self.occ = occ
         ## @var sensors
         # Dict with sensor instances
         self.sensors = dict()
@@ -84,16 +81,7 @@ class sensors(threading.Thread, metaclass=Singleton):
         ## @var parameter_requests
         # Dict with parameters requested by a module
         self.parameter_requests = dict()
-        self.sensors = dict(ble_sc=None, ble_hr=None, bmp183=None)
-        ## @var required
-        # Dict with parameters required by sensors
-        #self.required = dict()
-        ## @var required_previous
-        # Dict with parameters required by sensors from the previous loop cycle
-        #self.required_previous = dict()
-        ## @var simulate
-        # Local copy of simulate variable from OCC
-        #self.simulate = occ.get_simulate()
+        self.sensors = dict()
         self.register_parameter("ble_host_state", self.extra["module_name"], value=0)
         ## @var no_of_connected
         # Number of connected BLE devices
@@ -103,12 +91,13 @@ class sensors(threading.Thread, metaclass=Singleton):
         self.connecting = False
         ## @var connected
         # Dict keeping track of which sensor is connected
-        self.connected = dict(ble_sc=False, ble_hr=False, bmp183=False)
+        self.connected = dict()
 
     ## Functon that initialises all sensors
     #  @param self The python object self
     def initialise_sensors(self):
-        #FIXME make initialisation the same for all sensors
+        #FIXME make initialisation the same for all sensors, failed init should raise exception?
+        #FIXME load all modules from a sensor directory
 
         self.sensors['compute'] = compute.compute()
         #self.required["compute"] = self.sensors['compute'].get_required()
@@ -124,20 +113,15 @@ class sensors(threading.Thread, metaclass=Singleton):
 
         import ble_hr
         self.sensors['ble_hr'] = ble_hr.ble_hr()
-        #self.required["ble_hr"] = self.sensors['ble_hr'].get_required()
-        #self.required_previous["ble_hr"] = self.required['ble_hr']
 
         import ble_sc
         self.sensors['ble_sc'] = ble_sc.ble_sc()
-        #self.required["ble_sc"] = self.sensors['ble_sc'].get_required()
-        #self.required_previous["ble_sc"] = self.required['ble_sc']
 
     ## Main loop of sensors module. Constantly tries to reconnect with BLE devices
     #  @param self The python object self
     def run(self):
         self.log.debug("run started", extra=self.extra)
         self.initialise_sensors()
-        #self.init_data_from_ride_parameters()
 
         self.log.debug("Starting compute thread", extra=self.extra)
         self.sensors['compute'].start()
@@ -204,16 +188,6 @@ class sensors(threading.Thread, metaclass=Singleton):
 #        if self.connecting:
 #            self.parameters["ble_host_state"]["value"] = STATE_HOST['scanning_1']
 
-    ## Helper function for getting sensor handle
-    #  @param self The python object self
-    #def get_sensor(self, name):
-    #    self.log.debug('get_sensor called for {}'.format(name), extra=self.extra)
-    #    if name in self.sensors:
-    #        return self.sensors[name]
-    #    else:
-    #        self.log.debug("Sensor {} not ready or doesn't exist".format(name), extra=self.extra)
-    #        return None
-
     ## The destructor
     #  @param self The python object self
     def __del__(self):
@@ -272,13 +246,6 @@ class sensors(threading.Thread, metaclass=Singleton):
             elif self.parameters[parameter_name]["sensor_name"] is not None:
                 self.log.critical("{} already registerd by sensor {}. Sensor {} request refused.".format(parameter_name, self.parameters[parameter_name]["sensor_name"], sensor_name), extra=self.extra)
                 return
-#            if self.parameters[parameter_name]["sensor_name"] is None:
-#                #De-register, but store the "required by" and "unit" field.
-#                required_by = self.parameters[parameter_name]["required_by"]
-#                #Store the "unit" field only if registering call didn't set it.
-#                if unit is None:
-#                    unit = self.parameters[parameter_name]["unit"]
-#                del self.parameters[parameter_name]
         else:
             if parameter_name in self.parameter_requests:
                 required_by = self.parameter_requests[parameter_name]
