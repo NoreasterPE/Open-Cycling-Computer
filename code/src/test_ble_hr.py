@@ -3,6 +3,7 @@ import sys
 from ble_hr import ble_hr
 from bluepy.btle import BTLEException
 import logging
+import sensors
 
 
 if __name__ == '__main__':
@@ -15,6 +16,7 @@ if __name__ == '__main__':
     logging.getLogger('system').addHandler(sys_log_handler)
     sys_logger = logging.getLogger('system')
     sys_logger.debug("Log start", extra=ex)
+    s = sensors.sensors()
 
     try:
         sys_logger.debug("Initialising BLE device...", extra=ex)
@@ -48,12 +50,13 @@ if __name__ == '__main__':
         ts = 0
         while True:
             time.sleep(2)
-            data = ble_hr_device.get_raw_data()
-            new_ts = time.strftime("%Y-%b-%d %H:%M:%S", time.localtime(data['time_stamp']))
+            hr = s.parameters['heart_rate']['value']
+            ts = s.parameters['heart_rate']['time_stamp']
+            new_ts = time.strftime("%Y-%b-%d %H:%M:%S", time.localtime(ts))
+            #sys_logger.debug("Name: {}, state:{}, battery level: {}%".format(data['name'], data['state'], data['battery_level']), extra=ex)
             if ts != new_ts:
-                sys_logger.debug("Name: {}, state:{}, battery level: {}%".format(data['name'], data['state'], data['battery_level']), extra=ex)
                 ts = new_ts
-                sys_logger.debug(" Timestamp: {}, heart rate: {}".format(ts, data['heart_rate']), extra=ex)
+                sys_logger.debug(" Timestamp: {}, heart rate: {}".format(ts, hr), extra=ex)
             sys_logger.debug("Tick...{}".format(new_ts), extra=ex)
 
     except (KeyboardInterrupt, SystemExit):
