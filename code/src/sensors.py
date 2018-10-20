@@ -4,12 +4,10 @@
 #  BLE heart rate
 #  BLE speed & cadence sensor
 #  GPS (MTK3339) - [disabled]
-#  BMP183 pressure & temperature sensor
+#  BMP280 pressure & temperature sensor
 
 #from bluepy.btle import BTLEException
-import bmp183
 import copy
-import compute
 import logging
 import numbers
 import threading
@@ -99,17 +97,11 @@ class sensors(threading.Thread, metaclass=Singleton):
         #FIXME make initialisation the same for all sensors, failed init should raise exception?
         #FIXME load all modules from a sensor directory
 
+        import compute
         self.sensors['compute'] = compute.compute()
-        #self.required["compute"] = self.sensors['compute'].get_required()
-        #self.required_previous["compute"] = self.required['compute']
-        #self.log.info("Initialising bmp183 sensor", extra=self.extra)
-        #try:
-        self.sensors['bmp183'] = bmp183.bmp183(False)
-        #self.required["bmp183"] = self.sensors['bmp183'].get_required()
-        #self.required_previous["bmp183"] = self.sensors['bmp183'].get_required()
-        #self.connected['bmp183'] = True
-        #except IOError:
-        #    self.connected['bmp183'] = None
+
+        import bmp280
+        self.sensors['bmp280'] = bmp280.bmp280()
 
         import ble_hr
         self.sensors['ble_hr'] = ble_hr.ble_hr()
@@ -132,8 +124,8 @@ class sensors(threading.Thread, metaclass=Singleton):
         self.log.debug("Starting ble_sc thread", extra=self.extra)
         self.sensors['ble_sc'].start()
 
-        self.log.debug("Starting bmp183 thread", extra=self.extra)
-        self.sensors['bmp183'].start()
+        self.log.debug("Starting bmp280 thread", extra=self.extra)
+        self.sensors['bmp280'].start()
 
         self.local_data = threading.local()
         self.running = True

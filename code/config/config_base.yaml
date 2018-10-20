@@ -75,7 +75,7 @@ reference_altitude:
   force_notification: false
   raw_unit: m
   required_by:
-  - bmp183
+  - bmp280
   sensor_name: null
   time_stamp: 0.0
   unit: m

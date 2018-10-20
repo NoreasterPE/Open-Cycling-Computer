@@ -13,9 +13,9 @@ ble_sc        cadence_speed_device_name         - name of BLE cadence/speed sens
 ble_sc        odometer                          - total distance, editable in Settings page
 ble_sc        wheel_revolution_time             - time of last wheel revolution
 ble_sc        wheel_revolutions                 - total number of wheel revolutions for BLE sensor 
-bmp183        altitude                          - current altitude, calculated from pressure
-bmp183        pressure                          - current atmospheric pressure
-bmp183        temperature                       - current temperature
+bmp280        altitude                          - current altitude, calculated from pressure
+bmp280        pressure                          - current atmospheric pressure
+bmp280        temperature                       - current temperature
 compute       real_time                         - current time
 compute       session_time                      - time since the start of compute module
 compute       slope                             - gradient of the road, claculated from altitude change and odometer change
@@ -24,7 +24,7 @@ compute       start_time                        - time stamp of compute module s
 config        cadence_speed_device_address      - BLE address of speed/cadence sensor
 config        heart_rate_device_address         - BLE address of heart rate sensor
 config        log_level                         - logging level
-bmp183        reference_altitude                - reference (home) altitude used to calculate mean sea level pressure
+bmp280        reference_altitude                - reference (home) altitude used to calculate mean sea level pressure
 config        rider_weight                      - rider weight, currently not used
 config        wheel_circumference               - circumference of wheel, calculated from wheel size (see wheel module for the details)
 
@@ -46,7 +46,7 @@ Parameters needed by modules:
 ble_hr        heart_rate_device_address
 ble_sc        cadence_speed_device_address
 ble_sc        wheel_circumference
-bmp183        reference_altitude
+bmp280        reference_altitude
 compute       altitude
 compute       odometer
 compute       wheel_revolution_time
