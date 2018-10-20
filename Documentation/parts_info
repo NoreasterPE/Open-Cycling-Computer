@@ -1,12 +1,12 @@
 RPI Zero W
-Weight:		9 g
-DimensionsA:	65 mm × 30 mm × 5 mm
+Weight:	    9 g
+Dimensions:	65 mm × 30 mm × 5 mm
 Current:	100 - 140 mA
 
 PiTFT
 Weight:		82 g
 Dimensions:	118 x 86 x 3.4 mm
-Current:	100 mA (max brightness)
+Current:    100 mA (max brightness)
 
 LiPo Charger
 http://www.adafruit.com/products/259
@@ -29,22 +29,23 @@ Weight:		8.5 g
 Dimensions:	25.5 x 35 x 6.5 mm
 Current:	20 mA
 
-Matek Ublox SAM-M8Q [FUTURE]
+BMP280 SPI/I2C Barometer, Altimetr + Thermometer
+http://www.adafruit.com/products/2651
+Dimensions:	19.2mm x 17.9mm x 2.9mm
+Weight: 	1.3 g
+Current:	~1 mA
+
+[FUTURE]
+Matek Ublox SAM-M8Q
 https://www.unmannedtechshop.co.uk/matek-ublox-sam-m8q-gps-module/
 Weight:		7 g
 Dimensions:	26 x 16 x 7 mm
 Current:	29 mA (continuous), 9mA (1Hz, power save)
 
-
-BMP183 Altimetr + Thermometer [TBC, BMP260 has better parameters]
+[SUPERSEDED]
+BMP183 Altimetr + Thermometer
 http://www.adafruit.com/products/1900
 Dimensions:	18 × 18 × 2 mm
 Weight: 	1 g
 Current:	1 mA
-
-Case:
-TBD
-
-Connectors:
-TBD
 
