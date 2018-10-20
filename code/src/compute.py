@@ -53,13 +53,13 @@ class compute(sensor.sensor):
             self.altitude_delta = self.altitude - previous_altitude
         except TypeError:
             self.altitude_delta = 0.0
-        # FIXME wtf?
-        previous_wheel_rev_time = self.wheel_revolution_time
-        # FIXME wtf?
-        self.wheel_revolution_time = self.s.parameters["wheel_revolution_time"]["value"]
+        previous_odometer = self.odometer
+        self.odometer = self.s.parameters["odometer"]["value"]
         try:
-            # FIXME wtf?
-            self.wheel_revolution_time_delta = self.wheel_revolution_time - previous_wheel_rev_time
+            self.odometer_delta = self.odometer - previous_odometer
+        except TypeError:
+            self.odometer_delta = 0.0
+        try:
             self.altitude_delta_cumulative += self.altitude_delta
             self.odometer_delta_cumulative += self.odometer_delta
             self.calculate_slope()
@@ -78,7 +78,7 @@ class compute(sensor.sensor):
     ## Calculate slope. Current values are matched with Bosch BMP183 sensor (0.18 m of resolution). To be changed if sensor is upgraded to BMP280
     #  @param self The python object self
     def calculate_slope(self):
-        if self.odometer_delta_cumulative > 8.4:
+        if self.odometer_delta_cumulative > 2.0:
             self.s.parameters["slope"]["value"] = self.altitude_delta_cumulative / self.odometer_delta_cumulative
         if abs(self.s.parameters["slope"]["value"]) < 0.02:
             #If slope is less than 2% wait for more cumulative distance/altitude
