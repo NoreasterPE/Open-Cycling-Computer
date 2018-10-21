@@ -137,13 +137,17 @@ class sensors(threading.Thread, metaclass=Singleton):
             time.sleep(1.0)
             notify = list()
             for parameter, content in self.parameters.items():
-                if (self.local_data.previous_parameters[parameter]["force_notification"] or
-                   self.local_data.previous_parameters[parameter]["value"] != content["value"]):
-                    self.parameters[parameter]["force_notification"] = False
-                    if content["required_by"] is not None:
-                        for m in content["required_by"]:
-                            notify.append(m)
-            for module in notify:
+                try:
+                    if (self.local_data.previous_parameters[parameter]["force_notification"] or
+                       self.local_data.previous_parameters[parameter]["value"] != content["value"]):
+                        self.parameters[parameter]["force_notification"] = False
+                        if content["required_by"] is not None:
+                            for m in content["required_by"]:
+                                notify.append(m)
+                except KeyError as e:
+                    # TBC KeyError: 'cadence_speed_device_address'
+                    self.log.critical(e, extra=self.extra)
+            or module in notify:
                 try:
                     self.sensors[module].notification()
                 except AttributeError:
