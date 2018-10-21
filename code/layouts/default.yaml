@@ -255,7 +255,7 @@ pages:
                   file: images/altitude_icon_32x32.png
 
                 - parameter: altitude
-                  format: "%.0f"
+                  format: "%.1f"
                   x: 100
                   y: 220
 
