@@ -1,12 +1,11 @@
 UI
 - Consider scroll-over-the-edge to switch pages
-- Click to switch value i.e. click on temperature to cycle over min/average/max
+- Click to switch value i.e. click on temperature to cycle over min/average/max [TBC]
 - BLE device list expiry time. Currently never expires
 - There is no way to disconnect from a BLE device
+-Add separate page for units. Slope, pressure
 
 CODING STYLE:
-- Remove get_raw_data dict definition. Add self.params to sensor class
-- Fix inconsistent naming: func, function, param_name
 - Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
 
 REAL WORLD PROBLEMS:
@@ -196,3 +195,5 @@ TypeError: argument 1 must be pygame.Surface, not None
        solutions:
             - config file with mapping i.e. temperature = bmp183_temperature
             - prefix in dictionary and keep generic names. It would required some parameter registration (check linux kernel and driver reqistration)
+94. [WONTFIX[ - Remove get_raw_data dict definition. Add self.params to sensor class {conception change}
+95. [DONE] - Fix inconsistent naming: func, function, param_name
