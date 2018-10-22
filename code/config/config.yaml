@@ -89,12 +89,12 @@ reference_altitude:
   required_by:
   - bmp280
   sensor_name: null
-  time_stamp: 0.0
+  time_stamp: 1540155643.1353118
   unit: m
   units_allowed:
   - m
   - km
-  value: 54.0
+  value: '54.0'
   value_avg: .nan
   value_default: null
   value_max: -.inf
@@ -126,9 +126,9 @@ speed:
   - km/h
   - mi/h
   value: 0.0
-  value_avg: .nan
+  value_avg: .inf
   value_default: null
-  value_max: 6.054831460674158
+  value_max: -.inf
   value_min: .inf
 temperature:
   force_notification: false
@@ -140,11 +140,11 @@ temperature:
   units_allowed:
   - C
   - F
-  value: 23.088455440043695
+  value: 24.2
   value_avg: .nan
   value_default: null
-  value_max: 26.036583890000617
-  value_min: 22.02420838559018
+  value_max: 29.51
+  value_min: 20.13
 wheel_size:
   force_notification: false
   raw_unit: null
