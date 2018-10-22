@@ -24,7 +24,7 @@ class bmp280(sensor.sensor):
         self.first_run = True
         ## @var measurement_delay
         #  Time between measurements in [s]
-        self.measurement_delay = 0.45
+        self.measurement_delay = 1.0
         ## @var temperature_max_delta
         #  Maximum allowed temperature difference between measurements. Normally temperature doesn't change too quickly
         #  so a sudden change means the measurement if invalid. It a new temperature value differs from the previous velu more than
