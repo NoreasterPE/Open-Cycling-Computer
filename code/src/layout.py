@@ -599,7 +599,7 @@ class layout():
         if self.editor_fields["editor"] == "editor_numbers":
             unit_raw = self.occ.sensors.parameters[parameter]["raw_unit"]
             value = self.uc.convert(float(parameter_value), parameter_unit, unit_raw)
-            self.occ.sensors.parameters[parameter]["value"] = format(value)
+            self.occ.sensors.parameters[parameter]["value"] = float(value)
         if self.editor_fields["editor"] == "editor_string":
             self.occ.sensors.parameters[parameter]["value"] = parameter_value
 #        if self.self.editor_fields["ediotr"] == "ble_selector":
