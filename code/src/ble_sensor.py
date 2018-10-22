@@ -30,16 +30,11 @@ class ble_sensor(sensor.sensor):
         super().__init__()
         self.log.debug('WAIT_TIME {}'.format(self.WAIT_TIME), extra=self.extra)
 
-        #self.p_defaults.update(dict(addr=None, battery_level=numbers.NAN))
-        #self.p_raw.update(dict(self.p_defaults))
-        #self.p_formats.update(dict(addr=None, battery_level="%.0f"))
-        #self.p_units.update(dict(name=None, addr=None, battery_level="%"))
-        #self.p_raw_units.update(dict(addr=None, battery_level="%"))
-        #self.p_units_allowed.update(dict(addr=None, battery_level="%"))
         self.required.update(dict())
         self.state = 0
         self.device_address = None
         self.device_name = None
+        self.battery_level = numbers.NAN
 
         self.notifications_enabled = False
         #Delegate class handling notification has to be set be the real device class in __init__
@@ -84,7 +79,7 @@ class ble_sensor(sensor.sensor):
                 self.log.debug('Getting device name', extra=self.extra)
                 self.device_name = self.get_device_name()
                 self.log.debug('Getting battery level', extra=self.extra)
-                self.p_raw["battery_level"] = self.get_battery_level()
+                self.battery_level = self.get_battery_level()
             except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
                 self.handle_exception(e, "initialise_connection")
                 self.state = 0

@@ -71,6 +71,8 @@ class ble_sc(ble_sensor.ble_sensor):
             self.s.parameters["cadence_notification_beat"]["value"] = self.delegate.cadence_notification_beat
             if self.s.parameters["cadence_speed_device_name"]["value"] != self.device_name:
                 self.s.parameters["cadence_speed_device_name"]["value"] = self.device_name
+            if self.s.parameters["cadence_speed_battery_level"]["value"] != self.battery_level:
+                self.s.parameters["cadence_speed_battery_level"]["value"] = self.battery_level
         except (AttributeError) as exception:
             self.handle_exception(exception, "process_delegate_data")
 
