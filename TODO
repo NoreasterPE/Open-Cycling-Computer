@@ -3,12 +3,16 @@ UI
 - Click to switch value i.e. click on temperature to cycle over min/average/max [TBC]
 - BLE device list expiry time. Currently never expires
 - There is no way to disconnect from a BLE device
--Add separate page for units. Slope, pressure
+- Add separate page for units. Slope, pressure
+- Add text align options to layout (left/center/right)
+- Consider icons instead of Accept/Cancel/+/-/<--/-->
+- Fix icon lines width - it's not consistent
 
 CODING STYLE:
 - Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
 
 REAL WORLD PROBLEMS:
+- leading zero needs to be preserved in editor_number when value is less than 1.0 like 0.5
 - Use time_stamp for all parameters
 - Max speed will be false sooner or later after a single invalid measurement. Kalman filter required.
 - Average cadence to be calculated for ride time (reset with ride time?)
@@ -25,8 +29,8 @@ REAL WORLD PROBLEMS:
 - Ride log configuration in a config file
 - Loading sensor modules from files in a sub-directory
 - pressure_at_sea_level is sometimes updated even if there was no change in reference_altitude [TBC]
-- ride_parameters to be reduced/removed when compute module takes over all calcs
 - units_allowed should come from unit_converter
+- consider splitting layout into one-page-per-file
 
 CODE ERRORS:
 - Threads write to log aftred log end [ERROR]
@@ -197,3 +201,4 @@ TypeError: argument 1 must be pygame.Surface, not None
             - prefix in dictionary and keep generic names. It would required some parameter registration (check linux kernel and driver reqistration)
 94. [WONTFIX[ - Remove get_raw_data dict definition. Add self.params to sensor class {conception change}
 95. [DONE] - Fix inconsistent naming: func, function, param_name
+86. [DONE] - ride_parameters to be reduced/removed when compute module takes over all calcs

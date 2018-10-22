@@ -1,3 +1,4 @@
+[FIXME - NEEDS DETAILED REVIEW]
 1. /boot/cmdline added for splashscreen: quiet
 
 2. [FIXME - update] sudo apt-get install fbi omxplayer vim mc i2c-tools bluepy python-pip libglib2.0-dev python-gps python-serial git
@@ -11,3 +12,6 @@
 SUBSYSTEM=="input", ATTRS{name}=="ft6236", ENV{DEVNAME}=="*event*", SYMLINK+="input/touchscreen"
 
 /boot/overlays (add)
+
+5. Add to /boo/config.txt
+dtoverlay=i2c-sensor,addr=0x77,bmp280
