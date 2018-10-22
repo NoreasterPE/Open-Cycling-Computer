@@ -387,6 +387,29 @@ pages:
 
                 - parameter: label
                   x: 180
+                  y: 15
+                  text: Wheel circ.
+
+                - parameter: wheel_circumference
+                  editor_title: Wheel circ.
+                  editable: yes
+                  editor: editor_numbers
+                  x: 165
+                  y: 50
+                  font_size: 30
+                  button:
+                          x0: 120
+                          y0: 0
+                          w: 120
+                          h: 80
+
+                - parameter: wheel_circumference
+                  show: unit
+                  x: 220
+                  y: 50
+
+                - parameter: label
+                  x: 180
                   y: 95
                   text: MSLP METAR
 

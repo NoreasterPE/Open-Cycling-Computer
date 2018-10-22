@@ -76,7 +76,9 @@ class config(object):
             w = wheel.wheel()
             self.s.register_parameter("wheel_circumference",
                                       self.extra["module_name"],
-                                      raw_unit="m")
+                                      raw_unit="m",
+                                      unit="cm",
+                                      units_allowed=["cm", "mm"])
             self.s.update_parameter("wheel_circumference", dict(value=w.get_circumference(self.s.parameters["wheel_size"]["value"])))
         except AttributeError:
             error_list.append("wheel_circumference")
