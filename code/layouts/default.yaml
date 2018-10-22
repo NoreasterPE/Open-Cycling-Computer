@@ -387,28 +387,28 @@ pages:
 
                 - parameter: label
                   x: 180
-                  y: 15
+                  y: 95
                   text: MSLP METAR
 
                 - parameter: mean_sea_level_pressure
-                  editor_title: Mean sea level press.
+                  editor_title: Mean sea lvl press.
                   editable: yes
                   editor: editor_numbers
                   x: 165
-                  y: 50
+                  y: 130
                   font_size: 30
                   button:
                           x0: 120
-                          y0: 0
+                          y0: 80
                           w: 120
                           h: 80
 
                 - parameter: pressure
                   show: unit
                   x: 220
-                  y: 50
+                  y: 130
 
-                - parameter: reference_altitude_label
+                - parameter: label
                   x: 60
                   y: 95
                   text: Reference alt.
@@ -455,7 +455,7 @@ pages:
                   y: 210
                   font_size: 16
 
-                - parameter: hr_label
+                - parameter: label
                   x: 60
                   y: 255
                   font_size: 16
@@ -471,7 +471,7 @@ pages:
                           w: 120
                           h: 80
 
-                - parameter: sc_label
+                - parameter: label
                   x: 180
                   y: 255
                   font_size: 16
@@ -605,7 +605,7 @@ pages:
          font_size: 16
          fg_colour: FFFFFF
          fields:
-                - parameter: speed_label
+                - parameter: label
                   x: 60
                   y: 15
                   text: Speed
@@ -624,7 +624,7 @@ pages:
                           w: 120
                           h: 80
 
-                - parameter: odometer_label
+                - parameter: label
                   x: 180
                   y: 15
                   text: Odometer
@@ -643,7 +643,7 @@ pages:
                           w: 120
                           h: 80
 
-                - parameter: weight_label
+                - parameter: label
                   x: 60
                   y: 95
                   text: Rider weight
@@ -662,7 +662,7 @@ pages:
                           w: 120
                           h: 80
 
-                - parameter: temperature_label
+                - parameter: label
                   x: 180
                   y: 95
                   font_size: 16
@@ -682,7 +682,7 @@ pages:
                           w: 120
                           h: 80
 
-                - parameter: slope_label
+                - parameter: label
                   x: 60
                   y: 175
                   text: Slope
@@ -701,7 +701,7 @@ pages:
                           w: 120
                           h: 80
 
-                - parameter: pressure_label
+                - parameter: label
                   x: 180
                   y: 175
                   font_size: 16
