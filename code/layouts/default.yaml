@@ -744,6 +744,31 @@ pages:
                           w: 120
                           h: 80
 
+                - parameter: label
+                  x: 60
+                  y: 255
+                  text: Wheel circ.
+
+                - parameter: wheel_circumference
+                  show: unit
+                  editor_title: Wheel circ.  unit
+                  editable: yes
+                  editor: editor_units
+                  x: 60
+                  y: 290
+                  font_size: 30
+                  button:
+                          x0: 0
+                          y0: 240
+                          w: 120
+                          h: 80
+
+                - parameter: label
+                  x: 180
+                  y: 175
+                  font_size: 16
+                  text: Pressure
+
 
 
        - name: "Unit Editor"
