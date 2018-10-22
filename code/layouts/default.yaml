@@ -1,4 +1,4 @@
-pages: 
+pages:
        - name: Main
          id: page_0
          number: 0
@@ -8,7 +8,7 @@ pages:
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
-         fields: 
+         fields:
                 - parameter: speed
                   x: 95
                   y: 75
@@ -47,7 +47,7 @@ pages:
                   x: 170
                   y: 180
                   font_size: 30
-                  button: 
+                  button:
                           x0: 120
                           y0: 160
                           w: 120
@@ -88,20 +88,20 @@ pages:
                   x: 50
                   y: 290
                   font_size: 40
-                  button: 
+                  button:
                           x0: 0
                           y0: 240
                           w: 120
                           h: 80
 
                 - parameter: cadence
-                  show: average
+                  show: avg
                   x: 60
                   y: 255
                   font_size: 16
 
                 - parameter: cadence
-                  show: maximum
+                  show: max
                   x: 100
                   y: 255
                   font_size: 16
@@ -125,26 +125,26 @@ pages:
                   x: 171
                   y: 290
                   font_size: 40
-                  button: 
+                  button:
                           x0: 120
                           y0: 240
                           w: 120
                           h: 80
 
                 - parameter: heart_rate
-                  show: minimum
+                  show: min
                   x: 140
                   y: 255
                   font_size: 16
 
                 - parameter: heart_rate
-                  show: average
+                  show: avg
                   x: 180
                   y: 255
                   font_size: 16
 
                 - parameter: heart_rate
-                  show: maximum
+                  show: max
                   x: 220
                   y: 255
                   font_size: 16
@@ -172,14 +172,14 @@ pages:
          font: "sans-serif"
          font_size: 24
          fg_colour: FFFFFF
-         fields: 
+         fields:
                 - parameter: odometer_icon
                   x: 10
                   y: 84
                   file: images/odometer_icon_32x32.png
 
                 - parameter: odometer
-                  description: Odometer
+                  editor_title: Odometer
                   editable: yes
                   editor: editor_numbers
                   format: "%.1f"
@@ -202,12 +202,12 @@ pages:
                   file: images/speed_icon_32x32.png
 
                 - parameter: speed
-                  show: maximum
+                  show: max
                   format: "%.1f"
                   resettable: yes
                   button:
                           x0: 0
-                          y0: 80
+                          y0: 120
                           w: 240
                           h: 40
                   x: 100
@@ -224,11 +224,11 @@ pages:
                   file: images/average_speed_icon_32x32.png
 
                 - parameter: speed
-                  show: average
+                  show: avg
                   resettable: yes
                   button:
                           x0: 0
-                          y0: 120
+                          y0: 160
                           w: 240
                           h: 40
                   x: 100
@@ -305,7 +305,7 @@ pages:
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
-         fields: 
+         fields:
 #               - parameter: latitude
 #                  x: 60
 #                  y: 25
@@ -361,43 +361,37 @@ pages:
          id: settings_0
          number: 0
          type: settings
-         background: images/settings_0_background.png
+         background: images/background_2_x_4.png
          buttons: images/button_pressed.png
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
-         fields: 
+         fields:
                 - parameter: label
                   x: 60
                   y: 15
-                  text: Rider weight
+                  text: Wheel size
 
-                - parameter: rider_weight
-                  description: Rider weight
+                - parameter: wheel_size
+                  editor_title: Wheel size
                   editable: yes
-                  editor: editor_numbers
-                  x: 45
+                  editor: editor_string
+                  x: 60
                   y: 50
-                  font_size: 30
-                  button: 
+                  font_size: 20
+                  button:
                           x0: 0
                           y0: 0
                           w: 120
                           h: 80
 
-                - parameter: rider_weight
-                  show: unit
-                  x: 100
-                  y: 50
-                  font_size: 16
-
-                - parameter: reference_altitude_label
+                - parameter: label
                   x: 180
                   y: 15
-                  text: Reference alt.
+                  text: MSLP METAR
 
-                - parameter: reference_altitude
-                  description: Reference alt.
+                - parameter: mean_sea_level_pressure
+                  editor_title: Mean sea level press.
                   editable: yes
                   editor: editor_numbers
                   x: 165
@@ -409,24 +403,21 @@ pages:
                           w: 120
                           h: 80
 
-                - parameter: reference_altitude
+                - parameter: pressure
                   show: unit
                   x: 220
                   y: 50
-                  font_size: 16
 
-                - parameter: speed_label
+                - parameter: reference_altitude_label
                   x: 60
                   y: 95
-                  font_size: 16
-                  text: Speed
+                  text: Reference alt.
 
-                - parameter: speed
-                  show: unit
-                  description: Speed units
+                - parameter: reference_altitude
+                  editor_title: Reference alt.
                   editable: yes
-                  editor: editor_units
-                  x: 60
+                  editor: editor_numbers
+                  x: 45
                   y: 130
                   font_size: 30
                   button:
@@ -435,70 +426,40 @@ pages:
                           w: 120
                           h: 80
 
-                - parameter: temperature_label
-                  x: 180
-                  y: 95
-                  font_size: 16
-                  text: Temp. unit
-
-                - parameter: temperature
+                - parameter: reference_altitude
                   show: unit
-                  description: Temperature units
-                  editable: yes
-                  editor: editor_units
-                  x: 180
+                  x: 100
                   y: 130
-                  font_size: 30
-                  button:
-                          x0: 120
-                          y0: 80
-                          w: 120
-                          h: 80
 
-                - parameter: wheel_size_label
+                - parameter: label
                   x: 60
                   y: 175
-                  font_size: 16
-                  text: Wheel size
+                  text: Rider weight
 
-                - parameter: wheel_size
-                  description: Wheel size
+                - parameter: rider_weight
+                  editor_title: Rider weight
                   editable: yes
-                  editor: editor_string
-                  x: 60
+                  editor: editor_numbers
+                  x: 50
                   y: 215
-                  font_size: 20
+                  font_size: 30
                   button:
                           x0: 0
                           y0: 160
                           w: 120
                           h: 80
 
-                - parameter: odometer_label
-                  x: 180
-                  y: 175
-                  font_size: 16
-                  text: Odometer unit
-
-                - parameter: odometer
+                - parameter: rider_weight
                   show: unit
-                  description: Odometer unit
-                  editable: yes
-                  editor: editor_units
-                  x: 180
-                  y: 215
-                  font_size: 30
-                  button:
-                          x0: 120
-                          y0: 160
-                          w: 120
-                          h: 80
+                  x: 100
+                  y: 210
+                  font_size: 16
 
                 - parameter: hr_label
                   x: 60
                   y: 255
                   font_size: 16
-                  text: Heart rate 
+                  text: Heart rate
 
                 - parameter: heart_rate_device_name
                   x: 60
@@ -535,7 +496,7 @@ pages:
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
-         fields: 
+         fields:
                 - parameter: halt
                   x: 120
                   y: 40
@@ -589,7 +550,7 @@ pages:
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
-         fields: 
+         fields:
                 #- parameter: load_current_layout
                 #  x: 120
                 #  y: 40
@@ -612,11 +573,11 @@ pages:
                           w: 240
                           h: 80
 
-                #- parameter: 
+                #- parameter:
                 #  x: 120
                 #  y: 200
                 #  font_size: 16
-                #  text: 
+                #  text:
                 #  button:
                 #          x0: 0
                 #          y0: 159
@@ -627,12 +588,140 @@ pages:
                   x: 120
                   y: 280
                   font_size: 16
-                  text: 
+                  text:
                   button:
                           x0: 0
                           y0: 239
                           w: 240
                           h: 80
+
+       - name: "Units"
+         id: settings_3
+         number: 3
+         type: settings
+         background: images/background_2_x_4.png
+         buttons: images/button_pressed.png
+         font: "sans-serif"
+         font_size: 16
+         fg_colour: FFFFFF
+         fields:
+                - parameter: speed_label
+                  x: 60
+                  y: 15
+                  text: Speed
+
+                - parameter: speed
+                  show: unit
+                  editor_title: Speed unit
+                  editable: yes
+                  editor: editor_units
+                  x: 60
+                  y: 50
+                  font_size: 30
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 120
+                          h: 80
+
+                - parameter: odometer_label
+                  x: 180
+                  y: 15
+                  text: Odometer
+
+                - parameter: odometer
+                  show: unit
+                  editor_title: Odometer unit
+                  editable: yes
+                  editor: editor_units
+                  x: 180
+                  y: 55
+                  font_size: 30
+                  button:
+                          x0: 120
+                          y0: 0
+                          w: 120
+                          h: 80
+
+                - parameter: weight_label
+                  x: 60
+                  y: 95
+                  text: Rider weight
+
+                - parameter: rider_weight
+                  show: unit
+                  editor_title: Rider weight unit
+                  editable: yes
+                  editor: editor_units
+                  x: 60
+                  y: 130
+                  font_size: 30
+                  button:
+                          x0: 0
+                          y0: 80
+                          w: 120
+                          h: 80
+
+                - parameter: temperature_label
+                  x: 180
+                  y: 95
+                  font_size: 16
+                  text: Temperature
+
+                - parameter: temperature
+                  show: unit
+                  editor_title: Temperature unit
+                  editable: yes
+                  editor: editor_units
+                  x: 180
+                  y: 130
+                  font_size: 30
+                  button:
+                          x0: 120
+                          y0: 80
+                          w: 120
+                          h: 80
+
+                - parameter: slope_label
+                  x: 60
+                  y: 175
+                  text: Slope
+
+                - parameter: slope
+                  show: unit
+                  editor_title: Slope unit
+                  editable: yes
+                  editor: editor_units
+                  x: 60
+                  y: 210
+                  font_size: 30
+                  button:
+                          x0: 0
+                          y0: 160
+                          w: 120
+                          h: 80
+
+                - parameter: pressure_label
+                  x: 180
+                  y: 175
+                  font_size: 16
+                  text: Pressure
+
+                - parameter: pressure
+                  show: unit
+                  editor_title: Pressure unit
+                  editable: yes
+                  editor: editor_units
+                  x: 180
+                  y: 215
+                  font_size: 30
+                  button:
+                          x0: 120
+                          y0: 160
+                          w: 120
+                          h: 80
+
+
 
        - name: "Unit Editor"
          id: editor_units
@@ -643,7 +732,7 @@ pages:
          font: "sans-serif"
          font_size: 50
          fg_colour: FFFFFF
-         fields: 
+         fields:
                 - parameter: ed_accept
                   x: 60
                   y: 30
@@ -666,7 +755,7 @@ pages:
                           w: 120
                           h: 60
 
-                - parameter: description
+                - parameter: editor_title
                   x: 120
                   y: 100
                   font_size: 24
@@ -705,7 +794,7 @@ pages:
          font: "sans-serif"
          font_size: 30
          fg_colour: FFFFFF
-         fields: 
+         fields:
                 - parameter: ed_accept
                   x: 60
                   y: 30
@@ -726,7 +815,7 @@ pages:
                           w: 120
                           h: 60
 
-                - parameter: description
+                - parameter: editor_title
                   x: 120
                   y: 70
                   font_size: 24
@@ -794,7 +883,7 @@ pages:
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
-         fields: 
+         fields:
                 - parameter: ed_accept
                   x: 60
                   y: 30
@@ -817,7 +906,7 @@ pages:
                           w: 120
                           h: 60
 
-                - parameter: description
+                - parameter: editor_title
                   x: 120
                   y: 90
                   font_size: 16
@@ -881,7 +970,7 @@ pages:
          font: "sans-serif"
          font_size: 16
          fg_colour: FFFFFF
-         fields: 
+         fields:
                 - parameter: ble_scan
                   x: 60
                   y: 30

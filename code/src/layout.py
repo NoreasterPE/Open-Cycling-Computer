@@ -210,7 +210,7 @@ class layout():
                     value = self.occ.sensors.parameters[parameter]["unit"]
                 except KeyError:
                     value = None
-            elif show == "minimum":
+            elif show == "min":
                 try:
                     v = self.occ.sensors.parameters[parameter]["value_min"]
                     ru = self.occ.sensors.parameters[parameter]["raw_unit"]
@@ -219,7 +219,7 @@ class layout():
                     value = numbers.sanitise(value)
                 except KeyError:
                     value = None
-            elif show == "average":
+            elif show == "avg":
                 try:
                     v = self.occ.sensors.parameters[parameter]["value_avg"]
                     ru = self.occ.sensors.parameters[parameter]["raw_unit"]
@@ -228,7 +228,7 @@ class layout():
                     value = numbers.sanitise(value)
                 except KeyError:
                     value = None
-            elif show == "maximum":
+            elif show == "max":
                 try:
                     v = self.occ.sensors.parameters[parameter]["value_max"]
                     ru = self.occ.sensors.parameters[parameter]["raw_unit"]
@@ -350,7 +350,9 @@ class layout():
         self.log.debug("render_pressed_button finished", extra=self.extra)
 
     def check_click(self, position, click):
-        long_click_data_ready = False
+        resettable = False
+        editable = False
+        parameter_for_reset = None
         if click == 'SHORT':
             clicked_parameter = None
             for parameter, r in self.parameter_rect_list.items():
@@ -365,8 +367,10 @@ class layout():
                 if self.point_in_rect(position, r[1]):
                     for f in self.current_page['fields']:
                         try:
-                            _f = f["parameter"] + "_" + f["show"]
+                            show = f["show"]
+                            _f = f["parameter"] + "_" + show
                         except KeyError:
+                            show = None
                             _f = f["parameter"]
                         if _f == parameter:
                             try:
@@ -384,10 +388,10 @@ class layout():
                                         self.editor_fields["editor"] = None
                                         self.log.critical("Function {} marked as editable, but no editor field found".format(parameter), extra=self.extra)
                                     try:
-                                        self.editor_fields["description"] = f["description"]
+                                        self.editor_fields["editor_title"] = f["editor_title"]
                                     except KeyError:
-                                        self.editor_fields["description"] = None
-                                        self.log.critical("Function {} marked as editable, but no description field found".format(parameter), extra=self.extra)
+                                        self.editor_fields["editor_title"] = None
+                                        self.log.critical("Function {} marked as editable, but no editor_title field found".format(parameter), extra=self.extra)
                                     try:
                                         self.editor_fields["format"] = f["format"]
                                     except KeyError:
@@ -395,12 +399,10 @@ class layout():
                             except KeyError:
                                     editable = False
                             if resettable:
-                                self.log.debug("Resetting {}".format(r[0]), extra=self.extra)
-                                print("resetting parameter {} {} not yet ready".format(parameter, r[0]))
-                                #self.occ.rp.reset_param(r[0])
+                                parameter_for_reset = (f["parameter"], show)
+                                break
                             elif editable:
                                 self.editor_fields["parameter"] = r[0]
-                                long_click_data_ready = True
                                 break
                             else:
                                 self.log.debug("LONG CLICK on non-clickable {}".format(r[0]), extra=self.extra)
@@ -413,8 +415,7 @@ class layout():
         elif click == 'T_TO_B':  # Swipe TOP to BOTTOM
             self.run_function("settings")
 
-        if long_click_data_ready:
-            long_click_data_ready = False
+        if editable:
             self.log.debug("Opening editor {} for {}".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
             p = self.editor_fields["parameter"]
             self.editor_fields["unit"] = self.occ.sensors.parameters[p]["unit"]
@@ -436,6 +437,10 @@ class layout():
                 return
             self.editor_fields["index"] = 0
             self.use_page(self.editor_fields["editor"])
+        elif resettable:
+            self.log.debug("Resetting {}".format(parameter_for_reset), extra=self.extra)
+            self.occ.sensors.parameter_reset(parameter_for_reset)
+            self.parameter_for_reset = None
 
     def run_function(self, parameter):
         functions = {"page_0": self.load_page_0,

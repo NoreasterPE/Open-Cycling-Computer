@@ -147,7 +147,7 @@ class sensors(threading.Thread, metaclass=Singleton):
                 except KeyError as e:
                     # TBC KeyError: 'cadence_speed_device_address'
                     self.log.critical(e, extra=self.extra)
-            or module in notify:
+            for module in notify:
                 try:
                     self.sensors[module].notification()
                 except AttributeError:
@@ -213,7 +213,7 @@ class sensors(threading.Thread, metaclass=Singleton):
     #  @param value_min Minimum observed value of the parameter, defaults to +infinity
     #  @param value_avg Average value of the parameter, defaults to not-a-number. The type of average is decided by the module setting the value.
     #  @param value_max Maximum observed value of the parameter, defaults to -infinity
-    #  @param value_defaulti Parameter default to this value after sensor reset
+    #  @param value_default Parameter default to this value after sensor reset
     #  @param raw_unit Internal unit, i.e. for odometer it's meter "m"
     #  @param unit Unit used to dispaly the parameter i.e. for odometer it might be km or mi (mile)
     #  @param units_allowed List of units allowed for the parametes. The units has to be covered in unit_converter module
@@ -279,11 +279,23 @@ class sensors(threading.Thread, metaclass=Singleton):
     #  @param self The python object self
     #  @param parameter_name name of the parameter to be updated
     #  @param content dictionary with new content. All fileds from the content will be used, even if they are set to None
-    def update_parameter(self, parameter_name, content):
+    def update_parameter(self, parameter, content):
         content["sensor_name"] = None
-        self.log.debug("update parameter called for {}".format(parameter_name), extra=self.extra)
-        if parameter_name not in self.parameters:
-            self.register_parameter(parameter_name)
-        self.parameters[parameter_name].update(content)
-        self.parameters[parameter_name]["force_notification"] = True
-        self.log.debug("after update_parameter {} is {}".format(parameter_name, self.parameters[parameter_name]), extra=self.extra)
+        self.log.debug("update parameter called for {}".format(parameter), extra=self.extra)
+        if parameter not in self.parameters:
+            self.register_parameter(parameter)
+        self.parameters[parameter].update(content)
+        self.parameters[parameter]["force_notification"] = True
+        self.log.debug("after update_parameter {} is {}".format(parameter, self.parameters[parameter]), extra=self.extra)
+
+    def parameter_reset(self, parameter):
+        self.log.debug("reset request received for {}".format(parameter), extra=self.extra)
+        if parameter[1] is None:
+            self.parameters[parameter[0]]['value'] = self.parameters[parameter[0]]['value_default']
+        else:
+            if parameter[1] == 'min':
+                self.parameters[parameter[0]]['value_min'] = numbers.INF
+            elif parameter[1] == 'avg':
+                self.parameters[parameter[0]]['value_avg'] = numbers.NAN
+            elif parameter[1] == 'max':
+                self.parameters[parameter[0]]['value_max'] = numbers.INF_MIN
