@@ -28,8 +28,7 @@ class compute(sensor.sensor):
         self.s.register_parameter("speed", self.extra["module_name"], value=numbers.NAN, raw_unit="m/s", unit="km/h", units_allowed=["m/s", "km/h", "mi/h"])
         self.s.register_parameter("start_time", self.extra["module_name"], raw_unit="s")
         self.s.parameters["start_time"]["value"] = time.time()
-        self.s.register_parameter("session_time", self.extra["module_name"], raw_unit="s")
-        self.s.parameters["session_time"]["value"] = 0.0
+        self.s.register_parameter("session_time", self.extra["module_name"], value=0.0, value_default=0.0, raw_unit="s")
         self.s.request_parameter("odometer", self.extra["module_name"])
         self.odometer = None
         self.odometer_delta_cumulative = 0.0
