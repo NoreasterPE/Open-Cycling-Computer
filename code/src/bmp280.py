@@ -78,10 +78,14 @@ class bmp280(sensor.sensor):
     def measure(self):
         # Reades pressure and temperature from the kernel driver
         # FIXME Hardware checks
-        with open('/sys/bus/iio/devices/iio:device0/in_pressure_input', 'r') as press:
-            self.pressure_unfiltered = float(press.read()) * 1000.0
-        with open('/sys/bus/iio/devices/iio:device0/in_temp_input', 'r') as temp:
-            self.s.parameters["temperature"]["value"] = float(temp.read()) / 1000.0
+        try:
+            with open('/sys/bus/iio/devices/iio:device0/in_pressure_input', 'r') as press:
+                self.pressure_unfiltered = float(press.read()) * 1000.0
+            with open('/sys/bus/iio/devices/iio:device0/in_temp_input', 'r') as temp:
+                self.s.parameters["temperature"]["value"] = float(temp.read()) / 1000.0
+        except FileNotFoundError:
+            # FileNotFoundError: [Errno 2] No such file or directory: '/sys/bus/iio/devices/iio:device0/in_pressure_input'
+            pass
 
     def run(self):
         self.log.debug("Main loop started", extra=self.extra)

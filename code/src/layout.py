@@ -254,7 +254,8 @@ class layout():
                 elif string_format == "time":
                     try:
                         value = datetime.datetime.fromtimestamp(int(value)).strftime('%H:%M:%S')
-                    except TypeError:
+                    except (TypeError, ValueError):
+                        # ValueError: invalid literal for int() with base 10: ''
                         pass
                 elif string_format == "date":
                     try:
