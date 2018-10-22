@@ -34,18 +34,21 @@ class bmp280(sensor.sensor):
         self.s = sensors.sensors()
         self.s.register_parameter("pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])
         self.s.register_parameter("pressure_nof", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])
+        self.s.register_parameter("mean_sea_level_pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])
         self.s.register_parameter("temperature", self.extra["module_name"], raw_unit="C", unit="C", units_allowed=["C", "F"])
         self.s.register_parameter("altitude", self.extra["module_name"], raw_unit="m", unit="m", units_allowed=["m"])
         self.s.request_parameter("reference_altitude", self.extra["module_name"])
+        self.s.request_parameter("mean_sea_level_pressure", self.extra["module_name"])
         ## @var pressure_unfiltered
         #  Pressure as reported by the sensor. Might be IIR filtered, depending on the sensor configureaion
         self.pressure_unfiltered = numbers.NAN
-        ## @var altitude_delta
-        #  Change of altitude since last measurement
-        self.altitude_delta = numbers.NAN
-        ## @var pressure_at_sea_level
-        #  Mean sea-level pressure. Calculations are based on reference altitude
-        self.pressure_at_sea_level = numbers.NAN
+        ## @var reference_altitude
+        #  Reference altitude used to calculate current altitude
+        self.reference_altitude = numbers.NAN
+        self.ignore_reference_altitude_change = False
+        ## @var mean_sea_level_pressure
+        #  Mean sea-level pressure. Calculations are based on reference altitude or might be set by the user as MSLP METAR
+        self.mean_sea_level_pressure = numbers.NAN
         self.measure()
         self.kalman_setup()
         self.log.debug("Initialised.", extra=self.extra)
@@ -53,8 +56,24 @@ class bmp280(sensor.sensor):
     ## Trigger calculation of pressure at the sea level on change of reference altitude
     #  @param self The python object self
     def notification(self):
-        self.log.debug("notification received", extra=self.extra)
-        self.calculate_pressure_at_sea_level()
+        # User editer mean_sea_level_pressure, use it and calculate reference_altitude
+        if self.s.parameters["mean_sea_level_pressure"]["value"] != self.mean_sea_level_pressure:
+            self.log.debug("mean_sea_level_pressure changed to {}".format(self.s.parameters['mean_sea_level_pressure']['value']), extra=self.extra)
+            self.mean_sea_level_pressure = self.s.parameters["mean_sea_level_pressure"]["value"]
+            ra = self.calculate_altitude(self.s.parameters['pressure']['value'])
+            if ra is not None and not math.isnan(ra):
+                # reference_altitude recalculation triggers notification, so ignore the next event
+                self.ignore_reference_altitude_change = True
+                self.s.parameters['reference_altitude']['value'] = ra
+            self.log.debug("reference_altitude recalculated to: {}".format(self.s.parameters['reference_altitude']['value']), extra=self.extra)
+        elif self.s.parameters["reference_altitude"]["value"] != self.reference_altitude:
+            self.log.debug("reference_altitude changed to {}".format(self.s.parameters['reference_altitude']['value']), extra=self.extra)
+            if not self.ignore_reference_altitude_change:
+                self.reference_altitude = self.s.parameters["reference_altitude"]["value"]
+                self.calculate_mean_sea_level_pressure()
+                self.log.debug("mean_sea_level_pressure recalculated to: {}".format(self.s.parameters['mean_sea_level_pressure']['value']), extra=self.extra)
+            else:
+                self.ignore_reference_altitude_change = False
 
     def measure(self):
         # Reades pressure and temperature from the kernel driver
@@ -69,10 +88,11 @@ class bmp280(sensor.sensor):
         self.running = True
         while self.running:
             self.measure()
-            if math.isnan(self.pressure_at_sea_level):
-                self.calculate_pressure_at_sea_level()
+            if self.mean_sea_level_pressure is not None:
+                if math.isnan(self.mean_sea_level_pressure):
+                    self.calculate_mean_sea_level_pressure()
             self.kalman_update()
-            self.calculate_altitude()
+            self.s.parameters['altitude']['value'] = self.calculate_altitude(self.s.parameters['pressure']['value'])
             self.log.debug("pressure = {} [Pa], temperature = {} [C]".format(self.s.parameters["pressure"]["value"], self.s.parameters["temperature"]["value"]), extra=self.extra)
             self.log.debug("altitude = {} [m]".format(self.s.parameters["altitude"]["value"]), extra=self.extra)
             try:
@@ -123,14 +143,14 @@ class bmp280(sensor.sensor):
         self.s.parameters["pressure_nof"]["value"] = self.pressure_unfiltered
 
     ## Calculates pressure at sea level based on given reference altitude
-    #  Saves calculated value to self.pressure_at_sea_level
+    #  Saves calculated value to self.mean_sea_level_pressure
     #  @param self The python object self
     #  @param reference_altitude Home altitudei
-    def calculate_pressure_at_sea_level(self):
+    def calculate_mean_sea_level_pressure(self):
         self.log.debug("pressure: {}".format(self.s.parameters["pressure"]["value"]), extra=self.extra)
         try:
             ref_alt = float(self.s.parameters["reference_altitude"]["value"])
-        except (ValueError):
+        except (ValueError, TypeError):
             ref_alt = 0.0
             self.log.error("Reference altitude : {}, can't convert to float. Using 0 m".format(self.s.parameters["reference_altitude"]["value"]), extra=self.extra)
         except (KeyError):
@@ -139,25 +159,26 @@ class bmp280(sensor.sensor):
         try:
             if ref_alt < 43300.0:
                 try:
-                    self.pressure_at_sea_level = float(self.s.parameters["pressure"]["value"] / pow((1 - ref_alt / 44330), 5.255))
+                    self.mean_sea_level_pressure = float(self.s.parameters["pressure"]["value"] / pow((1 - ref_alt / 44330), 5.255))
                 except TypeError:
-                    self.pressure_at_sea_level = numbers.NAN
+                    self.mean_sea_level_pressure = numbers.NAN
             else:
                 self.log.debug("Reference altitude over 43300: {}, can't calculate pressure at sea level".format(ref_alt), extra=self.extra)
-                self.pressure_at_sea_level = numbers.NAN
+                self.mean_sea_level_pressure = numbers.NAN
         except TypeError:
             pass
-        self.log.debug("pressure_at_sea_level: {}".format(self.pressure_at_sea_level), extra=self.extra)
+        self.s.parameters['mean_sea_level_pressure']['value'] = self.mean_sea_level_pressure
+        self.log.debug("mean_sea_level_pressure: {}".format(self.mean_sea_level_pressure), extra=self.extra)
 
-    ## Calculates altitude and altitude_delta based on pressure_at_sea_level and current pressure
-    #  Saves calculated value to self.s.parameters["altitude]" and sel.altitude_delta
+    ## Calculates altitude based on mean_sea_level_pressure and given pressure
+    #  Saves calculated value to self.s.parameters["altitude]"
     #  @param self The python object self
-    def calculate_altitude(self):
-        altitude_previous = self.s.parameters["altitude"]["value"]
-        if self.s.parameters["pressure"]["value"] != 0:
-            self.s.parameters["altitude"]["value"] = round(44330.0 * (1 - pow((self.s.parameters["pressure"]["value"] / self.pressure_at_sea_level), (1 / 5.255))), 2)
+    def calculate_altitude(self, pressure):
+        altitude = numbers.NAN
         try:
-            self.altitude_delta = self.s.parameters["altitude"]["value"] - altitude_previous
+            if pressure != 0:
+                altitude = round(44330.0 * (1 - pow((pressure / self.mean_sea_level_pressure), (1 / 5.255))), 2)
         except TypeError:
-            self.altitude_delta = numbers.NAN
-        self.log.debug("altitude: {}, altitude_delta {}".format(self.s.parameters["altitude"]["value"], self.altitude_delta), extra=self.extra)
+            pass
+        self.log.debug("calculate_altitude produced altitude: {}".format(altitude), extra=self.extra)
+        return altitude
