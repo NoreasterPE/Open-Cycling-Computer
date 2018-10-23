@@ -42,31 +42,18 @@ pages:
                           name: ble_host_state
                           frames: 6
 
-                - parameter: distance
+                - parameter: session_time
                   resettable: yes
-                  x: 170
-                  y: 180
-                  font_size: 30
+                  format: hhmmss
+                  x: 180
+                  y: 225
+                  font_size: 20
                   button:
                           x0: 120
                           y0: 160
                           w: 120
                           h: 80
 
-                - parameter: distance_units
-                  x: 210
-                  y: 175
-
-                - parameter: ridetime_hms
-                  x: 180
-                  y: 205
-                  font_size: 20
-
-                - parameter: session_time
-                  format: hhmmss
-                  x: 180
-                  y: 225
-                  font_size: 20
 
                 - parameter: slope
                   x: 50

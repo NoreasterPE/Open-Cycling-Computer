@@ -5,8 +5,8 @@ Valid parameter names for use in layout files (for now it's the best idea to che
 Parameters provided by modules:
 Module name   Parameter name:
 ble_hr        heart_rate                        - current heart rate for BLE sensor
-ble_hr        heart_rate_notification_beat      - indicate is notifications from the sensor keep coming. Every received notification flips the state between 0 and 1
 ble_hr        heart_rate_device_name            - name of BLE heart rate sensor, as reported by the device
+ble_hr        heart_rate_notification_beat      - indicate is notifications from the sensor keep coming. Every received notification flips the state between 0 and 1
 ble_sc        cadence                           - cadence from BLE sensor
 ble_sc        cadence_notification_beat         - indicate is notifications from the sensor keep coming. Every received notification flips the state between 0 and 1
 ble_sc        cadence_speed_device_name         - name of BLE cadence/speed sensor, as reported by the device
@@ -15,16 +15,16 @@ ble_sc        wheel_revolution_time             - time of last wheel revolution
 ble_sc        wheel_revolutions                 - total number of wheel revolutions for BLE sensor 
 bmp280        altitude                          - current altitude, calculated from pressure
 bmp280        pressure                          - current atmospheric pressure
+bmp280        reference_altitude                - reference (home) altitude used to calculate mean sea level pressure
 bmp280        temperature                       - current temperature
 compute       real_time                         - current time
-compute       session_time                      - time since the start of compute module
+compute       session_start_time                - time stamp of compute module start or reset
+compute       session_time                      - time since the start of compute module or sine reset
 compute       slope                             - gradient of the road, claculated from altitude change and odometer change
 compute       speed                             - ground speed, calculated from wheel size and wheel revolution time
-compute       start_time                        - time stamp of compute module start
 config        cadence_speed_device_address      - BLE address of speed/cadence sensor
 config        heart_rate_device_address         - BLE address of heart rate sensor
 config        log_level                         - logging level
-bmp280        reference_altitude                - reference (home) altitude used to calculate mean sea level pressure
 config        rider_weight                      - rider weight, currently not used
 config        wheel_circumference               - circumference of wheel, calculated from wheel size (see wheel module for the details)
 

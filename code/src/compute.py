@@ -3,7 +3,7 @@
 ## @package compute
 #  Module for handling calculations that require more than sensor data
 
-#import numbers
+import math
 import numbers
 import sensor
 import sensors
@@ -26,13 +26,12 @@ class compute(sensor.sensor):
         self.s.register_parameter("real_time", self.extra["module_name"])
         self.s.register_parameter("slope", self.extra["module_name"], value=numbers.NAN, raw_unit="m/m", unit="%", units_allowed=["m/m", "%"])
         self.s.register_parameter("speed", self.extra["module_name"], value=numbers.NAN, raw_unit="m/s", unit="km/h", units_allowed=["m/s", "km/h", "mi/h"])
-        self.s.register_parameter("start_time", self.extra["module_name"], raw_unit="s")
-        self.s.parameters["start_time"]["value"] = time.time()
-        self.s.register_parameter("session_time", self.extra["module_name"], value=0.0, value_default=0.0, raw_unit="s")
+        self.s.register_parameter("session_start_time", self.extra["module_name"], value=time.time(), raw_unit="s")
+        self.session_start_time = self.s.parameters['session_start_time']['value']
+        self.s.register_parameter("session_time", self.extra["module_name"], value=0.0, value_default=numbers.NAN, raw_unit="s")
         self.s.request_parameter("odometer", self.extra["module_name"])
         self.odometer = None
         self.odometer_delta_cumulative = 0.0
-        # FIXME Currently not calculated
         self.odometer_delta = 0.0
         self.s.request_parameter("altitude", self.extra["module_name"])
         self.altitude = None
@@ -69,7 +68,10 @@ class compute(sensor.sensor):
         self.log.debug("Main loop started", extra=self.extra)
         self.running = True
         while self.running:
-            self.s.parameters["session_time"]["value"] = time.time() - self.s.parameters["start_time"]["value"]
+            # Check if there was a reset of session time
+            if math.isnan(self.s.parameters["session_time"]["value"]):
+                self.s.parameters["session_start_time"]["value"] = time.time()
+            self.s.parameters["session_time"]["value"] = time.time() - self.s.parameters["session_start_time"]["value"]
             self.s.parameters["real_time"]["value"] = time.time()
             time.sleep(0.1)
         self.log.debug("Main loop finished", extra=self.extra)
