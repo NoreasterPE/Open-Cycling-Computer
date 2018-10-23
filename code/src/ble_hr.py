@@ -24,6 +24,7 @@ class ble_hr(ble_sensor.ble_sensor):
         super().__init__()
         self.s = sensors.sensors()
         self.s.register_parameter("heart_rate_device_name", self.extra["module_name"])
+        self.s.register_parameter("heart_rate_battery_level", self.extra["module_name"])
         self.s.register_parameter("heart_rate", self.extra["module_name"], value=numbers.NAN, raw_unit="BPM", unit="BPM", units_allowed=["BMP"])
         self.s.register_parameter("heart_rate_notification_beat", self.extra["module_name"])
         self.s.request_parameter("heart_rate_device_address", self.extra["module_name"])
@@ -56,6 +57,9 @@ class ble_hr(ble_sensor.ble_sensor):
     def notification(self):
         if self.s.parameters["heart_rate_device_address"]["value"] != self.device_address:
             self.device_address = self.s.parameters["heart_rate_device_address"]["value"]
+        if self.s.parameters["heart_rate_battery_level"]["value"] != self.battery_level:
+            self.s.parameters["heart_rate_battery_level"]["value"] = self.battery_level
+
 
 
 ## Class for handling BLE notifications from heart rate sensor

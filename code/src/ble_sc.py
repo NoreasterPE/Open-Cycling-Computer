@@ -25,6 +25,7 @@ class ble_sc(ble_sensor.ble_sensor):
         self.log.debug("{} __init__ started".format(__name__), extra=self.extra)
         self.s = sensors.sensors()
         self.s.register_parameter("cadence_speed_device_name", self.extra["module_name"])
+        self.s.register_parameter("cadence_speed_battery_level", self.extra["module_name"])
         self.s.register_parameter("wheel_revolution_time", self.extra["module_name"], raw_unit="s")
         self.s.register_parameter("wheel_revolutions", self.extra["module_name"])
         self.s.register_parameter("odometer", self.extra["module_name"], raw_unit="m", unit="km")
@@ -78,7 +79,9 @@ class ble_sc(ble_sensor.ble_sensor):
 
     def notification(self):
         if self.s.parameters["cadence_speed_device_address"]["value"] != self.device_address:
-            self.device_address = self.s.parameters["cadence_speed_device_address"]["value"]
+            self.s.parameters["cadence_speed_device_address"]["value"] = self.device_address
+        if self.s.parameters["cadence_speed_battery_level"]["value"] != self.battery_level:
+            self.s.parameters["cadence_speed_battery_level"]["value"] = self.battery_level
 
     def reset_data(self):
         super().reset_data()
