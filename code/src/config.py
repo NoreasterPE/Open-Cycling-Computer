@@ -69,18 +69,16 @@ class config(object):
 
         try:
             self.s.update_parameter("wheel_size", self.config_params["wheel_size"])
-        except AttributeError:
-            error_list.append("wheel_size")
-        try:
             import wheel
             w = wheel.wheel()
-            self.s.register_parameter("wheel_circumference",
-                                      self.extra["module_name"],
-                                      raw_unit="m",
-                                      unit="cm",
-                                      units_allowed=["cm", "mm"])
-            self.s.update_parameter("wheel_circumference", dict(value=w.get_circumference(self.s.parameters["wheel_size"]["value"])))
+            wc = w.get_circumference(self.s.parameters["wheel_size"]["value"])
         except AttributeError:
+            wc = 0.0
+            error_list.append("wheel_size")
+        try:
+            self.s.update_parameter("wheel_circumference", self.config_params["wheel_circumference"])
+        except AttributeError:
+            self.s.update_parameter("wheel_circumference", dict(value=wc))
             error_list.append("wheel_circumference")
 
         ## @var reference_altitude
@@ -154,6 +152,7 @@ class config(object):
         c["layout_path"] = self.occ.layout_path
         c["rider_weight"] = self.s.parameters["rider_weight"]
         c["wheel_size"] = self.s.parameters["wheel_size"]
+        c["wheel_circumference"] = self.s.parameters["wheel_circumference"]
         c["reference_altitude"] = self.s.parameters["reference_altitude"]
         c["odometer"] = self.s.parameters["odometer"]
         #c["total_ride_time"] = self.s.parameters["total_ride_time"]

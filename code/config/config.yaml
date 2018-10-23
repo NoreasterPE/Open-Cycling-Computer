@@ -145,6 +145,22 @@ temperature:
   value_default: null
   value_max: 29.51
   value_min: 20.13
+wheel_circumference:
+  force_notification: false
+  raw_unit: m
+  required_by:
+  - ble_sc
+  sensor_name: null
+  time_stamp: 1540312597.1810174
+  unit: mm
+  units_allowed:
+  - cm
+  - mm
+  value: 2.105
+  value_avg: .nan
+  value_default: null
+  value_max: -.inf
+  value_min: .inf
 wheel_size:
   force_notification: false
   raw_unit: null
