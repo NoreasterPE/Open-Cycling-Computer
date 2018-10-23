@@ -100,6 +100,9 @@ class sensors(threading.Thread, metaclass=Singleton):
         import compute
         self.sensors['compute'] = compute.compute()
 
+        import ride_log
+        self.sensors['ride_log'] = ride_log.ride_log()
+
         import bmp280
         self.sensors['bmp280'] = bmp280.bmp280()
 
@@ -117,6 +120,9 @@ class sensors(threading.Thread, metaclass=Singleton):
 
         self.log.debug("Starting compute thread", extra=self.extra)
         self.sensors['compute'].start()
+
+        self.log.debug("Starting ride_log thread", extra=self.extra)
+        self.sensors['ride_log'].start()
 
         self.log.debug("Starting ble_hr thread", extra=self.extra)
         self.sensors['ble_hr'].start()

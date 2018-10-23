@@ -5,23 +5,25 @@
 import time
 import logging
 import numbers
+import sensor
 import sensors
-import sched
 
 
 ## Class for handling ride parameters logging
-class ride_log():
+class ride_log(sensor.sensor):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': 'ride_log'}
 
     ## @var RIDE_LOG_UPDATE
     # Period of time in s between ride log update events.
-    RIDE_LOG_UPDATE = 1.0
+    RIDE_LOG_UPDATE = 0.9
 
     ## The constructor
     #  @param self The python object self
     def __init__(self):
+        # Run init for super class
+        super().__init__()
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
@@ -38,28 +40,14 @@ class ride_log():
                                          'heart_rate': "Heart RT", 'pressure': "Pressure", 'pressure_nof': "Pressure nof", 'temperature': "Temp",
                                          'altitude': "Altitude", 'odometer': "Odometer", 'slope': "Slope"})
         self.s = sensors.sensors()
-        ## @var event_scheduler
-        self.event_scheduler = sched.scheduler(time.time, time.sleep)
+        self.s.request_parameter("real_time", self.extra["module_name"])
+        self.last_log_entry = 0.0
 
-    def schedule_update_event(self):
-        self.log.debug("schedule_update_event started", extra=self.extra)
-        self.add_entry()
-        if not self.stopping:
-            #Setting up next update event
-            self.event_scheduler.enter(self.RIDE_LOG_UPDATE, 1, self.schedule_update_event)
-            t = self.event_scheduler.run(blocking=False)
-            self.log.debug("Event scheduler, next event in: {0:.3f}".format(t), extra=self.extra)
-        self.log.debug("schedule_update_event finished", extra=self.extra)
-
-    def stop(self):
-        self.stopping = True
-
-    def start(self):
-        self.stopping = False
-        self.log.debug("Setting up event scheduler", extra=self.extra)
-        #self.event_scheduler.enter(self.RIDE_LOG_UPDATE, 1, self.schedule_update_event)
-        self.schedule_update_event()
-        self.log.debug("Start finished", extra=self.extra)
+    def notification(self):
+        self.log.debug("notification received", extra=self.extra)
+        if self.s.parameters['real_time']['value'] - self.last_log_entry > self.RIDE_LOG_UPDATE:
+            self.last_log_entry = self.s.parameters['real_time']['value']
+            self.add_entry()
 
     def add_entry(self):
         self.log.debug("Adding ride log entry", extra=self.extra)
@@ -76,7 +64,7 @@ class ride_log():
             slp = numbers.sanitise(self.s.parameters["slope"]["value"])
 
             self.ride_logger.info('', extra={'time': tme, 'speed': spd, 'cadence': cde,
-                                             'heart_rate': hrt, 'pressure': pre, 'pressure_nof': prn,'temperature': tem,
+                                             'heart_rate': hrt, 'pressure': pre, 'pressure_nof': prn, 'temperature': tem,
                                              'altitude': alt, 'odometer': odo, 'slope': slp})
         except KeyError:
             self.log.debug("Not all parameters for ride log are ready, waiting...", extra=self.extra)

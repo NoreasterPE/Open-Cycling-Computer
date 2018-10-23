@@ -11,7 +11,6 @@ from events import events
 import layout
 from pitft_touchscreen import pitft_touchscreen
 from rendering import rendering
-import ride_log
 import sensors
 import logging
 import logging.handlers
@@ -99,16 +98,10 @@ class open_cycling_computer(object, metaclass=singleton):
         #  Handle to touchscreen (pitft_touchscreen module)
         self.log.debug("Initialising pitft touchscreen", extra=self.extra)
         self.touchscreen = pitft_touchscreen()
-        ## @var ride_log
-        #  Handle to ride_log instance
-        self.log.debug("Initialising ride_log", extra=self.extra)
-        self.ride_log = ride_log.ride_log()
-        self.log.debug("Starting ride_log", extra=self.extra)
-        self.ride_log.start()
         ## @var events
         #  Handle to events instance
         self.log.debug("Initialising events", extra=self.extra)
-        self.events = events(self.layout, self.touchscreen, self.ride_log, self.rendering)
+        self.events = events(self.layout, self.touchscreen, self.rendering)
 
     ## Switches logging level
     #  @param self The python object self
@@ -129,7 +122,7 @@ class open_cycling_computer(object, metaclass=singleton):
     def get_simulate(self):
         return self.simulate
 
-    ## Clean up function. Stops ride_log, writes config and layout and ends OCC. Should never be user it the real device once the code is ready. Used on development version.
+    ## Clean up function. Writes config and layout and ends OCC. Should never be user it the real device once the code is ready. Used on development version.
     #  @param self The python object self
     def cleanup(self):
         if self.cleaning is False:
@@ -140,7 +133,6 @@ class open_cycling_computer(object, metaclass=singleton):
             self.log.debug("Cleaning already in progress", extra=self.extra)
             return
         self.events.stop()
-        self.ride_log.stop()
         time.sleep(2.0)
         try:
             self.rendering.stop()
