@@ -3,7 +3,6 @@ UI
 - Click to switch value i.e. click on temperature to cycle over min/average/max [TBC]
 - BLE device list expiry time. Currently never expires
 - There is no way to disconnect from a BLE device
-- Add separate page for units. Slope, pressure
 - Add text align options to layout (left/center/right)
 - Consider icons instead of Accept/Cancel/+/-/<--/-->
 - Fix icon lines width - it's not consistent
@@ -19,16 +18,13 @@ REAL WORLD PROBLEMS:
 - Do not try to initialise subsystems too many times. If BLE/GPS/other sensor is not there it won't magically show up. Log error and give up.
 - Add a module to allow real live raw data monitoring
 - Use Kalman filter for speed - BLE SC goes crazy sometimes
-- Make threads stoppable with feedback for clean exit (low priority)
 - Use Kalman filter for heart rate - ble_hr goes crazy sometimes
 - Use Kalman filter for cadence - ble_sc goes crazy sometimes
 - Quit/Halt should render some exit screen
 - BLE device name might be too long for assigned space. Split or cut. Use i4oled code if needed.
-- Average speed units to be changed with speed units. Required cleaning ride_parameters code first.
 - Set up low battery warning/shutdown. Pimoroni Lipo shim informs about battery state.
 - Ride log configuration in a config file
 - Loading sensor modules from files in a sub-directory
-- pressure_at_sea_level is sometimes updated even if there was no change in reference_altitude [TBC]
 - units_allowed should come from unit_converter
 - consider splitting layout into one-page-per-file
 
@@ -48,7 +44,6 @@ FUTURE
 - Button maps with colour images
 - Make library for layout handling. Might be useful for other projects like weather station [IN PROGRESS]
 - Explore python-osmgpsmap
-- Use METAR to calibrate altitude (internet connecion needed)
 
 [DONE]
 1. [DONE] Saving setting (i.e. current layout)
@@ -201,4 +196,9 @@ TypeError: argument 1 must be pygame.Surface, not None
             - prefix in dictionary and keep generic names. It would required some parameter registration (check linux kernel and driver reqistration)
 94. [WONTFIX[ - Remove get_raw_data dict definition. Add self.params to sensor class {conception change}
 95. [DONE] - Fix inconsistent naming: func, function, param_name
-86. [DONE] - ride_parameters to be reduced/removed when compute module takes over all calcs
+96. [DONE] - ride_parameters to be reduced/removed when compute module takes over all calcs
+97. [DONE] - Add separate page for units. Slope, pressure
+98. [DOME] - Average speed units to be changed with speed units. Required cleaning ride_parameters code first.
+99. [DONE] - pressure_at_sea_level is sometimes updated even if there was no change in reference_altitude [TBC]
+100. [DONE] - Use METAR to calibrate altitude (internet connecion needed) {user input of MSLP}
+101. [DONE] - Make threads stoppable with feedback for clean exit (low priority)
