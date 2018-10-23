@@ -45,9 +45,10 @@ class ride_log(sensor.sensor):
 
     def notification(self):
         self.log.debug("notification received", extra=self.extra)
-        if self.s.parameters['real_time']['value'] - self.last_log_entry > self.RIDE_LOG_UPDATE:
-            self.last_log_entry = self.s.parameters['real_time']['value']
-            self.add_entry()
+        if self.s.parameters['real_time']['value'] is not None:
+            if self.s.parameters['real_time']['value'] - self.last_log_entry > self.RIDE_LOG_UPDATE:
+                self.last_log_entry = self.s.parameters['real_time']['value']
+                self.add_entry()
 
     def add_entry(self):
         self.log.debug("Adding ride log entry", extra=self.extra)
