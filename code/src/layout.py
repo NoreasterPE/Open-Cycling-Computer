@@ -529,7 +529,14 @@ class layout():
     def ed_next(self):
         u = self.editor_fields["value"]
         i = self.editor_fields["index"]
-        if u[0] == '0':
+        strip_zero = True
+        try:
+            # Preserve leading zero if the value is less than 1.0
+            if float(u) < 1.0:
+                strip_zero = False
+        except TypeError:
+            pass
+        if u[0] == '0' and strip_zero:
             u = u[1:]
             self.editor_fields["value"] = u
         else:

@@ -11,7 +11,6 @@ CODING STYLE:
 - Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
 
 REAL WORLD PROBLEMS:
-- leading zero needs to be preserved in editor_number when value is less than 1.0 like 0.5
 - Use time_stamp for all parameters
 - Max speed will be false sooner or later after a single invalid measurement. Kalman filter required.
 - Average cadence to be calculated for ride time (reset with ride time?)
@@ -202,3 +201,4 @@ TypeError: argument 1 must be pygame.Surface, not None
 99. [DONE] - pressure_at_sea_level is sometimes updated even if there was no change in reference_altitude [TBC]
 100. [DONE] - Use METAR to calibrate altitude (internet connecion needed) {user input of MSLP}
 101. [DONE] - Make threads stoppable with feedback for clean exit (low priority)
+102. [DOME] - leading zero needs to be preserved in editor_number when value is less than 1.0 like 0.5
