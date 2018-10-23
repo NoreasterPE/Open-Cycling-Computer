@@ -160,6 +160,16 @@ pages:
          font_size: 24
          fg_colour: FFFFFF
          fields:
+                - parameter: real_time
+                  format: time
+                  x: 120
+                  y: 60
+
+                - parameter: real_time
+                  format: date
+                  x: 120
+                  y: 20
+
                 - parameter: odometer_icon
                   x: 10
                   y: 84
@@ -225,16 +235,6 @@ pages:
                   show: unit
                   x: 200
                   y: 180
-
-                - parameter: real_time
-                  format: time
-                  x: 120
-                  y: 60
-
-                - parameter: real_time
-                  format: date
-                  x: 120
-                  y: 20
 
                 - parameter: altitude_icon
                   x: 10
