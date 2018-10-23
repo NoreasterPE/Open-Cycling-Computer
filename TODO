@@ -1,14 +1,10 @@
 UI
-- Consider scroll-over-the-edge to switch pages
-- Click to switch value i.e. click on temperature to cycle over min/average/max [TBC]
 - BLE device list expiry time. Currently never expires
 - There is no way to disconnect from a BLE device
-- Add text align options to layout (left/center/right)
-- Consider icons instead of Accept/Cancel/+/-/<--/-->
 - Fix icon lines width - it's not consistent
 
 CODING STYLE:
-- Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
+- [EMPTY]
 
 REAL WORLD PROBLEMS:
 - Max speed will be false sooner or later after a single invalid measurement. Kalman filter required.
@@ -24,7 +20,6 @@ REAL WORLD PROBLEMS:
 - Ride log configuration in a config file
 - Loading sensor modules from files in a sub-directory
 - units_allowed should come from unit_converter
-- consider splitting layout into one-page-per-file
 
 CODE ERRORS:
 - Threads write to log aftred log end [ERROR]
@@ -36,12 +31,19 @@ HARDWARE:
 - Is it possible to read date/time from GPS chip with no fix or a separate clock is needed?
 - Fix lost should be marked in log? {Yes, as DEBUG}
 
-FUTURE
-- Auto reload layout on date time of modification change might be handy
-- Use real ff fonts instead of the "toy" cairo API
+OPTIONAL:
+- consider splitting layout into one-page-per-file
+- Click to switch value i.e. click on temperature to cycle over min/average/max
+- Consider scroll-over-the-edge to switch pages
+- Consider icons instead of Accept/Cancel/+/-/<--/-->
 - Button maps with colour images
-- Make library for layout handling. Might be useful for other projects like weather station [IN PROGRESS]
+- Auto reload layout on date time of modification change might be handy
 - Explore python-osmgpsmap
+- Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
+
+FUTURE
+- Use real ff fonts instead of the "toy" cairo API
+- Make library for layout handling. Might be useful for other projects like weather station [IN PROGRESS]
 
 [DONE]
 1. [DONE] Saving setting (i.e. current layout)
@@ -202,3 +204,4 @@ TypeError: argument 1 must be pygame.Surface, not None
 101. [DONE] - Make threads stoppable with feedback for clean exit (low priority)
 102. [DOME] - leading zero needs to be preserved in editor_number when value is less than 1.0 like 0.5
 103. [DONE] - Use time_stamp for all parameters {can be done with custom dict type, but that triggers custom yaml writer/reader. Won't fix}
+104. [DONE] - Add text align options to layout (left/center/right)
