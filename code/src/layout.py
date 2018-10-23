@@ -243,6 +243,10 @@ class layout():
                 except KeyError:
                     value = ""
             try:
+                align = field["align"]
+            except KeyError:
+                align = "center"
+            try:
                 string_format = field["format"]
                 if string_format == "hhmmss":
                     try:
@@ -301,9 +305,18 @@ class layout():
                 # Fall back to page font size
                 fs = self.page_font_size
             self.cr.set_font_size(fs)
+            x_shift = 0
+            te = self.cr.text_extents(uv)
+            y_shift = te.height / 2
+            if align == 'center':
+                x_shift = -1 * te.width / 2
+            elif align == 'right':
+                x_shift = -1 * te.width
+            elif align == 'left':
+                x_shift = 0
             if string_format != "zoomed_digit":
-                #FIXME Colour ignored for now
-                self.text_to_surface(uv, position_x, position_y)
+                rgb_colour = (1.0, 1.0, 1.0)
+                self.text_to_surface(uv, position_x + x_shift, position_y + y_shift, rgb_colour)
             else:
                 uv = self.editor_fields["value"]
                 i = self.editor_fields["index"]
@@ -315,18 +328,23 @@ class layout():
                 te3 = self.cr.text_extents(rv3)
                 #Currently edited digit
                 rv2 = uv[i]
-                self.cr.set_font_size(1.4 * fs)
+                #self.cr.set_font_size(1.4 * fs)
                 te2 = self.cr.text_extents(rv2)
 
                 total_width_half = (te1.width + te2.width + te3.width) / 2
-                rv1_x = position_x - total_width_half + (te1.width / 2) + te1.x_bearing
-                rv2_x = position_x - total_width_half + te1.width + (te2.width / 2) + te1.x_bearing + te2.x_bearing
-                rv3_x = position_x - total_width_half + te1.width + te2.width + (te3.width / 2) + te1.x_bearing + te2.x_bearing + te3.x_bearing
+                #rv1_x = position_x - total_width_half + (te1.width / 2) + te1.x_bearing
+                #rv2_x = position_x - total_width_half + te1.width + (te2.width / 2) + te1.x_bearing + te2.x_bearing
+                #rv3_x = position_x - total_width_half + te1.width + te2.width + (te3.width / 2) + te1.x_bearing + te2.x_bearing + te3.x_bearing
+                rv1_x = position_x - total_width_half
+                rv2_x = position_x - total_width_half + te1.x_advance
+                rv3_x = position_x - total_width_half + te1.x_advance + te2.x_advance
 
-                self.text_to_surface(rv2, rv2_x, position_y)
-                self.cr.set_font_size(fs)
-                self.text_to_surface(rv1, rv1_x, position_y)
-                self.text_to_surface(rv3, rv3_x, position_y)
+                rgb_colour = (1.0, 0.0, 0.0)
+                self.text_to_surface(rv2, rv2_x, position_y + y_shift, rgb_colour)
+                #self.cr.set_font_size(fs)
+                rgb_colour = (1.0, 1.0, 1.0)
+                self.text_to_surface(rv1, rv1_x, position_y + y_shift, rgb_colour)
+                self.text_to_surface(rv3, rv3_x, position_y + y_shift, rgb_colour)
 
     def render_all_buttons(self):
         # LAYOUT DEBUG FUNCION
@@ -534,7 +552,7 @@ class layout():
             # Preserve leading zero if the value is less than 1.0
             if float(u) < 1.0:
                 strip_zero = False
-        except TypeError:
+        except (TypeError, ValueError):
             pass
         if u[0] == '0' and strip_zero:
             u = u[1:]
@@ -707,15 +725,13 @@ class layout():
         self.cr.rectangle(x, y, w, h)
         self.cr.fill()
 
-    def text_to_surface(self, text, x, y):
+    def text_to_surface(self, text, x, y, c):
         self.cr.set_source_rgb(0.0, 0.0, 0.0)
         te = self.cr.text_extents(text)
-        self.cr.rectangle(x - (te.width / 2), y - (te.height / 2), te.width, te.height)
+        #self.cr.rectangle(x, y - te.height, te.width, te.height)
         self.cr.fill()
-        self.cr.set_source_rgb(1.0, 1.0, 1.0)
-        x0 = x - (te.width / 2) - te.x_bearing
-        y0 = y - (te.height / 2) - te.y_bearing
-        self.cr.move_to(x0, y0)
+        self.cr.set_source_rgb(c[0], c[1], c[2])
+        self.cr.move_to(x, y)
         self.cr.show_text(text)
         return (te)
 

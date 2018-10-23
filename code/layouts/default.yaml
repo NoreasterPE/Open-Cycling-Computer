@@ -176,11 +176,12 @@ pages:
                   file: images/odometer_icon_32x32.png
 
                 - parameter: odometer
+                  align: left
                   editor_title: Odometer
                   editable: yes
                   editor: editor_numbers
                   format: "%.1f"
-                  x: 100
+                  x: 70
                   y: 100
                   button:
                           x0: 0
@@ -190,7 +191,8 @@ pages:
 
                 - parameter: odometer
                   show: unit
-                  x: 200
+                  align: right
+                  x: 230
                   y: 100
 
                 - parameter: speed_icon
@@ -200,6 +202,7 @@ pages:
 
                 - parameter: speed
                   show: max
+                  align: left
                   format: "%.1f"
                   resettable: yes
                   button:
@@ -207,12 +210,13 @@ pages:
                           y0: 120
                           w: 240
                           h: 40
-                  x: 100
+                  x: 70
                   y: 140
 
                 - parameter: speed
                   show: unit
-                  x: 200
+                  align: right
+                  x: 230
                   y: 140
 
                 - parameter: speed_avg_icon
@@ -222,18 +226,20 @@ pages:
 
                 - parameter: speed
                   show: avg
+                  align: left
                   resettable: yes
                   button:
                           x0: 0
                           y0: 160
                           w: 240
                           h: 40
-                  x: 100
+                  x: 70
                   y: 180
 
                 - parameter: speed
                   show: unit
-                  x: 200
+                  align: right
+                  x: 230
                   y: 180
 
                 - parameter: altitude_icon
@@ -243,42 +249,48 @@ pages:
 
                 - parameter: altitude
                   format: "%.1f"
-                  x: 100
+                  align: left
+                  x: 70
                   y: 220
 
                 - parameter: altitude
                   show: unit
-                  x: 200
+                  align: right
+                  x: 230
                   y: 220
 
                 - parameter: pressure_icon
-                  x: 4
+                  x: 10
                   y: 244
                   file: images/pressure_icon_32x32.png
 
                 - parameter: pressure
                   format: "%.1f"
-                  x: 100
+                  align: left
+                  x: 70
                   y: 260
 
                 - parameter: pressure
                   show: unit
-                  x: 200
+                  align: right
+                  x: 230
                   y: 260
 
                 - parameter: temperature
                   format: "%.1f"
-                  x: 100
+                  align: left
+                  x: 70
                   y: 300
 
                 - parameter: temperature_icon
-                  x: 10
+                  x: 16
                   y: 284
                   file: images/temperature_icon_20x32.png
 
                 - parameter: temperature
                   show: unit
-                  x: 200
+                  align: right
+                  x: 230
                   y: 300
 
 
