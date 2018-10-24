@@ -79,7 +79,7 @@ class ble_sc(ble_sensor.ble_sensor):
 
     def notification(self):
         if self.s.parameters["cadence_speed_device_address"]["value"] != self.device_address:
-            self.s.parameters["cadence_speed_device_address"]["value"] = self.device_address
+            self.device_address = self.s.parameters["cadence_speed_device_address"]["value"]
         if self.s.parameters["cadence_speed_battery_level"]["value"] != self.battery_level:
             self.s.parameters["cadence_speed_battery_level"]["value"] = self.battery_level
 
