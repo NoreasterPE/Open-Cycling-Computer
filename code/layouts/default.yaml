@@ -429,7 +429,7 @@ pages:
                           w: 120
                           h: 80
 
-                - parameter: pressure
+                - parameter: mean_sea_level_pressure
                   show: unit
                   align: right
                   x: 235
