@@ -98,7 +98,6 @@ class bmp280(sensor.sensor):
             self.kalman_update()
             self.s.parameters['altitude']['value'] = self.calculate_altitude(self.s.parameters['pressure']['value'])
             self.log.debug("pressure = {} [Pa], temperature = {} [C]".format(self.s.parameters["pressure"]["value"], self.s.parameters["temperature"]["value"]), extra=self.extra)
-            self.log.debug("altitude = {} [m]".format(self.s.parameters["altitude"]["value"]), extra=self.extra)
             try:
                 self.s.parameters["pressure"]["value_min"] = min(self.s.parameters["pressure"]["value"], self.s.parameters["pressure"]["value_min"])
                 self.s.parameters["pressure"]["value_max"] = max(self.s.parameters["pressure"]["value"], self.s.parameters["pressure"]["value_max"])
@@ -184,5 +183,5 @@ class bmp280(sensor.sensor):
                 altitude = round(44330.0 * (1 - pow((pressure / self.mean_sea_level_pressure), (1 / 5.255))), 2)
         except TypeError:
             pass
-        self.log.debug("calculate_altitude produced altitude: {}".format(altitude), extra=self.extra)
+        self.log.debug("calculate_altitude  altitude: {} [m]".format(altitude), extra=self.extra)
         return altitude

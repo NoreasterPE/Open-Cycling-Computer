@@ -44,7 +44,6 @@ class ride_log(sensor.sensor):
         self.last_log_entry = 0.0
 
     def notification(self):
-        self.log.debug("notification received", extra=self.extra)
         if self.s.parameters['real_time']['value'] is not None:
             if self.s.parameters['real_time']['value'] - self.last_log_entry > self.RIDE_LOG_UPDATE:
                 self.last_log_entry = self.s.parameters['real_time']['value']
@@ -69,4 +68,3 @@ class ride_log(sensor.sensor):
                                              'altitude': alt, 'odometer': odo, 'slope': slp})
         except KeyError:
             self.log.debug("Not all parameters for ride log are ready, waiting...", extra=self.extra)
-        self.log.debug("Adding ride log entry finished", extra=self.extra)

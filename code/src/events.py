@@ -146,7 +146,6 @@ class events():
         self.reset_motion()
         self.touchscreen.start()
         while self.running:
-            self.log.debug("event loop running", extra=self.extra)
             while not self.touchscreen.queue_empty():
                 for e in self.touchscreen.get_event():
                     self.input_event_handler(e)
