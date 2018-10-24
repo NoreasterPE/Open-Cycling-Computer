@@ -109,6 +109,7 @@ rider_weight:
   units_allowed:
   - kg
   - lb
+  - st
   value: '80.0'
   value_avg: .nan
   value_default: null

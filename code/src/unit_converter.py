@@ -15,7 +15,7 @@ class unit_converter():
         self.distance = {"m": 1.0, "km": 1000.0, "mi": 1609.344, "yd": 0.9144, "cm":0.01, "mm":0.001}
         self.temperature = {"C", "F"}
         self.speed = {"m/s": 1.0, "km/h": 0.2777778, "mi/h": 0.44704}
-        self.mass = {"kg": 1.0, "st": 6.350293}
+        self.mass = {"kg": 1.0, "st": 6.350293, "lb": 0.4535924}
         self.slope = {"%", "m/m"}
         self.pressure = {"Pa": 1.0, "hPa": 100.0, "kPa": 1000.0}
 
@@ -146,6 +146,9 @@ if __name__ == '__main__':
 
     mass = 79.5  # kg
     print("kg: {} st: {}".format(mass, u.convert(mass, "kg", "st")))
+
+    mass = 79.5  # kg
+    print("kg: {} lb: {}".format(mass, u.convert(mass, "kg", "lb")))
 
     speed = 10  # m/s
     print("m/s: {} km/h: {} mi/h: {}".format(speed, u.convert(speed, "m/s", "km/h"), u.convert(speed, "m/s", "mi/h")))
