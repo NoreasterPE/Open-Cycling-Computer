@@ -72,9 +72,9 @@ pages:
 
                 - parameter: cadence
                   resettable: yes
-                  x: 50
-                  y: 290
-                  font_size: 40
+                  x: 55
+                  y: 295
+                  font_size: 50
                   button:
                           x0: 0
                           y0: 240
@@ -110,9 +110,9 @@ pages:
 
                 - parameter: heart_rate
                   resettable: yes
-                  x: 171
-                  y: 290
-                  font_size: 40
+                  x: 175
+                  y: 295
+                  font_size: 50
                   button:
                           x0: 120
                           y0: 240
