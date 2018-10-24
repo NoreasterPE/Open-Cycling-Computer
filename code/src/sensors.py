@@ -153,8 +153,7 @@ class sensors(threading.Thread, metaclass=Singleton):
                             for m in content["required_by"]:
                                 notify.append(m)
                 except KeyError as e:
-                    # TBC KeyError: 'cadence_speed_device_address'
-                    self.log.critical(e, extra=self.extra)
+                    pass
             for module in notify:
                 try:
                     self.sensors[module].notification()
