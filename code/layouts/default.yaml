@@ -110,6 +110,7 @@ pages:
 
                 - parameter: heart_rate
                   resettable: yes
+                  reset: min, avg, max
                   x: 175
                   y: 295
                   font_size: 50

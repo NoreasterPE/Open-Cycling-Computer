@@ -394,12 +394,17 @@ class layout():
                             show = f["show"]
                             _f = f["parameter"] + "_" + show
                         except KeyError:
-                            show = None
+                            show = ''
                             _f = f["parameter"]
                         if _f == parameter:
                             try:
                                 if f['resettable']:
                                     resettable = True
+                                try:
+                                    if f['reset']:
+                                        reset_list = f['reset'].split(',')
+                                except KeyError:
+                                        reset_list = []
                             except KeyError:
                                     resettable = False
                             try:
@@ -423,7 +428,8 @@ class layout():
                             except KeyError:
                                     editable = False
                             if resettable:
-                                parameter_for_reset = (f["parameter"], show)
+                                reset_list.append(show)
+                                parameter_for_reset = f["parameter"]
                                 break
                             elif editable:
                                 self.editor_fields["parameter"] = r[0]
@@ -462,8 +468,8 @@ class layout():
             self.editor_fields["index"] = 0
             self.use_page(self.editor_fields["editor"])
         elif resettable:
-            self.log.debug("Resetting {}".format(parameter_for_reset), extra=self.extra)
-            self.occ.sensors.parameter_reset(parameter_for_reset)
+            self.log.debug("Resetting {} with list: {}".format(parameter_for_reset, reset_list), extra=self.extra)
+            self.occ.sensors.parameter_reset(parameter_for_reset, reset_list)
             self.parameter_for_reset = None
 
     def run_function(self, parameter):

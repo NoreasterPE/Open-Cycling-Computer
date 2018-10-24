@@ -295,14 +295,15 @@ class sensors(threading.Thread, metaclass=Singleton):
         self.parameters[parameter]["force_notification"] = True
         self.log.debug("after update_parameter {} is {}".format(parameter, self.parameters[parameter]), extra=self.extra)
 
-    def parameter_reset(self, parameter):
+    def parameter_reset(self, parameter, reset_list):
         self.log.debug("reset request received for {}".format(parameter), extra=self.extra)
-        if parameter[1] is None:
-            self.parameters[parameter[0]]['value'] = self.parameters[parameter[0]]['value_default']
-        else:
-            if parameter[1] == 'min':
-                self.parameters[parameter[0]]['value_min'] = numbers.INF
-            elif parameter[1] == 'avg':
-                self.parameters[parameter[0]]['value_avg'] = numbers.NAN
-            elif parameter[1] == 'max':
-                self.parameters[parameter[0]]['value_max'] = numbers.INF_MIN
+        self.log.debug("reset list: {}".format(reset_list), extra=self.extra)
+        for suffix in reset_list:
+            if suffix == '':
+                self.parameters[parameter]['value'] = self.parameters[parameter]['value_default']
+            elif suffix == 'min':
+                self.parameters[parameter]['value_min'] = numbers.INF
+            elif suffix == 'avg':
+                self.parameters[parameter]['value_avg'] = numbers.NAN
+            elif suffix == 'max':
+                self.parameters[parameter]['value_max'] = numbers.INF_MIN
