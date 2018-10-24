@@ -39,6 +39,9 @@ class ble_hr(ble_sensor.ble_sensor):
     ## Process data delivered from delegate
     #  @param self The python object self
     def process_delegate_data(self):
+        if self.delegate.measurement_no <= 2:
+            #Fresh start or restart after lost connection. Update average valueA in the delegate
+            self.delegate.heart_rate_avg = self.s.parameters["heart_rate"]["value_avg"]
         try:
             self.s.parameters["heart_rate"]["time_stamp"] = self.delegate.time_stamp
             self.s.parameters["heart_rate"]["value"] = self.delegate.heart_rate
