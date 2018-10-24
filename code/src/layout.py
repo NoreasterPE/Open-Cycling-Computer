@@ -11,6 +11,8 @@ import time
 import unit_converter
 import yaml
 
+import cairo_helper
+
 
 ## Class for handling layouts
 class layout():
@@ -24,6 +26,7 @@ class layout():
         ## @var l
         # System logger handle
         self.log = logging.getLogger('system')
+        self.font_initialised = False
         self.occ = occ
         self.cr = cr
         self.render = False
@@ -102,10 +105,15 @@ class layout():
             self.occ.stop()
         self.font = self.current_page['font']
         # Wait for OCC to set rendering module
-        try:
-            self.cr.select_font_face(self.font, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
-        except AttributeError:
-            pass
+        if not self.font_initialised:
+            try:
+                # Only one font is allowed for now dure to cairo_helper workaround
+                font_face = cairo_helper.create_cairo_font_face_for_file(self.font, 0)
+                self.cr.set_font_face(font_face)
+                self.font_extents = self.cr.font_extents()
+                self.font_initialised = True
+            except AttributeError:
+                pass
         self.page_font_size = self.current_page['font_size']
         if (self.font == ""):
             self.font = None
@@ -305,19 +313,23 @@ class layout():
                 # Fall back to page font size
                 fs = self.page_font_size
             self.cr.set_font_size(fs)
-            x_shift = 0
             te = self.cr.text_extents(uv)
-            y_shift = te.height / 2
             if align == 'center':
-                x_shift = -1 * te.width / 2
+                x_shift = -1.0 * te.width / 2.0
             elif align == 'right':
-                x_shift = -1 * te.width
+                x_shift = -1.0 * te.width
             elif align == 'left':
-                x_shift = 0
+                x_shift = 0.0
+            else:
+                x_shift = 0.0
+            # 18 is font size for which font_extents has height. So far no scaled_font_extents function
+            y_shift = 0.5 * self.font_extents[2] * fs / 18
+            #FIXME add rgb_colour to layout files
+            rgb_colour = (1.0, 1.0, 1.0)
             if string_format != "zoomed_digit":
-                rgb_colour = (1.0, 1.0, 1.0)
                 self.text_to_surface(uv, position_x + x_shift, position_y + y_shift, rgb_colour)
             else:
+                SCALE = 1.4
                 uv = self.editor_fields["value"]
                 i = self.editor_fields["index"]
                 #Head
@@ -325,24 +337,17 @@ class layout():
                 te1 = self.cr.text_extents(rv1)
                 #Tail
                 rv3 = uv[i + 1:]
-                te3 = self.cr.text_extents(rv3)
                 #Currently edited digit
                 rv2 = uv[i]
-                #self.cr.set_font_size(1.4 * fs)
+                self.cr.set_font_size(SCALE * fs)
                 te2 = self.cr.text_extents(rv2)
 
-                total_width_half = (te1.width + te2.width + te3.width) / 2
-                #rv1_x = position_x - total_width_half + (te1.width / 2) + te1.x_bearing
-                #rv2_x = position_x - total_width_half + te1.width + (te2.width / 2) + te1.x_bearing + te2.x_bearing
-                #rv3_x = position_x - total_width_half + te1.width + te2.width + (te3.width / 2) + te1.x_bearing + te2.x_bearing + te3.x_bearing
-                rv1_x = position_x - total_width_half
-                rv2_x = position_x - total_width_half + te1.x_advance
-                rv3_x = position_x - total_width_half + te1.x_advance + te2.x_advance
+                rv1_x = position_x - te.width / 2.0
+                rv2_x = position_x - te.width / 2.0 + te1.x_advance
+                rv3_x = position_x - te.width / 2.0 + te1.x_advance + te2.x_advance
 
-                rgb_colour = (1.0, 0.0, 0.0)
-                self.text_to_surface(rv2, rv2_x, position_y + y_shift, rgb_colour)
-                #self.cr.set_font_size(fs)
-                rgb_colour = (1.0, 1.0, 1.0)
+                self.text_to_surface(rv2, rv2_x, position_y + SCALE * y_shift, (1.0, 0.0, 0.0))
+                self.cr.set_font_size(fs)
                 self.text_to_surface(rv1, rv1_x, position_y + y_shift, rgb_colour)
                 self.text_to_surface(rv3, rv3_x, position_y + y_shift, rgb_colour)
 
@@ -726,14 +731,9 @@ class layout():
         self.cr.fill()
 
     def text_to_surface(self, text, x, y, c):
-        self.cr.set_source_rgb(0.0, 0.0, 0.0)
-        te = self.cr.text_extents(text)
-        #self.cr.rectangle(x, y - te.height, te.width, te.height)
-        self.cr.fill()
         self.cr.set_source_rgb(c[0], c[1], c[2])
         self.cr.move_to(x, y)
         self.cr.show_text(text)
-        return (te)
 
     def point_in_rect(self, point, rect):
         try:

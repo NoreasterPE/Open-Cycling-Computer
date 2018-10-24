@@ -5,13 +5,13 @@ pages:
          type: normal
          background: images/page_0_background.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 16
          fg_colour: FFFFFF
          fields:
                 - parameter: speed
                   x: 95
-                  y: 75
+                  y: 80
                   font_size: 130
 
                 - parameter: speed
@@ -156,7 +156,7 @@ pages:
          type: normal
          background: images/stats_background.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 24
          fg_colour: FFFFFF
          fields:
@@ -301,7 +301,7 @@ pages:
          type: normal
          background: images/page_2_background.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 16
          fg_colour: FFFFFF
          fields:
@@ -362,7 +362,7 @@ pages:
          type: settings
          background: images/background_2_x_4.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 16
          fg_colour: FFFFFF
          fields:
@@ -515,7 +515,7 @@ pages:
          type: settings
          background: images/settings_1_background.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 16
          fg_colour: FFFFFF
          fields:
@@ -569,7 +569,7 @@ pages:
          type: settings
          background: images/settings_2_background.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 16
          fg_colour: FFFFFF
          fields:
@@ -623,7 +623,7 @@ pages:
          type: settings
          background: images/background_2_x_4.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 16
          fg_colour: FFFFFF
          fields:
@@ -776,7 +776,7 @@ pages:
          type: editor
          background: images/editor_units_background.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 50
          fg_colour: FFFFFF
          fields:
@@ -815,7 +815,7 @@ pages:
                 - parameter: ed_prev_unit
                   x: 60
                   y: 290
-                  text: ⇦
+                  text: ←
                   button:
                           x0: 0
                           y0: 260
@@ -825,7 +825,7 @@ pages:
                 - parameter: ed_next_unit
                   x: 180
                   y: 290
-                  text: ⇨
+                  text: →
                   button:
                           x0: 120
                           y0: 260
@@ -838,7 +838,7 @@ pages:
          type: editor
          background: images/editor_number_background.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 30
          fg_colour: FFFFFF
          fields:
@@ -903,7 +903,7 @@ pages:
                   x: 60
                   y: 290
                   font_size: 50
-                  text: ⇦
+                  text: ←
                   button:
                           x0: 0
                           y0: 260
@@ -914,7 +914,7 @@ pages:
                   x: 180
                   y: 290
                   font_size: 50
-                  text: ⇨
+                  text: →
                   button:
                           x0: 120
                           y0: 260
@@ -927,7 +927,7 @@ pages:
          type: editor
          background: images/editor_string_background.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 16
          fg_colour: FFFFFF
          fields:
@@ -990,7 +990,7 @@ pages:
                   x: 60
                   y: 290
                   font_size: 50
-                  text: ⇦
+                  text: ←
                   button:
                           x0: 0
                           y0: 260
@@ -1001,7 +1001,7 @@ pages:
                   x: 180
                   y: 290
                   font_size: 50
-                  text: ⇨
+                  text: →
                   button:
                           x0: 120
                           y0: 260
@@ -1014,7 +1014,7 @@ pages:
          type: editor
          background: images/ble_selector.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 16
          fg_colour: FFFFFF
          fields:
