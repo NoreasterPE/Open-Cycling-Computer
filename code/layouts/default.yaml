@@ -12,7 +12,7 @@ pages:
                 - parameter: speed
                   x: 95
                   y: 80
-                  font_size: 130
+                  font_size: 150
 
                 - parameter: speed
                   show: tenths
@@ -47,7 +47,7 @@ pages:
                   format: hhmmss
                   x: 180
                   y: 225
-                  font_size: 20
+                  font_size: 30
                   button:
                           x0: 120
                           y0: 160
@@ -95,7 +95,8 @@ pages:
 
                 - parameter: cadence
                   show: unit
-                  x: 105
+                  align: right
+                  x: 115
                   y: 310
                   font_size: 12
 
@@ -138,7 +139,8 @@ pages:
 
                 - parameter: heart_rate
                   show: unit
-                  x: 225
+                  align: right
+                  x: 235
                   y: 310
                   font_size: 12
 
@@ -363,7 +365,7 @@ pages:
          background: images/background_2_x_4.png
          buttons: images/button_pressed.png
          font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
-         font_size: 16
+         font_size: 20
          fg_colour: FFFFFF
          fields:
                 - parameter: label
@@ -377,7 +379,7 @@ pages:
                   editor: editor_string
                   x: 60
                   y: 50
-                  font_size: 20
+                  font_size: 30
                   button:
                           x0: 0
                           y0: 0
@@ -404,7 +406,8 @@ pages:
 
                 - parameter: wheel_circumference
                   show: unit
-                  x: 220
+                  align: right
+                  x: 235
                   y: 50
 
                 - parameter: label
@@ -427,7 +430,8 @@ pages:
 
                 - parameter: pressure
                   show: unit
-                  x: 220
+                  align: right
+                  x: 235
                   y: 130
 
                 - parameter: label
@@ -462,8 +466,8 @@ pages:
                   editor_title: Rider weight
                   editable: yes
                   editor: editor_numbers
-                  x: 50
-                  y: 215
+                  x: 45
+                  y: 210
                   font_size: 30
                   button:
                           x0: 0
@@ -475,18 +479,16 @@ pages:
                   show: unit
                   x: 100
                   y: 210
-                  font_size: 16
 
                 - parameter: label
                   x: 60
                   y: 255
-                  font_size: 16
                   text: Heart rate
 
                 - parameter: heart_rate_device_name
                   x: 60
                   y: 290
-                  font_size: 12
+                  font_size: 15
                   button:
                           x0: 0
                           y0: 240
@@ -496,13 +498,12 @@ pages:
                 - parameter: label
                   x: 180
                   y: 255
-                  font_size: 16
                   text: Spd/cadence
 
                 - parameter: cadence_speed_device_name
                   x: 180
                   y: 290
-                  font_size: 12
+                  font_size: 15
                   button:
                           x0: 120
                           y0: 240
@@ -516,13 +517,12 @@ pages:
          background: images/settings_1_background.png
          buttons: images/button_pressed.png
          font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
-         font_size: 16
+         font_size: 24
          fg_colour: FFFFFF
          fields:
                 - parameter: halt
                   x: 120
                   y: 40
-                  font_size: 16
                   text: Halt
                   button:
                           x0: 0
@@ -533,7 +533,6 @@ pages:
                 - parameter: reboot
                   x: 120
                   y: 120
-                  font_size: 16
                   text: Reboot
                   button:
                           x0: 0
@@ -544,22 +543,10 @@ pages:
                 - parameter: quit
                   x: 120
                   y: 200
-                  font_size: 16
                   text: Quit
                   button:
                           x0: 0
                           y0: 159
-                          w: 240
-                          h: 80
-
-                - parameter: write_config
-                  x: 120
-                  y: 280
-                  font_size: 16
-                  text: Write config
-                  button:
-                          x0: 0
-                          y0: 239
                           w: 240
                           h: 80
 
@@ -570,24 +557,22 @@ pages:
          background: images/settings_2_background.png
          buttons: images/button_pressed.png
          font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
-         font_size: 16
+         font_size: 24
          fg_colour: FFFFFF
          fields:
-                #- parameter: load_current_layout
-                #  x: 120
-                #  y: 40
-                #  font_size: 16
-                #  text: Load current layout
-                #  button:
-                #          x0: 0
-                #          y0: 0
-                #          w: 240
-                #          h: 80
+                - parameter: write_config
+                  x: 120
+                  y: 40
+                  text: Write config
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 240
+                          h: 80
 
                 - parameter: load_default_layout
                   x: 120
                   y: 120
-                  font_size: 16
                   text: Load default layout
                   button:
                           x0: 0
@@ -609,7 +594,6 @@ pages:
                 - parameter: log_level
                   x: 120
                   y: 280
-                  font_size: 16
                   text:
                   button:
                           x0: 0
@@ -624,7 +608,7 @@ pages:
          background: images/background_2_x_4.png
          buttons: images/button_pressed.png
          font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
-         font_size: 16
+         font_size: 20
          fg_colour: FFFFFF
          fields:
                 - parameter: label
@@ -657,7 +641,7 @@ pages:
                   editable: yes
                   editor: editor_units
                   x: 180
-                  y: 55
+                  y: 50
                   font_size: 30
                   button:
                           x0: 120
@@ -687,7 +671,6 @@ pages:
                 - parameter: label
                   x: 180
                   y: 95
-                  font_size: 16
                   text: Temperature
 
                 - parameter: temperature
@@ -726,7 +709,6 @@ pages:
                 - parameter: label
                   x: 180
                   y: 175
-                  font_size: 16
                   text: Pressure
 
                 - parameter: pressure
@@ -735,7 +717,7 @@ pages:
                   editable: yes
                   editor: editor_units
                   x: 180
-                  y: 215
+                  y: 210
                   font_size: 30
                   button:
                           x0: 120
@@ -765,7 +747,6 @@ pages:
                 - parameter: label
                   x: 180
                   y: 175
-                  font_size: 16
                   text: Pressure
 
 
@@ -864,13 +845,13 @@ pages:
 
                 - parameter: editor_title
                   x: 120
-                  y: 70
+                  y: 85
                   font_size: 24
 
                 - parameter: value
                   format: zoomed_digit
                   x: 120
-                  y: 120
+                  y: 135
                   font_size: 50
 
                 - parameter: unit
@@ -928,13 +909,12 @@ pages:
          background: images/editor_string_background.png
          buttons: images/button_pressed.png
          font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
-         font_size: 16
+         font_size: 30
          fg_colour: FFFFFF
          fields:
                 - parameter: ed_accept
                   x: 60
                   y: 30
-                  font_size: 30
                   text: Accept
                   button:
                           x0: 0
@@ -945,7 +925,6 @@ pages:
                 - parameter: ed_cancel
                   x: 180
                   y: 30
-                  font_size: 30
                   text: Cancel
                   button:
                           x0: 120
@@ -956,12 +935,12 @@ pages:
                 - parameter: editor_title
                   x: 120
                   y: 90
-                  font_size: 16
+                  font_size: 24
 
                 - parameter: value
                   format: zoomed_digit
                   x: 120
-                  y: 130
+                  y: 150
                   font_size: 40
 
                 - parameter: ed_decrease
