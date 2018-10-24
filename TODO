@@ -2,6 +2,7 @@ UI
 - BLE device list expiry time. Currently never expires
 - There is no way to disconnect from a BLE device
 - Fix icon lines width - it's not consistent
+- reduce debug settings to 1 screen 2x4
 
 CODING STYLE:
 - [EMPTY]
@@ -19,7 +20,11 @@ REAL WORLD PROBLEMS:
 - Set up low battery warning/shutdown. Pimoroni Lipo shim informs about battery state.
 - Ride log configuration in a config file
 - Loading sensor modules from files in a sub-directory
-- units_allowed should come from unit_converter
+- units_allowed should come from unit_coonverter
+- slope in % needs different formatting than in m/m
+- create editor_list for list selection (wheel size)
+- add session_distance
+- changing MSLP or reference_altitude triggers crazy slope. Reset slope calcs variables
 
 CODE ERRORS:
 - Threads write to log aftred log end [ERROR]
@@ -32,6 +37,10 @@ HARDWARE:
 - Fix lost should be marked in log? {Yes, as DEBUG}
 
 OPTIONAL:
+- show all available unit s in unit editor
+- add colours to layout
+- short click to show help
+- grey out not used params, like rider_weight
 - consider splitting layout into one-page-per-file
 - Click to switch value i.e. click on temperature to cycle over min/average/max
 - Consider scroll-over-the-edge to switch pages
