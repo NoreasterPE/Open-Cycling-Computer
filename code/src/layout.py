@@ -28,6 +28,12 @@ class layout():
         self.log = logging.getLogger('system')
         self.font_initialised = False
         self.occ = occ
+        ## @var width
+        #  Window/screen width
+        self.width = self.occ.width
+        ## @var height
+        #  Window/screen height
+        self.height = self.occ.height
         self.cr = cr
         self.render = False
         self.uc = unit_converter.unit_converter()
@@ -159,7 +165,7 @@ class layout():
 
     def render_background(self):
         self.cr.set_source_surface(self.background_image, 0, 0)
-        self.cr.rectangle(0, 0, 240, 320)
+        self.cr.rectangle(0, 0, self.width, self.height)
         self.cr.fill()
 
     def render_page(self):
@@ -731,7 +737,11 @@ class layout():
         png_surface = cairo.ImageSurface.create_from_png(file_path)
         return png_surface
 
-    def image_to_surface(self, surface, x=0, y=0, w=240, h=320):
+    def image_to_surface(self, surface, x=0, y=0, w=None, h=None):
+        if w is None:
+            w = self.width
+        if h is None:
+            h = self.height
         self.cr.set_source_surface(surface, x, y)
         self.cr.rectangle(x, y, w, h)
         self.cr.fill()
