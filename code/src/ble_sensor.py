@@ -67,11 +67,8 @@ class ble_sensor(sensor.sensor):
                 self.log.debug('Setting notification handler', extra=self.extra)
                 self.peripherial.withDelegate(self.delegate)
                 self.log.debug('Notification handler set', extra=self.extra)
-                self.log.debug('Connecting', extra=self.extra)
+                self.log.debug('Connecting to {}'.format(self.device_address), extra=self.extra)
                 self.state = 1
-                
-                self.log.debug('{}'.format(self.device_address), extra=self.extra)
-                self.log.debug('{}'.format(type(self.device_address)), extra=self.extra)
                 self.peripherial.connect(self.device_address, addrType='random')
                 self.log.debug('Connected', extra=self.extra)
                 self.connected = True
