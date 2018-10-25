@@ -274,7 +274,7 @@ class layout():
                         value = datetime.datetime.fromtimestamp(int(value)).strftime('%Y-%m-%d')
                     except (ValueError, TypeError):
                         pass
-            except KeyError:
+            except (KeyError, ValueError):
                 string_format = "%.0f"
             try:
                 uv = string_format % float(value)
