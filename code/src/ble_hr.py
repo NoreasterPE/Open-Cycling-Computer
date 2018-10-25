@@ -28,12 +28,6 @@ class ble_hr(ble_sensor.ble_sensor):
         self.s.register_parameter("heart_rate", self.extra["module_name"], value=numbers.NAN, raw_unit="BPM", unit="BPM", units_allowed=["BMP"])
         self.s.register_parameter("heart_rate_notification_beat", self.extra["module_name"])
         self.s.request_parameter("heart_rate_device_address", self.extra["module_name"])
-        ## @var device_address
-        #  BLE device address
-        self.device_address = None
-
-        #self.reset_data()
-        #FIXME Delegate data (min/avg/max) are lost after disconnection
         self.delegate_class = hr_delegate
 
     ## Process data delivered from delegate
@@ -62,7 +56,6 @@ class ble_hr(ble_sensor.ble_sensor):
             self.device_address = self.s.parameters["heart_rate_device_address"]["value"]
         if self.s.parameters["heart_rate_battery_level"]["value"] != self.battery_level:
             self.s.parameters["heart_rate_battery_level"]["value"] = self.battery_level
-
 
 
 ## Class for handling BLE notifications from heart rate sensor

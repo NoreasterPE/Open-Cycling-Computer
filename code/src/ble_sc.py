@@ -32,13 +32,7 @@ class ble_sc(ble_sensor.ble_sensor):
         self.s.register_parameter("cadence", self.extra["module_name"], value=numbers.NAN, raw_unit="RPM")
         self.s.register_parameter("cadence_notification_beat", self.extra["module_name"])
         self.s.request_parameter("cadence_speed_device_address", self.extra["module_name"])
-        ## @var device_address
-        #  BLE device address
-        self.device_address = None
         self.s.request_parameter("wheel_circumference", self.extra["module_name"])
-
-        #self.reset_data()
-        #FIXME Delegate data (min/avg/max) are lost after disconnection
         self.delegate_class = sc_delegate
 
     ## Process data delivered from delegate

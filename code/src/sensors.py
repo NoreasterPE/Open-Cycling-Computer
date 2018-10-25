@@ -280,7 +280,7 @@ class sensors(threading.Thread, metaclass=Singleton):
             if parameter_name not in self.parameter_requests:
                 self.parameter_requests[parameter_name] = list()
                 self.parameter_requests[parameter_name].append(sensor_name)
-        self.log.debug("after request_parameter for {} parameter_requests is {}".format(parameter_name, self.parameter_requests), extra=self.extra)
+        #self.log.debug("after request_parameter for {} parameter_requests is {}".format(parameter_name, self.parameter_requests), extra=self.extra)
 
     ## Update parameter with new content
     #  @param self The python object self
