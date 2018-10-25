@@ -26,7 +26,7 @@ class config(object):
         self.base_config_file_path = base_config_file_path
         self.s = sensors.sensors()
 
-    ## Function that reads config file. Currently read values are written directly to destination variables which is not really flexible solution.
+    ## Function that reads config file.
     #  @param self The python object self
     def read_config(self):
         self.log.debug("read_config started", extra=self.extra)
