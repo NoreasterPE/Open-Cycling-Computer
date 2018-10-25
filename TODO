@@ -24,7 +24,7 @@ REAL WORLD PROBLEMS:
 - slope in % needs different formatting than in m/m
 - create editor_list for list selection (wheel size)
 - add session_distance
-- changing MSLP or reference_altitude triggers crazy slope. Reset slope calcs variables
+- changing MSLP or reference_altitude triggers crazy slope. Reset slope calcs variables or filter the jump
 - max cadence reset doesn't work
 
 CODE ERRORS:

@@ -72,27 +72,34 @@ class compute(sensor.sensor):
         self.log.debug("Main loop started", extra=self.extra)
         self.running = True
         while self.running:
+            t = time.time()
             # Check if there was a reset of session time
             if math.isnan(self.s.parameters["session_time"]["value"]):
-                self.s.parameters["session_start_time"]["value"] = time.time()
+                self.s.parameters["session_start_time"]["value"] = t
                 self.s.parameters["session_odometer_start"]["value"] = self.odometer
             self.s.parameters["session_time"]["value"] = time.time() - self.s.parameters["session_start_time"]["value"]
             try:
                 self.s.parameters["session_distance"]["value"] = self.odometer - self.s.parameters["session_odometer_start"]["value"]
             except (TypeError, ValueError):
                 pass
-            self.s.parameters["real_time"]["value"] = time.time()
+            self.s.parameters["real_time"]["value"] = t
+            # 3 s expiry to slope reset
+            if t - self.s.parameters["slope"]["time_stamp"] > 3.0:
+                self.s.parameters["slope"]["value"] = 0.0
             time.sleep(0.1)
         self.log.debug("Main loop finished", extra=self.extra)
 
     ## Calculate slope. Current values are matched with Bosch BMP183 sensor (0.18 m of resolution). To be changed if sensor is upgraded to BMP280
     #  @param self The python object self
     def calculate_slope(self):
+        t = time.time()
         if self.odometer_delta_cumulative > 2.0:
             self.s.parameters["slope"]["value"] = self.altitude_delta_cumulative / self.odometer_delta_cumulative
+            self.s.parameters["slope"]["time_stamp"] = t
         if abs(self.s.parameters["slope"]["value"]) < 0.02:
             #If slope is less than 2% wait for more cumulative distance/altitude
             self.s.parameters["slope"]["value"] = 0.0
+            self.s.parameters["slope"]["time_stamp"] = t
         else:
             #If slope is less more 2%, use calculated value and reset cumulative variables
             self.log.debug("altitude_delta_cumulative: {}".format(self.altitude_delta_cumulative), extra=self.extra)
