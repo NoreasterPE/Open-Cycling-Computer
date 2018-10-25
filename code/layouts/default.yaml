@@ -717,11 +717,11 @@ pages:
                 - parameter: label
                   x: 180
                   y: 175
-                  text: Pressure
+                  text: Wheel circ.
 
-                - parameter: pressure
+                - parameter: wheel_circumference
                   show: unit
-                  editor_title: Pressure unit
+                  editor_title: Wheel circ. unit
                   editable: yes
                   editor: editor_units
                   x: 180
@@ -736,11 +736,11 @@ pages:
                 - parameter: label
                   x: 60
                   y: 255
-                  text: Wheel circ.
+                  text: Pressure
 
-                - parameter: wheel_circumference
+                - parameter: pressure
                   show: unit
-                  editor_title: Wheel circ.  unit
+                  editor_title: Pressure unit
                   editable: yes
                   editor: editor_units
                   x: 60
@@ -754,8 +754,23 @@ pages:
 
                 - parameter: label
                   x: 180
-                  y: 175
-                  text: Pressure
+                  y: 255
+                  text: METAR Press.
+
+                - parameter: mean_sea_level_pressure
+                  show: unit
+                  editor_title: METAR MSLP unit
+                  editable: yes
+                  editor: editor_units
+                  x: 180
+                  y: 290
+                  font_size: 30
+                  button:
+                          x0: 120
+                          y0: 240
+                          w: 120
+                          h: 80
+
 
 
 
