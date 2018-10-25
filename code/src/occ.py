@@ -82,7 +82,7 @@ class open_cycling_computer(object, metaclass=singleton):
         ## @var rendering
         #  Handle to rendering instance
         self.log.debug("Initialising rendering", extra=self.extra)
-        self.rendering = rendering()
+        self.rendering = rendering(self.width, self.height)
         ## @var surface
         #  Main cairo surface
         self.surface = self.rendering.surface

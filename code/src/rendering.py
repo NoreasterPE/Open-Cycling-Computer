@@ -13,9 +13,15 @@ class rendering(threading.Thread):
 
     ## The constructor
     #  @param self The python object self
-    def __init__(self):
+    def __init__(self, width, height):
         # Run init for super class
         super().__init__()
+        ## @var width
+        #  Window/screen width
+        self.width = width
+        ## @var height
+        #  Window/screen height
+        self.height = height
         self.render = True
         ## @var running
         #  Variable controlling if rendering module should keep running
@@ -28,9 +34,9 @@ class rendering(threading.Thread):
         self.fb_map = mmap.mmap(self.fb_fd.fileno(), PiTFT_mem_size)
 
         # Framebuffer surface
-        self.fb_surface = cairo.ImageSurface.create_for_data(self.fb_map, cairo.FORMAT_RGB16_565, 240, 320)
+        self.fb_surface = cairo.ImageSurface.create_for_data(self.fb_map, cairo.FORMAT_RGB16_565, self.width, self.height)
         # Main cairo drawing surface
-        self.surface = cairo.ImageSurface.create_similar(self.fb_surface, cairo.CONTENT_COLOR, 240, 320)
+        self.surface = cairo.ImageSurface.create_similar(self.fb_surface, cairo.CONTENT_COLOR, self.width, self.height)
         # Framebuffer context
         self.fb_cr = cairo.Context(self.fb_surface)
         # Main cairo context
@@ -44,7 +50,7 @@ class rendering(threading.Thread):
             if self.render:
                 self.render = False
                 self.fb_cr.set_source_surface(self.surface, 0, 0)
-                self.fb_cr.rectangle(0, 0, 240, 320)
+                self.fb_cr.rectangle(0, 0, self.width, self.height)
                 self.fb_cr.fill()
                 #Uncomment to generate screenshots, also changes fps to 1 to avoid generating too much images
                 #self.fb_surface.write_to_png("sc_" + str(round(time.time())) + ".png")
