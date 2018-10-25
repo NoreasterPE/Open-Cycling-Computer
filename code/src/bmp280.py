@@ -3,6 +3,7 @@
 ## @package bmp280
 #  Module for handling Bosch BMP280 pressureAand temperature sensor
 
+import kalman
 import math
 import numbers
 import sensor
@@ -50,7 +51,9 @@ class bmp280(sensor.sensor):
         #  Mean sea-level pressure. Calculations are based on reference altitude or might be set by the user as MSLP METAR
         self.mean_sea_level_pressure = numbers.NAN
         self.measure()
-        self.kalman_setup()
+        # Initialise Kalman filter
+        self.kalman = kalman.kalman(Q=0.02, R=1.0)
+        self.kalman.set_initial_value(self.pressure_unfiltered)
         self.log.debug("Initialised.", extra=self.extra)
 
     ## Trigger calculation of pressure at the sea level on change of reference altitude
@@ -95,7 +98,10 @@ class bmp280(sensor.sensor):
             if self.mean_sea_level_pressure is not None:
                 if math.isnan(self.mean_sea_level_pressure):
                     self.calculate_mean_sea_level_pressure()
-            self.kalman_update()
+            self.kalman.update_unfiltered_value(self.pressure_unfiltered)
+            self.kalman.update()
+            self.s.parameters["pressure"]["value"] = self.kalman.value_estimate
+            self.s.parameters["pressure_nof"]["value"] = self.pressure_unfiltered
             self.s.parameters['altitude']['value'] = self.calculate_altitude(self.s.parameters['pressure']['value'])
             self.log.debug("pressure = {} [Pa], temperature = {} [C]".format(self.s.parameters["pressure"]["value"], self.s.parameters["temperature"]["value"]), extra=self.extra)
             try:
@@ -108,42 +114,6 @@ class bmp280(sensor.sensor):
                 pass
             time.sleep(self.measurement_delay)
         self.log.debug("Main loop finished", extra=self.extra)
-
-    def kalman_setup(self):
-        # FIXME Add detailed comments
-        # FIXME that will depend on max descend/ascend speed.  calculate from max +/- 1.5m/s
-        # R makes no difference, R/Q is what matters
-        # P and K are self tuning
-        self.Q = 0.02
-        # First estimate
-        self.pressure_estimate = self.pressure_unfiltered
-        # Error
-        self.P = 0.245657137142
-        # First previous estimate
-        self.pressure_estimate_previous = self.pressure_unfiltered
-        # First previous error
-        self.P_previous = 0.325657137142
-        # First gain
-        self.K = 0.245657137142
-        # Estimate of measurement variance, sensor noise
-        self.R = 1.0
-
-    def kalman_update(self):
-        # FIXME Add detailed commants
-        z = self.pressure_unfiltered
-        # Save previous value
-        self.pressure_estimate_previous = self.pressure_estimate
-        # Save previous error
-        self.P_previous = self.P + self.Q
-        # Calculate current gain
-        self.K = self.P_previous / (self.P_previous + self.R)
-        # Calculate new estimate
-        self.pressure_estimate = self.pressure_estimate_previous + \
-            self.K * (z - self.pressure_estimate_previous)
-        # Calculate new error estimate
-        self.P = (1 - self.K) * self.P_previous
-        self.s.parameters["pressure"]["value"] = self.pressure_estimate
-        self.s.parameters["pressure_nof"]["value"] = self.pressure_unfiltered
 
     ## Calculates pressure at sea level based on given reference altitude
     #  Saves calculated value to self.mean_sea_level_pressure
