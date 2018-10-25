@@ -78,6 +78,7 @@ pages:
 
                 - parameter: cadence
                   resettable: yes
+                  reset: avg, max
                   x: 55
                   y: 295
                   font_size: 50
