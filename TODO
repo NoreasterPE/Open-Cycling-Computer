@@ -25,6 +25,7 @@ REAL WORLD PROBLEMS:
 - create editor_list for list selection (wheel size)
 - add session_distance
 - changing MSLP or reference_altitude triggers crazy slope. Reset slope calcs variables
+- max cadence reset doesn't work
 
 CODE ERRORS:
 - Threads write to log aftred log end [ERROR]
