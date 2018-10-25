@@ -42,6 +42,13 @@ pages:
                           name: ble_host_state
                           frames: 6
 
+                - parameter: session_distance
+                  format: "%.1f"
+                  align: right
+                  x: 230
+                  y: 185
+                  font_size: 30
+
                 - parameter: session_time
                   resettable: yes
                   format: hhmmss
@@ -53,7 +60,6 @@ pages:
                           y0: 160
                           w: 120
                           h: 80
-
 
                 - parameter: slope
                   x: 50

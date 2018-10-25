@@ -27,6 +27,8 @@ class compute(sensor.sensor):
         self.s.register_parameter("slope", self.extra["module_name"], value=numbers.NAN, raw_unit="m/m", unit="%", units_allowed=["m/m", "%"])
         self.s.register_parameter("speed", self.extra["module_name"], value=numbers.NAN, raw_unit="m/s", unit="km/h", units_allowed=["m/s", "km/h", "mi/h"])
         self.s.register_parameter("session_start_time", self.extra["module_name"], value=time.time(), raw_unit="s")
+        self.s.register_parameter("session_distance", self.extra["module_name"], value=0.0, raw_unit="m", unit="km", units_allowed=["m", "km", "mi"])
+        self.s.register_parameter("session_odometer_start", self.extra["module_name"], value=numbers.NAN, raw_unit="m")
         self.session_start_time = self.s.parameters['session_start_time']['value']
         self.s.register_parameter("session_time", self.extra["module_name"], value=0.0, value_default=numbers.NAN, raw_unit="s")
         self.s.request_parameter("odometer", self.extra["module_name"])
@@ -63,6 +65,8 @@ class compute(sensor.sensor):
             self.calculate_slope()
         except TypeError:
             pass
+        if math.isnan(self.s.parameters["session_odometer_start"]["value"]):
+            self.s.parameters["session_odometer_start"]["value"] = self.odometer
 
     def run(self):
         self.log.debug("Main loop started", extra=self.extra)
@@ -71,7 +75,12 @@ class compute(sensor.sensor):
             # Check if there was a reset of session time
             if math.isnan(self.s.parameters["session_time"]["value"]):
                 self.s.parameters["session_start_time"]["value"] = time.time()
+                self.s.parameters["session_odometer_start"]["value"] = self.odometer
             self.s.parameters["session_time"]["value"] = time.time() - self.s.parameters["session_start_time"]["value"]
+            try:
+                self.s.parameters["session_distance"]["value"] = self.odometer - self.s.parameters["session_odometer_start"]["value"]
+            except (TypeError, ValueError):
+                pass
             self.s.parameters["real_time"]["value"] = time.time()
             time.sleep(0.1)
         self.log.debug("Main loop finished", extra=self.extra)
