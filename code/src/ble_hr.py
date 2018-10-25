@@ -73,7 +73,7 @@ class hr_delegate(bluepy.btle.DefaultDelegate):
         self.log.debug('Delegate __init__ finished', extra=self.extra)
 
     def handleNotification(self, cHandle, data):
-        self.log.debug('Delegate: handleNotification started', extra=self.extra)
+        #self.log.debug('Delegate: handleNotification started', extra=self.extra)
         self.log.debug('Delegate: Notification received. Handle: {}, data: {}'.format(hex(cHandle), data), extra=self.extra)
 
         # Heart Rate Measurement from BLE standard
@@ -133,7 +133,7 @@ class hr_delegate(bluepy.btle.DefaultDelegate):
 
         ts_formatted = time.strftime("%H:%M:%S", time.localtime(self.time_stamp))
         self.log.debug('Delegate: set heart rate {}, time stamp {}'.format(self.heart_rate, ts_formatted), extra=self.extra)
-        self.log.debug('Delegate: handleNotification finished', extra=self.extra)
+        #self.log.debug('Delegate: handleNotification finished', extra=self.extra)
 
     ## Calculates average heart rate. The calculation will use only time with valid measurements, so it won't be the same as ride time.
     #  @param self The python object self
@@ -152,7 +152,7 @@ class hr_delegate(bluepy.btle.DefaultDelegate):
             self.heart_rate_avg = hr_avg
         self.log.debug("heart_rate_avg {}".format(self.heart_rate_avg), extra=self.extra)
 
-    ## Resets minimum, average and maximum heart rate
+    ## Resets ble_hr delegate to initial values
     #  @param self The python object self
     def reset_data(self):
         self.time_stamp = time.time()

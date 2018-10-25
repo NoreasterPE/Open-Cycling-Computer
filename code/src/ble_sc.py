@@ -45,7 +45,7 @@ class ble_sc(ble_sensor.ble_sensor):
                 self.log.debug('wheel_revolution_time {}'.format(self.s.parameters["wheel_revolution_time"]["value"]), extra=self.extra)
                 # Move to compute module
                 self.s.parameters["speed"]["value"] = self.s.parameters["wheel_circumference"]["value"] / self.s.parameters["wheel_revolution_time"]["value"]
-                self.s.parameters["speed"]["value_max"] = max(self.s.parameters["speed"]["value_max"], self.s.parameters["speed"]["value"] )
+                self.s.parameters["speed"]["value_max"] = max(self.s.parameters["speed"]["value_max"], self.s.parameters["speed"]["value"])
             else:
                 self.s.parameters["speed"]["value"] = 0.0
             self.s.parameters["speed"]["time_stamp"] = self.delegate.wheel_time_stamp
@@ -119,7 +119,7 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
         self.log.debug('Delegate __init__ finished', extra=self.extra)
 
     def handleNotification(self, cHandle, data):
-        self.log.debug('Delegate: handleNotification started', extra=self.extra)
+        #self.log.debug('Delegate: handleNotification started', extra=self.extra)
         self.log.debug('Delegate: Notification received. Handle: {}, data: {}'.format(hex(cHandle), data), extra=self.extra)
 
         # CSC Measurement from BLE_SC standard
@@ -220,7 +220,7 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
 
         ts_formatted = time.strftime("%H:%M:%S", time.localtime(self.time_stamp))
         self.log.debug('Delegate: set cadence {}, time stamp {}'.format(self.cadence, ts_formatted), extra=self.extra)
-        self.log.debug('Delegate: handleNotification finished', extra=self.extra)
+        #self.log.debug('Delegate: handleNotification finished', extra=self.extra)
 
     ## Calculates average cadence. The calculation will use only time with valid measurements, so it won't be the same as ride time.
     #  @param self The python object self
