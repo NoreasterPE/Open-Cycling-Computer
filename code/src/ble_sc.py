@@ -38,6 +38,15 @@ class ble_sc(ble_sensor.ble_sensor):
     ## Process data delivered from delegate
     #  @param self The python object self
     def process_delegate_data(self):
+        if self.delegate.measurement_no <= 2:
+            #Fresh start or restart after lost connection. Update average value in the delegate
+            self.delegate.cadence_avg = self.s.parameters["cadence"]["value_avg"]
+            self.measurement_time = self.delegate.measurement_time
+        if self.s.parameters["cadence"]["reset"]:
+            #Reset by user, reset deletage data
+            self.log.debug('reset request received', extra=self.extra)
+            self.delegate.reset_data()
+            self.s.parameters["cadence"]["reset"] = False
         try:
             if self.delegate.wheel_time_stamp == self.delegate.wheel_revolution_time_stamp:
                 self.s.parameters["wheel_revolution_time"]["time_stamp"] = self.delegate.wheel_revolution_time_stamp
@@ -62,6 +71,7 @@ class ble_sc(ble_sensor.ble_sensor):
             self.s.parameters["cadence"]["time_stamp"] = self.delegate.cadence_time_stamp
             self.s.parameters["cadence"]["value"] = self.delegate.cadence
             self.s.parameters["cadence"]["value_avg"] = self.delegate.cadence_avg
+            self.measurement_time = self.delegate.measurement_time
             self.s.parameters["cadence"]["value_max"] = max(self.s.parameters["cadence"]["value_max"], self.delegate.cadence)
             self.s.parameters["cadence_notification_beat"]["value"] = self.delegate.cadence_notification_beat
             if self.s.parameters["cadence_speed_device_name"]["value"] != self.device_name:
@@ -98,24 +108,7 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
         self.log = log
         self.log.debug('Delegate __init__ started', extra=self.extra)
         super().__init__()
-        self.wheel_time_stamp = time.time()
-        self.wheel_revolutions = 0
-        self.wheel_last_time_event = 0
-        self.wheel_last_time_delta = 0
-        self.wheel_revolution_time = 0
-        self.cadence_time_stamp = time.time()
-        self.last_measurement = self.cadence_time_stamp
-        self.crank_cumul = 0
-        self.crank_last_time_event = 0
-        self.crank_last_time_delta = 0
-        self.crank_rev_time = 0
-        self.cadence = 0
-        self.cadence_avg = 0
-        self.measurement_time = 0.0
-        self.cadence_notification_beat = 0
-        self.measurement_no = 0
-        self.time_stamp = time.time()
-        self.time_stamp_previous = self.time_stamp
+        self.reset_data()
         self.log.debug('Delegate __init__ finished', extra=self.extra)
 
     def handleNotification(self, cHandle, data):
@@ -238,3 +231,25 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
                 cd_avg = numbers.NAN
         self.cadence_avg = cd_avg
         self.log.debug("cadence_avg {}".format(self.cadence_avg), extra=self.extra)
+
+    ## Resets ble_sc delegate to initial values
+    #  @param self The python object self
+    def reset_data(self):
+        self.wheel_time_stamp = time.time()
+        self.wheel_revolutions = 0
+        self.wheel_last_time_event = 0
+        self.wheel_last_time_delta = 0
+        self.wheel_revolution_time = 0
+        self.cadence_time_stamp = time.time()
+        self.last_measurement = self.cadence_time_stamp
+        self.crank_cumul = 0
+        self.crank_last_time_event = 0
+        self.crank_last_time_delta = 0
+        self.crank_rev_time = 0
+        self.cadence = 0
+        self.cadence_avg = 0
+        self.measurement_time = 0.0
+        self.cadence_notification_beat = 0
+        self.measurement_no = 0
+        self.time_stamp = time.time()
+        self.time_stamp_previous = self.time_stamp

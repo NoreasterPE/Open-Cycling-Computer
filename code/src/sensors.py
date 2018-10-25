@@ -236,7 +236,8 @@ class sensors(threading.Thread, metaclass=Singleton):
                            unit=None,
                            units_allowed=list(),
                            required_by=list(),
-                           force_notification=False):
+                           force_notification=False,
+                           reset=False):
 
         self.log.debug("Trying to register {} by {}".format(parameter_name, sensor_name), extra=self.extra)
         if unit is None:
@@ -264,8 +265,9 @@ class sensors(threading.Thread, metaclass=Singleton):
                                                    unit=unit,
                                                    units_allowed=units_allowed,
                                                    required_by=required_by,
-                                                   force_notification=force_notification)
-        self.log.debug("after register_parameter {} is {}".format(parameter_name, self.parameters[parameter_name]), extra=self.extra)
+                                                   force_notification=force_notification,
+                                                   reset=False)
+        #self.log.debug("after register_parameter {} is {}".format(parameter_name, self.parameters[parameter_name]), extra=self.extra)
 
     ## Function for requesting a parameter. Called by a sensor to request information abut changes of a parameter.
     #  @param self The python object self
@@ -298,7 +300,10 @@ class sensors(threading.Thread, metaclass=Singleton):
     def parameter_reset(self, parameter, reset_list):
         self.log.debug("reset request received for {}".format(parameter), extra=self.extra)
         self.log.debug("reset list: {}".format(reset_list), extra=self.extra)
+        # Info for module responsible for the parameter that there was a reset
+        self.parameters[parameter]['reset'] = True
         for suffix in reset_list:
+            suffix = suffix.strip(' ')
             if suffix == '':
                 self.parameters[parameter]['value'] = self.parameters[parameter]['value_default']
             elif suffix == 'min':

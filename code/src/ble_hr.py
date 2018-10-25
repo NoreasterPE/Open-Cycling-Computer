@@ -34,13 +34,20 @@ class ble_hr(ble_sensor.ble_sensor):
     #  @param self The python object self
     def process_delegate_data(self):
         if self.delegate.measurement_no <= 2:
-            #Fresh start or restart after lost connection. Update average valueA in the delegate
+            #Fresh start or restart after lost connection. Seed average value and measurement time in the delegate
             self.delegate.heart_rate_avg = self.s.parameters["heart_rate"]["value_avg"]
+            self.measurement_time = self.delegate.measurement_time
+        if self.s.parameters["heart_rate"]["reset"]:
+            #Reset by user, reset deletage data
+            self.log.debug('reset request received', extra=self.extra)
+            self.delegate.reset_data()
+            self.s.parameters["heart_rate"]["reset"] = False
         try:
             self.s.parameters["heart_rate"]["time_stamp"] = self.delegate.time_stamp
             self.s.parameters["heart_rate"]["value"] = self.delegate.heart_rate
             self.s.parameters["heart_rate"]["value_min"] = min(self.s.parameters["heart_rate"]["value_min"], self.delegate.heart_rate)
             self.s.parameters["heart_rate"]["value_avg"] = self.delegate.heart_rate_avg
+            self.measurement_time = self.delegate.measurement_time
             self.s.parameters["heart_rate"]["value_max"] = max(self.s.parameters["heart_rate"]["value_max"], self.delegate.heart_rate)
             self.s.parameters["heart_rate_notification_beat"]["value"] = self.delegate.heart_rate_notification_beat
             if self.s.parameters["heart_rate_device_name"]["value"] != self.device_name:
