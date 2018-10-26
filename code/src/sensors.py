@@ -110,7 +110,6 @@ class sensors(threading.Thread, metaclass=Singleton):
         self.load_plugins()
 
         for s in self.sensors:
-            print(s)
             self.log.debug("Starting {} thread".format(s), extra=self.extra)
             self.sensors[s].start()
 
