@@ -42,6 +42,7 @@ class config(object):
                     self.config_params = yaml.safe_load(f)
             except IOError:
                 self.log.exception("I/O Error when trying to parse overwritten config. Quitting!!", extra=self.extra)
+                #FIXME no cleanup function
                 self.cleanup()
         self.s.register_parameter("log_level", self.extra["module_name"])
         try:

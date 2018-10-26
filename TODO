@@ -18,18 +18,16 @@ REAL WORLD PROBLEMS:
 - Quit/Halt should render some exit screen
 - BLE device name might be too long for assigned space. Split or cut. Use i4oled code if needed.
 - Set up low battery warning/shutdown. Pimoroni Lipo shim informs about battery state.
-- Ride log configuration in a config file
 - units_allowed should come from unit_coonverter
 - slope in % needs different formatting than in m/m
 - create editor_list for list selection (wheel size)
 - add session_distance
 - changing MSLP or reference_altitude triggers crazy slope. Reset slope calcs variables or filter the jump
-- max cadence reset doesn't work
 
 CODE ERRORS:
 - Threads write to log aftred log end [ERROR]
 - Setting time from GPS for the first time breaks delta (trip time)
-- Average cadence and heart rate are invalid
+- Average cadence and heart rate are invalid [IN PROGRESS]
 
 HARDWARE:
 - Add backlight control
@@ -231,3 +229,5 @@ TypeError: argument 1 must be pygame.Surface, not None
 103. [DONE] - Use time_stamp for all parameters {can be done with custom dict type, but that triggers custom yaml writer/reader. Won't fix}
 104. [DONE] - Add text align options to layout (left/center/right)
 105. [DONE] - Loading sensor modules from files in a sub-directory
+106. [DONE] - max cadence reset doesn't work
+107. [DONE] - Ride log configuration in a config file
