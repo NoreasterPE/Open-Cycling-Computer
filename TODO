@@ -54,6 +54,22 @@ FUTURE
 - Use real ff fonts instead of the "toy" cairo API
 - Make library for layout handling. Might be useful for other projects like weather station [IN PROGRESS]
 
+RANDOM ERRORs:
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/threading.py", line 920, in _bootstrap_inner
+    self.run()
+  File "/home/pi/Open-Cycling-Computer/code/src/sensors.py", line 110, in run
+    self.load_plugins()
+  File "/home/pi/Open-Cycling-Computer/code/src/sensors.py", line 104, in load_plugins
+    self.sensors[plugin] = plugin_class()
+  File "/home/pi/Open-Cycling-Computer/code/src/plugins/compute.py", line 34, in __init__
+    self.s.request_parameter("odometer", self.extra["module_name"])
+  File "/home/pi/Open-Cycling-Computer/code/src/sensors.py", line 258, in request_parameter
+    if sensor_name not in self.parameters[parameter_name]["required_by"]:
+TypeError: argument of type 'NoneType' is not iterable
+
+
 [DONE]
 1. [DONE] Saving setting (i.e. current layout)
 2. [DONE] Split module tests from main part and use consistent naming
