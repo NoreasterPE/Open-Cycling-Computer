@@ -3,6 +3,7 @@
 ## @package ride_log
 #  Module for handling ride parameters logging to file
 from shutil import copyfile
+import datetime
 import logging
 import numbers
 import sensor
@@ -38,9 +39,15 @@ class ride_log(sensor.sensor):
 
         ride_log_format = ''
         self.ex = dict()
+        self.parameter_format = dict()
         for i in self.config_params['parameters']:
             ride_log_format += '%(' + i['name'] + ')-12s,'
+            try:
+                self.parameter_format[i['name']] = i['format']
+            except KeyError:
+                self.parameter_format[i['name']] = '%.1f'
             self.ex[i['name']] = i['description']
+            self.parameter_format
         ride_log_format = ride_log_format.strip(',')
 
         ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
@@ -81,5 +88,29 @@ class ride_log(sensor.sensor):
     def add_entry(self):
         self.log.debug("Adding ride log entry", extra=self.extra)
         for p in self.ex:
-            self.ex[p] = numbers.sanitise(self.s.parameters[p]["value"])
+            value = self.s.parameters[p]["value"]
+            string_format = self.parameter_format[p]
+            if string_format == "hhmmss":
+                try:
+                    minutes, seconds = divmod(int(value), 60)
+                    hours, minutes = divmod(minutes, 60)
+                    value = "{:02.0f}:{:02.0f}:{:02.0f}".format(hours, minutes, seconds)
+                except TypeError:
+                    pass
+            elif string_format == "time":
+                try:
+                    value = datetime.datetime.fromtimestamp(int(value)).strftime('%H:%M:%S')
+                except (TypeError, ValueError):
+                    pass
+            elif string_format == "date":
+                try:
+                    value = datetime.datetime.fromtimestamp(int(value)).strftime('%Y-%m-%d')
+                except (ValueError, TypeError):
+                    pass
+            else:
+                try:
+                    value  = string_format % value
+                except (ValueError, TypeError):
+                    pass
+            self.ex[p] = value
         self.ride_logger.info('', extra=self.ex)
