@@ -3,6 +3,7 @@ cadence_speed_device_address:
   raw_unit: null
   required_by:
   - ble_sc
+  reset: false
   sensor_name: null
   time_stamp: 0.0
   unit: null
@@ -17,6 +18,7 @@ cadence_speed_device_name:
   raw_unit: null
   required_by:
   - ble_sc
+  reset: false
   sensor_name: null
   time_stamp: 0.0
   unit: null
@@ -31,6 +33,7 @@ heart_rate_device_address:
   raw_unit: null
   required_by:
   - ble_hr
+  reset: false
   sensor_name: null
   time_stamp: 0.0
   unit: null
@@ -44,6 +47,7 @@ heart_rate_device_name:
   force_notification: false
   raw_unit: null
   required_by: null
+  reset: false
   sensor_name: null
   time_stamp: 0.0
   unit: null
@@ -58,6 +62,7 @@ log_level:
   force_notification: false
   raw_unit: null
   required_by: null
+  reset: false
   sensor_name: null
   time_stamp: 0.0
   unit: null
@@ -71,6 +76,7 @@ odometer:
   force_notification: false
   raw_unit: m
   required_by: null
+  reset: false
   sensor_name: null
   time_stamp: 0.0
   unit: km
@@ -78,7 +84,7 @@ odometer:
   - m
   - km
   - mi
-  value: 545.1950000000004
+  value: 589.4000000000008
   value_avg: .nan
   value_default: null
   value_max: -.inf
@@ -88,13 +94,14 @@ reference_altitude:
   raw_unit: m
   required_by:
   - bmp280
+  reset: false
   sensor_name: null
   time_stamp: 1540155643.1353118
   unit: m
   units_allowed:
   - m
   - km
-  value: '54.0'
+  value: 11.47
   value_avg: .nan
   value_default: null
   value_max: -.inf
@@ -103,6 +110,7 @@ rider_weight:
   force_notification: false
   raw_unit: kg
   required_by: null
+  reset: false
   sensor_name: null
   time_stamp: 0.0
   unit: kg
@@ -119,8 +127,9 @@ speed:
   force_notification: false
   raw_unit: m/s
   required_by: null
+  reset: true
   sensor_name: null
-  time_stamp: 1539777458.018691
+  time_stamp: 1540503352.0432143
   unit: km/h
   units_allowed:
   - m/s
@@ -135,22 +144,24 @@ temperature:
   force_notification: false
   raw_unit: C
   required_by: null
+  reset: false
   sensor_name: null
   time_stamp: 0.0
   unit: C
   units_allowed:
   - C
   - F
-  value: 24.2
+  value: 23.84
   value_avg: .nan
   value_default: null
   value_max: 29.51
-  value_min: 20.13
+  value_min: 19.24
 wheel_circumference:
   force_notification: false
   raw_unit: m
   required_by:
   - ble_sc
+  reset: false
   sensor_name: null
   time_stamp: 1540312597.1810174
   unit: mm
@@ -166,6 +177,7 @@ wheel_size:
   force_notification: false
   raw_unit: null
   required_by: null
+  reset: false
   sensor_name: null
   time_stamp: 0.0
   unit: null
