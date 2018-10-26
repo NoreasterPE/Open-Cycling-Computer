@@ -31,4 +31,4 @@ class wheel:
     #  @param self The python object self
     #  @param name String describing wheel, i.e. 700x25C
     def get_circumference(self, name):
-            return self.wheel_circ[name]
+            return self.wheel_circ[name.upper()]

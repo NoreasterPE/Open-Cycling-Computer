@@ -83,9 +83,12 @@ class bmp280(sensor.sensor):
         # FIXME Hardware checks
         try:
             with open('/sys/bus/iio/devices/iio:device0/in_pressure_input', 'r') as press:
+                # self.pressure_unfiltered is required for test files
                 self.pressure_unfiltered = float(press.read()) * 1000.0
             with open('/sys/bus/iio/devices/iio:device0/in_temp_input', 'r') as temp:
-                self.s.parameters["temperature"]["value"] = float(temp.read()) / 1000.0
+                # self.temperature is required for test files
+                self.temperature = float(temp.read()) / 1000.0
+                self.s.parameters["temperature"]["value"] = self.temperature
         except FileNotFoundError:
             # FileNotFoundError: [Errno 2] No such file or directory: '/sys/bus/iio/devices/iio:device0/in_pressure_input'
             pass
@@ -100,7 +103,9 @@ class bmp280(sensor.sensor):
                     self.calculate_mean_sea_level_pressure()
             self.kalman.update_unfiltered_value(self.pressure_unfiltered)
             self.kalman.update()
-            self.s.parameters["pressure"]["value"] = self.kalman.value_estimate
+            # self.pressure is required for test files
+            self.pressure = self.kalman.value_estimate
+            self.s.parameters["pressure"]["value"] = self.pressure
             self.s.parameters["pressure_nof"]["value"] = self.pressure_unfiltered
             self.s.parameters['altitude']['value'] = self.calculate_altitude(self.s.parameters['pressure']['value'])
             self.log.debug("pressure = {} [Pa], temperature = {} [C]".format(self.s.parameters["pressure"]["value"], self.s.parameters["temperature"]["value"]), extra=self.extra)

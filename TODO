@@ -19,7 +19,6 @@ REAL WORLD PROBLEMS:
 - BLE device name might be too long for assigned space. Split or cut. Use i4oled code if needed.
 - Set up low battery warning/shutdown. Pimoroni Lipo shim informs about battery state.
 - Ride log configuration in a config file
-- Loading sensor modules from files in a sub-directory
 - units_allowed should come from unit_coonverter
 - slope in % needs different formatting than in m/m
 - create editor_list for list selection (wheel size)
@@ -215,3 +214,4 @@ TypeError: argument 1 must be pygame.Surface, not None
 102. [DOME] - leading zero needs to be preserved in editor_number when value is less than 1.0 like 0.5
 103. [DONE] - Use time_stamp for all parameters {can be done with custom dict type, but that triggers custom yaml writer/reader. Won't fix}
 104. [DONE] - Add text align options to layout (left/center/right)
+105. [DONE] - Loading sensor modules from files in a sub-directory

@@ -1,14 +1,14 @@
 import time
 import sys
-from ble_hr import ble_hr
+sys.path.insert(0, '../plugins')
+sys.path.insert(0, '../')
+import ble_sc
 from bluepy.btle import BTLEException
 import logging
-import sensors
-
+from wheel import wheel as w
 
 if __name__ == '__main__':
-    ex = {'module_name': 'test_ble_hr'}
-    #sys_log_filename = "ble_hr." + time.strftime("%Y-%m-%d-%H:%M:%S") + ".log"
+    ex = {'module_name': 'test_ble_sc'}
     logging.getLogger('system').setLevel(logging.DEBUG)
     sys_log_handler = logging.StreamHandler(sys.stdout)
     sys_log_format = '%(asctime)-25s %(levelname)-10s %(module_name)-12s %(message)s'
@@ -16,21 +16,22 @@ if __name__ == '__main__':
     logging.getLogger('system').addHandler(sys_log_handler)
     sys_logger = logging.getLogger('system')
     sys_logger.debug("Log start", extra=ex)
-    s = sensors.sensors()
 
+    wheel = w()
+    WHEEL_CIRC_700x25 = wheel.get_circumference("700x25C") / 1000.0
     try:
         sys_logger.debug("Initialising BLE device...", extra=ex)
-        ble_hr_device = ble_hr()
+        ble_sc_device = ble_sc.ble_sc()
         sys_logger.debug("Setting address...", extra=ex)
-        ble_hr_device.set_addr("D6:90:A8:08:F0:E4")
+        ble_sc_device.set_addr("FD:DF:0E:4E:76:CF")
         sys_logger.debug("Starting BLE thread...", extra=ex)
-        ble_hr_device.start()
+        ble_sc_device.start()
         connected = False
         while not connected:
             sys_logger.debug("Device not connected...", extra=ex)
             try:
                 sys_logger.debug("Calling is_connected", extra=ex)
-                connected = ble_hr_device.is_connected()
+                connected = ble_sc_device.is_connected()
                 sys_logger.debug("is_connected returned {}".format(connected), extra=ex)
                 time.sleep(3)
             except BTLEException as e:
@@ -38,28 +39,22 @@ if __name__ == '__main__':
                 sys_logger.debug(".....sensor is not on? Waiting... ", extra=ex)
 
         sys_logger.debug("Sensor started!", extra=ex)
-        #sys_logger.debug("Getting device name", extra=ex)
-        #sys_logger.debug("Device name: {}".format(ble_hr_device.get_device_name()), extra=ex)
-        #time.sleep(2)
-        #sys_logger.debug("Getting battery level", extra=ex)
-        #sys_logger.debug("Battery level: {}".format(ble_hr_device.get_battery_level()), extra=ex)
         time.sleep(2)
 
-        #sys_logger.debug("Starting notifications", extra=ex)
-        #ble_hr_device.set_notifications()
         ts = 0
         while True:
             time.sleep(2)
-            hr = s.parameters['heart_rate']['value']
-            ts = s.parameters['heart_rate']['time_stamp']
-            new_ts = time.strftime("%Y-%b-%d %H:%M:%S", time.localtime(ts))
-            #sys_logger.debug("Name: {}, state:{}, battery level: {}%".format(data['name'], data['state'], data['battery_level']), extra=ex)
+            data = ble_sc_device.get_raw_data()
+            new_ts = time.strftime("%Y-%b-%d %H:%M:%S", time.localtime(data['time_stamp']))
             if ts != new_ts:
+                sys_logger.debug("Name: {}, state:{}, battery level: {}%".format(data['name'], data['state'], data['battery_level']), extra=ex)
                 ts = new_ts
-                sys_logger.debug(" Timestamp: {}, heart rate: {}".format(ts, hr), extra=ex)
+                speed = 3.6 * WHEEL_CIRC_700x25 / (data["wheel_rev_time"] + 0.00001)
+                sys_logger.debug("TS: {}, speed: {:10.3f} km/h".format(data["wheel_time_stamp"], speed), extra=ex)
+                sys_logger.debug("TS: {}, RPM: {:10.3f}".format(data["cadence_time_stamp"], data["cadence"]), extra=ex)
             sys_logger.debug("Tick...{}".format(new_ts), extra=ex)
 
     except (KeyboardInterrupt, SystemExit):
-        sys_logger.debug("BLE hr stop", extra=ex)
+        sys_logger.debug("BLE sc stop", extra=ex)
         if connected:
-            ble_hr_device.stop()
+            ble_sc_device.stop()

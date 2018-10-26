@@ -70,6 +70,7 @@ class sensors(threading.Thread, metaclass=Singleton):
         ## @var l
         # System logger handle
         self.log = logging.getLogger('system')
+
         ## @var sensors
         # Dict with sensor instances
         self.sensors = dict()
@@ -91,47 +92,27 @@ class sensors(threading.Thread, metaclass=Singleton):
         # Dict keeping track of which sensor is connected
         self.connected = dict()
 
-    ## Functon that initialises all sensors
+    ## Functon that loads plugins from a subdirectory. The subdirectory name in 'plugins' by default.
     #  @param self The python object self
-    def initialise_sensors(self):
-        #FIXME make initialisation the same for all sensors, failed init should raise exception?
-        #FIXME load all modules from a sensor directory
-
-        import compute
-        self.sensors['compute'] = compute.compute()
-
-        import ride_log
-        self.sensors['ride_log'] = ride_log.ride_log()
-
-        import bmp280
-        self.sensors['bmp280'] = bmp280.bmp280()
-
-        import ble_hr
-        self.sensors['ble_hr'] = ble_hr.ble_hr()
-
-        import ble_sc
-        self.sensors['ble_sc'] = ble_sc.ble_sc()
+    def load_plugins(self, directory='plugins'):
+        plugins = __import__(directory)
+        import importlib
+        for plugin in plugins.__all__:
+            module = importlib.import_module(str(directory + '.' + plugin), directory)
+            plugin_class = module.__getattribute__(plugin)
+            self.log.debug("Initialising plugin {}".format(plugin), extra=self.extra)
+            self.sensors[plugin] = plugin_class()
 
     ## Main loop of sensors module. Constantly tries to reconnect with BLE devices
     #  @param self The python object self
     def run(self):
         self.log.debug("run started", extra=self.extra)
-        self.initialise_sensors()
+        self.load_plugins()
 
-        self.log.debug("Starting compute thread", extra=self.extra)
-        self.sensors['compute'].start()
-
-        self.log.debug("Starting ride_log thread", extra=self.extra)
-        self.sensors['ride_log'].start()
-
-        self.log.debug("Starting ble_hr thread", extra=self.extra)
-        self.sensors['ble_hr'].start()
-
-        self.log.debug("Starting ble_sc thread", extra=self.extra)
-        self.sensors['ble_sc'].start()
-
-        self.log.debug("Starting bmp280 thread", extra=self.extra)
-        self.sensors['bmp280'].start()
+        for s in self.sensors:
+            print(s)
+            self.log.debug("Starting {} thread".format(s), extra=self.extra)
+            self.sensors[s].start()
 
         self.running = True
         self.previous_parameters = dict()
@@ -295,7 +276,7 @@ class sensors(threading.Thread, metaclass=Singleton):
             self.register_parameter(parameter)
         self.parameters[parameter].update(content)
         self.parameters[parameter]["force_notification"] = True
-        self.log.debug("after update_parameter {} is {}".format(parameter, self.parameters[parameter]), extra=self.extra)
+        #self.log.debug("after update_parameter {} is {}".format(parameter, self.parameters[parameter]), extra=self.extra)
 
     def parameter_reset(self, parameter, reset_list):
         self.log.debug("reset request received for {}".format(parameter), extra=self.extra)

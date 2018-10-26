@@ -62,6 +62,3 @@ class sensor(threading.Thread):
     def stop(self):
         self.log.debug("Stop started", extra=self.extra)
         self.running = False
-
-    def __del__(self):
-        self.stop()
