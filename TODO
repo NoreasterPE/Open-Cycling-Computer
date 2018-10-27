@@ -5,7 +5,7 @@ UI
 - reduce debug settings to 1 screen 2x4
 
 CODING STYLE:
-- [EMPTY]
+- move formatting code to numbers module and use in layout and ride_log
 
 REAL WORLD PROBLEMS:
 - Max speed will be false sooner or later after a single invalid measurement. Kalman filter required.
@@ -21,7 +21,6 @@ REAL WORLD PROBLEMS:
 - units_allowed should come from unit_coonverter
 - slope in % needs different formatting than in m/m
 - create editor_list for list selection (wheel size)
-- add session_distance
 - changing MSLP or reference_altitude triggers crazy slope. Reset slope calcs variables or filter the jump
 
 CODE ERRORS:
@@ -231,3 +230,4 @@ TypeError: argument 1 must be pygame.Surface, not None
 105. [DONE] - Loading sensor modules from files in a sub-directory
 106. [DONE] - max cadence reset doesn't work
 107. [DONE] - Ride log configuration in a config file
+108. [DONE] - add session_distance
