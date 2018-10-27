@@ -27,7 +27,6 @@ class sensor(threading.Thread):
         ## @var connected
         # Variable indicating it the sensor hardware is currently connected
         self.connected = False
-        #self.reset_data()
 
         ## @var name
         # Name of the sensor

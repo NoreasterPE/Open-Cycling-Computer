@@ -38,8 +38,6 @@ class events():
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
-        # Run init for super class
-        super(events, self).__init__()
         self.layout = layout
         self.touchscreen = touchscreen
         self.rendering = rendering
