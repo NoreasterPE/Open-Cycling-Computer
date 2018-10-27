@@ -35,7 +35,7 @@ class events():
     ## The constructor
     #  @param self The python object self
     def __init__(self, layout, touchscreen, rendering):
-        ## @var l
+        ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
         # Run init for super class

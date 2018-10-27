@@ -67,7 +67,7 @@ class sensors(threading.Thread, metaclass=Singleton):
     #  @param occ OCC instance
     def __init__(self):
         super().__init__()
-        ## @var l
+        ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
 

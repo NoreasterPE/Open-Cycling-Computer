@@ -23,7 +23,7 @@ class layout():
     # Temporary change
 
     def __init__(self, occ, cr, layout_path="layouts/default.yaml"):
-        ## @var l
+        ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
         self.font_initialised = False

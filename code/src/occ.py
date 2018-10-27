@@ -44,7 +44,7 @@ class open_cycling_computer(object, metaclass=singleton):
         ## @var simulate
         #  Stores simulate parameter from constructor call
         self.simulate = simulate
-        ## @var l
+        ## @var log
         #  Handle to system logger
         self.log = logging.getLogger('system')
         if not self.simulate:
