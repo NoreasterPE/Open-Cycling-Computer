@@ -84,7 +84,7 @@ odometer:
   - m
   - km
   - mi
-  value: 589.4000000000008
+  value: 1382.9850000000065
   value_avg: .nan
   value_default: null
   value_max: -.inf
@@ -129,7 +129,7 @@ speed:
   required_by: null
   reset: true
   sensor_name: null
-  time_stamp: 1540503352.0432143
+  time_stamp: 1540638854.585688
   unit: km/h
   units_allowed:
   - m/s
@@ -138,7 +138,7 @@ speed:
   value: 0.0
   value_avg: .inf
   value_default: null
-  value_max: -.inf
+  value_max: 9.753484162895928
   value_min: .inf
 temperature:
   force_notification: false
@@ -151,7 +151,7 @@ temperature:
   units_allowed:
   - C
   - F
-  value: 23.84
+  value: 25.79
   value_avg: .nan
   value_default: null
   value_max: 29.51

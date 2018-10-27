@@ -8,6 +8,7 @@ CODING STYLE:
 - move formatting code to numbers module and use in layout and ride_log
 
 REAL WORLD PROBLEMS:
+- Unit syncronistion. I.e. Odometer and session distance
 - Max speed will be false sooner or later after a single invalid measurement. Kalman filter required.
 - Average cadence to be calculated for ride time (reset with ride time?)
 - Do not try to initialise subsystems too many times. If BLE/GPS/other sensor is not there it won't magically show up. Log error and give up.

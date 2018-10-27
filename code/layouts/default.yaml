@@ -6,22 +6,23 @@ pages:
          background: images/page_0_background.png
          buttons: images/button_pressed.png
          font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
-         font_size: 16
+         font_size: 20
          fg_colour: FFFFFF
          fields:
                 - parameter: speed
-                  x: 95
-                  y: 80
+                  x: 85
+                  y: 85
                   font_size: 150
 
                 - parameter: speed
                   show: tenths
-                  x: 210
-                  y: 105
-                  font_size: 50
+                  x: 200
+                  y: 115
+                  font_size: 80
 
                 - parameter: speed
                   show: unit
+                  font_size: 24
                   x: 205
                   y: 65
 
@@ -45,9 +46,15 @@ pages:
                 - parameter: session_distance
                   format: "%.1f"
                   align: right
-                  x: 230
+                  x: 200
                   y: 185
                   font_size: 30
+
+                - parameter: session_distance
+                  show: unit
+                  align: right
+                  x: 230
+                  y: 185
 
                 - parameter: session_time
                   resettable: yes
@@ -79,7 +86,7 @@ pages:
                 - parameter: cadence
                   resettable: yes
                   reset: avg, max
-                  x: 55
+                  x: 45
                   y: 295
                   font_size: 50
                   button:
@@ -92,13 +99,11 @@ pages:
                   show: avg
                   x: 60
                   y: 255
-                  font_size: 16
 
                 - parameter: cadence
                   show: max
                   x: 100
                   y: 255
-                  font_size: 16
 
                 - parameter: cadence
                   show: unit
@@ -118,7 +123,7 @@ pages:
                 - parameter: heart_rate
                   resettable: yes
                   reset: min, avg, max
-                  x: 175
+                  x: 165
                   y: 295
                   font_size: 50
                   button:
@@ -131,19 +136,16 @@ pages:
                   show: min
                   x: 140
                   y: 255
-                  font_size: 16
 
                 - parameter: heart_rate
                   show: avg
                   x: 180
                   y: 255
-                  font_size: 16
 
                 - parameter: heart_rate
                   show: max
                   x: 220
                   y: 255
-                  font_size: 16
 
                 - parameter: heart_rate
                   show: unit
