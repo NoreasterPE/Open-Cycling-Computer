@@ -45,7 +45,9 @@ class ble_sc(ble_sensor.ble_sensor):
         if self.s.parameters["cadence"]["reset"]:
             #Reset by user, reset deletage data
             self.log.debug('reset request received', extra=self.extra)
-            self.delegate.reset_data()
+            self.delegate.cadence = 0.0
+            self.delegate.cadence_avg = 0.0
+            self.delegate.measurement_time = 0.0
             self.s.parameters["cadence"]["reset"] = False
         try:
             if self.delegate.wheel_time_stamp == self.delegate.wheel_revolution_time_stamp:
