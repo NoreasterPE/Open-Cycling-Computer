@@ -6,6 +6,7 @@ import datetime
 import logging
 import numbers
 import os
+import sensors
 import sys
 import time
 import unit_converter
@@ -19,21 +20,20 @@ class layout():
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': 'layout'}
-    # def __init__(self, occ, layout_path="layouts/current.yaml"):
-    # Temporary change
 
-    def __init__(self, occ, cr, layout_path="layouts/default.yaml"):
+    def __init__(self, cr, layout_file="layouts/default.yaml"):
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
         self.font_initialised = False
-        self.occ = occ
+        ## @var s
+        #  Sensors instance
+        self.s = sensors.sensors()
         ## @var width
         #  Window/screen width
-        self.width = self.occ.width
         ## @var height
         #  Window/screen height
-        self.height = self.occ.height
+        self.width, self.height = self.s.parameters['display_size']["value"]
         self.cr = cr
         self.render = False
         self.uc = unit_converter.unit_converter()
@@ -42,33 +42,33 @@ class layout():
         self.page_index = {}
         self.parameter_rect_list = {}
         self.current_image_list = {}
-        self.layout_path = layout_path
-        self.load_layout(layout_path)
+        self.layout_file = layout_file
+        self.load_layout(layout_file)
 
-    def load_layout(self, layout_path):
+    def load_layout(self, layout_file):
         self.max_page_id = 0
         self.max_settings_id = 0
         self.page_list = {}
         self.page_index = {}
         try:
-            with open(layout_path) as f:
+            with open(layout_file) as f:
                 self.layout_tree = yaml.safe_load(f)
                 f.close()
-            self.layout_path = layout_path
+            self.layout_file = layout_file
         except FileNotFoundError:
-            self.log.critical("Loading layout {} failed, falling back to default.yaml".format(__name__, layout_path), extra=self.extra)
+            self.log.critical("Loading layout {} failed, falling back to default.yaml".format(__name__, layout_file), extra=self.extra)
             sys_info = "Error details: {}".format(sys.exc_info()[0])
             self.log.error(sys_info, extra=self.extra)
             # Fallback to default layout
             # FIXME - define const file with paths?
-            layout_path = "layouts/default.yaml"
+            layout_file = "layouts/default.yaml"
             try:
-                with open(layout_path) as f:
+                with open(layout_file) as f:
                     self.layout_tree = yaml.safe_load(f)
                     f.close()
             except FileNotFoundError:
-                self.log.critical("Loading default layout {} failed, Quitting...".format(__name__, layout_path), extra=self.extra)
-                self.occ.stop()
+                self.log.critical("Loading default layout {} failed, Quitting...".format(__name__, layout_file), extra=self.extra)
+                raise
 
         for page in self.layout_tree['pages']:
             page_id = page['id']
@@ -96,19 +96,18 @@ class layout():
             self.background_image = self.load_image(self.current_page['background'])
         except cairo.Error:
             self.log.critical("{}: Cannot load background image!".format(__name__,), extra=self.extra)
-            self.log.critical("layout_path = {}".format(self.layout_path), extra=self.extra)
+            self.log.critical("layout_file = {}".format(self.layout_file), extra=self.extra)
             self.log.critical("background path = {}".format(self.current_page['background']), extra=self.extra)
             self.log.critical("page_id = {}".format(page_id), extra=self.extra)
-            # That stops occ but not immediately - errors can occur
-            self.occ.stop()
+            raise
         try:
             self.buttons_image = self.load_image(self.current_page['buttons'])
         except cairo.Error:
             self.log.critical("{}: Cannot load buttons image!".format(__name__,), extra=self.extra)
-            self.log.critical("layout_path = {}".format(self.layout_path), extra=self.extra)
+            self.log.critical("layout_file = {}".format(self.layout_file), extra=self.extra)
             self.log.critical("buttons path = {}".format(self.current_page['buttons']), extra=self.extra)
             self.log.critical("page_id = {}".format(page_id), extra=self.extra)
-            self.occ.stop()
+            raise
         self.font = self.current_page['font']
         # Wait for OCC to set rendering module
         if not self.font_initialised:
@@ -202,51 +201,51 @@ class layout():
                         value = None
                 else:
                     try:
-                        v = self.occ.sensors.parameters[parameter]["value"]
-                        ru = self.occ.sensors.parameters[parameter]["raw_unit"]
-                        u = self.occ.sensors.parameters[parameter]["unit"]
+                        v = self.s.parameters[parameter]["value"]
+                        ru = self.s.parameters[parameter]["raw_unit"]
+                        u = self.s.parameters[parameter]["unit"]
                         value = self.uc.convert(v, ru, u)
                         value = numbers.sanitise(value)
                     except (KeyError, TypeError):
                         value = None
             elif show == "tenths":
                 try:
-                    v = self.occ.sensors.parameters[parameter]["value"]
-                    ru = self.occ.sensors.parameters[parameter]["raw_unit"]
-                    u = self.occ.sensors.parameters[parameter]["unit"]
+                    v = self.s.parameters[parameter]["value"]
+                    ru = self.s.parameters[parameter]["raw_unit"]
+                    u = self.s.parameters[parameter]["unit"]
                     value = self.uc.convert(v, ru, u)
                     tenths_string = "{}".format(value - int(value))
                     value = format(tenths_string)[2:3]
-                except (KeyError, TypeError):
+                except (KeyError, TypeError, ValueError):
                     value = None
             elif show == "unit":
                 try:
-                    value = self.occ.sensors.parameters[parameter]["unit"]
+                    value = self.s.parameters[parameter]["unit"]
                 except KeyError:
                     value = None
             elif show == "min":
                 try:
-                    v = self.occ.sensors.parameters[parameter]["value_min"]
-                    ru = self.occ.sensors.parameters[parameter]["raw_unit"]
-                    u = self.occ.sensors.parameters[parameter]["unit"]
+                    v = self.s.parameters[parameter]["value_min"]
+                    ru = self.s.parameters[parameter]["raw_unit"]
+                    u = self.s.parameters[parameter]["unit"]
                     value = self.uc.convert(v, ru, u)
                     value = numbers.sanitise(value)
                 except KeyError:
                     value = None
             elif show == "avg":
                 try:
-                    v = self.occ.sensors.parameters[parameter]["value_avg"]
-                    ru = self.occ.sensors.parameters[parameter]["raw_unit"]
-                    u = self.occ.sensors.parameters[parameter]["unit"]
+                    v = self.s.parameters[parameter]["value_avg"]
+                    ru = self.s.parameters[parameter]["raw_unit"]
+                    u = self.s.parameters[parameter]["unit"]
                     value = self.uc.convert(v, ru, u)
                     value = numbers.sanitise(value)
                 except KeyError:
                     value = None
             elif show == "max":
                 try:
-                    v = self.occ.sensors.parameters[parameter]["value_max"]
-                    ru = self.occ.sensors.parameters[parameter]["raw_unit"]
-                    u = self.occ.sensors.parameters[parameter]["unit"]
+                    v = self.s.parameters[parameter]["value_max"]
+                    ru = self.s.parameters[parameter]["raw_unit"]
+                    u = self.s.parameters[parameter]["unit"]
                     value = self.uc.convert(v, ru, u)
                     value = numbers.sanitise(value)
                 except KeyError:
@@ -295,7 +294,7 @@ class layout():
             try:
                 variable = field['variable']
                 #print("{} variable {}".format(parameter, variable))
-                value = self.occ.sensors.parameters[variable["name"]]["value"]
+                value = self.s.parameters[variable["name"]]["value"]
                 try:
                     # If there is a variable with frames defined prepare path for relevant icon
                     frames = field['variable']['frames']
@@ -454,19 +453,19 @@ class layout():
         if editable:
             self.log.debug("Opening editor {} for {}".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
             p = self.editor_fields["parameter"]
-            self.editor_fields["unit"] = self.occ.sensors.parameters[p]["unit"]
+            self.editor_fields["unit"] = self.s.parameters[p]["unit"]
             if self.editor_fields["editor"] == 'editor_numbers':
-                self.editor_fields["raw_value"] = self.occ.sensors.parameters[p]["value"]
-                value = self.uc.convert(self.occ.sensors.parameters[p]["value"],
-                                        self.occ.sensors.parameters[p]["raw_unit"],
-                                        self.occ.sensors.parameters[p]["unit"])
+                self.editor_fields["raw_value"] = self.s.parameters[p]["value"]
+                value = self.uc.convert(self.s.parameters[p]["value"],
+                                        self.s.parameters[p]["raw_unit"],
+                                        self.s.parameters[p]["unit"])
                 try:
                     self.editor_fields["value"] = self.editor_fields["format"] % value
                 except TypeError:
                     self.editor_fields["value"] = value
             elif (self.editor_fields["editor"] == 'editor_string' or
                   self.editor_fields["editor"] == 'editor_units'):
-                self.editor_fields["value"] = self.occ.sensors.parameters[p]["value"]
+                self.editor_fields["value"] = self.s.parameters[p]["value"]
                 pass
             else:
                 self.log.critical("Unknown editor {} called for parameter {}, ignoring".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
@@ -475,7 +474,7 @@ class layout():
             self.use_page(self.editor_fields["editor"])
         elif resettable:
             self.log.debug("Resetting {} with list: {}".format(parameter_for_reset, reset_list), extra=self.extra)
-            self.occ.sensors.parameter_reset(parameter_for_reset, reset_list)
+            self.s.parameter_reset(parameter_for_reset, reset_list)
             self.parameter_for_reset = None
 
     def run_function(self, parameter):
@@ -608,18 +607,18 @@ class layout():
         variable = self.editor_fields["parameter"]
         variable_unit = self.editor_fields["unit"]
         variable_value = self.editor_fields["value"]
-        current_unit_index = self.occ.sensors.parameters[self.editor_fields["parameter"]]["units_allowed"].index(variable_unit)
-        self.log.debug("variable: {} units_allowed: {}".format(variable, self.occ.sensors.parameters[self.editor_fields["parameter"]]["units_allowed"]), extra=self.extra)
+        current_unit_index = self.s.parameters[self.editor_fields["parameter"]]["units_allowed"].index(variable_unit)
+        self.log.debug("variable: {} units_allowed: {}".format(variable, self.s.parameters[self.editor_fields["parameter"]]["units_allowed"]), extra=self.extra)
         if direction == 1:
             try:
-                next_unit = self.occ.sensors.parameters[self.editor_fields["parameter"]]["units_allowed"][current_unit_index + 1]
+                next_unit = self.s.parameters[self.editor_fields["parameter"]]["units_allowed"][current_unit_index + 1]
             except IndexError:
-                next_unit = self.occ.sensors.parameters[self.editor_fields["parameter"]]["units_allowed"][0]
+                next_unit = self.s.parameters[self.editor_fields["parameter"]]["units_allowed"][0]
         else:
             try:
-                next_unit = self.occ.sensors.parameters[self.editor_fields["parameter"]]["units_allowed"][current_unit_index - 1]
+                next_unit = self.s.parameters[self.editor_fields["parameter"]]["units_allowed"][current_unit_index - 1]
             except IndexError:
-                next_unit = self.occ.sensors.parameters[self.editor_fields["parameter"]]["units_allowed"][-1]
+                next_unit = self.s.parameters[self.editor_fields["parameter"]]["units_allowed"][-1]
         self.editor_fields["unit"] = next_unit
         self.editor_fields["value"] = variable_value
 
@@ -638,17 +637,17 @@ class layout():
         parameter_value = self.editor_fields["value"]
         self.log.debug("parameter: {}, parameter_unit: {}, parameter_value: {}".format(parameter, parameter_unit, parameter_value), extra=self.extra)
         if self.editor_fields["editor"] == "editor_units":
-            self.occ.sensors.parameters[parameter]["unit"] = parameter_unit
+            self.s.parameters[parameter]["unit"] = parameter_unit
         if self.editor_fields["editor"] == "editor_numbers":
-            unit_raw = self.occ.sensors.parameters[parameter]["raw_unit"]
+            unit_raw = self.s.parameters[parameter]["raw_unit"]
             value = self.uc.convert(float(parameter_value), parameter_unit, unit_raw)
-            self.occ.sensors.parameters[parameter]["value"] = float(value)
+            self.s.parameters[parameter]["value"] = float(value)
         if self.editor_fields["editor"] == "editor_string":
-            self.occ.sensors.parameters[parameter]["value"] = parameter_value
+            self.s.parameters[parameter]["value"] = parameter_value
 #        if self.self.editor_fields["ediotr"] == "ble_selector":
 #            (name, addr, dev_type) = parameter_value
-#            self.occ.sensors.set_ble_device(name, addr, dev_type)
-        self.occ.sensors.parameters[parameter]["time_stamp"] = time.time()
+#            self.s.set_ble_device(name, addr, dev_type)
+        self.s.parameters[parameter]["time_stamp"] = time.time()
         self.render = True
         self.log.debug("accept_edit finished", extra=self.extra)
 
@@ -706,10 +705,10 @@ class layout():
         self.load_layout_by_name("default.yaml")
 
     def quit(self):
-        self.occ.stop()
+        quit()
 
     def write_config(self):
-        self.occ.config.write_config()
+        self.s.parameters['write_config_requested']['value'] = True
 
     def reboot(self):
         self.quit()
@@ -730,8 +729,10 @@ class layout():
             log_level = 10
         log_level_name = logging.getLevelName(log_level)
         self.log.debug("Changing log level to: {}".format(log_level_name), extra=self.extra)
-        self.occ.switch_log_level(log_level_name)
-        self.occ.sensors.parameters["log_level"]["value"] = log_level_name
+        try:
+            self.s.parameters['log_level']['value'] = log_level_name
+        except KeyError:
+            pass
 
     def png_to_cairo_surface(self, file_path):
         png_surface = cairo.ImageSurface.create_from_png(file_path)

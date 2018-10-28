@@ -57,7 +57,20 @@ heart_rate_device_name:
   value_default: null
   value_max: -.inf
   value_min: .inf
-layout_path: layouts/default.yaml
+layout_file:
+  force_notification: false
+  raw_unit: null
+  required_by: null
+  reset: false
+  sensor_name: null
+  time_stamp: 0.0
+  unit: null
+  units_allowed: []
+  value: layouts/default.yaml
+  value_avg: .nan
+  value_default: null
+  value_max: -.inf
+  value_min: .inf
 log_level:
   force_notification: false
   raw_unit: null

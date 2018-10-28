@@ -6,15 +6,14 @@
 #  http://opencyclingcomputer.eu/
 
 #from ble_scanner import ble_scanner
-from config import config
-from events import events
+import events
 import layout
-from pitft_touchscreen import pitft_touchscreen
-from rendering import rendering
+import pitft_touchscreen
+import rendering
 import sensors
 import logging
+import sys
 import logging.handlers
-import platform
 import signal
 import time
 
@@ -37,44 +36,28 @@ class open_cycling_computer(object, metaclass=singleton):
 
     ## The constructor
     #  @param self The python object self
-    #  @param simulate Decides if OCC runs in simulation mode or real device mode. Simulation mode is useful for test on non-raspberry pi hardware. Default value is False.
+    #  @param config_file Location of config file
     #  @param width Width of screen or window. Default value is 240 pixels
     #  @param height Height of screen or window.  Default value is 320 pixels
-    def __init__(self, simulate=False, width=240, height=320):
-        ## @var simulate
-        #  Stores simulate parameter from constructor call
-        self.simulate = simulate
+    def __init__(self, config_file=None, layout_file=None, width=240, height=320):
         ## @var log
         #  Handle to system logger
         self.log = logging.getLogger('system')
-        if not self.simulate:
-            pass
         ## @var running
         #  Variable controlling if OCC should keep running
         self.running = True
         ## @var cleaning
         #  Variable indicating is cleaning is in progress
         self.cleaning = False
-        ## @var width
-        #  Window/screen width
-        self.width = width
-        ## @var height
-        #  Window/screen height
-        self.height = height
-        self.log.debug("Screen size is {} x {}".format(self.width, self.height), extra=self.extra)
+        self.log.debug("Screen size is {} x {}".format(width, height), extra=self.extra)
         self.log.debug("Calling sensors", extra=self.extra)
         ## @var sensors
         #  Handle to sensors instance
         self.sensors = sensors.sensors(self)
-        ## @var layout_path
-        #  Path to layout file
-        self.layout_path = ''
-        self.log.debug("Initialising config", extra=self.extra)
-        ## @var config
-        #  Handle to config instance
-        self.config = config(self, "config/config.yaml", "config/config_base.yaml")
-        self.log.debug("Reading config", extra=self.extra)
-        self.config.read_config()
+        self.sensors.register_parameter("log_level", self.extra["module_name"], value='debug')
+        self.sensors.register_parameter("config_file", self.extra["module_name"], value=config_file)
+        self.sensors.register_parameter("layout_file", self.extra["module_name"], value=layout_file)
+        self.sensors.register_parameter("display_size", self.extra["module_name"], value=(width, height))
         ## @var ble_scanner
         #  Handle to ble_scanner instance
         ##self.log.debug("Initialising ble_scanner", extra=self.extra)
@@ -82,7 +65,7 @@ class open_cycling_computer(object, metaclass=singleton):
         ## @var rendering
         #  Handle to rendering instance
         self.log.debug("Initialising rendering", extra=self.extra)
-        self.rendering = rendering(self.width, self.height)
+        self.rendering = rendering.rendering(width, height)
         ## @var surface
         #  Main cairo surface
         self.surface = self.rendering.surface
@@ -91,24 +74,17 @@ class open_cycling_computer(object, metaclass=singleton):
         self.cr = self.rendering.cr
         ## @var layout
         #  Handle to layout instance
-        self.layout = layout.layout(self, self.cr, self.layout_path)
+        self.layout = layout.layout(self.cr)
         self.log.debug("Starting rendering thread", extra=self.extra)
         self.rendering.start()
         ## @var touchscreen
         #  Handle to touchscreen (pitft_touchscreen module)
         self.log.debug("Initialising pitft touchscreen", extra=self.extra)
-        self.touchscreen = pitft_touchscreen()
+        self.touchscreen = pitft_touchscreen.pitft_touchscreen()
         ## @var events
         #  Handle to events instance
         self.log.debug("Initialising events", extra=self.extra)
-        self.events = events(self.layout, self.touchscreen, self.rendering)
-
-    ## Switches logging level
-    #  @param self The python object self
-    #  @param log_level Log level to be set.
-    def switch_log_level(self, log_level):
-        self.log.debug("Switching to log_level {}".format(log_level), extra=self.extra)
-        self.log.setLevel(log_level)
+        self.events = events.events(self.layout, self.touchscreen, self.rendering)
 
     ## Stops main event loop
     #  @param self The python object self
@@ -154,6 +130,11 @@ def quit_handler(signal, frame):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print('Argument 1: config file, argument 2: layout file')
+        quit()
+    config_file = sys.argv[1]
+    layout_file = sys.argv[2]
     ## @var sys_log_filename
     # Log filename, helper variable
     sys_log_filename = "log/debug." + time.strftime("%Y-%m-%d-%H:%M:%S") + ".log"
@@ -190,7 +171,7 @@ if __name__ == "__main__":
     sensor_manager.start()
     ## @var main_window
     # OCC main window. It's instance of open_cycling_computer class
-    main_window = open_cycling_computer(simulate)
+    main_window = open_cycling_computer(config_file, layout_file)
     sys_logger.debug("Starting events loop", extra=ex)
     main_window.events.run()
     main_window.stop()
