@@ -84,9 +84,10 @@ class bmp280(sensor.sensor):
                 # self.temperature is required for test files
                 self.temperature = float(temp.read()) / 1000.0
                 self.s.parameters["temperature"]["value"] = self.temperature
-        except FileNotFoundError:
+        except (FileNotFoundError, OSError) as e:
             # FileNotFoundError: [Errno 2] No such file or directory: '/sys/bus/iio/devices/iio:device0/in_pressure_input'
-            pass
+            # OSError: [Errno 121] Remote I/O error
+            self.log.critical("eading from bmp280 caused exception: {}".format(e), extra=self.extra)
 
     def run(self):
         self.log.debug("Main loop started", extra=self.extra)
