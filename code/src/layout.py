@@ -707,20 +707,19 @@ class layout():
     def quit(self):
         quit()
 
+    #FIXME That will be gone when functions are no longer hard coded
     def write_config(self):
         self.s.parameters['write_config_requested']['value'] = True
 
     def reboot(self):
         self.quit()
         time.sleep(2)
-        if not self.occ.simulate:
-            os.system("reboot")
+        os.system("reboot")
 
     def halt(self):
         self.quit()
         time.sleep(2)
-        if not self.occ.simulate:
-            os.system("./halt.sh")
+        os.system("./halt.sh")
 
     def log_level(self):
         log_level = self.log.getEffectiveLevel()

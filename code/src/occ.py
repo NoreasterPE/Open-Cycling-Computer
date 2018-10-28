@@ -93,11 +93,6 @@ class open_cycling_computer(object, metaclass=singleton):
         self.cleanup()
         self.running = False
 
-    ## Returns simulate variable
-    #  @param self The python object self
-    def get_simulate(self):
-        return self.simulate
-
     ## Clean up function. Writes config and layout and ends OCC. Should never be user it the real device once the code is ready. Used on development version.
     #  @param self The python object self
     def cleanup(self):
@@ -155,16 +150,6 @@ if __name__ == "__main__":
 
     ex = {'module_name': 'Main'}
     sys_logger.debug("Log start", extra=ex)
-    # This is a simple check if we're running on Raspberry PI.
-    # Switch to simulation mode if we're not
-    if (platform.machine() == "armv6l"):
-        ## @var simulate
-        #  Stores simulate parameter. It's True on non armv6l platform
-        simulate = False
-    else:
-        simulate = True
-        sys_logger.warning("Warning! platform.machine() is NOT armv6l. I'll run in simulation mode. No real data will be shown.", extra=ex)
-    sys_logger.debug("simulate = {}".format(simulate), extra=ex)
     sys_logger.debug("Setting up sensors", extra=ex)
     sensor_manager = sensors.sensors()
     sys_logger.debug("Starting sensors", extra=ex)
