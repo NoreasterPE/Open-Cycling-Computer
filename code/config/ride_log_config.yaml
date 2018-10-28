@@ -24,3 +24,4 @@ parameters:
     description:  "Odometer"
   - name: slope
     description:  "Slope"
+    format: '%.3f'
