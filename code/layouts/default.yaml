@@ -571,6 +571,8 @@ pages:
          fg_colour: FFFFFF
          fields:
                 - parameter: write_config
+                  #FIXME Add soft defined function calls to layout
+                  #function: config.write_config
                   x: 120
                   y: 40
                   text: Write config
