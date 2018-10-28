@@ -65,8 +65,10 @@ class compute(sensor.sensor):
             self.calculate_slope()
         except TypeError:
             pass
-        if math.isnan(self.s.parameters["session_odometer_start"]["value"]):
-            self.s.parameters["session_odometer_start"]["value"] = self.odometer
+        if 'session_odometer_start' in self.s.parameters:
+            if self.s.parameters["session_odometer_start"]["value"] is not None:
+                if math.isnan(self.s.parameters["session_odometer_start"]["value"]):
+                    self.s.parameters["session_odometer_start"]["value"] = self.odometer
 
     def run(self):
         self.log.debug("Main loop started", extra=self.extra)
