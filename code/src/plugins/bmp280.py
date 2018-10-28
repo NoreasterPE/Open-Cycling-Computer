@@ -54,17 +54,21 @@ class bmp280(sensor.sensor):
     ## Trigger calculation of pressure at the sea level on change of reference altitude
     #  @param self The python object self
     def notification(self):
+        if 'reference_altitude' not in self.s.parameters:
+            self.log.debug("reference_altitude doesn't exist yet in parameters", extra=self.extra)
+            return
         # User editer mean_sea_level_pressure, use it and calculate reference_altitude
         if self.s.parameters["mean_sea_level_pressure"]["value"] != self.mean_sea_level_pressure:
             self.log.debug("mean_sea_level_pressure changed to {}".format(self.s.parameters['mean_sea_level_pressure']['value']), extra=self.extra)
             self.mean_sea_level_pressure = self.s.parameters["mean_sea_level_pressure"]["value"]
             ra = self.calculate_altitude(self.s.parameters['pressure']['value'])
             if ra is not None and not math.isnan(ra):
+                self.s.parameters['reference_altitude']['value'] = ra
+                self.log.debug("reference_altitude recalculated to: {}".format(self.s.parameters['reference_altitude']['value']), extra=self.extra)
                 # reference_altitude recalculation triggers notification, so ignore the next event
                 self.ignore_reference_altitude_change = True
-                self.s.parameters['reference_altitude']['value'] = ra
-            self.log.debug("reference_altitude recalculated to: {}".format(self.s.parameters['reference_altitude']['value']), extra=self.extra)
-        elif self.s.parameters["reference_altitude"]["value"] != self.reference_altitude:
+
+        if self.s.parameters["reference_altitude"]["value"] != self.reference_altitude:
             self.log.debug("reference_altitude changed to {}".format(self.s.parameters['reference_altitude']['value']), extra=self.extra)
             if not self.ignore_reference_altitude_change:
                 self.reference_altitude = self.s.parameters["reference_altitude"]["value"]
