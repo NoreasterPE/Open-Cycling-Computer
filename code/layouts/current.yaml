@@ -5,23 +5,24 @@ pages:
          type: normal
          background: images/page_0_background.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
-         font_size: 16
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
+         font_size: 20
          fg_colour: FFFFFF
          fields:
                 - parameter: speed
-                  x: 95
-                  y: 75
-                  font_size: 130
+                  x: 85
+                  y: 85
+                  font_size: 150
 
                 - parameter: speed
                   show: tenths
-                  x: 210
-                  y: 105
-                  font_size: 50
+                  x: 200
+                  y: 115
+                  font_size: 80
 
                 - parameter: speed
                   show: unit
+                  font_size: 24
                   x: 205
                   y: 65
 
@@ -42,31 +43,30 @@ pages:
                           name: ble_host_state
                           frames: 6
 
-                - parameter: distance
+                - parameter: session_distance
+                  format: "%.1f"
+                  align: right
+                  x: 200
+                  y: 185
+                  font_size: 30
+
+                - parameter: session_distance
+                  show: unit
+                  align: right
+                  x: 230
+                  y: 185
+
+                - parameter: session_time
                   resettable: yes
-                  x: 170
-                  y: 180
+                  format: hhmmss
+                  x: 180
+                  y: 225
                   font_size: 30
                   button:
                           x0: 120
                           y0: 160
                           w: 120
                           h: 80
-
-                - parameter: distance_units
-                  x: 210
-                  y: 175
-
-                - parameter: ridetime_hms
-                  x: 180
-                  y: 205
-                  font_size: 20
-
-                - parameter: session_time
-                  format: hhmmss
-                  x: 180
-                  y: 225
-                  font_size: 20
 
                 - parameter: slope
                   x: 50
@@ -85,9 +85,10 @@ pages:
 
                 - parameter: cadence
                   resettable: yes
-                  x: 50
-                  y: 290
-                  font_size: 40
+                  reset: avg, max
+                  x: 45
+                  y: 295
+                  font_size: 50
                   button:
                           x0: 0
                           y0: 240
@@ -98,17 +99,16 @@ pages:
                   show: avg
                   x: 60
                   y: 255
-                  font_size: 16
 
                 - parameter: cadence
                   show: max
                   x: 100
                   y: 255
-                  font_size: 16
 
                 - parameter: cadence
                   show: unit
-                  x: 105
+                  align: right
+                  x: 115
                   y: 310
                   font_size: 12
 
@@ -122,9 +122,10 @@ pages:
 
                 - parameter: heart_rate
                   resettable: yes
-                  x: 171
-                  y: 290
-                  font_size: 40
+                  reset: min, avg, max
+                  x: 165
+                  y: 295
+                  font_size: 50
                   button:
                           x0: 120
                           y0: 240
@@ -135,23 +136,21 @@ pages:
                   show: min
                   x: 140
                   y: 255
-                  font_size: 16
 
                 - parameter: heart_rate
                   show: avg
                   x: 180
                   y: 255
-                  font_size: 16
 
                 - parameter: heart_rate
                   show: max
                   x: 220
                   y: 255
-                  font_size: 16
 
                 - parameter: heart_rate
                   show: unit
-                  x: 225
+                  align: right
+                  x: 235
                   y: 310
                   font_size: 12
 
@@ -169,76 +168,10 @@ pages:
          type: normal
          background: images/stats_background.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 24
          fg_colour: FFFFFF
          fields:
-                - parameter: odometer_icon
-                  x: 10
-                  y: 84
-                  file: images/odometer_icon_32x32.png
-
-                - parameter: odometer
-                  editor_title: Odometer
-                  editable: yes
-                  editor: editor_numbers
-                  format: "%.1f"
-                  x: 100
-                  y: 100
-                  button:
-                          x0: 0
-                          y0: 80
-                          w: 240
-                          h: 40
-
-                - parameter: odometer
-                  show: unit
-                  x: 200
-                  y: 100
-
-                - parameter: speed_icon
-                  x: 10
-                  y: 124
-                  file: images/speed_icon_32x32.png
-
-                - parameter: speed
-                  show: max
-                  format: "%.1f"
-                  resettable: yes
-                  button:
-                          x0: 0
-                          y0: 120
-                          w: 240
-                          h: 40
-                  x: 100
-                  y: 140
-
-                - parameter: speed
-                  show: unit
-                  x: 200
-                  y: 140
-
-                - parameter: speed_avg_icon
-                  x: 10
-                  y: 164
-                  file: images/average_speed_icon_32x32.png
-
-                - parameter: speed
-                  show: avg
-                  resettable: yes
-                  button:
-                          x0: 0
-                          y0: 160
-                          w: 240
-                          h: 40
-                  x: 100
-                  y: 180
-
-                - parameter: speed
-                  show: unit
-                  x: 200
-                  y: 180
-
                 - parameter: real_time
                   format: time
                   x: 120
@@ -249,6 +182,78 @@ pages:
                   x: 120
                   y: 20
 
+                - parameter: odometer_icon
+                  x: 10
+                  y: 84
+                  file: images/odometer_icon_32x32.png
+
+                - parameter: odometer
+                  align: left
+                  editor_title: Odometer
+                  editable: yes
+                  editor: editor_numbers
+                  format: "%.1f"
+                  x: 70
+                  y: 100
+                  button:
+                          x0: 0
+                          y0: 80
+                          w: 240
+                          h: 40
+
+                - parameter: odometer
+                  show: unit
+                  align: right
+                  x: 230
+                  y: 100
+
+                - parameter: speed_icon
+                  x: 10
+                  y: 124
+                  file: images/speed_icon_32x32.png
+
+                - parameter: speed
+                  show: max
+                  align: left
+                  format: "%.1f"
+                  resettable: yes
+                  button:
+                          x0: 0
+                          y0: 120
+                          w: 240
+                          h: 40
+                  x: 70
+                  y: 140
+
+                - parameter: speed
+                  show: unit
+                  align: right
+                  x: 230
+                  y: 140
+
+                - parameter: speed_avg_icon
+                  x: 10
+                  y: 164
+                  file: images/average_speed_icon_32x32.png
+
+                - parameter: speed
+                  show: avg
+                  align: left
+                  resettable: yes
+                  button:
+                          x0: 0
+                          y0: 160
+                          w: 240
+                          h: 40
+                  x: 70
+                  y: 180
+
+                - parameter: speed
+                  show: unit
+                  align: right
+                  x: 230
+                  y: 180
+
                 - parameter: altitude_icon
                   x: 10
                   y: 204
@@ -256,42 +261,48 @@ pages:
 
                 - parameter: altitude
                   format: "%.1f"
-                  x: 100
+                  align: left
+                  x: 70
                   y: 220
 
                 - parameter: altitude
                   show: unit
-                  x: 200
+                  align: right
+                  x: 230
                   y: 220
 
                 - parameter: pressure_icon
-                  x: 4
+                  x: 10
                   y: 244
                   file: images/pressure_icon_32x32.png
 
                 - parameter: pressure
                   format: "%.1f"
-                  x: 100
+                  align: left
+                  x: 70
                   y: 260
 
                 - parameter: pressure
                   show: unit
-                  x: 200
+                  align: right
+                  x: 230
                   y: 260
 
                 - parameter: temperature
                   format: "%.1f"
-                  x: 100
+                  align: left
+                  x: 70
                   y: 300
 
                 - parameter: temperature_icon
-                  x: 10
+                  x: 16
                   y: 284
                   file: images/temperature_icon_20x32.png
 
                 - parameter: temperature
                   show: unit
-                  x: 200
+                  align: right
+                  x: 230
                   y: 300
 
 
@@ -302,7 +313,7 @@ pages:
          type: normal
          background: images/page_2_background.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 16
          fg_colour: FFFFFF
          fields:
@@ -363,8 +374,8 @@ pages:
          type: settings
          background: images/background_2_x_4.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
-         font_size: 16
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
+         font_size: 20
          fg_colour: FFFFFF
          fields:
                 - parameter: label
@@ -378,12 +389,36 @@ pages:
                   editor: editor_string
                   x: 60
                   y: 50
-                  font_size: 20
+                  font_size: 30
                   button:
                           x0: 0
                           y0: 0
                           w: 120
                           h: 80
+
+                - parameter: label
+                  x: 180
+                  y: 15
+                  text: Wheel circ.
+
+                - parameter: wheel_circumference
+                  editor_title: Wheel circ.
+                  editable: yes
+                  editor: editor_numbers
+                  x: 165
+                  y: 50
+                  font_size: 30
+                  button:
+                          x0: 120
+                          y0: 0
+                          w: 120
+                          h: 80
+
+                - parameter: wheel_circumference
+                  show: unit
+                  align: right
+                  x: 235
+                  y: 50
 
                 - parameter: label
                   x: 180
@@ -403,9 +438,10 @@ pages:
                           w: 120
                           h: 80
 
-                - parameter: pressure
+                - parameter: mean_sea_level_pressure
                   show: unit
-                  x: 220
+                  align: right
+                  x: 235
                   y: 130
 
                 - parameter: label
@@ -440,8 +476,8 @@ pages:
                   editor_title: Rider weight
                   editable: yes
                   editor: editor_numbers
-                  x: 50
-                  y: 215
+                  x: 45
+                  y: 210
                   font_size: 30
                   button:
                           x0: 0
@@ -453,18 +489,16 @@ pages:
                   show: unit
                   x: 100
                   y: 210
-                  font_size: 16
 
                 - parameter: label
                   x: 60
                   y: 255
-                  font_size: 16
                   text: Heart rate
 
                 - parameter: heart_rate_device_name
                   x: 60
                   y: 290
-                  font_size: 12
+                  font_size: 15
                   button:
                           x0: 0
                           y0: 240
@@ -474,13 +508,12 @@ pages:
                 - parameter: label
                   x: 180
                   y: 255
-                  font_size: 16
                   text: Spd/cadence
 
                 - parameter: cadence_speed_device_name
                   x: 180
                   y: 290
-                  font_size: 12
+                  font_size: 15
                   button:
                           x0: 120
                           y0: 240
@@ -491,118 +524,94 @@ pages:
          id: settings_1
          number: 1
          type: settings
-         background: images/settings_1_background.png
+         background: images/background_2_x_4.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
-         font_size: 16
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
+         font_size: 24
          fg_colour: FFFFFF
          fields:
                 - parameter: halt
-                  x: 120
+                  x: 60
                   y: 40
-                  font_size: 16
                   text: Halt
                   button:
                           x0: 0
                           y0: 0
-                          w: 240
+                          w: 120
                           h: 80
 
                 - parameter: reboot
-                  x: 120
-                  y: 120
-                  font_size: 16
+                  x: 180
+                  y: 40
                   text: Reboot
                   button:
-                          x0: 0
-                          y0: 79
-                          w: 240
+                          x0: 120
+                          y0: 0
+                          w: 120
                           h: 80
 
                 - parameter: quit
-                  x: 120
-                  y: 200
-                  font_size: 16
+                  x: 60
+                  y: 120
                   text: Quit
                   button:
                           x0: 0
-                          y0: 159
-                          w: 240
+                          y0: 80
+                          w: 120
                           h: 80
+
+                - parameter: label
+                  text: Write
+                  x: 180
+                  y: 110
+                - parameter: label
+                  text: config
+                  x: 180
+                  y: 140
 
                 - parameter: write_config
-                  x: 120
-                  y: 280
-                  font_size: 16
-                  text: Write config
+                  #FIXME Add soft defined function calls to layout
+                  #function: config.write_config
                   button:
-                          x0: 0
-                          y0: 239
-                          w: 240
+                          x0: 120
+                          y0: 80
+                          w: 120
                           h: 80
 
-       - name: "Settings 2"
-         id: settings_2
-         number: 2
-         type: settings
-         background: images/settings_2_background.png
-         buttons: images/button_pressed.png
-         font: "sans-serif"
-         font_size: 16
-         fg_colour: FFFFFF
-         fields:
-                #- parameter: load_current_layout
-                #  x: 120
-                #  y: 40
-                #  font_size: 16
-                #  text: Load current layout
-                #  button:
-                #          x0: 0
-                #          y0: 0
-                #          w: 240
-                #          h: 80
+                - parameter: label
+                  text: Load
+                  x: 60
+                  y: 185
+                - parameter: label
+                  text: layout
+                  x: 60
+                  y: 210
 
                 - parameter: load_default_layout
-                  x: 120
-                  y: 120
-                  font_size: 16
-                  text: Load default layout
                   button:
                           x0: 0
-                          y0: 79
-                          w: 240
+                          y0: 160
+                          w: 120
                           h: 80
 
-                #- parameter:
-                #  x: 120
-                #  y: 200
-                #  font_size: 16
-                #  text:
-                #  button:
-                #          x0: 0
-                #          y0: 159
-                #          w: 240
-                #          h: 80
-
                 - parameter: log_level
-                  x: 120
-                  y: 280
-                  font_size: 16
+                  x: 180
+                  y: 200
                   text:
                   button:
-                          x0: 0
-                          y0: 239
-                          w: 240
+                          x0: 120
+                          y0: 160
+                          w: 120
                           h: 80
 
        - name: "Units"
-         id: settings_3
-         number: 3
+         id: settings_2
+         number: 2
          type: settings
          background: images/background_2_x_4.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
-         font_size: 16
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
+         font_size: 20
          fg_colour: FFFFFF
          fields:
                 - parameter: label
@@ -635,7 +644,7 @@ pages:
                   editable: yes
                   editor: editor_units
                   x: 180
-                  y: 55
+                  y: 50
                   font_size: 30
                   button:
                           x0: 120
@@ -665,7 +674,6 @@ pages:
                 - parameter: label
                   x: 180
                   y: 95
-                  font_size: 16
                   text: Temperature
 
                 - parameter: temperature
@@ -704,7 +712,25 @@ pages:
                 - parameter: label
                   x: 180
                   y: 175
-                  font_size: 16
+                  text: Wheel circ.
+
+                - parameter: wheel_circumference
+                  show: unit
+                  editor_title: Wheel circ. unit
+                  editable: yes
+                  editor: editor_units
+                  x: 180
+                  y: 210
+                  font_size: 30
+                  button:
+                          x0: 120
+                          y0: 160
+                          w: 120
+                          h: 80
+
+                - parameter: label
+                  x: 60
+                  y: 255
                   text: Pressure
 
                 - parameter: pressure
@@ -712,14 +738,34 @@ pages:
                   editor_title: Pressure unit
                   editable: yes
                   editor: editor_units
+                  x: 60
+                  y: 290
+                  font_size: 30
+                  button:
+                          x0: 0
+                          y0: 240
+                          w: 120
+                          h: 80
+
+                - parameter: label
                   x: 180
-                  y: 215
+                  y: 255
+                  text: METAR Press.
+
+                - parameter: mean_sea_level_pressure
+                  show: unit
+                  editor_title: METAR MSLP unit
+                  editable: yes
+                  editor: editor_units
+                  x: 180
+                  y: 290
                   font_size: 30
                   button:
                           x0: 120
-                          y0: 160
+                          y0: 240
                           w: 120
                           h: 80
+
 
 
 
@@ -729,7 +775,7 @@ pages:
          type: editor
          background: images/editor_units_background.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 50
          fg_colour: FFFFFF
          fields:
@@ -768,7 +814,7 @@ pages:
                 - parameter: ed_prev_unit
                   x: 60
                   y: 290
-                  text: ⇦
+                  text: ←
                   button:
                           x0: 0
                           y0: 260
@@ -778,7 +824,7 @@ pages:
                 - parameter: ed_next_unit
                   x: 180
                   y: 290
-                  text: ⇨
+                  text: →
                   button:
                           x0: 120
                           y0: 260
@@ -791,7 +837,7 @@ pages:
          type: editor
          background: images/editor_number_background.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 30
          fg_colour: FFFFFF
          fields:
@@ -817,13 +863,13 @@ pages:
 
                 - parameter: editor_title
                   x: 120
-                  y: 70
+                  y: 85
                   font_size: 24
 
                 - parameter: value
                   format: zoomed_digit
                   x: 120
-                  y: 120
+                  y: 135
                   font_size: 50
 
                 - parameter: unit
@@ -856,7 +902,7 @@ pages:
                   x: 60
                   y: 290
                   font_size: 50
-                  text: ⇦
+                  text: ←
                   button:
                           x0: 0
                           y0: 260
@@ -867,7 +913,7 @@ pages:
                   x: 180
                   y: 290
                   font_size: 50
-                  text: ⇨
+                  text: →
                   button:
                           x0: 120
                           y0: 260
@@ -880,14 +926,13 @@ pages:
          type: editor
          background: images/editor_string_background.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
-         font_size: 16
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
+         font_size: 30
          fg_colour: FFFFFF
          fields:
                 - parameter: ed_accept
                   x: 60
                   y: 30
-                  font_size: 30
                   text: Accept
                   button:
                           x0: 0
@@ -898,7 +943,6 @@ pages:
                 - parameter: ed_cancel
                   x: 180
                   y: 30
-                  font_size: 30
                   text: Cancel
                   button:
                           x0: 120
@@ -909,12 +953,12 @@ pages:
                 - parameter: editor_title
                   x: 120
                   y: 90
-                  font_size: 16
+                  font_size: 24
 
                 - parameter: value
                   format: zoomed_digit
                   x: 120
-                  y: 130
+                  y: 150
                   font_size: 40
 
                 - parameter: ed_decrease
@@ -943,7 +987,7 @@ pages:
                   x: 60
                   y: 290
                   font_size: 50
-                  text: ⇦
+                  text: ←
                   button:
                           x0: 0
                           y0: 260
@@ -954,7 +998,7 @@ pages:
                   x: 180
                   y: 290
                   font_size: 50
-                  text: ⇨
+                  text: →
                   button:
                           x0: 120
                           y0: 260
@@ -967,7 +1011,7 @@ pages:
          type: editor
          background: images/ble_selector.png
          buttons: images/button_pressed.png
-         font: "sans-serif"
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 16
          fg_colour: FFFFFF
          fields:
