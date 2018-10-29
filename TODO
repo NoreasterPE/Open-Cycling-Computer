@@ -9,6 +9,7 @@ CODING STYLE:
 - move formatting code to numbers module and use in layout and ride_log
 
 REAL WORLD PROBLEMS:
+- config module should determine what to read and what to write using the content of config file. Currently it's hardcoded.
 - Unit syncronistion. I.e. Odometer and session distance
 - Max speed will be false sooner or later after a single invalid measurement. Kalman filter required.
 - Average cadence to be calculated for ride time (reset with ride time?)

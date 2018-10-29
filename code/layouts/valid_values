@@ -4,7 +4,7 @@ Valid parameter names for use in layout files (for now it's the best idea to che
 
 Parameters provided by modules:
 Module name   Parameter name:
-ble_hr        heart_rate                        - current heart rate for BLE sensor
+ble_hr        heart_rate                        - current heart rate from BLE sensor
 ble_hr        heart_rate_device_name            - name of BLE heart rate sensor, as reported by the device
 ble_hr        heart_rate_notification_beat      - indicate is notifications from the sensor keep coming. Every received notification flips the state between 0 and 1
 ble_sc        cadence                           - cadence from BLE sensor
@@ -13,7 +13,7 @@ ble_sc        cadence_speed_device_name         - name of BLE cadence/speed sens
 ble_sc        odometer                          - total distance, editable in Settings page
 ble_sc        wheel_revolution_time             - time of last wheel revolution
 ble_sc        wheel_revolutions                 - total number of wheel revolutions for BLE sensor 
-bmp280        altitude                          - current altitude, calculated from pressure
+bmp280        altitude                          - current altitude, calculated from pressure and mean seal level pressure
 bmp280        pressure                          - current atmospheric pressure
 bmp280        reference_altitude                - reference (home) altitude used to calculate mean sea level pressure
 bmp280        temperature                       - current temperature
@@ -52,7 +52,7 @@ compute       odometer
 compute       wheel_revolution_time
 
 Functions:
-FIXME - udate list of functions
+FIXME - update list of functions
 halt			- halts the system
 quit			- quits occ
 reboot			- reboots the system
