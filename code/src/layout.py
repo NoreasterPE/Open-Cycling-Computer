@@ -165,7 +165,15 @@ class layout():
         self.use_page()
 
     def render_background(self):
-        self.cr.set_source_surface(self.background_image, 0, 0)
+        try:
+            self.cr.set_source_surface(self.background_image, 0, 0)
+        except TypeError as e:
+            self.cr.set_source_rgb(0.0, 0.0, 0.0)
+            if str(e) == 'must be cairo.Surface, not None':
+                # Allow for empty background
+                pass
+            else:
+                raise
         self.cr.rectangle(0, 0, self.width, self.height)
         self.cr.fill()
 
