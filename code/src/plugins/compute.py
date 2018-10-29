@@ -79,7 +79,13 @@ class compute(sensor.sensor):
             if math.isnan(self.s.parameters["session_time"]["value"]):
                 self.s.parameters["session_start_time"]["value"] = t
                 self.s.parameters["session_odometer_start"]["value"] = self.odometer
-            self.s.parameters["session_time"]["value"] = time.time() - self.s.parameters["session_start_time"]["value"]
+
+            session_time = t - self.s.parameters["session_start_time"]["value"]
+            session_time_delta = session_time - self.s.parameters["session_time"]["value"]
+            if abs(session_time_delta) > 2.0:
+                self.log.warning("Session time change bigger than 2s ({:.3f} s), assuming system time change.".format(session_time_delta), extra=self.extra)
+                self.s.parameters["session_start_time"]["value"] += session_time_delta
+            self.s.parameters["session_time"]["value"] = t - self.s.parameters["session_start_time"]["value"]
             try:
                 self.s.parameters["session_distance"]["value"] = self.odometer - self.s.parameters["session_odometer_start"]["value"]
             except (TypeError, ValueError):

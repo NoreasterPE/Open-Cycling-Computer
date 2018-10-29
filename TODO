@@ -35,6 +35,7 @@ HARDWARE:
 - Fix lost should be marked in log? {Yes, as DEBUG}
 
 OPTIONAL:
+- events/rendering module as plugin would allow to do simulation on a different hardware i.e. in GTK window
 - show all available unit s in unit editor
 - add colours to layout
 - short click to show help
@@ -232,3 +233,4 @@ TypeError: argument 1 must be pygame.Surface, not None
 106. [DONE] - max cadence reset doesn't work
 107. [DONE] - Ride log configuration in a config file
 108. [DONE] - add session_distance
+109. [DONE] - When starting from rc.local script session time will jump after time adjustments by ntp. The same will happen with GPS, RTC clock needed
