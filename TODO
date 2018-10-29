@@ -68,8 +68,8 @@ Traceback (most recent call last):
   File "/home/pi/Open-Cycling-Computer/code/src/sensors.py", line 104, in load_plugins
     self.sensors[plugin] = plugin_class()
   File "/home/pi/Open-Cycling-Computer/code/src/plugins/compute.py", line 34, in __init__
-    self.s.request_parameter("odometer", self.extra["module_name"])
-  File "/home/pi/Open-Cycling-Computer/code/src/sensors.py", line 258, in request_parameter
+    self.s.request_ parameter("odometer", self.extra["module_name"])
+  File "/home/pi/Open-Cycling-Computer/code/src/sensors.py", line 258, in request _parameter
     if sensor_name not in self.parameters[parameter_name]["required_by"]:
 TypeError: argument of type 'NoneType' is not iterable
 

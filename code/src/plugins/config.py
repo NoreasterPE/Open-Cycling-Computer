@@ -104,9 +104,7 @@ class config(sensor.sensor):
         #  Home altitude. Used as reference altitude for calculation of pressure at sea level and subsequent altitude calculations.
         #  It is being set through the notification system - see \link notification \endlink function
         try:
-            self.s.register_parameter("reference_altitude",
-                                      self.extra["module_name"],
-                                      raw_unit="m")
+            self.s.register_parameter("reference_altitude", self.extra["module_name"], raw_unit="m")
             self.s.update_parameter("reference_altitude", self.config_params["reference_altitude"])
         except AttributeError:
             error_list.append("reference_altitude")

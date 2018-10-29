@@ -63,7 +63,7 @@ class ride_log(sensor.sensor):
     #  @param self The python object self
     def read_config(self):
         self.log.debug("read_config started", extra=self.extra)
-        #FIXME Replace with request_parameter and an entry in the main config file
+        #FIXME Replace with request parameter and an entry in the main config file
         self.config_file_path = 'config/ride_log_config.yaml'
         self.base_config_file_path = 'config/ride_log_base_config.yaml'
         try:
