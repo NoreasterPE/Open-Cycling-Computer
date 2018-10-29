@@ -524,98 +524,89 @@ pages:
          id: settings_1
          number: 1
          type: settings
-         background: images/settings_1_background.png
+         background: images/background_2_x_4.png
          buttons: images/button_pressed.png
          font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 24
          fg_colour: FFFFFF
          fields:
                 - parameter: halt
-                  x: 120
+                  x: 60
                   y: 40
                   text: Halt
                   button:
                           x0: 0
                           y0: 0
-                          w: 240
+                          w: 120
                           h: 80
 
                 - parameter: reboot
-                  x: 120
-                  y: 120
+                  x: 180
+                  y: 40
                   text: Reboot
                   button:
-                          x0: 0
-                          y0: 79
-                          w: 240
+                          x0: 120
+                          y0: 0
+                          w: 120
                           h: 80
 
                 - parameter: quit
-                  x: 120
-                  y: 200
+                  x: 60
+                  y: 120
                   text: Quit
                   button:
                           x0: 0
-                          y0: 159
-                          w: 240
+                          y0: 80
+                          w: 120
                           h: 80
 
-       - name: "Settings 2"
-         id: settings_2
-         number: 2
-         type: settings
-         background: images/settings_2_background.png
-         buttons: images/button_pressed.png
-         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
-         font_size: 24
-         fg_colour: FFFFFF
-         fields:
+                - parameter: label
+                  text: Write
+                  x: 180
+                  y: 110
+                - parameter: label
+                  text: config
+                  x: 180
+                  y: 140
+
                 - parameter: write_config
                   #FIXME Add soft defined function calls to layout
                   #function: config.write_config
-                  x: 120
-                  y: 40
-                  text: Write config
                   button:
-                          x0: 0
-                          y0: 0
-                          w: 240
+                          x0: 120
+                          y0: 80
+                          w: 120
                           h: 80
+
+                - parameter: label
+                  text: Load
+                  x: 60
+                  y: 185
+                - parameter: label
+                  text: layout
+                  x: 60
+                  y: 210
 
                 - parameter: load_default_layout
-                  x: 120
-                  y: 120
-                  text: Load default layout
                   button:
                           x0: 0
-                          y0: 79
-                          w: 240
+                          y0: 160
+                          w: 120
                           h: 80
 
-                #- parameter:
-                #  x: 120
-                #  y: 200
-                #  font_size: 16
-                #  text:
-                #  button:
-                #          x0: 0
-                #          y0: 159
-                #          w: 240
-                #          h: 80
-
                 - parameter: log_level
-                  x: 120
-                  y: 280
+                  x: 180
+                  y: 200
                   text:
                   button:
-                          x0: 0
-                          y0: 239
-                          w: 240
+                          x0: 120
+                          y0: 160
+                          w: 120
                           h: 80
 
        - name: "Units"
-         id: settings_3
-         number: 3
+         id: settings_2
+         number: 2
          type: settings
          background: images/background_2_x_4.png
          buttons: images/button_pressed.png
