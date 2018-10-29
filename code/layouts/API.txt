@@ -1,0 +1,36 @@
+This is a draft as API is not stable yet.
+
+Layout structure:
+
+pages: - top level
+Page header construction
+       - name: Main                                                 - page name
+         id: page_0                                                 - page id   
+         number: 0                                                  - page number
+         type: normal                                               - page type, types are: normal, settings, editor
+         background: images/page_0_background.png                   - background image or None for black background
+         buttons: images/button_pressed.png                         - image with button, rendered when button is pressed
+         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"   - page font, currently only one font per layout is allowed due to pycairo workaround
+         font_size: 20                                              - page fotn sie, used if font is not directly defined in field (see below)
+         fg_colour: FFFFFF                                          - not yet used
+         fields:                                                    - begining of section with field definitions
+
+Field construction:
+                - parameter: session_time                           - mandatory, parameter name, for labels use 'label'
+                  resettable: yes                                   - optional, indictes if parameter can be resetted, cannot be used editable
+                  editable: yes                                     - optional, indictes if parameter can be edited, cannot be used with resetteble
+                  editor_title: Odometer                            - editor title, required if editable is 'yes'
+                  editor: editor_number                             - editor type, required if editable is 'yes'
+                  format: hhmmss                                    - optional, format, options are: "%.1f" - normal python formatting, hhmmss 00:10:12, time, date, zoomed_digit (for editors)
+                  reset: avg, max                                   - optional, which fields should be resetted
+                  show: unit                                        - optional, what should be shown: unit, min, avg, max, tenths
+                  align: left                                       - optional, center by default, left or right
+                  x: 180                                            - optional, position x where the parameter should be rendered, defaults to 0
+                  y: 225                                            - optional, position y where the parameter should be rendered, defaults to 0
+                  font_size: 30                                     - optional, font_size, defaults to page font size
+                  button                                            - for editable or resettable parameters area of button:
+                          x0: 120                                   - x
+                          y0: 160                                   - y
+                          w: 120                                    - width
+                          h: 80                                     - height
+

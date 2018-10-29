@@ -1,0 +1,15 @@
+This a draft version
+
+1. Plugin is required to provide:
+    - non blocking __init__
+    - function 'start' that can run in a separate thread, inheritance from sensor.sensor or threading.Thread to provide function 'run'
+
+2. Plugin can:
+    - after obtaining instance of sensors s = sensors.sensors() plugin can access all core parameters and parameters registered by other plugins:
+        pressure = s.parameters['pressure']['value']
+        full list in layouts/valid_values or with 'git grep register_parameter | grep -v sensors.py'
+    - registration of a parameter with s.register_parameter, see sensors.py for the details
+        Registered parameters can be used directly in layout files.
+    - requesting info about parameter change with request_parameter, see sensors.py for the details (notification function required)
+
+
