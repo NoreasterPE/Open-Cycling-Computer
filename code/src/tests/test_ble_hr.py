@@ -2,6 +2,7 @@ import time
 from bluepy.btle import BTLEException
 import sys
 sys.path.insert(0, '../plugins')
+sys.path.insert(0, '../helpers')
 sys.path.insert(0, '../')
 import ble_hr
 import logging

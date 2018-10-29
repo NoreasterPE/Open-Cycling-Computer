@@ -1,6 +1,7 @@
 import time
 import sys
 sys.path.insert(0, '../plugins')
+sys.path.insert(0, '../helpers')
 sys.path.insert(0, '../')
 import ble_sc
 from bluepy.btle import BTLEException
