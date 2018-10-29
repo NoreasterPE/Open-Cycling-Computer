@@ -7,6 +7,7 @@ UI
 
 CODING STYLE:
 - move formatting code to numbers module and use in layout and ride_log
+- make draft plugin API document
 
 REAL WORLD PROBLEMS:
 - config module should determine what to read and what to write using the content of config file. Currently it's hardcoded.
