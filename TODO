@@ -3,6 +3,7 @@ UI
 - There is no way to disconnect from a BLE device
 - Fix icon lines width - it's not consistent
 - reduce debug settings to 1 screen 2x4
+- add option to use plain background color instead of image
 
 CODING STYLE:
 - move formatting code to numbers module and use in layout and ride_log
