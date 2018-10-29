@@ -8,13 +8,13 @@
 #from ble_scanner import ble_scanner
 import events
 import layout
-import pitft_touchscreen
-import rendering
-import sensors
 import logging
-import sys
 import logging.handlers
+import pitft_touchscreen
+import pitft_rendering
+import sensors
 import signal
+import sys
 import time
 
 
@@ -53,7 +53,7 @@ class open_cycling_computer(object, metaclass=singleton):
         self.log.debug("Calling sensors", extra=self.extra)
         ## @var sensors
         #  Handle to sensors instance
-        self.sensors = sensors.sensors(self)
+        self.sensors = sensors.sensors()
         self.sensors.register_parameter("log_level", self.extra["module_name"], value='debug')
         self.sensors.register_parameter("config_file", self.extra["module_name"], value=config_file)
         self.sensors.register_parameter("layout_file", self.extra["module_name"], value=layout_file)
@@ -65,7 +65,7 @@ class open_cycling_computer(object, metaclass=singleton):
         ## @var rendering
         #  Handle to rendering instance
         self.log.debug("Initialising rendering", extra=self.extra)
-        self.rendering = rendering.rendering(width, height)
+        self.rendering = pitft_rendering.pitft_rendering()
         ## @var surface
         #  Main cairo surface
         self.surface = self.rendering.surface
