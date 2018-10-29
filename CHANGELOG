@@ -1,3 +1,14 @@
+v0.11
+- added draft of plugins and layout API description
+- added simple example of sensor monitoring (weather.py) with independent config and layout
+- ride log defined in config file
+- added plugins system, cadence resetting session distance
+- fixed average heart rate calcs, added pounds to weight units
+- use Gidole font, bug fixes, code cleaning and hardening
+
+v0.10
+ - Odometer editable from Statistics, editors use zoom & colour, pressure sensor bmp183 replaced with bmp280 (kernel driver), bug fixes & code cleaning
+
 v0.09:
 - Change to notification system, code hardening and lot, lot of code cleaning
 
