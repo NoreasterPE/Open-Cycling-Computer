@@ -186,8 +186,14 @@ class layout():
             #print("{}".format(field))
             parameter = field['parameter']
             #print("{}".format(parameter))
-            position_x = field['x']
-            position_y = field['y']
+            try:
+                position_x = field['x']
+            except KeyError:
+                position_x = 0
+            try:
+                position_y = field['y']
+            except KeyError:
+                position_y = 0
             # Show value of parameter by default
             try:
                 show = field["show"]
