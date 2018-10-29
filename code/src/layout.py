@@ -21,7 +21,7 @@ class layout():
     # Module name used for logging and prefixing data
     extra = {'module_name': 'layout'}
 
-    def __init__(self, cr, layout_file="layouts/default.yaml"):
+    def __init__(self, cr):
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
@@ -29,6 +29,7 @@ class layout():
         ## @var s
         #  Sensors instance
         self.s = sensors.sensors()
+        self.layout_file = self.s.parameters['layout_file']['value']
         ## @var width
         #  Window/screen width
         ## @var height
@@ -42,10 +43,11 @@ class layout():
         self.page_index = {}
         self.parameter_rect_list = {}
         self.current_image_list = {}
-        self.layout_file = layout_file
-        self.load_layout(layout_file)
+        self.load_layout(self.layout_file)
 
     def load_layout(self, layout_file):
+        if self.layout_file is None:
+            return
         self.max_page_id = 0
         self.max_settings_id = 0
         self.page_list = {}
