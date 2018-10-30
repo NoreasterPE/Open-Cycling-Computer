@@ -29,7 +29,12 @@ class layout():
         ## @var s
         #  Sensors instance
         self.s = sensors.sensors()
+        ## @var layout_file
+        #  Location of layout file
         self.layout_file = self.s.parameters['layout_file']['value']
+        ## @var fonts_dir
+        #  Location of fonts directory
+        self.fonts_dir = self.s.parameters['fonts_dir']['value']
         ## @var width
         #  Window/screen width
         ## @var height
@@ -116,7 +121,7 @@ class layout():
         if not self.font_initialised:
             try:
                 # Only one font is allowed for now dure to cairo_helper workaround
-                font_face = cairo_helper.create_cairo_font_face_for_file(self.font, 0)
+                font_face = cairo_helper.create_cairo_font_face_for_file(self.fonts_dir + self.font, 0)
                 self.ctx.set_font_face(font_face)
                 self.font_extents = self.ctx.font_extents()
                 self.font_initialised = True
