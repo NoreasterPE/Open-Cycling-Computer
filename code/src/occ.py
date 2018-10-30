@@ -39,7 +39,7 @@ class open_cycling_computer(object, metaclass=singleton):
     #  @param config_file Location of config file
     #  @param width Width of screen or window. Default value is 240 pixels
     #  @param height Height of screen or window.  Default value is 320 pixels
-    def __init__(self, config_file=None, layout_file=None, width=240, height=320):
+    def __init__(self, config_file=None, layout_file=None, fonts_dir=None, width=240, height=320):
         ## @var log
         #  Handle to system logger
         self.log = logging.getLogger('system')
@@ -57,6 +57,7 @@ class open_cycling_computer(object, metaclass=singleton):
         self.sensors.register_parameter("log_level", self.extra["module_name"], value='debug')
         self.sensors.register_parameter("config_file", self.extra["module_name"], value=config_file)
         self.sensors.register_parameter("layout_file", self.extra["module_name"], value=layout_file)
+        self.sensors.register_parameter("fonts_dir", self.extra["module_name"], value=fonts_dir)
         self.sensors.register_parameter("display_size", self.extra["module_name"], value=(width, height))
         ## @var ble_scanner
         #  Handle to ble_scanner instance
@@ -119,11 +120,12 @@ def quit_handler(signal, frame):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print('Argument 1: config file, argument 2: layout file')
+    if len(sys.argv) != 4:
+        print('Argument 1: config file, argument 2: layout file, argument 3: fonts directory')
         quit()
     config_file = sys.argv[1]
     layout_file = sys.argv[2]
+    fonts_dir = sys.argv[3]
     ## @var sys_log_filename
     # Log filename, helper variable
     sys_log_filename = "log/debug." + time.strftime("%Y-%m-%d-%H:%M:%S") + ".log"
@@ -150,7 +152,7 @@ if __name__ == "__main__":
     sensor_manager.start()
     ## @var main_window
     # OCC main window. It's instance of open_cycling_computer class
-    main_window = open_cycling_computer(config_file, layout_file)
+    main_window = open_cycling_computer(config_file, layout_file, fonts_dir)
     sys_logger.debug("Starting events loop", extra=ex)
     main_window.events.run()
     main_window.stop()
