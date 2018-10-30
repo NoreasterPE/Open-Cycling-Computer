@@ -21,7 +21,7 @@ class layout():
     # Module name used for logging and prefixing data
     extra = {'module_name': 'layout'}
 
-    def __init__(self, cr):
+    def __init__(self):
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
@@ -35,7 +35,9 @@ class layout():
         ## @var height
         #  Window/screen height
         self.width, self.height = self.s.parameters['display_size']["value"]
-        self.cr = cr
+        ## @var cr
+        #  Handle to cairo context and render flag
+        self.cr = self.s.ctx[0]
         self.render = False
         self.uc = unit_converter.unit_converter()
         self.editor_fields = None

@@ -66,15 +66,9 @@ class open_cycling_computer(object, metaclass=singleton):
         #  Handle to rendering instance
         self.log.debug("Initialising rendering", extra=self.extra)
         self.rendering = pitft_rendering.pitft_rendering()
-        ## @var surface
-        #  Main cairo surface
-        self.surface = self.rendering.surface
-        ## @var ctx
-        #  Main cairo context
-        self.ctx = self.rendering.ctx
         ## @var layout
         #  Handle to layout instance
-        self.layout = layout.layout(self.ctx)
+        self.layout = layout.layout()
         self.log.debug("Starting rendering thread", extra=self.extra)
         self.rendering.start()
         ## @var touchscreen
