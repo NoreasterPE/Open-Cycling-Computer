@@ -11,6 +11,9 @@ import time
 
 ## Display rendering class
 class pitft_rendering(sensor.sensor):
+    ## @var extra
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'pitft_rendering'}
 
     ## The constructor
     #  @param self The python object self
@@ -33,7 +36,10 @@ class pitft_rendering(sensor.sensor):
         self.cairo_initialised = False
         self.setup_cairo()
 
+    ## Notification handler
+    #  @param self The python object self
     def notification(self):
+        self.log.debug('notification received')
         if ((self.width, self.height) != self.s.parameters['display_size']['value'] and
                 not self.cairo_initialised):
             self.width, self.height = self.s.parameters['display_size']['value']
