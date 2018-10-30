@@ -69,12 +69,12 @@ class open_cycling_computer(object, metaclass=singleton):
         ## @var surface
         #  Main cairo surface
         self.surface = self.rendering.surface
-        ## @var cr
+        ## @var ctx
         #  Main cairo context
-        self.cr = self.rendering.cr
+        self.ctx = self.rendering.ctx
         ## @var layout
         #  Handle to layout instance
-        self.layout = layout.layout(self.cr)
+        self.layout = layout.layout(self.ctx)
         self.log.debug("Starting rendering thread", extra=self.extra)
         self.rendering.start()
         ## @var touchscreen

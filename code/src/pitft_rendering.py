@@ -51,11 +51,11 @@ class pitft_rendering(sensor.sensor):
             # Main cairo drawing surface
             self.surface = cairo.ImageSurface.create_similar(self.fb_surface, cairo.CONTENT_COLOR, self.width, self.height)
             # Framebuffer context
-            self.fb_cr = cairo.Context(self.fb_surface)
+            self.fb_ctx = cairo.Context(self.fb_surface)
             # Main cairo context
-            self.cr = cairo.Context(self.surface)
-            self.cr.set_source_rgba(0.0, 0.0, 0.0, 1.0)
-            self.cr.paint_with_alpha(1.0)
+            self.ctx = cairo.Context(self.surface)
+            self.ctx.set_source_rgba(0.0, 0.0, 0.0, 1.0)
+            self.ctx.paint_with_alpha(1.0)
             self.cairo_initialised = True
 
     def run(self):
@@ -67,9 +67,9 @@ class pitft_rendering(sensor.sensor):
                 self.setup_cairo()
             if self.render:
                 self.render = False
-                self.fb_cr.set_source_surface(self.surface, 0, 0)
-                self.fb_cr.rectangle(0, 0, self.width, self.height)
-                self.fb_cr.fill()
+                self.fb_ctx.set_source_surface(self.surface, 0, 0)
+                self.fb_ctx.rectangle(0, 0, self.width, self.height)
+                self.fb_ctx.fill()
                 #Uncomment to generate screenshots, also changes fps to 1 to avoid generating too much images
                 #self.fb_surface.write_to_png("sc_" + str(round(time.time())) + ".png")
                 #self.fps = 1.0
