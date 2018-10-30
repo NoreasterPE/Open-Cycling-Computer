@@ -121,6 +121,7 @@ class layout():
         if not self.font_initialised:
             try:
                 # Only one font is allowed for now dure to cairo_helper workaround
+                self.log.debug("Calling cairo_helper for {}".format(self.fonts_dir + self.font), extra=self.extra)
                 font_face = cairo_helper.create_cairo_font_face_for_file(self.fonts_dir + self.font, 0)
                 self.ctx.set_font_face(font_face)
                 self.font_extents = self.ctx.font_extents()
