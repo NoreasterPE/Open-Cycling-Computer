@@ -38,7 +38,6 @@ class layout():
         ## @var cr
         #  Handle to cairo context and render flag
         self.ctx = self.s.ctx[0]
-        self.render = False
         self.uc = unit_converter.unit_converter()
         self.editor_fields = None
         self.page_list = {}
@@ -90,7 +89,7 @@ class layout():
 
     def use_page(self, page_id="page_0"):
         self.log.debug("use_page {}".format(page_id), extra=self.extra)
-        self.render = True
+        self.s.ctx[1] = True
         try:
             self.current_page = self.page_list[page_id]
         except KeyError:
@@ -181,7 +180,7 @@ class layout():
 
     def render_page(self):
         self.render_background()
-        self.render = True
+        self.s.ctx[1] = True
         # LAYOUT DEBUG FUNCION
         #self.render_all_buttons()
         if self.current_page['fields'] is not None:
@@ -556,7 +555,7 @@ class layout():
             pass
         un = u[:i] + ui + u[i + 1:]
         self.editor_fields["value"] = un
-        self.render = True
+        self.s.ctx[1] = True
 
     def ed_increase(self):
         u = self.editor_fields["value"]
@@ -576,7 +575,7 @@ class layout():
             pass
         un = u[:i] + ui + u[i + 1:]
         self.editor_fields["value"] = un
-        self.render = True
+        self.s.ctx[1] = True
 
     def ed_next(self):
         u = self.editor_fields["value"]
@@ -602,7 +601,7 @@ class layout():
             if (ui == ".") or (ui == ","):
                 i += 1
         self.editor_fields["index"] = i
-        self.render = True
+        self.s.ctx[1] = True
 
     def ed_prev(self):
         u = self.editor_fields["value"]
@@ -618,7 +617,7 @@ class layout():
             if (ui == ".") or (ui == ","):
                 i -= 1
         self.editor_fields["index"] = i
-        self.render = True
+        self.s.ctx[1] = True
 
     def ed_change_unit(self, direction):
         # direction to be 1 (next) or 0 (previous)
@@ -642,11 +641,11 @@ class layout():
 
     def ed_next_unit(self):
         self.ed_change_unit(1)
-        self.render = True
+        self.s.ctx[1] = True
 
     def ed_prev_unit(self):
         self.ed_change_unit(0)
-        self.render = True
+        self.s.ctx[1] = True
 
     def accept_edit(self):
         self.log.debug("accept_edit started", extra=self.extra)
@@ -666,7 +665,7 @@ class layout():
 #            (name, addr, dev_type) = parameter_value
 #            self.s.set_ble_device(name, addr, dev_type)
         self.s.parameters[parameter]["time_stamp"] = time.time()
-        self.render = True
+        self.s.ctx[1] = True
         self.log.debug("accept_edit finished", extra=self.extra)
 
     def get_page(self, page_type, page_no):

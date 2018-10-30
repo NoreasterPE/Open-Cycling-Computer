@@ -6,6 +6,7 @@
 
 import logging
 import operator
+import sensors
 import time
 
 ## @var LONG_CLICK
@@ -38,6 +39,7 @@ class events():
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
+        self.s = sensors.sensors()
         self.layout = layout
         self.touchscreen = touchscreen
         self.rendering = rendering
@@ -149,7 +151,7 @@ class events():
                     self.input_event_handler(e)
             time.sleep(MAIN_LOOP_BEAT)
             #self.log.debug("Ride event scheduler, next event in: {0:.3f}".format(t), extra=self.extra)
-            if self.layout.render:
+            if self.s.ctx[1]:
                 self.layout.render_page()
                 self.rendering.force_render()
             if self.touch_position is not None:
