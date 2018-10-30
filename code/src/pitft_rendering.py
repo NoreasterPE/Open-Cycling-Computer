@@ -62,6 +62,7 @@ class pitft_rendering(sensor.sensor):
             self.ctx = cairo.Context(self.surface)
             self.ctx.set_source_rgba(0.0, 0.0, 0.0, 1.0)
             self.ctx.paint_with_alpha(1.0)
+            self.s.register_cairo_context(self.extra['module_name'], self.ctx)
             self.cairo_initialised = True
 
     def run(self):
