@@ -80,6 +80,12 @@ class sensors(threading.Thread, metaclass=Singleton):
         ## @var parameter_requests
         # Dict with parameters requested by a module
         self.parameter_requests = dict()
+        ## @var ctx
+        #  List with cairo context used to rener graphics and render flag indicating that the context has been modified
+        self.ctx = [None, False]
+        ## @var ctx_owner
+        #  Name of the module that registered cairo context
+        self.ctx_owner = None
         self.sensors = dict()
         self.register_parameter("ble_host_state", self.extra["module_name"], value=0)
         ## @var no_of_connected
@@ -292,3 +298,14 @@ class sensors(threading.Thread, metaclass=Singleton):
                 self.parameters[parameter]['value_avg'] = numbers.NAN
             elif suffix == 'max':
                 self.parameters[parameter]['value_max'] = numbers.INF_MIN
+
+    ## Function for registering cairo context linked with a display. Only one plugin is allowed to register it
+    #  @param self The python object self
+    #  @param plugin_name Name of the plugin registering cairo context
+    #  @param cairo_context Cairo context need to be registered by one of the plugins to allow display access
+    def register_cairo_context(self, plugin_name, cairo_context):
+        if self.ctx_owner is None:
+            self.ctx[0] = cairo_context
+            self.ctx_owner = plugin_name
+        else:
+            self.log.critical("Can't register cairo context for {} as it's already registered by {}".format(plugin_name, self.ctx_owner), extra=self.extra)
