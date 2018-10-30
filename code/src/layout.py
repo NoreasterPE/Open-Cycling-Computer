@@ -37,7 +37,7 @@ class layout():
         self.width, self.height = self.s.parameters['display_size']["value"]
         ## @var cr
         #  Handle to cairo context and render flag
-        self.cr = self.s.ctx[0]
+        self.ctx = self.s.ctx[0]
         self.render = False
         self.uc = unit_converter.unit_converter()
         self.editor_fields = None
@@ -118,8 +118,8 @@ class layout():
             try:
                 # Only one font is allowed for now dure to cairo_helper workaround
                 font_face = cairo_helper.create_cairo_font_face_for_file(self.font, 0)
-                self.cr.set_font_face(font_face)
-                self.font_extents = self.cr.font_extents()
+                self.ctx.set_font_face(font_face)
+                self.font_extents = self.ctx.font_extents()
                 self.font_initialised = True
             except AttributeError:
                 pass
@@ -168,16 +168,16 @@ class layout():
 
     def render_background(self):
         try:
-            self.cr.set_source_surface(self.background_image, 0, 0)
+            self.ctx.set_source_surface(self.background_image, 0, 0)
         except TypeError as e:
-            self.cr.set_source_rgb(0.0, 0.0, 0.0)
+            self.ctx.set_source_rgb(0.0, 0.0, 0.0)
             if str(e) == 'must be cairo.Surface, not None':
                 # Allow for empty background
                 pass
             else:
                 raise
-        self.cr.rectangle(0, 0, self.width, self.height)
-        self.cr.fill()
+        self.ctx.rectangle(0, 0, self.width, self.height)
+        self.ctx.fill()
 
     def render_page(self):
         self.render_background()
@@ -335,8 +335,8 @@ class layout():
             except KeyError:
                 # Fall back to page font size
                 fs = self.page_font_size
-            self.cr.set_font_size(fs)
-            te = self.cr.text_extents(uv)
+            self.ctx.set_font_size(fs)
+            te = self.ctx.text_extents(uv)
             if align == 'center':
                 x_shift = -1.0 * te.width / 2.0
             elif align == 'right':
@@ -357,20 +357,20 @@ class layout():
                 i = self.editor_fields["index"]
                 #Head
                 rv1 = uv[:i]
-                te1 = self.cr.text_extents(rv1)
+                te1 = self.ctx.text_extents(rv1)
                 #Tail
                 rv3 = uv[i + 1:]
                 #Currently edited digit
                 rv2 = uv[i]
-                self.cr.set_font_size(SCALE * fs)
-                te2 = self.cr.text_extents(rv2)
+                self.ctx.set_font_size(SCALE * fs)
+                te2 = self.ctx.text_extents(rv2)
 
                 rv1_x = position_x - te.width / 2.0
                 rv2_x = position_x - te.width / 2.0 + te1.x_advance
                 rv3_x = position_x - te.width / 2.0 + te1.x_advance + te2.x_advance
 
                 self.text_to_surface(rv2, rv2_x, position_y + SCALE * y_shift, (1.0, 0.0, 0.0))
-                self.cr.set_font_size(fs)
+                self.ctx.set_font_size(fs)
                 self.text_to_surface(rv1, rv1_x, position_y + y_shift, rgb_colour)
                 self.text_to_surface(rv3, rv3_x, position_y + y_shift, rgb_colour)
 
@@ -378,22 +378,22 @@ class layout():
         # LAYOUT DEBUG FUNCION
         for parameter, r in self.parameter_rect_list.items():
             fr = r[1]
-            self.cr.set_source_rgb(0.0, 1.0, 0.0)
-            self.cr.rectangle(fr[0], fr[1], fr[2], fr[3])
-            self.cr.fill()
-            self.cr.set_line_width(2.0)
-            self.cr.set_source_rgb(1.0, 0.0, 0.0)
-            self.cr.rectangle(fr[0], fr[1], fr[2], fr[3])
-            self.cr.stroke()
+            self.ctx.set_source_rgb(0.0, 1.0, 0.0)
+            self.ctx.rectangle(fr[0], fr[1], fr[2], fr[3])
+            self.ctx.fill()
+            self.ctx.set_line_width(2.0)
+            self.ctx.set_source_rgb(1.0, 0.0, 0.0)
+            self.ctx.rectangle(fr[0], fr[1], fr[2], fr[3])
+            self.ctx.stroke()
 
     def render_pressed_button(self, pressed_pos):
         self.log.debug("render_pressed_button started", extra=self.extra)
         for parameter, r in self.parameter_rect_list.items():
             if self.point_in_rect(pressed_pos, r[1]):
                 fr = r[1]
-                self.cr.set_source_surface(self.buttons_image, 0, 0)
-                self.cr.rectangle(fr[0], fr[1], fr[2], fr[3])
-                self.cr.fill()
+                self.ctx.set_source_surface(self.buttons_image, 0, 0)
+                self.ctx.rectangle(fr[0], fr[1], fr[2], fr[3])
+                self.ctx.fill()
         self.log.debug("render_pressed_button finished", extra=self.extra)
 
     def check_click(self, position, click):
@@ -760,14 +760,14 @@ class layout():
             w = self.width
         if h is None:
             h = self.height
-        self.cr.set_source_surface(surface, x, y)
-        self.cr.rectangle(x, y, w, h)
-        self.cr.fill()
+        self.ctx.set_source_surface(surface, x, y)
+        self.ctx.rectangle(x, y, w, h)
+        self.ctx.fill()
 
     def text_to_surface(self, text, x, y, c):
-        self.cr.set_source_rgb(c[0], c[1], c[2])
-        self.cr.move_to(x, y)
-        self.cr.show_text(text)
+        self.ctx.set_source_rgb(c[0], c[1], c[2])
+        self.ctx.move_to(x, y)
+        self.ctx.show_text(text)
 
     def point_in_rect(self, point, rect):
         try:
