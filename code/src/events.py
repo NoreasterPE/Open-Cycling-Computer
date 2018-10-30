@@ -6,6 +6,7 @@
 
 import logging
 import operator
+import queue
 import sensors
 import time
 
@@ -45,6 +46,8 @@ class events():
         self.rendering = rendering
         self.running = False
         self.ignore_touch = False
+        self.event_queue = queue.Queue()
+        self.s.register_event_queue(self.extra['module_name'], self.event_queue)
 
     ## Main click and swipe handler
     #  @param self The python object self
@@ -56,31 +59,37 @@ class events():
         self.log.debug("screen_touched_handler: {} {} {}".format(dx, dy, dt), extra=self.extra)
         if (self.released_timestamp is not None and dt < LONG_CLICK):
             self.log.debug("Short click: {} {}".format(dt, self.touch_position), extra=self.extra)
-            self.layout.check_click(self.touch_position, 'SHORT')
+            self.event_queue.put((self.touch_position, 'SHORT'))
+            self.layout.check_click()
             self.reset_motion()
         if (dt > LONG_CLICK):
             self.log.debug("Long click: {} {}".format(dt, self.touch_position), extra=self.extra)
-            self.layout.check_click(self.touch_position, 'LONG')
+            self.event_queue.put((self.touch_position, 'LONG'))
+            self.layout.check_click()
             #The finger is still touching the screen, make sure it's ignored to avoid generating ghost events
             self.reset_motion()
             self.ignore_touch = True
         if (abs(dx)) > SWIPE_LENGTH:
             if dx < 0:
                 self.log.debug("Swipe right to left: {} {}".format(dx, dy), extra=self.extra)
-                self.layout.check_click(self.touch_position, 'R_TO_L')
+                self.event_queue.put((self.touch_position, 'R_TO_L'))
+                self.layout.check_click()
                 self.ignore_touch = True
             else:
                 self.log.debug("Swipe left to right: {} {}".format(dx, dy), extra=self.extra)
-                self.layout.check_click(self.touch_position, 'L_TO_R')
+                self.event_queue.put((self.touch_position, 'L_TO_R'))
+                self.layout.check_click()
                 self.ignore_touch = True
         elif (abs(dy)) > SWIPE_LENGTH:
             if dy > 0:
                 self.log.debug("Swipe bottom to toP: {} {}".format(dx, dy), extra=self.extra)
-                self.layout.check_click(self.touch_position, 'B_TO_T')
+                self.event_queue.put((self.touch_position, 'B_TO_T'))
+                self.layout.check_click()
                 self.ignore_touch = True
             else:
                 self.log.debug("Swipe top to bottom: {} {}".format(dx, dy), extra=self.extra)
-                self.layout.check_click(self.touch_position, 'T_TO_B')
+                self.event_queue.put((self.touch_position, 'T_TO_B'))
+                self.layout.check_click()
                 self.ignore_touch = True
 
     ## Main event handler

@@ -401,7 +401,8 @@ class layout():
                 self.ctx.fill()
         self.log.debug("render_pressed_button finished", extra=self.extra)
 
-    def check_click(self, position, click):
+    def check_click(self):
+        position, click = self.s.event_queue.get()
         resettable = False
         editable = False
         parameter_for_reset = None
