@@ -36,7 +36,7 @@ class layout():
         #  Window/screen height
         self.width, self.height = self.s.parameters['display_size']["value"]
         ## @var cr
-        #  Handle to cairo context and render flag
+        #  Handle to cairo context
         self.ctx = self.s.ctx[0]
         self.uc = unit_converter.unit_converter()
         self.editor_fields = None
