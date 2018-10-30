@@ -86,6 +86,12 @@ class sensors(threading.Thread, metaclass=Singleton):
         ## @var ctx_owner
         #  Name of the module that registered cairo context
         self.ctx_owner = None
+        ## @var event_queue
+        #  Event queue
+        self.event_queue = None
+        ## @var event_queue_owner
+        #  Name of the module that registered event queue
+        self.event_queue_owner = None
         self.sensors = dict()
         self.register_parameter("ble_host_state", self.extra["module_name"], value=0)
         ## @var no_of_connected
@@ -308,4 +314,15 @@ class sensors(threading.Thread, metaclass=Singleton):
             self.ctx[0] = cairo_context
             self.ctx_owner = plugin_name
         else:
-            self.log.critical("Can't register cairo context for {} as it's already registered by {}".format(plugin_name, self.ctx_owner), extra=self.extra)
+            self.log.critical("Can't register cairo context by {} as it's already registered by {}".format(plugin_name, self.ctx_owner), extra=self.extra)
+
+    ## Function for registering event queue. Only one plugin is allowed to register it
+    #  @param self The python object self
+    #  @param plugin_name Name of the plugin registering cairo context
+    #  @param event_queue queue instance, see https://docs.python.org/3.5/library/queue.html
+    def register_event_queue(self, plugin_name, event_queue):
+        if self.event_queue_owner is None:
+            self.event_queue = event_queue
+            self.event_queue_owner = plugin_name
+        else:
+            self.log.critical("Can't register event queue by {} as it's already registered by {}".format(plugin_name, self.event_queue_owner), extra=self.extra)
