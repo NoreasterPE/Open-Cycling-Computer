@@ -76,6 +76,7 @@ class pitft_rendering(sensor.sensor):
                 self.fb_ctx.set_source_surface(self.surface, 0, 0)
                 self.fb_ctx.rectangle(0, 0, self.width, self.height)
                 self.fb_ctx.fill()
+                self.s.render['refresh'] = False
                 self.s.render['hold'] = False
                 #Uncomment to generate screenshots, also changes fps to 1 to avoid generating too much images
                 #self.fb_surface.write_to_png("sc_" + str(round(time.time())) + ".png")
