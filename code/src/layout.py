@@ -412,6 +412,7 @@ class layout():
                 self.ctx.set_source_surface(self.buttons_image, 0, 0)
                 self.ctx.rectangle(fr[0], fr[1], fr[2], fr[3])
                 self.ctx.fill()
+        self.s.render['refresh'] = True
         self.log.debug("render_pressed_button finished", extra=self.extra)
 
     def check_click(self):
