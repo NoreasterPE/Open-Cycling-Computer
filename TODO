@@ -10,6 +10,7 @@ CODING STYLE:
 - make draft plugin API document
 
 REAL WORLD PROBLEMS:
+- session distance changes after odometer edition.
 - tidy up current/default layout loading. Dafault is a backup, current is the currently used.
 - config module should determine what to read and what to write using the content of config file. Currently it's hardcoded.
 - Unit syncronistion. I.e. Odometer and session distance
