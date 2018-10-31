@@ -26,7 +26,6 @@ class pitft_rendering(sensor.sensor):
         ## @var height
         #  Window/screen height
         self.width, self.height = self.s.parameters['display_size']['value']
-        self.render = True
         ## @var running
         #  Variable controlling if rendering module should keep running
         self.running = False
@@ -74,7 +73,6 @@ class pitft_rendering(sensor.sensor):
                 self.setup_cairo()
             if self.s.render['refresh'] and not self.s.render['hold']:
                 self.s.render['hold'] = True
-                self.render = False
                 self.fb_ctx.set_source_surface(self.surface, 0, 0)
                 self.fb_ctx.rectangle(0, 0, self.width, self.height)
                 self.fb_ctx.fill()
