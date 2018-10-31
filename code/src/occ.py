@@ -11,7 +11,6 @@ import layout
 import logging
 import logging.handlers
 import pitft_touchscreen
-import pitft_rendering
 import sensors
 import signal
 import sys
@@ -63,15 +62,9 @@ class open_cycling_computer(object, metaclass=singleton):
         #  Handle to ble_scanner instance
         ##self.log.debug("Initialising ble_scanner", extra=self.extra)
         ##self.ble_scanner = ble_scanner(self)
-        ## @var rendering
-        #  Handle to rendering instance
-        self.log.debug("Initialising rendering", extra=self.extra)
-        self.rendering = pitft_rendering.pitft_rendering()
         ## @var layout
         #  Handle to layout instance
         self.layout = layout.layout()
-        self.log.debug("Starting rendering thread", extra=self.extra)
-        self.rendering.start()
         ## @var touchscreen
         #  Handle to touchscreen (pitft_touchscreen module)
         self.log.debug("Initialising pitft touchscreen", extra=self.extra)
@@ -79,7 +72,7 @@ class open_cycling_computer(object, metaclass=singleton):
         ## @var events
         #  Handle to events instance
         self.log.debug("Initialising events", extra=self.extra)
-        self.events = events.events(self.layout, self.touchscreen, self.rendering)
+        self.events = events.events(self.layout, self.touchscreen, None)
 
     ## Stops main event loop
     #  @param self The python object self
@@ -100,10 +93,6 @@ class open_cycling_computer(object, metaclass=singleton):
             return
         self.events.stop()
         time.sleep(2.0)
-        try:
-            self.rendering.stop()
-        except AttributeError:
-            self.log.debug("self.rendering.stop() produced AttributeError", extra=self.extra)
         try:
             self.config.write_config()
         except AttributeError:

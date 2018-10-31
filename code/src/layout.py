@@ -56,7 +56,20 @@ class layout():
         self.timer.start()
 
     def refresh_display(self):
-        if not self.s.render['hold']:
+        # Check if cairo context has changed
+        if self.ctx != self.s.render['ctx']:
+            self.ctx = self.s.render['ctx']
+        if not self.font_initialised:
+            try:
+                # Only one font is allowed for now due to cairo_helper workaround
+                self.log.debug("Calling cairo_helper for {}".format(self.fonts_dir + self.font), extra=self.extra)
+                font_face = cairo_helper.create_cairo_font_face_for_file(self.fonts_dir + self.font, 0)
+                self.ctx.set_font_face(font_face)
+                self.font_extents = self.ctx.font_extents()
+                self.font_initialised = True
+            except AttributeError:
+                pass
+        if not self.s.render['hold'] and self.ctx is not None:
             self.s.render['hold'] = True
             self.render_page()
             self.s.render['hold'] = False
@@ -130,17 +143,6 @@ class layout():
             self.log.critical("page_id = {}".format(page_id), extra=self.extra)
             raise
         self.font = self.current_page['font']
-        # Wait for OCC to set rendering module
-        if not self.font_initialised:
-            try:
-                # Only one font is allowed for now dure to cairo_helper workaround
-                self.log.debug("Calling cairo_helper for {}".format(self.fonts_dir + self.font), extra=self.extra)
-                font_face = cairo_helper.create_cairo_font_face_for_file(self.fonts_dir + self.font, 0)
-                self.ctx.set_font_face(font_face)
-                self.font_extents = self.ctx.font_extents()
-                self.font_initialised = True
-            except AttributeError:
-                pass
         self.page_font_size = self.current_page['font_size']
         if (self.font == ""):
             self.font = None
