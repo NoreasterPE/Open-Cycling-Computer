@@ -46,7 +46,6 @@ class compute(sensor.sensor):
     ## Trigger calculation of slope on cumulative change of distance and altitude
     #  @param self The python object self
     def notification(self):
-        self.log.debug("notification received", extra=self.extra)
         previous_altitude = self.altitude
         self.altitude = self.s.parameters["altitude"]["value"]
         try:
@@ -104,6 +103,7 @@ class compute(sensor.sensor):
         if self.odometer_delta_cumulative > 2.0:
             self.s.parameters["slope"]["value"] = self.altitude_delta_cumulative / self.odometer_delta_cumulative
             self.s.parameters["slope"]["time_stamp"] = t
+            self.log.debug("slope: {}".format(self.s.parameters["slope"]["value"]), extra=self.extra)
         if abs(self.s.parameters["slope"]["value"]) < 0.02:
             #If slope is less than 2% wait for more cumulative distance/altitude
             self.s.parameters["slope"]["value"] = 0.0
@@ -114,4 +114,3 @@ class compute(sensor.sensor):
             self.log.debug("odometer_delta_cumulative: {}".format(self.odometer_delta_cumulative), extra=self.extra)
             self.altitude_delta_cumulative = 0.0
             self.odometer_delta_cumulative = 0.0
-        self.log.debug("slope: {}".format(self.s.parameters["slope"]["value"]), extra=self.extra)
