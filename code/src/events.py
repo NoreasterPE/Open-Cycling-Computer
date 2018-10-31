@@ -159,13 +159,9 @@ class events():
                 for e in self.touchscreen.get_event():
                     self.input_event_handler(e)
             time.sleep(MAIN_LOOP_BEAT)
-            #self.log.debug("Ride event scheduler, next event in: {0:.3f}".format(t), extra=self.extra)
-            if self.s.ctx[1]:
-                self.layout.render_page()
-                self.rendering.force_render()
             if self.touch_position is not None:
                 self.layout.render_pressed_button(self.touch_position)
-                self.rendering.force_render()
+                self.s.ctx[1] = True
         self.log.debug("event loop finsished", extra=self.extra)
         self.touchscreen.stop()
 

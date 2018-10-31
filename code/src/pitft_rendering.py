@@ -72,11 +72,13 @@ class pitft_rendering(sensor.sensor):
                     self.height is not None and
                     not self.cairo_initialised):
                 self.setup_cairo()
-            if self.render:
+            if self.s.ctx[1] and not self.s.ctx[2]:
+                self.s.ctx[2] = True
                 self.render = False
                 self.fb_ctx.set_source_surface(self.surface, 0, 0)
                 self.fb_ctx.rectangle(0, 0, self.width, self.height)
                 self.fb_ctx.fill()
+                self.s.ctx[2] = False
                 #Uncomment to generate screenshots, also changes fps to 1 to avoid generating too much images
                 #self.fb_surface.write_to_png("sc_" + str(round(time.time())) + ".png")
                 #self.fps = 1.0
@@ -85,9 +87,6 @@ class pitft_rendering(sensor.sensor):
 
     def stop(self):
         self.running = False
-
-    def force_render(self):
-        self.render = True
 
     def __del__(self):
         self.stop()

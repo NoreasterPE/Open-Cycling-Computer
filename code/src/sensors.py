@@ -81,8 +81,10 @@ class sensors(threading.Thread, metaclass=Singleton):
         # Dict with parameters requested by a module
         self.parameter_requests = dict()
         ## @var ctx
-        #  List with cairo context used to rener graphics and render flag indicating that the context has been modified
-        self.ctx = [None, False]
+        #  List with cairo context used to render graphics,
+        #  render flag indicating that the context has been modified and
+        #  hold render flag indicating that rendering should be posponed to avoid flickering
+        self.ctx = [None, False, False]
         ## @var ctx_owner
         #  Name of the module that registered cairo context
         self.ctx_owner = None

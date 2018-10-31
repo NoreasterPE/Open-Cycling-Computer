@@ -1,18 +1,19 @@
 #!/usr/bin/python3
 ## @package layout
 #   Module responsible for loading and rendering layouts. Needs heavy cleaning...
+
 import cairo
+import cairo_helper
 import datetime
 import logging
 import numbers
 import os
 import sensors
 import sys
+import threading
 import time
 import unit_converter
 import yaml
-
-import cairo_helper
 
 
 ## Class for handling layouts
@@ -50,6 +51,18 @@ class layout():
         self.parameter_rect_list = {}
         self.current_image_list = {}
         self.load_layout(self.layout_file)
+        self.stop_timer = False
+        self.timer = threading.Timer(0.5, self.refresh_display)
+        self.timer.start()
+
+    def refresh_display(self):
+        if not self.s.ctx[2]:
+            self.s.ctx[2] = True
+            self.render_page()
+            self.s.ctx[2] = False
+        if not self.stop_timer:
+            self.timer = threading.Timer(0.5, self.refresh_display)
+            self.timer.start()
 
     def load_layout(self, layout_file):
         if self.layout_file is None:
@@ -186,11 +199,11 @@ class layout():
 
     def render_page(self):
         self.render_background()
-        self.s.ctx[1] = True
         # LAYOUT DEBUG FUNCION
         #self.render_all_buttons()
         if self.current_page['fields'] is not None:
             self.render_layout()
+        self.s.ctx[1] = True
 
     def make_image_key(self, image_path, value):
         suffix = "_" + format(value)
