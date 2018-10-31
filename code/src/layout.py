@@ -9,6 +9,7 @@ import logging
 import numbers
 import os
 import sensors
+import queue
 import sys
 import threading
 import time
@@ -17,12 +18,13 @@ import yaml
 
 
 ## Class for handling layouts
-class layout():
+class layout(threading.Thread):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': 'layout'}
 
     def __init__(self):
+        super().__init__()
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
@@ -52,8 +54,34 @@ class layout():
         self.current_image_list = {}
         self.load_layout(self.layout_file)
         self.stop_timer = False
-        self.timer = threading.Timer(0.5, self.refresh_display)
+        self.start()
+        #FIXME timer and layout module are unstoppable ;-) to be fixed
+
+    def generate_refresh_event(self):
+        if self.s.event_queue is not None:
+            self.s.event_queue.put(('refresh', None, None))
+
+    def run(self):
+        self.timer = threading.Timer(0.5, self.generate_refresh_event)
         self.timer.start()
+        while self.s.event_queue is None:
+            time.sleep(0.5)
+        self.running = True
+        while self.running:
+            try:
+                ev_type, position, click = self.s.event_queue.get(block=True, timeout=1)
+                if ev_type == 'touch':
+                    self.check_click(position, click)
+                if ev_type == 'refresh':
+                    self.refresh_display()
+                    if not self.stop_timer:
+                        self.timer = threading.Timer(0.5, self.generate_refresh_event)
+                        self.timer.start()
+            except queue.Empty:
+                pass
+            except AttributeError:
+                #queue doesn't exist
+                pass
 
     def refresh_display(self):
         # Check if cairo context has changed
@@ -73,9 +101,6 @@ class layout():
             self.s.render['hold'] = True
             self.render_page()
             self.s.render['hold'] = False
-        if not self.stop_timer:
-            self.timer = threading.Timer(0.5, self.refresh_display)
-            self.timer.start()
 
     def load_layout(self, layout_file):
         if self.layout_file is None:
@@ -407,6 +432,8 @@ class layout():
             self.ctx.stroke()
 
     def render_pressed_button(self, pressed_pos):
+        if self.ctx is None:
+            return
         self.log.debug("render_pressed_button started", extra=self.extra)
         for parameter, r in self.parameter_rect_list.items():
             if self.point_in_rect(pressed_pos, r[1]):
@@ -417,12 +444,12 @@ class layout():
         self.s.render['refresh'] = True
         self.log.debug("render_pressed_button finished", extra=self.extra)
 
-    def check_click(self):
-        position, click = self.s.event_queue.get()
+    def check_click(self, position, click):
         resettable = False
         editable = False
         parameter_for_reset = None
         if click == 'SHORT':
+            self.render_pressed_button(position)
             clicked_parameter = None
             for parameter, r in self.parameter_rect_list.items():
                 if self.point_in_rect(position, r[1]):
@@ -432,6 +459,7 @@ class layout():
                 self.log.debug("run_function for {}".format(clicked_parameter), extra=self.extra)
                 self.run_function(clicked_parameter)
         elif click == 'LONG':
+            self.render_pressed_button(position)
             for parameter, r in self.parameter_rect_list.items():
                 if self.point_in_rect(position, r[1]):
                     for f in self.current_page['fields']:

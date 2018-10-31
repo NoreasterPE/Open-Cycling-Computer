@@ -72,7 +72,7 @@ class open_cycling_computer(object, metaclass=singleton):
         ## @var events
         #  Handle to events instance
         self.log.debug("Initialising events", extra=self.extra)
-        self.events = events.events(self.layout, self.touchscreen, None)
+        self.events = events.events(self.layout, self.touchscreen)
 
     ## Stops main event loop
     #  @param self The python object self
