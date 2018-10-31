@@ -43,7 +43,7 @@ class layout():
         self.width, self.height = self.s.parameters['display_size']["value"]
         ## @var cr
         #  Handle to cairo context
-        self.ctx = self.s.ctx[0]
+        self.ctx = self.s.render['ctx']
         self.uc = unit_converter.unit_converter()
         self.editor_fields = None
         self.page_list = {}
@@ -56,10 +56,10 @@ class layout():
         self.timer.start()
 
     def refresh_display(self):
-        if not self.s.ctx[2]:
-            self.s.ctx[2] = True
+        if not self.s.render['hold']:
+            self.s.render['hold'] = True
             self.render_page()
-            self.s.ctx[2] = False
+            self.s.render['hold'] = False
         if not self.stop_timer:
             self.timer = threading.Timer(0.5, self.refresh_display)
             self.timer.start()
@@ -107,7 +107,7 @@ class layout():
 
     def use_page(self, page_id="page_0"):
         self.log.debug("use_page {}".format(page_id), extra=self.extra)
-        self.s.ctx[1] = True
+        self.s.render['refresh'] = True
         try:
             self.current_page = self.page_list[page_id]
         except KeyError:
@@ -203,7 +203,7 @@ class layout():
         #self.render_all_buttons()
         if self.current_page['fields'] is not None:
             self.render_layout()
-        self.s.ctx[1] = True
+        self.s.render['refresh'] = True
 
     def make_image_key(self, image_path, value):
         suffix = "_" + format(value)
@@ -575,7 +575,7 @@ class layout():
             pass
         un = u[:i] + ui + u[i + 1:]
         self.editor_fields["value"] = un
-        self.s.ctx[1] = True
+        self.s.render['refresh'] = True
 
     def ed_increase(self):
         u = self.editor_fields["value"]
@@ -595,7 +595,7 @@ class layout():
             pass
         un = u[:i] + ui + u[i + 1:]
         self.editor_fields["value"] = un
-        self.s.ctx[1] = True
+        self.s.render['refresh'] = True
 
     def ed_next(self):
         u = self.editor_fields["value"]
@@ -621,7 +621,7 @@ class layout():
             if (ui == ".") or (ui == ","):
                 i += 1
         self.editor_fields["index"] = i
-        self.s.ctx[1] = True
+        self.s.render['refresh'] = True
 
     def ed_prev(self):
         u = self.editor_fields["value"]
@@ -637,7 +637,7 @@ class layout():
             if (ui == ".") or (ui == ","):
                 i -= 1
         self.editor_fields["index"] = i
-        self.s.ctx[1] = True
+        self.s.render['refresh'] = True
 
     def ed_change_unit(self, direction):
         # direction to be 1 (next) or 0 (previous)
@@ -661,11 +661,11 @@ class layout():
 
     def ed_next_unit(self):
         self.ed_change_unit(1)
-        self.s.ctx[1] = True
+        self.s.render['refresh'] = True
 
     def ed_prev_unit(self):
         self.ed_change_unit(0)
-        self.s.ctx[1] = True
+        self.s.render['refresh'] = True
 
     def accept_edit(self):
         self.log.debug("accept_edit started", extra=self.extra)
@@ -685,7 +685,7 @@ class layout():
 #            (name, addr, dev_type) = parameter_value
 #            self.s.set_ble_device(name, addr, dev_type)
         self.s.parameters[parameter]["time_stamp"] = time.time()
-        self.s.ctx[1] = True
+        self.s.render['refresh'] = True
         self.log.debug("accept_edit finished", extra=self.extra)
 
     def get_page(self, page_type, page_no):

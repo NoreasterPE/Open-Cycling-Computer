@@ -80,14 +80,12 @@ class sensors(threading.Thread, metaclass=Singleton):
         ## @var parameter_requests
         # Dict with parameters requested by a module
         self.parameter_requests = dict()
-        ## @var ctx
-        #  List with cairo context used to render graphics,
-        #  render flag indicating that the context has been modified and
-        #  hold render flag indicating that rendering should be posponed to avoid flickering
-        self.ctx = [None, False, False]
-        ## @var ctx_owner
-        #  Name of the module that registered cairo context
-        self.ctx_owner = None
+        ## @var render
+        #  owner   - name of the module that registered cairo context,
+        #  ctx     - cairo context used to render graphics,
+        #  refresh - flag indicating that the context has been modified,
+        #  hold    - flag indicating that rendering should be posponed to avoid flickering
+        self.render = dict(owner=None, ctx=None, refresh=False, hold=False)
         ## @var event_queue
         #  Event queue
         self.event_queue = None
@@ -312,11 +310,11 @@ class sensors(threading.Thread, metaclass=Singleton):
     #  @param plugin_name Name of the plugin registering cairo context
     #  @param cairo_context Cairo context need to be registered by one of the plugins to allow display access
     def register_cairo_context(self, plugin_name, cairo_context):
-        if self.ctx_owner is None:
-            self.ctx[0] = cairo_context
-            self.ctx_owner = plugin_name
+        if self.render['owner'] is None:
+            self.render['ctx'] = cairo_context
+            self.render['owner'] = plugin_name
         else:
-            self.log.critical("Can't register cairo context by {} as it's already registered by {}".format(plugin_name, self.ctx_owner), extra=self.extra)
+            self.log.critical("Can't register cairo context by {} as it's already registered by {}".format(plugin_name, self.render['owner']), extra=self.extra)
 
     ## Function for registering event queue. Only one plugin is allowed to register it
     #  @param self The python object self

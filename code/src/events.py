@@ -161,7 +161,7 @@ class events():
             time.sleep(MAIN_LOOP_BEAT)
             if self.touch_position is not None:
                 self.layout.render_pressed_button(self.touch_position)
-                self.s.ctx[1] = True
+                self.s.render['refresh'] = True
         self.log.debug("event loop finsished", extra=self.extra)
         self.touchscreen.stop()
 
