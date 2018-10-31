@@ -36,12 +36,11 @@ class events():
 
     ## The constructor
     #  @param self The python object self
-    def __init__(self, layout, touchscreen):
+    def __init__(self, touchscreen):
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
         self.s = sensors.sensors()
-        self.layout = layout
         self.touchscreen = touchscreen
         self.running = False
         self.ignore_touch = False
