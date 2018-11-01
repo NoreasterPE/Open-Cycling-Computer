@@ -6,14 +6,14 @@ from shutil import copyfile
 import datetime
 import logging
 import numbers
-import sensor
+import plugin
 import plugin_manager
 import time
 import yaml
 
 
 ## Class for handling ride parameters logging
-class ride_log(sensor.sensor):
+class ride_log(plugin.plugin):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': 'ride_log'}

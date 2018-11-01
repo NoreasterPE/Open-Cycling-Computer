@@ -2,7 +2,7 @@ This a draft version
 
 1. Plugin is required to provide:
     - non blocking __init__
-    - function 'start' that can run in a separate thread, inheritance from sensor.sensor or threading.Thread to provide function 'run'
+    - function 'start' that can run in a separate thread, inheritance from plugin.plugin or threading.Thread to provide function 'run'
 
 2. Plugin can:
     - after obtaining instance of plugin_manager s = plugin_manager.plugin_manager() plugin can access all core parameters and parameters registered by other plugins:

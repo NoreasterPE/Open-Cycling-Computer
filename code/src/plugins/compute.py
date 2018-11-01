@@ -5,13 +5,13 @@
 
 import math
 import numbers
-import sensor
+import plugin
 import plugin_manager
 import time
 
 
 ## Compute module, handles all cross sensor calculations. I.e. slope calculation can be done with data from altimeter and speed sensor.
-class compute(sensor.sensor):
+class compute(plugin.plugin):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': 'compute'}

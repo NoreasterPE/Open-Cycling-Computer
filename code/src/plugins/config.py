@@ -4,12 +4,12 @@
 
 import yaml
 from shutil import copyfile
-import sensor
+import plugin
 import plugin_manager
 
 
 ## Main config class
-class config(sensor.sensor):
+class config(plugin.plugin):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': 'config'}

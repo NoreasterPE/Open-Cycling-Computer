@@ -6,12 +6,12 @@
 import kalman
 import math
 import numbers
-import sensor
+import plugin
 import plugin_manager
 import time
 
 
-class bmp280(sensor.sensor):
+class bmp280(plugin.plugin):
     'Class for Bosch BMP280 pressure and temperature sensor with SPI/I2C interfaces as sold by Adafruit. Currently only SPI is supported'
     ## @var extra
     # Module name used for logging and prefixing data

@@ -4,13 +4,13 @@
 
 import cairo
 import mmap
-import sensor
+import plugin
 import plugin_manager
 import time
 
 
 ## Display rendering class
-class pitft_rendering(sensor.sensor):
+class pitft_rendering(plugin.plugin):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': 'pitft_rendering'}

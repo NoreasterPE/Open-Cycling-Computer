@@ -1,10 +1,6 @@
 #!/usr/bin/python3
-## @package sensors
-#  Sensors module. Responsible for connecting to, starting and stopping sensors. Currently used sensors are:
-#  BLE heart rate
-#  BLE speed & cadence sensor
-#  GPS (MTK3339) - [disabled]
-#  BMP280 pressure & temperature sensor
+## @package plugin_manager
+#  Sensors module. Responsible for connecting to, starting and stopping plugins.
 
 #from bluepy.btle import BTLEException
 import copy
@@ -56,7 +52,7 @@ class Singleton(type):
         return cls._instances[cls]
 
 
-## Class for handling starting/stopping sensors in separate threads
+## Class for handling starting/stopping plugins in separate threads
 class plugin_manager(threading.Thread, metaclass=Singleton):
     ## @var extra
     # Module name used for logging and prefixing data
@@ -71,9 +67,9 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
         # System logger handle
         self.log = logging.getLogger('system')
 
-        ## @var sensors
+        ## @var plugins
         # Dict with sensor instances
-        self.sensors = dict()
+        self.plugins = dict()
         ## @var parameters
         # Dict with parameters
         self.parameters = dict()
@@ -92,7 +88,7 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
         ## @var event_queue_owner
         #  Name of the module that registered event queue
         self.event_queue_owner = None
-        self.sensors = dict()
+        self.plugins = dict()
         self.register_parameter("ble_host_state", self.extra["module_name"], value=0)
         ## @var no_of_connected
         # Number of connected BLE devices
@@ -113,17 +109,18 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
             module = importlib.import_module(str(directory + '.' + plugin), directory)
             plugin_class = module.__getattribute__(plugin)
             self.log.debug("Initialising plugin {}".format(plugin), extra=self.extra)
-            self.sensors[plugin] = plugin_class()
+            self.plugins[plugin] = plugin_class()
 
-    ## Main loop of sensors module. Constantly tries to reconnect with BLE devices
+    ## Main loop of plugin_manager module.Makes snap shot of parameters and after a delay compares it to the current state.
+    # Changes of parameters are used to notify plugins that requested relevant parameters.
     #  @param self The python object self
     def run(self):
         self.log.debug("run started", extra=self.extra)
         self.load_plugins()
 
-        for s in self.sensors:
+        for s in self.plugins:
             self.log.debug("Starting {} thread".format(s), extra=self.extra)
-            self.sensors[s].start()
+            self.plugins[s].start()
 
         self.running = True
         self.previous_parameters = dict()
@@ -148,7 +145,7 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
                     pass
             for module in notify:
                 try:
-                    self.sensors[module].notification()
+                    self.plugins[module].notification()
                 except AttributeError:
                     # Ignore error - module might not exist anymore/yet
                     pass
@@ -161,9 +158,9 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
     def set_ble_host_state(self):
         self.no_of_connected = 0
         self.connecting = False
-        for name in self.sensors:
+        for name in self.plugins:
             try:
-                s = self.sensors[name].is_connected()
+                s = self.plugins[name].is_connected()
                 if s and name.startswith("ble"):
                     self.no_of_connected += 1
             except AttributeError:
@@ -188,26 +185,26 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
     def __del__(self):
         self.stop()
 
-    ## Function stopping all sensors. Called by the destructor
+    ## Function stopping all plugins. Called by the destructor
     #  @param self The python object self
     def stop(self):
         self.log.debug("stop started", extra=self.extra)
         self.running = False
-        for s in self.sensors:
+        for s in self.plugins:
             self.connected[s] = False
             self.log.debug("Stopping {} thread".format(s), extra=self.extra)
             try:
-                self.sensors[s].stop()
+                self.plugins[s].stop()
                 self.log.debug("Stopped {} thread".format(s), extra=self.extra)
             except AttributeError:
                 pass
-            self.sensors[s] = None
+            self.plugins[s] = None
         self.log.debug("stop finished", extra=self.extra)
 
     ## Function for registering a new parameter. Called by a sensor to provide information about what the sensor is measuring.
     #  @param self The python object self
     #  @param parameter_name Name of the prarameter, like speed, pressure, temperature, etc.
-    #  @param sensor_name Name of the sensor providing the parameter. For hardware sonsors, name of the module, "config" for parameters from config file like rider_weight, or "compute" for parameters like "slope" calculated in the compute module
+    #  @param plugin_name Name of the sensor providing the parameter. For hardware sonsors, name of the module, "config" for parameters from config file like rider_weight, or "compute" for parameters like "slope" calculated in the compute module
     #  @param value Current value of the parameter
     #  @param value_min Minimum observed value of the parameter, defaults to +infinity
     #  @param value_avg Average value of the parameter, defaults to not-a-number. The type of average is decided by the module setting the value.
@@ -218,7 +215,7 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
     #  @param units_allowed List of units allowed for the parametes. The units has to be covered in unit_converter module
     def register_parameter(self,
                            parameter_name,
-                           sensor_name=None,
+                           plugin_name=None,
                            value=None,
                            value_min=numbers.INF,
                            value_avg=numbers.NAN,
@@ -231,22 +228,22 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
                            force_notification=False,
                            reset=False):
 
-        self.log.debug("Trying to register {} by {}".format(parameter_name, sensor_name), extra=self.extra)
+        self.log.debug("Trying to register {} by {}".format(parameter_name, plugin_name), extra=self.extra)
         if unit is None:
             unit = raw_unit
         if unit is not None and units_allowed is None:
             units_allowed.append(unit)
         if parameter_name in self.parameters:
-            if self.parameters[parameter_name]["sensor_name"] == sensor_name:
-                self.log.debug("{} already registerd by the same sensor {}, probably update from config".format(parameter_name, sensor_name), extra=self.extra)
-            elif self.parameters[parameter_name]["sensor_name"] is not None:
-                self.log.critical("{} already registerd by sensor {}. Sensor {} request refused.".format(parameter_name, self.parameters[parameter_name]["sensor_name"], sensor_name), extra=self.extra)
+            if self.parameters[parameter_name]["plugin_name"] == plugin_name:
+                self.log.debug("{} already registerd by the same sensor {}, probably update from config".format(parameter_name, plugin_name), extra=self.extra)
+            elif self.parameters[parameter_name]["plugin_name"] is not None:
+                self.log.critical("{} already registerd by sensor {}. Sensor {} request refused.".format(parameter_name, self.parameters[parameter_name]["plugin_name"], plugin_name), extra=self.extra)
                 return
         else:
             if parameter_name in self.parameter_requests:
                 required_by = self.parameter_requests[parameter_name]
                 del self.parameter_requests[parameter_name]
-            self.parameters[parameter_name] = dict(sensor_name=sensor_name,
+            self.parameters[parameter_name] = dict(plugin_name=plugin_name,
                                                    time_stamp=0.0,
                                                    value=value,
                                                    value_min=value_min,
@@ -263,17 +260,17 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
 
     ## Function for requesting a parameter. Called by a sensor to request information abut changes of a parameter.
     #  @param self The python object self
-    def request_parameter(self, parameter_name, sensor_name):
-        self.log.debug("request_parameter called for {} by {}".format(parameter_name, sensor_name), extra=self.extra)
+    def request_parameter(self, parameter_name, plugin_name):
+        self.log.debug("request_parameter called for {} by {}".format(parameter_name, plugin_name), extra=self.extra)
         if parameter_name in self.parameters:
-            if sensor_name not in self.parameters[parameter_name]["required_by"]:
-                self.parameters[parameter_name]["required_by"].append(sensor_name)
+            if plugin_name not in self.parameters[parameter_name]["required_by"]:
+                self.parameters[parameter_name]["required_by"].append(plugin_name)
                 self.parameters[parameter_name]["force_notification"] = True
-                self.log.debug("{} added to required_by of {}".format(sensor_name, parameter_name), extra=self.extra)
+                self.log.debug("{} added to required_by of {}".format(plugin_name, parameter_name), extra=self.extra)
         else:
             if parameter_name not in self.parameter_requests:
                 self.parameter_requests[parameter_name] = list()
-                self.parameter_requests[parameter_name].append(sensor_name)
+                self.parameter_requests[parameter_name].append(plugin_name)
         #self.log.debug("after request_parameter for {} parameter_requests is {}".format(parameter_name, self.parameter_requests), extra=self.extra)
 
     ## Update parameter with new content
@@ -281,7 +278,7 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
     #  @param parameter_name name of the parameter to be updated
     #  @param content dictionary with new content. All fileds from the content will be used, even if they are set to None
     def update_parameter(self, parameter, content):
-        content["sensor_name"] = None
+        content["plugin_name"] = None
         self.log.debug("update parameter called for {}".format(parameter), extra=self.extra)
         if parameter not in self.parameters:
             self.register_parameter(parameter)

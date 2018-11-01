@@ -1,18 +1,18 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-## @package sensor
-#  Abstract base class for all sensors.
+## @package plugin
+#  Abstract base class for all plugins.
 import logging
 import threading
 import numbers
 import time
 
 
-## Abstract base class for sensors
-class sensor(threading.Thread):
+## Abstract base class for plugins
+class plugin(threading.Thread):
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'a_sensor'}
+    extra = {'module_name': 'a_plugin'}
 
     def __init__(self):
         super().__init__()
@@ -21,15 +21,15 @@ class sensor(threading.Thread):
         self.log = logging.getLogger('system')
 
         ## @var params_required
-        # Dict with params required by the sensor to work properly
+        # Dict with params required by the plugin to work properly
         self.required = dict()
 
         ## @var connected
-        # Variable indicating it the sensor hardware is currently connected
+        # Variable indicating it the plugin hardware is currently connected
         self.connected = False
 
         ## @var name
-        # Name of the sensor
+        # Name of the plugin
         self.name = None
 
         ## @var running
@@ -41,7 +41,7 @@ class sensor(threading.Thread):
         self.running = True
         while self.running:
             time.sleep(10)
-            # Copy the above code to a real sensor code and replace sleep with whatewer the sensor needs to provide data
+            # Copy the above code to a real plugin code and replace sleep with whatewer the plugin needs to provide data
         self.log.debug("Main loop finished", extra=self.extra)
 
     ## Resets all parameters to the default values
@@ -49,7 +49,7 @@ class sensor(threading.Thread):
     def reset_data(self):
         pass
 
-    ## Useb by module "sensors" to notify about change of a reqired parameter. Overwrite with code that needs to be executed on change of the parameters.
+    ## Usedb by module plugin_manager to notify about change of a reqired parameter. Overwrite with code that needs to be executed on change of the parameters.
     #  @param self The python object self
     #  @param reqired Dict with new values for require parameters
     def notification(self):

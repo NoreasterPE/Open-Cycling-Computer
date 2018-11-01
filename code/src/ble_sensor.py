@@ -4,12 +4,12 @@
 #  Abstract base BLE sensor handling module.
 import bluepy.btle
 import numbers
-import sensor
+import plugin
 import time
 
 
 ##Abstract base Class for handling BLE sensors
-class ble_sensor(sensor.sensor):
+class ble_sensor(plugin.plugin):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': 'ble_sensor'}

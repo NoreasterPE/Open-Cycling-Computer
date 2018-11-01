@@ -49,15 +49,15 @@ class open_cycling_computer(object, metaclass=singleton):
         #  Variable indicating is cleaning is in progress
         self.cleaning = False
         self.log.debug("Screen size is {} x {}".format(width, height), extra=self.extra)
-        self.log.debug("Calling sensors", extra=self.extra)
-        ## @var sensors
-        #  Handle to sensors instance
-        self.sensors = plugin_manager.plugin_manager()
-        self.sensors.register_parameter("log_level", self.extra["module_name"], value='debug')
-        self.sensors.register_parameter("config_file", self.extra["module_name"], value=config_file)
-        self.sensors.register_parameter("layout_file", self.extra["module_name"], value=layout_file)
-        self.sensors.register_parameter("fonts_dir", self.extra["module_name"], value=fonts_dir)
-        self.sensors.register_parameter("display_size", self.extra["module_name"], value=(width, height))
+        self.log.debug("Calling plugin_manager", extra=self.extra)
+        ## @var pm
+        #  Handle to plugin_manager instance
+        self.pm = plugin_manager.plugin_manager()
+        self.pm.register_parameter("log_level", self.extra["module_name"], value='debug')
+        self.pm.register_parameter("config_file", self.extra["module_name"], value=config_file)
+        self.pm.register_parameter("layout_file", self.extra["module_name"], value=layout_file)
+        self.pm.register_parameter("fonts_dir", self.extra["module_name"], value=fonts_dir)
+        self.pm.register_parameter("display_size", self.extra["module_name"], value=(width, height))
         ## @var ble_scanner
         #  Handle to ble_scanner instance
         ##self.log.debug("Initialising ble_scanner", extra=self.extra)
@@ -135,16 +135,16 @@ if __name__ == "__main__":
 
     ex = {'module_name': 'Main'}
     sys_logger.debug("Log start", extra=ex)
-    sys_logger.debug("Setting up sensors", extra=ex)
-    sensor_manager = plugin_manager.plugin_manager()
-    sys_logger.debug("Starting sensors", extra=ex)
-    sensor_manager.start()
+    sys_logger.debug("Setting up plugin manager", extra=ex)
+    p_manager = plugin_manager.plugin_manager()
+    sys_logger.debug("Starting plugin manager", extra=ex)
+    p_manager.start()
     ## @var main_window
     # OCC main window. It's instance of open_cycling_computer class
     main_window = open_cycling_computer(config_file, layout_file, fonts_dir)
     sys_logger.debug("Starting events loop", extra=ex)
     main_window.events.run()
     main_window.stop()
-    sensor_manager.stop()
+    p_manager.stop()
     sys_logger.debug("Log end", extra=ex)
     quit()
