@@ -313,6 +313,7 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
     #  @param plugin_name Name of the plugin registering cairo context
     #  @param cairo_context Cairo context need to be registered by one of the plugins to allow display access
     def register_cairo_context(self, plugin_name, cairo_context):
+        self.log.debug("Registering cairo context by {}".format(plugin_name), extra=self.extra)
         if self.render['owner'] is None:
             self.render['ctx'] = cairo_context
             self.render['owner'] = plugin_name
@@ -321,9 +322,10 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
 
     ## Function for registering event queue. Only one plugin is allowed to register it
     #  @param self The python object self
-    #  @param plugin_name Name of the plugin registering cairo context
+    #  @param plugin_name Name of the plugin registering event queue
     #  @param event_queue queue instance, see https://docs.python.org/3.5/library/queue.html
     def register_event_queue(self, plugin_name, event_queue):
+        self.log.debug("Registering event queue by {}".format(plugin_name), extra=self.extra)
         if self.event_queue_owner is None:
             self.event_queue = event_queue
             self.event_queue_owner = plugin_name

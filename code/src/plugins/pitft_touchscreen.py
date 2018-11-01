@@ -13,8 +13,10 @@ class pitft_touchscreen(threading.Thread):
         super().__init__()
         self.device = evdev.InputDevice(device_path)
         if self.device is None:
+            #FIXME replace with log
             print("Input device {} not found".format(device_path))
             exit()
+        #FIXME Add event structure documentation
         self.event = {}
         self.event['time'] = None
         self.event['id'] = None
