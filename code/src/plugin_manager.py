@@ -82,8 +82,14 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
         #  refresh - flag indicating that the context has been modified,
         #  hold    - flag indicating that rendering should be posponed to avoid flickering
         self.render = dict(owner=None, ctx=None, refresh=False, hold=False)
+        ## @var input_queue
+        #  Input queue with events from hardware input, i.e. pitft touchscreen
+        self.input_queue = None
+        ## @var input_queue_owner
+        #  Name of the module that registered input queue
+        self.input_queue_owner = None
         ## @var event_queue
-        #  Event queue
+        #  Event queue with high level events, like short/long click, swipe, display refresh
         self.event_queue = None
         ## @var event_queue_owner
         #  Name of the module that registered event queue
@@ -323,3 +329,15 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
             self.event_queue_owner = plugin_name
         else:
             self.log.critical("Can't register event queue by {} as it's already registered by {}".format(plugin_name, self.event_queue_owner), extra=self.extra)
+
+    ## Function for registering input queue. Only one plugin is allowed to register it
+    #  @param self The python object self
+    #  @param plugin_name Name of the plugin registering input queue
+    #  @param input_queue queue instance, see https://docs.python.org/3.5/library/queue.html
+    def register_input_queue(self, plugin_name, input_queue):
+        self.log.debug("Registering input queue by {}".format(plugin_name), extra=self.extra)
+        if self.input_queue_owner is None:
+            self.input_queue = input_queue
+            self.input_queue_owner = plugin_name
+        else:
+            self.log.critical("Can't register input queue by {} as it's already registered by {}".format(plugin_name, self.input_queue_owner), extra=self.extra)
