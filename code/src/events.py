@@ -8,7 +8,6 @@ import logging
 import operator
 import queue
 import plugin_manager
-import time
 
 ## @var LONG_CLICK
 # Time of long click in ms All clicks over 0.8s are considered "long".
@@ -36,12 +35,11 @@ class events():
 
     ## The constructor
     #  @param self The python object self
-    def __init__(self, touchscreen):
+    def __init__(self):
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
         self.pm = plugin_manager.plugin_manager()
-        self.touchscreen = touchscreen
         self.running = False
         self.ignore_touch = False
         self.event_queue = queue.Queue()
@@ -144,12 +142,14 @@ class events():
         self.log.debug("event loop started", extra=self.extra)
         self.running = True
         self.reset_motion()
-        self.touchscreen.start()
         while self.running:
-            while not self.touchscreen.queue_empty():
-                for e in self.touchscreen.get_event():
-                    self.input_event_handler(e)
-            time.sleep(MAIN_LOOP_BEAT)
+            try:
+                e = self.pm.input_queue.get(block=True, timeout=1)
+                self.input_event_handler(e)
+            except queue.Empty:
+                pass
+            except AttributeError:
+                pass
         self.log.debug("event loop finsished", extra=self.extra)
         self.touchscreen.stop()
 

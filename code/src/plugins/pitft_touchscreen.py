@@ -4,11 +4,17 @@
 
 import evdev
 import queue
-import threading
+import plugin
+import plugin_manager
 
 
 # Class for handling events from piTFT
-class pitft_touchscreen(threading.Thread):
+class pitft_touchscreen(plugin.plugin):
+    ## @var extra
+    # FIXME - use class name instead hard coded string
+    # Module name used for logging and prefixing data
+    extra = {'module_name': 'pitft_touchscreen'}
+
     def __init__(self, device_path="/dev/input/touchscreen"):
         super().__init__()
         self.device = evdev.InputDevice(device_path)
@@ -24,6 +30,8 @@ class pitft_touchscreen(threading.Thread):
         self.event['y'] = None
         self.event['touch'] = None
         self.events = queue.Queue()
+        self.pm = plugin_manager.plugin_manager()
+        self.pm.register_input_queue(self.extra['module_name'], self.events)
 
     def run(self):
         self.stopping = False
@@ -62,16 +70,6 @@ class pitft_touchscreen(threading.Thread):
                     self.event['touch'] = e['touch']
                 except KeyError:
                     self.event['touch'] = None
-
-    def get_event(self):
-        if not self.events.empty():
-            event = self.events.get()
-            yield event
-        else:
-            yield None
-
-    def queue_empty(self):
-        return self.events.empty()
 
     def stop(self):
         self.stopping = True

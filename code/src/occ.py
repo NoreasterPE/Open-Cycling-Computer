@@ -10,7 +10,6 @@ import events
 import layout
 import logging
 import logging.handlers
-import pitft_touchscreen
 import plugin_manager
 import signal
 import sys
@@ -65,14 +64,10 @@ class open_cycling_computer(object, metaclass=singleton):
         ## @var layout
         #  Handle to layout instance
         self.layout = layout.layout()
-        ## @var touchscreen
-        #  Handle to touchscreen (pitft_touchscreen module)
-        self.log.debug("Initialising pitft touchscreen", extra=self.extra)
-        self.touchscreen = pitft_touchscreen.pitft_touchscreen()
         ## @var events
         #  Handle to events instance
         self.log.debug("Initialising events", extra=self.extra)
-        self.events = events.events(self.touchscreen)
+        self.events = events.events()
 
     ## Stops main event loop
     #  @param self The python object self
