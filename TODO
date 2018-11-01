@@ -41,6 +41,7 @@ HARDWARE:
 - Add backlight control
 - Is it possible to read date/time from GPS chip with no fix or a separate clock is needed?
 - Fix lost should be marked in log? {Yes, as DEBUG}
+- accelerometer + kalman filter could improve altitude drift control
 
 OPTIONAL:
 - events/rendering module as plugin would allow to do simulation on a different hardware i.e. in GTK window
