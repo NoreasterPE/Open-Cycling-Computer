@@ -1,8 +1,10 @@
+PRIORITY
+-list selector (editor) - required for ble scan and better wheel size selection
+
 UI
 - BLE device list expiry time. Currently never expires
 - There is no way to disconnect from a BLE device
 - Fix icon lines width - it's not consistent
-- reduce debug settings to 1 screen 2x4
 - add option to use plain background color instead of image
 
 CODING STYLE:
@@ -33,7 +35,7 @@ REAL WORLD PROBLEMS:
 CODE ERRORS:
 - Threads write to log aftred log end [ERROR]
 - Setting time from GPS for the first time breaks delta (trip time)
-- Average cadence and heart rate are invalid [IN PROGRESS]
+- Average cadence and heart rate are invalid [IN PROGRESS, NEEDS TESTING]
 
 HARDWARE:
 - Add backlight control
@@ -57,7 +59,7 @@ OPTIONAL:
 
 FUTURE
 - Use real ff fonts instead of the "toy" cairo API
-- Make library for layout handling. Might be useful for other projects like weather station [IN PROGRESS]
+- Make library for sensor/plugin handling. Might be useful for other projects like weather station [IN PROGRESS, name pysensor]
 
 RANDOM ERRORs:
 Exception in thread Thread-1:
@@ -240,3 +242,4 @@ TypeError: argument 1 must be pygame.Surface, not None
 107. [DONE] - Ride log configuration in a config file
 108. [DONE] - add session_distance
 109. [DONE] - When starting from rc.local script session time will jump after time adjustments by ntp. The same will happen with GPS, RTC clock needed
+110. [DONE] - reduce debug settings to 1 screen 2x4
