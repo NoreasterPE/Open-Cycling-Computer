@@ -11,7 +11,7 @@ import layout
 import logging
 import logging.handlers
 import pitft_touchscreen
-import sensors
+import plugin_manager
 import signal
 import sys
 import time
@@ -52,7 +52,7 @@ class open_cycling_computer(object, metaclass=singleton):
         self.log.debug("Calling sensors", extra=self.extra)
         ## @var sensors
         #  Handle to sensors instance
-        self.sensors = sensors.sensors()
+        self.sensors = plugin_manager.plugin_manager()
         self.sensors.register_parameter("log_level", self.extra["module_name"], value='debug')
         self.sensors.register_parameter("config_file", self.extra["module_name"], value=config_file)
         self.sensors.register_parameter("layout_file", self.extra["module_name"], value=layout_file)
@@ -136,7 +136,7 @@ if __name__ == "__main__":
     ex = {'module_name': 'Main'}
     sys_logger.debug("Log start", extra=ex)
     sys_logger.debug("Setting up sensors", extra=ex)
-    sensor_manager = sensors.sensors()
+    sensor_manager = plugin_manager.plugin_manager()
     sys_logger.debug("Starting sensors", extra=ex)
     sensor_manager.start()
     ## @var main_window

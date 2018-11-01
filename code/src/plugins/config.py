@@ -5,7 +5,7 @@
 import yaml
 from shutil import copyfile
 import sensor
-import sensors
+import plugin_manager
 
 
 ## Main config class
@@ -21,10 +21,10 @@ class config(sensor.sensor):
     def __init__(self):
         # Run init for super class
         super().__init__()
-        self.s = sensors.sensors()
-        self.s.register_parameter("write_config_requested", self.extra["module_name"], value=False)
-        self.s.request_parameter("write_config_requested", self.extra["module_name"])
-        self.s.request_parameter("config_file", self.extra["module_name"])
+        self.pm = plugin_manager.plugin_manager()
+        self.pm.register_parameter("write_config_requested", self.extra["module_name"], value=False)
+        self.pm.request_parameter("write_config_requested", self.extra["module_name"])
+        self.pm.request_parameter("config_file", self.extra["module_name"])
         self.log_level = None
         #FIXME Add config safe copy
         ## @var config_file
@@ -37,17 +37,17 @@ class config(sensor.sensor):
     ## CNotification handler for config module
     #  @param self The python object self
     def notification(self):
-        if self.config_file != self.s.parameters['config_file']['value']:
+        if self.config_file != self.pm.parameters['config_file']['value']:
             # Config path changed, load it
-            self.log.debug("Config file changed from {} to {}".format(self.config_file, self.s.parameters['config_file']['value']), extra=self.extra)
-            self.config_file = self.s.parameters['config_file']['value']
+            self.log.debug("Config file changed from {} to {}".format(self.config_file, self.pm.parameters['config_file']['value']), extra=self.extra)
+            self.config_file = self.pm.parameters['config_file']['value']
             self.read_config()
-        if self.log_level != self.s.parameters['log_level']['value']:
-            self.log_level = self.s.parameters['log_level']['value']
+        if self.log_level != self.pm.parameters['log_level']['value']:
+            self.log_level = self.pm.parameters['log_level']['value']
             self.log.debug("Switching to log_level {}".format(self.log_level), extra=self.extra)
             self.log.setLevel(self.log_level)
-        if self.s.parameters['write_config_requested']['value']:
-            self.s.parameters['write_config_requested']['value'] = False
+        if self.pm.parameters['write_config_requested']['value']:
+            self.pm.parameters['write_config_requested']['value'] = False
             self.write_config()
 
     ## Function that reads config file.
@@ -70,87 +70,87 @@ class config(sensor.sensor):
                 self.cleanup()
         error_list = []
         try:
-            self.s.update_parameter("log_level", self.config_params["log_level"])
+            self.pm.update_parameter("log_level", self.config_params["log_level"])
         except KeyError:
             error_list.append("log_level")
 
         try:
-            self.s.update_parameter("layout_file", self.config_params["layout_file"])
+            self.pm.update_parameter("layout_file", self.config_params["layout_file"])
         except KeyError:
             error_list.append("layout_file")
 
         try:
-            self.s.register_parameter("rider_weight", self.extra["module_name"])
-            self.s.update_parameter("rider_weight", self.config_params["rider_weight"])
+            self.pm.register_parameter("rider_weight", self.extra["module_name"])
+            self.pm.update_parameter("rider_weight", self.config_params["rider_weight"])
 
         except AttributeError:
             error_list.append("rider_weight")
 
         try:
-            self.s.update_parameter("wheel_size", self.config_params["wheel_size"])
+            self.pm.update_parameter("wheel_size", self.config_params["wheel_size"])
             import wheel
             w = wheel.wheel()
-            wc = w.get_circumference(self.s.parameters["wheel_size"]["value"])
+            wc = w.get_circumference(self.pm.parameters["wheel_size"]["value"])
         except AttributeError:
             wc = 0.0
             error_list.append("wheel_size")
         try:
-            self.s.update_parameter("wheel_circumference", self.config_params["wheel_circumference"])
+            self.pm.update_parameter("wheel_circumference", self.config_params["wheel_circumference"])
         except AttributeError:
-            self.s.update_parameter("wheel_circumference", dict(value=wc))
+            self.pm.update_parameter("wheel_circumference", dict(value=wc))
             error_list.append("wheel_circumference")
 
         ## @var reference_altitude
         #  Home altitude. Used as reference altitude for calculation of pressure at sea level and subsequent altitude calculations.
         #  It is being set through the notification system - see \link notification \endlink function
         try:
-            self.s.register_parameter("reference_altitude", self.extra["module_name"], raw_unit="m")
-            self.s.update_parameter("reference_altitude", self.config_params["reference_altitude"])
+            self.pm.register_parameter("reference_altitude", self.extra["module_name"], raw_unit="m")
+            self.pm.update_parameter("reference_altitude", self.config_params["reference_altitude"])
         except AttributeError:
             error_list.append("reference_altitude")
 
         try:
-            self.s.update_parameter("odometer", self.config_params["odometer"])
+            self.pm.update_parameter("odometer", self.config_params["odometer"])
         except AttributeError:
             error_list.append("odometer")
 
 #        try:
-#            self.s.update_parameter("total_ride_time", self.config_params["total_ride_time"])
-#            self.s.update_parameter("total_ride_time",
+#            self.pm.update_parameter("total_ride_time", self.config_params["total_ride_time"])
+#            self.pm.update_parameter("total_ride_time",
 #                                    dict(value=float(self.config_params["total_ride_time"]),
 #                                         raw_unit="s"))
 #        except AttributeError:
 #            error_list.append("total_ride_time")
 
         try:
-            self.s.update_parameter("speed", self.config_params["speed"])
+            self.pm.update_parameter("speed", self.config_params["speed"])
         except AttributeError:
             error_list.append("speed")
 
         try:
-            self.s.update_parameter("temperature", self.config_params["temperature"])
+            self.pm.update_parameter("temperature", self.config_params["temperature"])
         except AttributeError:
             error_list.append("temperature")
 
         try:
-            self.s.update_parameter("heart_rate_device_name", self.config_params["heart_rate_device_name"])
+            self.pm.update_parameter("heart_rate_device_name", self.config_params["heart_rate_device_name"])
         except AttributeError:
             error_list.append("heart_rate_device_name")
 
         try:
-            self.s.register_parameter("heart_rate_device_address", self.extra["module_name"])
-            self.s.update_parameter("heart_rate_device_address", self.config_params["heart_rate_device_address"])
+            self.pm.register_parameter("heart_rate_device_address", self.extra["module_name"])
+            self.pm.update_parameter("heart_rate_device_address", self.config_params["heart_rate_device_address"])
         except AttributeError:
             error_list.append("heart_rate_device_address")
 
         try:
-            self.s.update_parameter("cadence_speed_device_name", self.config_params["cadence_speed_device_name"])
+            self.pm.update_parameter("cadence_speed_device_name", self.config_params["cadence_speed_device_name"])
         except AttributeError:
             error_list.append("cadence_speed_device_name")
 
         try:
-            self.s.register_parameter("cadence_speed_device_address", self.extra["module_name"])
-            self.s.update_parameter("cadence_speed_device_address", self.config_params["cadence_speed_device_address"])
+            self.pm.register_parameter("cadence_speed_device_address", self.extra["module_name"])
+            self.pm.update_parameter("cadence_speed_device_address", self.config_params["cadence_speed_device_address"])
         except AttributeError:
             error_list.append("cadence_speed_device_address")
 
@@ -165,20 +165,20 @@ class config(sensor.sensor):
     def write_config(self):
         self.log.debug("Writing config file started", extra=self.extra)
         c = {}
-        c["log_level"] = self.s.parameters["log_level"]
-        c["layout_file"] = self.s.parameters["layout_file"]
-        c["rider_weight"] = self.s.parameters["rider_weight"]
-        c["wheel_size"] = self.s.parameters["wheel_size"]
-        c["wheel_circumference"] = self.s.parameters["wheel_circumference"]
-        c["reference_altitude"] = self.s.parameters["reference_altitude"]
-        c["odometer"] = self.s.parameters["odometer"]
-        #c["total_ride_time"] = self.s.parameters["total_ride_time"]
-        c["speed"] = self.s.parameters["speed"]
-        c["temperature"] = self.s.parameters["temperature"]
-        c["heart_rate_device_name"] = self.s.parameters["heart_rate_device_name"]
-        c["heart_rate_device_address"] = self.s.parameters["heart_rate_device_address"]
-        c["cadence_speed_device_name"] = self.s.parameters["cadence_speed_device_name"]
-        c["cadence_speed_device_address"] = self.s.parameters["cadence_speed_device_address"]
+        c["log_level"] = self.pm.parameters["log_level"]
+        c["layout_file"] = self.pm.parameters["layout_file"]
+        c["rider_weight"] = self.pm.parameters["rider_weight"]
+        c["wheel_size"] = self.pm.parameters["wheel_size"]
+        c["wheel_circumference"] = self.pm.parameters["wheel_circumference"]
+        c["reference_altitude"] = self.pm.parameters["reference_altitude"]
+        c["odometer"] = self.pm.parameters["odometer"]
+        #c["total_ride_time"] = self.pm.parameters["total_ride_time"]
+        c["speed"] = self.pm.parameters["speed"]
+        c["temperature"] = self.pm.parameters["temperature"]
+        c["heart_rate_device_name"] = self.pm.parameters["heart_rate_device_name"]
+        c["heart_rate_device_address"] = self.pm.parameters["heart_rate_device_address"]
+        c["cadence_speed_device_name"] = self.pm.parameters["cadence_speed_device_name"]
+        c["cadence_speed_device_address"] = self.pm.parameters["cadence_speed_device_address"]
         self.log.debug("Data ready for config file", extra=self.extra)
         # FIXME error handling for file operation
         f = open(self.config_file, "w")

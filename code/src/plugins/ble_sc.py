@@ -6,7 +6,7 @@ import ble_sensor
 import bluepy.btle
 import math
 import numbers
-import sensors
+import plugin_manager
 import time
 
 
@@ -23,16 +23,16 @@ class ble_sc(ble_sensor.ble_sensor):
     def __init__(self):
         super().__init__()
         self.log.debug("{} __init__ started".format(__name__), extra=self.extra)
-        self.s = sensors.sensors()
-        self.s.register_parameter("cadence_speed_device_name", self.extra["module_name"])
-        self.s.register_parameter("cadence_speed_battery_level", self.extra["module_name"])
-        self.s.register_parameter("wheel_revolution_time", self.extra["module_name"], raw_unit="s")
-        self.s.register_parameter("wheel_revolutions", self.extra["module_name"])
-        self.s.register_parameter("odometer", self.extra["module_name"], raw_unit="m", unit="km")
-        self.s.register_parameter("cadence", self.extra["module_name"], value=numbers.NAN, raw_unit="RPM")
-        self.s.register_parameter("cadence_notification_beat", self.extra["module_name"])
-        self.s.request_parameter("cadence_speed_device_address", self.extra["module_name"])
-        self.s.request_parameter("wheel_circumference", self.extra["module_name"])
+        self.pm = plugin_manager.plugin_manager()
+        self.pm.register_parameter("cadence_speed_device_name", self.extra["module_name"])
+        self.pm.register_parameter("cadence_speed_battery_level", self.extra["module_name"])
+        self.pm.register_parameter("wheel_revolution_time", self.extra["module_name"], raw_unit="s")
+        self.pm.register_parameter("wheel_revolutions", self.extra["module_name"])
+        self.pm.register_parameter("odometer", self.extra["module_name"], raw_unit="m", unit="km")
+        self.pm.register_parameter("cadence", self.extra["module_name"], value=numbers.NAN, raw_unit="RPM")
+        self.pm.register_parameter("cadence_notification_beat", self.extra["module_name"])
+        self.pm.request_parameter("cadence_speed_device_address", self.extra["module_name"])
+        self.pm.request_parameter("wheel_circumference", self.extra["module_name"])
         self.delegate_class = sc_delegate
 
     ## Process data delivered from delegate
@@ -40,54 +40,54 @@ class ble_sc(ble_sensor.ble_sensor):
     def process_delegate_data(self):
         if self.delegate.measurement_no <= 2:
             #Fresh start or restart after lost connection. Update average value in the delegate
-            self.delegate.cadence_avg = self.s.parameters["cadence"]["value_avg"]
+            self.delegate.cadence_avg = self.pm.parameters["cadence"]["value_avg"]
             self.measurement_time = self.delegate.measurement_time
-        if self.s.parameters["cadence"]["reset"]:
+        if self.pm.parameters["cadence"]["reset"]:
             #Reset by user, reset deletage data
             self.log.debug('reset request received', extra=self.extra)
             self.delegate.cadence = 0.0
             self.delegate.cadence_avg = 0.0
             self.delegate.measurement_time = 0.0
-            self.s.parameters["cadence"]["reset"] = False
+            self.pm.parameters["cadence"]["reset"] = False
         try:
             if self.delegate.wheel_time_stamp == self.delegate.wheel_revolution_time_stamp:
-                self.s.parameters["wheel_revolution_time"]["time_stamp"] = self.delegate.wheel_revolution_time_stamp
-                self.s.parameters["wheel_revolution_time"]["value"] = self.delegate.wheel_revolution_time
-                self.log.debug('wheel_revolution_time {}'.format(self.s.parameters["wheel_revolution_time"]["value"]), extra=self.extra)
+                self.pm.parameters["wheel_revolution_time"]["time_stamp"] = self.delegate.wheel_revolution_time_stamp
+                self.pm.parameters["wheel_revolution_time"]["value"] = self.delegate.wheel_revolution_time
+                self.log.debug('wheel_revolution_time {}'.format(self.pm.parameters["wheel_revolution_time"]["value"]), extra=self.extra)
                 # Move to compute module
-                self.s.parameters["speed"]["value"] = self.s.parameters["wheel_circumference"]["value"] / self.s.parameters["wheel_revolution_time"]["value"]
-                self.s.parameters["speed"]["value_max"] = max(self.s.parameters["speed"]["value_max"], self.s.parameters["speed"]["value"])
+                self.pm.parameters["speed"]["value"] = self.pm.parameters["wheel_circumference"]["value"] / self.pm.parameters["wheel_revolution_time"]["value"]
+                self.pm.parameters["speed"]["value_max"] = max(self.pm.parameters["speed"]["value_max"], self.pm.parameters["speed"]["value"])
             else:
-                self.s.parameters["speed"]["value"] = 0.0
-            self.s.parameters["speed"]["time_stamp"] = self.delegate.wheel_time_stamp
+                self.pm.parameters["speed"]["value"] = 0.0
+            self.pm.parameters["speed"]["time_stamp"] = self.delegate.wheel_time_stamp
 
-            if self.s.parameters["wheel_revolutions"]["value"] != self.delegate.wheel_revolutions:
-                self.log.debug('wheel_revolutions {}'.format(self.s.parameters["wheel_revolutions"]["value"]), extra=self.extra)
+            if self.pm.parameters["wheel_revolutions"]["value"] != self.delegate.wheel_revolutions:
+                self.log.debug('wheel_revolutions {}'.format(self.pm.parameters["wheel_revolutions"]["value"]), extra=self.extra)
                 try:
-                    self.s.parameters["odometer"]["value"] += (self.delegate.wheel_revolutions -
-                                                               self.s.parameters["wheel_revolutions"]["value"]) * self.s.parameters["wheel_circumference"]["value"]
+                    self.pm.parameters["odometer"]["value"] += (self.delegate.wheel_revolutions -
+                                                               self.pm.parameters["wheel_revolutions"]["value"]) * self.pm.parameters["wheel_circumference"]["value"]
                 except TypeError:
                     pass
-                self.s.parameters["wheel_revolutions"]["value"] = self.delegate.wheel_revolutions
+                self.pm.parameters["wheel_revolutions"]["value"] = self.delegate.wheel_revolutions
 
-            self.s.parameters["cadence"]["time_stamp"] = self.delegate.cadence_time_stamp
-            self.s.parameters["cadence"]["value"] = self.delegate.cadence
-            self.s.parameters["cadence"]["value_avg"] = self.delegate.cadence_avg
+            self.pm.parameters["cadence"]["time_stamp"] = self.delegate.cadence_time_stamp
+            self.pm.parameters["cadence"]["value"] = self.delegate.cadence
+            self.pm.parameters["cadence"]["value_avg"] = self.delegate.cadence_avg
             self.measurement_time = self.delegate.measurement_time
-            self.s.parameters["cadence"]["value_max"] = max(self.s.parameters["cadence"]["value_max"], self.delegate.cadence)
-            self.s.parameters["cadence_notification_beat"]["value"] = self.delegate.cadence_notification_beat
-            if self.s.parameters["cadence_speed_device_name"]["value"] != self.device_name:
-                self.s.parameters["cadence_speed_device_name"]["value"] = self.device_name
-            if self.s.parameters["cadence_speed_battery_level"]["value"] != self.battery_level:
-                self.s.parameters["cadence_speed_battery_level"]["value"] = self.battery_level
+            self.pm.parameters["cadence"]["value_max"] = max(self.pm.parameters["cadence"]["value_max"], self.delegate.cadence)
+            self.pm.parameters["cadence_notification_beat"]["value"] = self.delegate.cadence_notification_beat
+            if self.pm.parameters["cadence_speed_device_name"]["value"] != self.device_name:
+                self.pm.parameters["cadence_speed_device_name"]["value"] = self.device_name
+            if self.pm.parameters["cadence_speed_battery_level"]["value"] != self.battery_level:
+                self.pm.parameters["cadence_speed_battery_level"]["value"] = self.battery_level
         except (AttributeError) as exception:
             self.handle_exception(exception, "process_delegate_data")
 
     def notification(self):
-        if self.s.parameters["cadence_speed_device_address"]["value"] != self.device_address:
-            self.device_address = self.s.parameters["cadence_speed_device_address"]["value"]
-        if self.s.parameters["cadence_speed_battery_level"]["value"] != self.battery_level:
-            self.s.parameters["cadence_speed_battery_level"]["value"] = self.battery_level
+        if self.pm.parameters["cadence_speed_device_address"]["value"] != self.device_address:
+            self.device_address = self.pm.parameters["cadence_speed_device_address"]["value"]
+        if self.pm.parameters["cadence_speed_battery_level"]["value"] != self.battery_level:
+            self.pm.parameters["cadence_speed_battery_level"]["value"] = self.battery_level
 
     def reset_data(self):
         super().reset_data()

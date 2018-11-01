@@ -7,7 +7,7 @@ import datetime
 import logging
 import numbers
 import sensor
-import sensors
+import plugin_manager
 import time
 import yaml
 
@@ -55,8 +55,8 @@ class ride_log(sensor.sensor):
         logging.getLogger('ride').addHandler(ride_log_handler)
         self.ride_logger = logging.getLogger('ride')
         self.ride_logger.info('', extra=self.ex)
-        self.s = sensors.sensors()
-        self.s.request_parameter("real_time", self.extra["module_name"])
+        self.pm = plugin_manager.plugin_manager()
+        self.pm.request_parameter("real_time", self.extra["module_name"])
         self.last_log_entry = 0.0
 
     ## Function that reads config file with ride_log format
@@ -80,15 +80,15 @@ class ride_log(sensor.sensor):
                 self.log.critical("I/O Error when trying to parse overwritten config. Hardcoded format will be used!", extra=self.extra)
 
     def notification(self):
-        if self.s.parameters['real_time']['value'] is not None:
-            if self.s.parameters['real_time']['value'] - self.last_log_entry > self.RIDE_LOG_UPDATE:
-                self.last_log_entry = self.s.parameters['real_time']['value']
+        if self.pm.parameters['real_time']['value'] is not None:
+            if self.pm.parameters['real_time']['value'] - self.last_log_entry > self.RIDE_LOG_UPDATE:
+                self.last_log_entry = self.pm.parameters['real_time']['value']
                 self.add_entry()
 
     def add_entry(self):
         self.log.debug("Adding ride log entry", extra=self.extra)
         for p in self.ex:
-            value = self.s.parameters[p]["value"]
+            value = self.pm.parameters[p]["value"]
             string_format = self.parameter_format[p]
             if string_format == "hhmmss":
                 try:

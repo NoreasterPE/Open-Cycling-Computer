@@ -8,7 +8,7 @@ import datetime
 import logging
 import numbers
 import os
-import sensors
+import plugin_manager
 import queue
 import sys
 import threading
@@ -31,21 +31,21 @@ class layout(threading.Thread):
         self.font_initialised = False
         ## @var s
         #  Sensors instance
-        self.s = sensors.sensors()
+        self.pm = plugin_manager.plugin_manager()
         ## @var layout_file
         #  Location of layout file
-        self.layout_file = self.s.parameters['layout_file']['value']
+        self.layout_file = self.pm.parameters['layout_file']['value']
         ## @var fonts_dir
         #  Location of fonts directory
-        self.fonts_dir = self.s.parameters['fonts_dir']['value']
+        self.fonts_dir = self.pm.parameters['fonts_dir']['value']
         ## @var width
         #  Window/screen width
         ## @var height
         #  Window/screen height
-        self.width, self.height = self.s.parameters['display_size']["value"]
+        self.width, self.height = self.pm.parameters['display_size']["value"]
         ## @var cr
         #  Handle to cairo context
-        self.ctx = self.s.render['ctx']
+        self.ctx = self.pm.render['ctx']
         self.uc = unit_converter.unit_converter()
         self.editor_fields = None
         self.page_list = {}
@@ -58,18 +58,18 @@ class layout(threading.Thread):
         #FIXME timer and layout module are unstoppable ;-) to be fixed
 
     def generate_refresh_event(self):
-        if self.s.event_queue is not None:
-            self.s.event_queue.put(('refresh', None, None))
+        if self.pm.event_queue is not None:
+            self.pm.event_queue.put(('refresh', None, None))
 
     def run(self):
         self.timer = threading.Timer(0.5, self.generate_refresh_event)
         self.timer.start()
-        while self.s.event_queue is None:
+        while self.pm.event_queue is None:
             time.sleep(0.5)
         self.running = True
         while self.running:
             try:
-                ev_type, position, click = self.s.event_queue.get(block=True, timeout=1)
+                ev_type, position, click = self.pm.event_queue.get(block=True, timeout=1)
                 if ev_type == 'touch':
                     self.check_click(position, click)
                 if ev_type == 'refresh':
@@ -85,8 +85,8 @@ class layout(threading.Thread):
 
     def refresh_display(self):
         # Check if cairo context has changed
-        if self.ctx != self.s.render['ctx']:
-            self.ctx = self.s.render['ctx']
+        if self.ctx != self.pm.render['ctx']:
+            self.ctx = self.pm.render['ctx']
         if not self.font_initialised:
             try:
                 # Only one font is allowed for now due to cairo_helper workaround
@@ -97,10 +97,10 @@ class layout(threading.Thread):
                 self.font_initialised = True
             except AttributeError:
                 pass
-        if not self.s.render['hold'] and self.ctx is not None:
-            self.s.render['hold'] = True
+        if not self.pm.render['hold'] and self.ctx is not None:
+            self.pm.render['hold'] = True
             self.render_page()
-            self.s.render['hold'] = False
+            self.pm.render['hold'] = False
 
     def load_layout(self, layout_file):
         if self.layout_file is None:
@@ -145,7 +145,7 @@ class layout(threading.Thread):
 
     def use_page(self, page_id="page_0"):
         self.log.debug("use_page {}".format(page_id), extra=self.extra)
-        self.s.render['refresh'] = True
+        self.pm.render['refresh'] = True
         try:
             self.current_page = self.page_list[page_id]
         except KeyError:
@@ -230,7 +230,7 @@ class layout(threading.Thread):
         #self.render_all_buttons()
         if self.current_page['fields'] is not None:
             self.render_layout()
-        self.s.render['refresh'] = True
+        self.pm.render['refresh'] = True
 
     def make_image_key(self, image_path, value):
         suffix = "_" + format(value)
@@ -264,18 +264,18 @@ class layout(threading.Thread):
                         value = None
                 else:
                     try:
-                        v = self.s.parameters[parameter]["value"]
-                        ru = self.s.parameters[parameter]["raw_unit"]
-                        u = self.s.parameters[parameter]["unit"]
+                        v = self.pm.parameters[parameter]["value"]
+                        ru = self.pm.parameters[parameter]["raw_unit"]
+                        u = self.pm.parameters[parameter]["unit"]
                         value = self.uc.convert(v, ru, u)
                         value = numbers.sanitise(value)
                     except (KeyError, TypeError):
                         value = None
             elif show == "tenths":
                 try:
-                    v = self.s.parameters[parameter]["value"]
-                    ru = self.s.parameters[parameter]["raw_unit"]
-                    u = self.s.parameters[parameter]["unit"]
+                    v = self.pm.parameters[parameter]["value"]
+                    ru = self.pm.parameters[parameter]["raw_unit"]
+                    u = self.pm.parameters[parameter]["unit"]
                     value = self.uc.convert(v, ru, u)
                     tenths_string = "{}".format(value - int(value))
                     value = format(tenths_string)[2:3]
@@ -283,32 +283,32 @@ class layout(threading.Thread):
                     value = None
             elif show == "unit":
                 try:
-                    value = self.s.parameters[parameter]["unit"]
+                    value = self.pm.parameters[parameter]["unit"]
                 except KeyError:
                     value = None
             elif show == "min":
                 try:
-                    v = self.s.parameters[parameter]["value_min"]
-                    ru = self.s.parameters[parameter]["raw_unit"]
-                    u = self.s.parameters[parameter]["unit"]
+                    v = self.pm.parameters[parameter]["value_min"]
+                    ru = self.pm.parameters[parameter]["raw_unit"]
+                    u = self.pm.parameters[parameter]["unit"]
                     value = self.uc.convert(v, ru, u)
                     value = numbers.sanitise(value)
                 except KeyError:
                     value = None
             elif show == "avg":
                 try:
-                    v = self.s.parameters[parameter]["value_avg"]
-                    ru = self.s.parameters[parameter]["raw_unit"]
-                    u = self.s.parameters[parameter]["unit"]
+                    v = self.pm.parameters[parameter]["value_avg"]
+                    ru = self.pm.parameters[parameter]["raw_unit"]
+                    u = self.pm.parameters[parameter]["unit"]
                     value = self.uc.convert(v, ru, u)
                     value = numbers.sanitise(value)
                 except KeyError:
                     value = None
             elif show == "max":
                 try:
-                    v = self.s.parameters[parameter]["value_max"]
-                    ru = self.s.parameters[parameter]["raw_unit"]
-                    u = self.s.parameters[parameter]["unit"]
+                    v = self.pm.parameters[parameter]["value_max"]
+                    ru = self.pm.parameters[parameter]["raw_unit"]
+                    u = self.pm.parameters[parameter]["unit"]
                     value = self.uc.convert(v, ru, u)
                     value = numbers.sanitise(value)
                 except KeyError:
@@ -357,7 +357,7 @@ class layout(threading.Thread):
             try:
                 variable = field['variable']
                 #print("{} variable {}".format(parameter, variable))
-                value = self.s.parameters[variable["name"]]["value"]
+                value = self.pm.parameters[variable["name"]]["value"]
                 try:
                     # If there is a variable with frames defined prepare path for relevant icon
                     frames = field['variable']['frames']
@@ -441,7 +441,7 @@ class layout(threading.Thread):
                 self.ctx.set_source_surface(self.buttons_image, 0, 0)
                 self.ctx.rectangle(fr[0], fr[1], fr[2], fr[3])
                 self.ctx.fill()
-        self.s.render['refresh'] = True
+        self.pm.render['refresh'] = True
         self.log.debug("render_pressed_button finished", extra=self.extra)
 
     def check_click(self, position, click):
@@ -521,19 +521,19 @@ class layout(threading.Thread):
         if editable:
             self.log.debug("Opening editor {} for {}".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
             p = self.editor_fields["parameter"]
-            self.editor_fields["unit"] = self.s.parameters[p]["unit"]
+            self.editor_fields["unit"] = self.pm.parameters[p]["unit"]
             if self.editor_fields["editor"] == 'editor_numbers':
-                self.editor_fields["raw_value"] = self.s.parameters[p]["value"]
-                value = self.uc.convert(self.s.parameters[p]["value"],
-                                        self.s.parameters[p]["raw_unit"],
-                                        self.s.parameters[p]["unit"])
+                self.editor_fields["raw_value"] = self.pm.parameters[p]["value"]
+                value = self.uc.convert(self.pm.parameters[p]["value"],
+                                        self.pm.parameters[p]["raw_unit"],
+                                        self.pm.parameters[p]["unit"])
                 try:
                     self.editor_fields["value"] = self.editor_fields["format"] % value
                 except TypeError:
                     self.editor_fields["value"] = value
             elif (self.editor_fields["editor"] == 'editor_string' or
                   self.editor_fields["editor"] == 'editor_units'):
-                self.editor_fields["value"] = self.s.parameters[p]["value"]
+                self.editor_fields["value"] = self.pm.parameters[p]["value"]
                 pass
             else:
                 self.log.critical("Unknown editor {} called for parameter {}, ignoring".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
@@ -542,7 +542,7 @@ class layout(threading.Thread):
             self.use_page(self.editor_fields["editor"])
         elif resettable:
             self.log.debug("Resetting {} with list: {}".format(parameter_for_reset, reset_list), extra=self.extra)
-            self.s.parameter_reset(parameter_for_reset, reset_list)
+            self.pm.parameter_reset(parameter_for_reset, reset_list)
             self.parameter_for_reset = None
 
     def run_function(self, parameter):
@@ -606,7 +606,7 @@ class layout(threading.Thread):
             pass
         un = u[:i] + ui + u[i + 1:]
         self.editor_fields["value"] = un
-        self.s.render['refresh'] = True
+        self.pm.render['refresh'] = True
 
     def ed_increase(self):
         u = self.editor_fields["value"]
@@ -626,7 +626,7 @@ class layout(threading.Thread):
             pass
         un = u[:i] + ui + u[i + 1:]
         self.editor_fields["value"] = un
-        self.s.render['refresh'] = True
+        self.pm.render['refresh'] = True
 
     def ed_next(self):
         u = self.editor_fields["value"]
@@ -652,7 +652,7 @@ class layout(threading.Thread):
             if (ui == ".") or (ui == ","):
                 i += 1
         self.editor_fields["index"] = i
-        self.s.render['refresh'] = True
+        self.pm.render['refresh'] = True
 
     def ed_prev(self):
         u = self.editor_fields["value"]
@@ -668,35 +668,35 @@ class layout(threading.Thread):
             if (ui == ".") or (ui == ","):
                 i -= 1
         self.editor_fields["index"] = i
-        self.s.render['refresh'] = True
+        self.pm.render['refresh'] = True
 
     def ed_change_unit(self, direction):
         # direction to be 1 (next) or 0 (previous)
         variable = self.editor_fields["parameter"]
         variable_unit = self.editor_fields["unit"]
         variable_value = self.editor_fields["value"]
-        current_unit_index = self.s.parameters[self.editor_fields["parameter"]]["units_allowed"].index(variable_unit)
-        self.log.debug("variable: {} units_allowed: {}".format(variable, self.s.parameters[self.editor_fields["parameter"]]["units_allowed"]), extra=self.extra)
+        current_unit_index = self.pm.parameters[self.editor_fields["parameter"]]["units_allowed"].index(variable_unit)
+        self.log.debug("variable: {} units_allowed: {}".format(variable, self.pm.parameters[self.editor_fields["parameter"]]["units_allowed"]), extra=self.extra)
         if direction == 1:
             try:
-                next_unit = self.s.parameters[self.editor_fields["parameter"]]["units_allowed"][current_unit_index + 1]
+                next_unit = self.pm.parameters[self.editor_fields["parameter"]]["units_allowed"][current_unit_index + 1]
             except IndexError:
-                next_unit = self.s.parameters[self.editor_fields["parameter"]]["units_allowed"][0]
+                next_unit = self.pm.parameters[self.editor_fields["parameter"]]["units_allowed"][0]
         else:
             try:
-                next_unit = self.s.parameters[self.editor_fields["parameter"]]["units_allowed"][current_unit_index - 1]
+                next_unit = self.pm.parameters[self.editor_fields["parameter"]]["units_allowed"][current_unit_index - 1]
             except IndexError:
-                next_unit = self.s.parameters[self.editor_fields["parameter"]]["units_allowed"][-1]
+                next_unit = self.pm.parameters[self.editor_fields["parameter"]]["units_allowed"][-1]
         self.editor_fields["unit"] = next_unit
         self.editor_fields["value"] = variable_value
 
     def ed_next_unit(self):
         self.ed_change_unit(1)
-        self.s.render['refresh'] = True
+        self.pm.render['refresh'] = True
 
     def ed_prev_unit(self):
         self.ed_change_unit(0)
-        self.s.render['refresh'] = True
+        self.pm.render['refresh'] = True
 
     def accept_edit(self):
         self.log.debug("accept_edit started", extra=self.extra)
@@ -705,18 +705,18 @@ class layout(threading.Thread):
         parameter_value = self.editor_fields["value"]
         self.log.debug("parameter: {}, parameter_unit: {}, parameter_value: {}".format(parameter, parameter_unit, parameter_value), extra=self.extra)
         if self.editor_fields["editor"] == "editor_units":
-            self.s.parameters[parameter]["unit"] = parameter_unit
+            self.pm.parameters[parameter]["unit"] = parameter_unit
         if self.editor_fields["editor"] == "editor_numbers":
-            unit_raw = self.s.parameters[parameter]["raw_unit"]
+            unit_raw = self.pm.parameters[parameter]["raw_unit"]
             value = self.uc.convert(float(parameter_value), parameter_unit, unit_raw)
-            self.s.parameters[parameter]["value"] = float(value)
+            self.pm.parameters[parameter]["value"] = float(value)
         if self.editor_fields["editor"] == "editor_string":
-            self.s.parameters[parameter]["value"] = parameter_value
+            self.pm.parameters[parameter]["value"] = parameter_value
 #        if self.self.editor_fields["ediotr"] == "ble_selector":
 #            (name, addr, dev_type) = parameter_value
-#            self.s.set_ble_device(name, addr, dev_type)
-        self.s.parameters[parameter]["time_stamp"] = time.time()
-        self.s.render['refresh'] = True
+#            self.pm.set_ble_device(name, addr, dev_type)
+        self.pm.parameters[parameter]["time_stamp"] = time.time()
+        self.pm.render['refresh'] = True
         self.log.debug("accept_edit finished", extra=self.extra)
 
     def get_page(self, page_type, page_no):
@@ -777,7 +777,7 @@ class layout(threading.Thread):
 
     #FIXME That will be gone when functions are no longer hard coded
     def write_config(self):
-        self.s.parameters['write_config_requested']['value'] = True
+        self.pm.parameters['write_config_requested']['value'] = True
 
     def reboot(self):
         self.quit()
@@ -797,7 +797,7 @@ class layout(threading.Thread):
         log_level_name = logging.getLevelName(log_level)
         self.log.debug("Changing log level to: {}".format(log_level_name), extra=self.extra)
         try:
-            self.s.parameters['log_level']['value'] = log_level_name
+            self.pm.parameters['log_level']['value'] = log_level_name
         except KeyError:
             pass
 

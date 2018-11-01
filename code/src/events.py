@@ -7,7 +7,7 @@
 import logging
 import operator
 import queue
-import sensors
+import plugin_manager
 import time
 
 ## @var LONG_CLICK
@@ -40,12 +40,12 @@ class events():
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
-        self.s = sensors.sensors()
+        self.pm = plugin_manager.plugin_manager()
         self.touchscreen = touchscreen
         self.running = False
         self.ignore_touch = False
         self.event_queue = queue.Queue()
-        self.s.register_event_queue(self.extra['module_name'], self.event_queue)
+        self.pm.register_event_queue(self.extra['module_name'], self.event_queue)
 
     ## Main click and swipe handler
     #  @param self The python object self

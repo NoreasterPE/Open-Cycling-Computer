@@ -6,7 +6,7 @@ import ble_sensor
 import bluepy.btle
 import math
 import numbers
-import sensors
+import plugin_manager
 import time
 
 
@@ -22,12 +22,12 @@ class ble_hr(ble_sensor.ble_sensor):
 
     def __init__(self):
         super().__init__()
-        self.s = sensors.sensors()
-        self.s.register_parameter("heart_rate_device_name", self.extra["module_name"])
-        self.s.register_parameter("heart_rate_battery_level", self.extra["module_name"])
-        self.s.register_parameter("heart_rate", self.extra["module_name"], value=numbers.NAN, raw_unit="BPM", unit="BPM", units_allowed=["BMP"])
-        self.s.register_parameter("heart_rate_notification_beat", self.extra["module_name"])
-        self.s.request_parameter("heart_rate_device_address", self.extra["module_name"])
+        self.pm = plugin_manager.plugin_manager()
+        self.pm.register_parameter("heart_rate_device_name", self.extra["module_name"])
+        self.pm.register_parameter("heart_rate_battery_level", self.extra["module_name"])
+        self.pm.register_parameter("heart_rate", self.extra["module_name"], value=numbers.NAN, raw_unit="BPM", unit="BPM", units_allowed=["BMP"])
+        self.pm.register_parameter("heart_rate_notification_beat", self.extra["module_name"])
+        self.pm.request_parameter("heart_rate_device_address", self.extra["module_name"])
         self.delegate_class = hr_delegate
 
     ## Process data delivered from delegate
@@ -35,34 +35,34 @@ class ble_hr(ble_sensor.ble_sensor):
     def process_delegate_data(self):
         if self.delegate.measurement_no <= 2:
             #Fresh start or restart after lost connection. Seed average value and measurement time in the delegate
-            self.delegate.heart_rate_avg = self.s.parameters["heart_rate"]["value_avg"]
+            self.delegate.heart_rate_avg = self.pm.parameters["heart_rate"]["value_avg"]
             self.measurement_time = self.delegate.measurement_time
-        if self.s.parameters["heart_rate"]["reset"]:
+        if self.pm.parameters["heart_rate"]["reset"]:
             #Reset by user, reset deletage data
             self.log.debug('reset request received', extra=self.extra)
             self.delegate.reset_data()
-            self.s.parameters["heart_rate"]["reset"] = False
+            self.pm.parameters["heart_rate"]["reset"] = False
         try:
-            self.s.parameters["heart_rate"]["time_stamp"] = self.delegate.time_stamp
-            self.s.parameters["heart_rate"]["value"] = self.delegate.heart_rate
-            self.s.parameters["heart_rate"]["value_min"] = min(self.s.parameters["heart_rate"]["value_min"], self.delegate.heart_rate)
-            self.s.parameters["heart_rate"]["value_avg"] = self.delegate.heart_rate_avg
+            self.pm.parameters["heart_rate"]["time_stamp"] = self.delegate.time_stamp
+            self.pm.parameters["heart_rate"]["value"] = self.delegate.heart_rate
+            self.pm.parameters["heart_rate"]["value_min"] = min(self.pm.parameters["heart_rate"]["value_min"], self.delegate.heart_rate)
+            self.pm.parameters["heart_rate"]["value_avg"] = self.delegate.heart_rate_avg
             self.measurement_time = self.delegate.measurement_time
-            self.s.parameters["heart_rate"]["value_max"] = max(self.s.parameters["heart_rate"]["value_max"], self.delegate.heart_rate)
-            self.s.parameters["heart_rate_notification_beat"]["value"] = self.delegate.heart_rate_notification_beat
-            if self.s.parameters["heart_rate_device_name"]["value"] != self.device_name:
-                self.s.parameters["heart_rate_device_name"]["value"] = self.device_name
-            if self.s.parameters["heart_rate_battery_level"]["value"] != self.battery_level:
-                self.s.parameters["heart_rate_battery_level"]["value"] = self.battery_level
+            self.pm.parameters["heart_rate"]["value_max"] = max(self.pm.parameters["heart_rate"]["value_max"], self.delegate.heart_rate)
+            self.pm.parameters["heart_rate_notification_beat"]["value"] = self.delegate.heart_rate_notification_beat
+            if self.pm.parameters["heart_rate_device_name"]["value"] != self.device_name:
+                self.pm.parameters["heart_rate_device_name"]["value"] = self.device_name
+            if self.pm.parameters["heart_rate_battery_level"]["value"] != self.battery_level:
+                self.pm.parameters["heart_rate_battery_level"]["value"] = self.battery_level
         except (AttributeError) as exception:
             self.handle_exception(exception, "process_delegate_data")
-        self.log.debug("heart rate = {} @ {}".format(self.s.parameters["heart_rate"]["value"], time.strftime("%H:%M:%S", time.localtime(self.s.parameters["heart_rate"]["time_stamp"]))), extra=self.extra)
+        self.log.debug("heart rate = {} @ {}".format(self.pm.parameters["heart_rate"]["value"], time.strftime("%H:%M:%S", time.localtime(self.pm.parameters["heart_rate"]["time_stamp"]))), extra=self.extra)
 
     def notification(self):
-        if self.s.parameters["heart_rate_device_address"]["value"] != self.device_address:
-            self.device_address = self.s.parameters["heart_rate_device_address"]["value"]
-        if self.s.parameters["heart_rate_battery_level"]["value"] != self.battery_level:
-            self.s.parameters["heart_rate_battery_level"]["value"] = self.battery_level
+        if self.pm.parameters["heart_rate_device_address"]["value"] != self.device_address:
+            self.device_address = self.pm.parameters["heart_rate_device_address"]["value"]
+        if self.pm.parameters["heart_rate_battery_level"]["value"] != self.battery_level:
+            self.pm.parameters["heart_rate_battery_level"]["value"] = self.battery_level
 
 
 ## Class for handling BLE notifications from heart rate sensor

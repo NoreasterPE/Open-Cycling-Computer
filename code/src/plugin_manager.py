@@ -57,10 +57,10 @@ class Singleton(type):
 
 
 ## Class for handling starting/stopping sensors in separate threads
-class sensors(threading.Thread, metaclass=Singleton):
+class plugin_manager(threading.Thread, metaclass=Singleton):
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'sensors'}
+    extra = {'module_name': 'plugin_manager'}
 
     ## The constructor
     #  @param self The python object self

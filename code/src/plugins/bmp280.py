@@ -7,7 +7,7 @@ import kalman
 import math
 import numbers
 import sensor
-import sensors
+import plugin_manager
 import time
 
 
@@ -27,14 +27,14 @@ class bmp280(sensor.sensor):
         #  Time between measurements in [s]
         self.measurement_delay = 1.0
 
-        self.s = sensors.sensors()
-        self.s.register_parameter("pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])
-        self.s.register_parameter("pressure_nof", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])
-        self.s.register_parameter("mean_sea_level_pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])
-        self.s.register_parameter("temperature", self.extra["module_name"], raw_unit="C", unit="C", units_allowed=["C", "F"])
-        self.s.register_parameter("altitude", self.extra["module_name"], raw_unit="m", unit="m", units_allowed=["m"])
-        self.s.request_parameter("reference_altitude", self.extra["module_name"])
-        self.s.request_parameter("mean_sea_level_pressure", self.extra["module_name"])
+        self.pm = plugin_manager.plugin_manager()
+        self.pm.register_parameter("pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])
+        self.pm.register_parameter("pressure_nof", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])
+        self.pm.register_parameter("mean_sea_level_pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])
+        self.pm.register_parameter("temperature", self.extra["module_name"], raw_unit="C", unit="C", units_allowed=["C", "F"])
+        self.pm.register_parameter("altitude", self.extra["module_name"], raw_unit="m", unit="m", units_allowed=["m"])
+        self.pm.request_parameter("reference_altitude", self.extra["module_name"])
+        self.pm.request_parameter("mean_sea_level_pressure", self.extra["module_name"])
         ## @var pressure_unfiltered
         #  Pressure as reported by the sensor. Might be IIR filtered, depending on the sensor configureaion
         self.pressure_unfiltered = numbers.NAN
@@ -54,26 +54,26 @@ class bmp280(sensor.sensor):
     ## Trigger calculation of pressure at the sea level on change of reference altitude
     #  @param self The python object self
     def notification(self):
-        if 'reference_altitude' not in self.s.parameters:
+        if 'reference_altitude' not in self.pm.parameters:
             self.log.debug("reference_altitude doesn't exist yet in parameters", extra=self.extra)
             return
         # User editer mean_sea_level_pressure, use it and calculate reference_altitude
-        if self.s.parameters["mean_sea_level_pressure"]["value"] != self.mean_sea_level_pressure:
-            self.log.debug("mean_sea_level_pressure changed to {}".format(self.s.parameters['mean_sea_level_pressure']['value']), extra=self.extra)
-            self.mean_sea_level_pressure = self.s.parameters["mean_sea_level_pressure"]["value"]
-            ra = self.calculate_altitude(self.s.parameters['pressure']['value'])
+        if self.pm.parameters["mean_sea_level_pressure"]["value"] != self.mean_sea_level_pressure:
+            self.log.debug("mean_sea_level_pressure changed to {}".format(self.pm.parameters['mean_sea_level_pressure']['value']), extra=self.extra)
+            self.mean_sea_level_pressure = self.pm.parameters["mean_sea_level_pressure"]["value"]
+            ra = self.calculate_altitude(self.pm.parameters['pressure']['value'])
             if ra is not None and not math.isnan(ra):
-                self.s.parameters['reference_altitude']['value'] = ra
-                self.log.debug("reference_altitude recalculated to: {}".format(self.s.parameters['reference_altitude']['value']), extra=self.extra)
+                self.pm.parameters['reference_altitude']['value'] = ra
+                self.log.debug("reference_altitude recalculated to: {}".format(self.pm.parameters['reference_altitude']['value']), extra=self.extra)
                 # reference_altitude recalculation triggers notification, so ignore the next event
                 self.ignore_reference_altitude_change = True
 
-        if self.s.parameters["reference_altitude"]["value"] != self.reference_altitude:
-            self.log.debug("reference_altitude changed to {}".format(self.s.parameters['reference_altitude']['value']), extra=self.extra)
+        if self.pm.parameters["reference_altitude"]["value"] != self.reference_altitude:
+            self.log.debug("reference_altitude changed to {}".format(self.pm.parameters['reference_altitude']['value']), extra=self.extra)
             if not self.ignore_reference_altitude_change:
-                self.reference_altitude = self.s.parameters["reference_altitude"]["value"]
+                self.reference_altitude = self.pm.parameters["reference_altitude"]["value"]
                 self.calculate_mean_sea_level_pressure()
-                self.log.debug("mean_sea_level_pressure recalculated to: {}".format(self.s.parameters['mean_sea_level_pressure']['value']), extra=self.extra)
+                self.log.debug("mean_sea_level_pressure recalculated to: {}".format(self.pm.parameters['mean_sea_level_pressure']['value']), extra=self.extra)
             else:
                 self.ignore_reference_altitude_change = False
 
@@ -87,7 +87,7 @@ class bmp280(sensor.sensor):
             with open('/sys/bus/iio/devices/iio:device0/in_temp_input', 'r') as temp:
                 # self.temperature is required for test files
                 self.temperature = float(temp.read()) / 1000.0
-                self.s.parameters["temperature"]["value"] = self.temperature
+                self.pm.parameters["temperature"]["value"] = self.temperature
         except (FileNotFoundError, OSError) as e:
             # FileNotFoundError: [Errno 2] No such file or directory: '/sys/bus/iio/devices/iio:device0/in_pressure_input'
             # OSError: [Errno 121] Remote I/O error
@@ -105,15 +105,15 @@ class bmp280(sensor.sensor):
             self.kalman.update()
             # self.pressure is required for test files
             self.pressure = self.kalman.value_estimate
-            self.s.parameters["pressure"]["value"] = self.pressure
-            self.s.parameters["pressure_nof"]["value"] = self.pressure_unfiltered
-            self.s.parameters['altitude']['value'] = self.calculate_altitude(self.s.parameters['pressure']['value'])
-            self.log.debug("pressure = {} [Pa], temperature = {} [C]".format(self.s.parameters["pressure"]["value"], self.s.parameters["temperature"]["value"]), extra=self.extra)
+            self.pm.parameters["pressure"]["value"] = self.pressure
+            self.pm.parameters["pressure_nof"]["value"] = self.pressure_unfiltered
+            self.pm.parameters['altitude']['value'] = self.calculate_altitude(self.pm.parameters['pressure']['value'])
+            self.log.debug("pressure = {} [Pa], temperature = {} [C]".format(self.pm.parameters["pressure"]["value"], self.pm.parameters["temperature"]["value"]), extra=self.extra)
             try:
-                self.s.parameters["pressure"]["value_min"] = min(self.s.parameters["pressure"]["value"], self.s.parameters["pressure"]["value_min"])
-                self.s.parameters["pressure"]["value_max"] = max(self.s.parameters["pressure"]["value"], self.s.parameters["pressure"]["value_max"])
-                self.s.parameters["temperature"]["value_min"] = min(self.s.parameters["temperature"]["value"], self.s.parameters["temperature"]["value_min"])
-                self.s.parameters["temperature"]["value_max"] = max(self.s.parameters["temperature"]["value"], self.s.parameters["temperature"]["value_max"])
+                self.pm.parameters["pressure"]["value_min"] = min(self.pm.parameters["pressure"]["value"], self.pm.parameters["pressure"]["value_min"])
+                self.pm.parameters["pressure"]["value_max"] = max(self.pm.parameters["pressure"]["value"], self.pm.parameters["pressure"]["value_max"])
+                self.pm.parameters["temperature"]["value_min"] = min(self.pm.parameters["temperature"]["value"], self.pm.parameters["temperature"]["value_min"])
+                self.pm.parameters["temperature"]["value_max"] = max(self.pm.parameters["temperature"]["value"], self.pm.parameters["temperature"]["value_max"])
                 # Some variables are not initialised when run in test mode, so ignore the error
             except TypeError:
                 pass
@@ -125,19 +125,19 @@ class bmp280(sensor.sensor):
     #  @param self The python object self
     #  @param reference_altitude Home altitudei
     def calculate_mean_sea_level_pressure(self):
-        self.log.debug("pressure: {}".format(self.s.parameters["pressure"]["value"]), extra=self.extra)
+        self.log.debug("pressure: {}".format(self.pm.parameters["pressure"]["value"]), extra=self.extra)
         try:
-            ref_alt = float(self.s.parameters["reference_altitude"]["value"])
+            ref_alt = float(self.pm.parameters["reference_altitude"]["value"])
         except (ValueError, TypeError):
             ref_alt = 0.0
-            self.log.error("Reference altitude : {}, can't convert to float. Using 0 m".format(self.s.parameters["reference_altitude"]["value"]), extra=self.extra)
+            self.log.error("Reference altitude : {}, can't convert to float. Using 0 m".format(self.pm.parameters["reference_altitude"]["value"]), extra=self.extra)
         except (KeyError):
             ref_alt = 0.0
             self.log.debug("Reference altitude doesn't exist, using 0 0 m", extra=self.extra)
         try:
             if ref_alt < 43300.0:
                 try:
-                    self.mean_sea_level_pressure = float(self.s.parameters["pressure"]["value"] / pow((1 - ref_alt / 44330), 5.255))
+                    self.mean_sea_level_pressure = float(self.pm.parameters["pressure"]["value"] / pow((1 - ref_alt / 44330), 5.255))
                 except TypeError:
                     self.mean_sea_level_pressure = numbers.NAN
             else:
@@ -145,11 +145,11 @@ class bmp280(sensor.sensor):
                 self.mean_sea_level_pressure = numbers.NAN
         except TypeError:
             pass
-        self.s.parameters['mean_sea_level_pressure']['value'] = self.mean_sea_level_pressure
+        self.pm.parameters['mean_sea_level_pressure']['value'] = self.mean_sea_level_pressure
         self.log.debug("mean_sea_level_pressure: {}".format(self.mean_sea_level_pressure), extra=self.extra)
 
     ## Calculates altitude based on mean_sea_level_pressure and given pressure
-    #  Saves calculated value to self.s.parameters["altitude]"
+    #  Saves calculated value to self.pm.parameters["altitude]"
     #  @param self The python object self
     def calculate_altitude(self, pressure):
         altitude = numbers.NAN

@@ -226,7 +226,7 @@ class ble_sensor(sensor.sensor):
     def notification(self):
         self.log.debug("notification received", extra=self.extra)
         #FIXME on device_address change initialise connection to the new device
-        #self.device_address = self.s.parameters["device_address"]["value"]
+        #self.device_address = self.pm.parameters["device_address"]["value"]
         self.initialise_connection()
         #pass
 
