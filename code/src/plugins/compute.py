@@ -8,6 +8,7 @@ import numbers
 import plugin
 import plugin_manager
 import time
+import wheel
 
 
 ## Compute module, handles all cross sensor calculations. I.e. slope calculation can be done with data from altimeter and speed sensor.
@@ -30,6 +31,9 @@ class compute(plugin.plugin):
         self.pm.register_parameter("session_distance", self.extra["module_name"], value=0.0, raw_unit="m", unit="km", units_allowed=["m", "km", "mi"])
         self.pm.register_parameter("session_odometer_start", self.extra["module_name"], value=numbers.NAN, raw_unit="m")
         self.session_start_time = self.pm.parameters['session_start_time']['value']
+        self.pm.register_parameter("wheel_size", self.extra["module_name"], value=numbers.NAN, raw_unit="m")
+        self.pm.request_parameter("wheel_size", self.extra["module_name"])
+        self.wheel_size = numbers.NAN
         self.pm.register_parameter("session_time", self.extra["module_name"], value=0.0, value_default=numbers.NAN, raw_unit="s")
         self.pm.request_parameter("odometer", self.extra["module_name"])
         self.odometer = None
@@ -40,12 +44,23 @@ class compute(plugin.plugin):
         self.altitude_delta_cumulative = 0.0
         self.pm.request_parameter("wheel_revolution_time", self.extra["module_name"])
         self.wheel_revolution_time = None
+        self.pm.request_parameter("wheel_size", self.extra["module_name"])
+        self.wheel_size = None
         self.reset_data()
         self.log.debug("Initialised.", extra=self.extra)
 
     ## Trigger calculation of slope on cumulative change of distance and altitude
     #  @param self The python object self
     def notification(self):
+        if self.wheel_size != self.pm.parameters['wheel_size']['value']:
+            self.log.debug("wheel_size changed from {} to {}.".format(self.wheel_size, self.pm.parameters['wheel_size']['value']), extra=self.extra)
+            self.wheel_size = self.pm.parameters['wheel_size']['value']
+            w = wheel.wheel()
+            try:
+                self.pm.parameters['wheel_circumference']['value'] = w.get_circumference(self.wheel_size)
+            except KeyError:
+                #FIXME That should give user feedback that something went wrong
+                self.log.critical("Unknown wheel_circumference for wheel_size {}.".format(self.wheel_size), extra=self.extra)
         previous_altitude = self.altitude
         self.altitude = self.pm.parameters["altitude"]["value"]
         try:
