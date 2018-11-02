@@ -523,6 +523,7 @@ class layout(threading.Thread):
             self.log.debug("Opening editor {} for {}".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
             p = self.editor_fields["parameter"]
             self.editor_fields["unit"] = self.pm.parameters[p]["unit"]
+            self.editor_fields["index"] = 0
             if self.editor_fields["editor"] == 'editor_numbers':
                 self.editor_fields["raw_value"] = self.pm.parameters[p]["value"]
                 value = self.uc.convert(self.pm.parameters[p]["value"],
@@ -539,7 +540,6 @@ class layout(threading.Thread):
             else:
                 self.log.critical("Unknown editor {} called for parameter {}, ignoring".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
                 return
-            self.editor_fields["index"] = 0
             self.use_page(self.editor_fields["editor"])
         elif resettable:
             self.log.debug("Resetting {} with list: {}".format(parameter_for_reset, reset_list), extra=self.extra)
