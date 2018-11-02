@@ -555,8 +555,10 @@ class layout(threading.Thread):
                      "ed_decrease": self.ed_decrease,
                      "ed_increase": self.ed_increase,
                      "ed_next": self.ed_next,
+                     "ed_next_item": self.ed_next_item,
                      "ed_next_unit": self.ed_next_unit,
                      "ed_prev": self.ed_prev,
+                     "ed_prev_item": self.ed_prev_item,
                      "ed_prev_unit": self.ed_prev_unit,
                      "halt": self.halt,
                      "load_default_layout": self.load_default_layout,
@@ -670,6 +672,35 @@ class layout(threading.Thread):
                 i -= 1
         self.editor_fields["index"] = i
         self.pm.render['refresh'] = True
+
+    def slice_list_elements(self, a_list, index):
+        list_len = len(a_list)
+        circular_list_slice = (a_list * 3)[index + list_len - 1:index + list_len + 2]
+        self.editor_fields["previous_list_element"] = circular_list_slice[0]
+        self.editor_fields["value"] = circular_list_slice[1]
+        self.editor_fields["next_list_element"] = circular_list_slice[2]
+
+    def ed_next_item(self):
+        index = self.editor_fields["index"]
+        index += 1
+        p = self.editor_fields["parameter"]
+        value_list = self.pm.parameters[p]["value_list"]
+        self.slice_list_elements(value_list, index)
+        if index > len(self.pm.parameters[p]["value_list"]) - 1:
+            self.editor_fields["index"] = 0
+        else:
+            self.editor_fields["index"] = index
+
+    def ed_prev_item(self):
+        index = self.editor_fields["index"]
+        index -= 1
+        p = self.editor_fields["parameter"]
+        value_list = self.pm.parameters[p]["value_list"]
+        self.slice_list_elements(value_list, index)
+        if index < 0:
+            self.editor_fields["index"] = len(self.pm.parameters[p]["value_list"]) - 1
+        else:
+            self.editor_fields["index"] = index
 
     def ed_change_unit(self, direction):
         # direction to be 1 (next) or 0 (previous)
