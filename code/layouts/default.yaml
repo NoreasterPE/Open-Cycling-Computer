@@ -386,7 +386,7 @@ pages:
                 - parameter: wheel_size
                   editor_title: Wheel size
                   editable: yes
-                  editor: editor_string
+                  editor: editor_list
                   x: 60
                   y: 50
                   font_size: 30
