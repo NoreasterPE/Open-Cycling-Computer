@@ -1,7 +1,8 @@
 PRIORITY
--list selector (editor) - required for ble scan and better wheel size selection
+-ble scanner/picker
 
 UI
+- overlay for showing messages to user
 - BLE device list expiry time. Currently never expires
 - There is no way to disconnect from a BLE device
 - Fix icon lines width - it's not consistent
@@ -10,10 +11,17 @@ UI
 CODING STYLE:
 - move formatting code to numbers module and use in layout and ride_log
 - make draft plugin API document
+- move all editor functions from layout.py to a separate module
+- allow for plugin.function in layout file
+- add descriptions to parameters? TBC, it's not needed for the code, so maybe doxygen strings?
+- some "available" function to check if a parameter is present and has a meaningful value (not None, not NAN). Used to safe guard math calcs
 
 REAL WORLD PROBLEMS:
+- move all wheel_size/wheel_circumference code to compute.py
+- plugin_manager.parameters should have field indicating if they need to be stored in config.file
 - session distance changes after odometer edition.
 - tidy up current/default layout loading. Dafault is a backup, current is the currently used.
+- no custom actions in cofig.py (wheel_size/wheel_circumference). Simple read/restore
 - config module should determine what to read and what to write using the content of config file. Currently it's hardcoded.
 - Unit syncronistion. I.e. Odometer and session distance
 - Max speed will be false sooner or later after a single invalid measurement. Kalman filter required.
@@ -244,3 +252,4 @@ TypeError: argument 1 must be pygame.Surface, not None
 108. [DONE] - add session_distance
 109. [DONE] - When starting from rc.local script session time will jump after time adjustments by ntp. The same will happen with GPS, RTC clock needed
 110. [DONE] - reduce debug settings to 1 screen 2x4
+111. [DONE] - list selector (editor) - required for ble scan and better wheel size selection
