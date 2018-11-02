@@ -1,96 +1,102 @@
 cadence_speed_device_address:
   force_notification: false
+  plugin_name: null
   raw_unit: null
   required_by:
   - ble_sc
   reset: false
-  plugin_name: null
   time_stamp: 0.0
   unit: null
   units_allowed: null
   value: FD:DF:0E:4E:76:CF
   value_avg: .nan
   value_default: null
+  value_list: null
   value_max: -.inf
   value_min: .inf
 cadence_speed_device_name:
   force_notification: false
+  plugin_name: null
   raw_unit: null
   required_by:
   - ble_sc
   reset: false
-  plugin_name: null
   time_stamp: 0.0
   unit: null
   units_allowed: null
   value: Lezyne S&C 249
   value_avg: .nan
   value_default: null
+  value_list: null
   value_max: -.inf
   value_min: .inf
 heart_rate_device_address:
   force_notification: false
+  plugin_name: null
   raw_unit: null
   required_by:
   - ble_hr
   reset: false
-  plugin_name: null
   time_stamp: 0.0
   unit: null
   units_allowed: null
   value: D6:90:A8:08:F0:E4
   value_avg: .nan
   value_default: null
+  value_list: null
   value_max: -.inf
   value_min: .inf
 heart_rate_device_name:
   force_notification: false
+  plugin_name: null
   raw_unit: null
   required_by: null
   reset: false
-  plugin_name: null
   time_stamp: 0.0
   unit: null
   units_allowed: null
   value: Tacx HRB 04741
   value_avg: .nan
   value_default: null
+  value_list: null
   value_max: -.inf
   value_min: .inf
 layout_file:
   force_notification: false
+  plugin_name: null
   raw_unit: null
   required_by: null
   reset: false
-  plugin_name: null
   time_stamp: 0.0
   unit: null
   units_allowed: []
   value: layouts/default.yaml
   value_avg: .nan
   value_default: null
+  value_list: null
   value_max: -.inf
   value_min: .inf
 log_level:
   force_notification: false
+  plugin_name: null
   raw_unit: null
   required_by: null
   reset: false
-  plugin_name: null
   time_stamp: 0.0
   unit: null
   units_allowed: null
   value: DEBUG
   value_avg: .nan
   value_default: null
+  value_list: null
   value_max: -.inf
   value_min: .inf
 odometer:
   force_notification: false
+  plugin_name: null
   raw_unit: m
   required_by: null
   reset: false
-  plugin_name: null
   time_stamp: 0.0
   unit: km
   units_allowed:
@@ -100,15 +106,16 @@ odometer:
   value: 1382.9850000000065
   value_avg: .nan
   value_default: null
+  value_list: null
   value_max: -.inf
   value_min: .inf
 reference_altitude:
   force_notification: false
+  plugin_name: null
   raw_unit: m
   required_by:
   - bmp280
   reset: false
-  plugin_name: null
   time_stamp: 1540155643.1353118
   unit: m
   units_allowed:
@@ -117,14 +124,15 @@ reference_altitude:
   value: 11.47
   value_avg: .nan
   value_default: null
+  value_list: null
   value_max: -.inf
   value_min: .inf
 rider_weight:
   force_notification: false
+  plugin_name: null
   raw_unit: kg
   required_by: null
   reset: false
-  plugin_name: null
   time_stamp: 0.0
   unit: kg
   units_allowed:
@@ -134,14 +142,15 @@ rider_weight:
   value: '80.0'
   value_avg: .nan
   value_default: null
+  value_list: null
   value_max: -.inf
   value_min: .inf
 speed:
   force_notification: false
+  plugin_name: null
   raw_unit: m/s
   required_by: null
   reset: true
-  plugin_name: null
   time_stamp: 1540638854.585688
   unit: km/h
   units_allowed:
@@ -151,31 +160,33 @@ speed:
   value: 0.0
   value_avg: .inf
   value_default: null
+  value_list: null
   value_max: 9.753484162895928
   value_min: .inf
 temperature:
   force_notification: false
+  plugin_name: null
   raw_unit: C
   required_by: null
   reset: false
-  plugin_name: null
   time_stamp: 0.0
   unit: C
   units_allowed:
   - C
   - F
-  value: 25.36
+  value: 24.84
   value_avg: .nan
   value_default: null
+  value_list: null
   value_max: 29.51
   value_min: 19.24
 wheel_circumference:
   force_notification: false
+  plugin_name: null
   raw_unit: m
   required_by:
   - ble_sc
   reset: false
-  plugin_name: null
   time_stamp: 1540312597.1810174
   unit: mm
   units_allowed:
@@ -184,19 +195,36 @@ wheel_circumference:
   value: 2.105
   value_avg: .nan
   value_default: null
+  value_list: null
   value_max: -.inf
   value_min: .inf
 wheel_size:
   force_notification: false
+  plugin_name: null
   raw_unit: null
   required_by: null
   reset: false
-  plugin_name: null
   time_stamp: 0.0
   unit: null
   units_allowed: null
   value: 700X25C
   value_avg: .nan
   value_default: null
+  value_list:
+  - 700X18C
+  - 700X19C
+  - 700X20C
+  - 700X23C
+  - 700X25C
+  - 700X28C
+  - 700X30C
+  - 700X32C
+  - 700X35C
+  - 700X38C
+  - 700X40C
+  - 700X42C
+  - 700X44C
+  - 700X45C
+  - 700X47C
   value_max: -.inf
   value_min: .inf
