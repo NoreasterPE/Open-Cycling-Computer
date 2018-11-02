@@ -119,7 +119,7 @@ if __name__ == "__main__":
     sys_log_handler = logging.handlers.RotatingFileHandler(sys_log_filename)
     ## @var sys_log_format
     # Log format string
-    sys_log_format = '%(asctime)-25s %(levelname)-10s %(module_name)-12s %(message)s'
+    sys_log_format = '%(asctime)-25s %(levelname)-10s %(module_name)-15s %(message)s'
     sys_log_handler.setFormatter(logging.Formatter(sys_log_format))
     logging.getLogger('system').addHandler(sys_log_handler)
     ## @var sys_logger
