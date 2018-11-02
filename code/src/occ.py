@@ -48,7 +48,7 @@ class open_cycling_computer(object, metaclass=singleton):
         #  Variable indicating is cleaning is in progress
         self.cleaning = False
         self.log.debug("Screen size is {} x {}".format(width, height), extra=self.extra)
-        self.log.debug("Calling plugin_manager", extra=self.extra)
+        self.log.debug("Getting plugin_manager", extra=self.extra)
         ## @var pm
         #  Handle to plugin_manager instance
         self.pm = plugin_manager.plugin_manager()

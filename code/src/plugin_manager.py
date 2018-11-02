@@ -216,6 +216,7 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
     #  @param value_avg Average value of the parameter, defaults to not-a-number. The type of average is decided by the module setting the value.
     #  @param value_max Maximum observed value of the parameter, defaults to -infinity
     #  @param value_default Parameter default to this value after sensor reset
+    #  @param value_list List of allowed values, None means all velues are allowed
     #  @param raw_unit Internal unit, i.e. for odometer it's meter "m"
     #  @param unit Unit used to dispaly the parameter i.e. for odometer it might be km or mi (mile)
     #  @param units_allowed List of units allowed for the parametes. The units has to be covered in unit_converter module

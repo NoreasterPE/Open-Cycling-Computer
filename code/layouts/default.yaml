@@ -766,9 +766,6 @@ pages:
                           w: 120
                           h: 80
 
-
-
-
        - name: "Unit Editor"
          id: editor_units
          number: 0

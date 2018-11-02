@@ -111,22 +111,23 @@ class layout(threading.Thread):
         self.page_index = {}
         try:
             with open(layout_file) as f:
+                self.log.debug("Loading layout {}".format(layout_file), extra=self.extra)
                 self.layout_tree = yaml.safe_load(f)
                 f.close()
             self.layout_file = layout_file
         except FileNotFoundError:
-            self.log.critical("Loading layout {} failed, falling back to default.yaml".format(__name__, layout_file), extra=self.extra)
+            self.log.critical("Loading layout {} failed, falling back to default.yaml".format(layout_file), extra=self.extra)
             sys_info = "Error details: {}".format(sys.exc_info()[0])
             self.log.error(sys_info, extra=self.extra)
             # Fallback to default layout
-            # FIXME - define const file with paths?
             layout_file = "layouts/default.yaml"
             try:
                 with open(layout_file) as f:
+                    self.log.debug("Loading layout {}".format(layout_file), extra=self.extra)
                     self.layout_tree = yaml.safe_load(f)
                     f.close()
             except FileNotFoundError:
-                self.log.critical("Loading default layout {} failed, Quitting...".format(__name__, layout_file), extra=self.extra)
+                self.log.critical("Loading default layout {} failed, Quitting...".format(layout_file), extra=self.extra)
                 raise
 
         for page in self.layout_tree['pages']:
@@ -782,12 +783,12 @@ class layout(threading.Thread):
     def reboot(self):
         self.quit()
         time.sleep(2)
-        os.system("reboot")
+        os.system("sudor reboot")
 
     def halt(self):
         self.quit()
         time.sleep(2)
-        os.system("./halt.sh")
+        os.system("sudo halt")
 
     def log_level(self):
         log_level = self.log.getEffectiveLevel()
