@@ -536,7 +536,12 @@ class layout(threading.Thread):
             elif (self.editor_fields["editor"] == 'editor_string' or
                   self.editor_fields["editor"] == 'editor_units'):
                 self.editor_fields["value"] = self.pm.parameters[p]["value"]
-                pass
+            elif self.editor_fields["editor"] == 'editor_list':
+                v = self.pm.parameters[p]["value"]
+                index = self.pm.parameters[p]["value_list"].index(v)
+                self.editor_fields['index'] = index
+                value_list = self.pm.parameters[p]["value_list"]
+                self.slice_list_elements(value_list, index)
             else:
                 self.log.critical("Unknown editor {} called for parameter {}, ignoring".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
                 return
@@ -742,7 +747,8 @@ class layout(threading.Thread):
             unit_raw = self.pm.parameters[parameter]["raw_unit"]
             value = self.uc.convert(float(parameter_value), parameter_unit, unit_raw)
             self.pm.parameters[parameter]["value"] = float(value)
-        if self.editor_fields["editor"] == "editor_string":
+        if (self.editor_fields["editor"] == "editor_string" or
+            self.editor_fields["editor"] == "editor_list"):
             self.pm.parameters[parameter]["value"] = parameter_value
 #        if self.self.editor_fields["ediotr"] == "ble_selector":
 #            (name, addr, dev_type) = parameter_value
