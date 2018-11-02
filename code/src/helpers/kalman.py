@@ -12,7 +12,7 @@ class kalman():
 
     def __init__(self, Q=None, R=None, P=None, P_previous=None, K=None):
         # FIXME Add detailed comments
-        # R makes no difference, R/Q is what matters
+        # R is the measurement noise covariance (sensor noise), Q is the process noise covariance
         # P, P_previous and K are self tuning
         if Q is not None:
             #self.Q = 0.02
