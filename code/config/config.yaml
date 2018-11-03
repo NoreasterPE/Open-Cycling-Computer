@@ -5,6 +5,7 @@ cadence_speed_device_address:
   required_by:
   - ble_sc
   reset: false
+  store: true
   time_stamp: 0.0
   unit: null
   units_allowed: null
@@ -21,6 +22,7 @@ cadence_speed_device_name:
   required_by:
   - ble_sc
   reset: false
+  store: true
   time_stamp: 0.0
   unit: null
   units_allowed: null
@@ -37,6 +39,7 @@ heart_rate_device_address:
   required_by:
   - ble_hr
   reset: false
+  store: true
   time_stamp: 0.0
   unit: null
   units_allowed: null
@@ -52,6 +55,7 @@ heart_rate_device_name:
   raw_unit: null
   required_by: null
   reset: false
+  store: true
   time_stamp: 0.0
   unit: null
   units_allowed: null
@@ -67,6 +71,7 @@ layout_file:
   raw_unit: null
   required_by: null
   reset: false
+  store: true
   time_stamp: 0.0
   unit: null
   units_allowed: []
@@ -82,6 +87,7 @@ log_level:
   raw_unit: null
   required_by: null
   reset: false
+  store: true
   time_stamp: 0.0
   unit: null
   units_allowed: null
@@ -97,6 +103,7 @@ odometer:
   raw_unit: m
   required_by: null
   reset: false
+  store: true
   time_stamp: 0.0
   unit: km
   units_allowed:
@@ -116,6 +123,7 @@ reference_altitude:
   required_by:
   - bmp280
   reset: false
+  store: true
   time_stamp: 1540155643.1353118
   unit: m
   units_allowed:
@@ -133,6 +141,7 @@ rider_weight:
   raw_unit: kg
   required_by: null
   reset: false
+  store: true
   time_stamp: 0.0
   unit: kg
   units_allowed:
@@ -151,6 +160,7 @@ speed:
   raw_unit: m/s
   required_by: null
   reset: true
+  store: true
   time_stamp: 1540638854.585688
   unit: km/h
   units_allowed:
@@ -169,6 +179,7 @@ temperature:
   raw_unit: C
   required_by: null
   reset: false
+  store: true
   time_stamp: 0.0
   unit: C
   units_allowed:
@@ -187,6 +198,7 @@ wheel_circumference:
   required_by:
   - ble_sc
   reset: false
+  store: true
   time_stamp: 1540312597.1810174
   unit: mm
   units_allowed:
@@ -204,6 +216,7 @@ wheel_size:
   raw_unit: null
   required_by: null
   reset: false
+  store: true
   time_stamp: 0.0
   unit: null
   units_allowed: null
