@@ -220,6 +220,10 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
     #  @param raw_unit Internal unit, i.e. for odometer it's meter "m"
     #  @param unit Unit used to dispaly the parameter i.e. for odometer it might be km or mi (mile)
     #  @param units_allowed List of units allowed for the parametes. The units has to be covered in unit_converter module
+    #  @param required_by List of plugins that need to be notified about parameter change
+    #  @param force_notification Force notification, even if the parameter value didn't change
+    #  @param store If True triggers writing to config file
+    #  @param reset Used to notify plugins that the parameter has been reset
     def register_parameter(self,
                            parameter_name,
                            plugin_name=None,
