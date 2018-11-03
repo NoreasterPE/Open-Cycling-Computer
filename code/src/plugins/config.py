@@ -68,113 +68,23 @@ class config(plugin.plugin):
                 self.log.exception("I/O Error when trying to parse overwritten config. Quitting!!", extra=self.extra)
                 #FIXME no cleanup function
                 self.cleanup()
-        error_list = []
-        try:
-            self.pm.update_parameter("log_level", self.config_params["log_level"])
-        except KeyError:
-            error_list.append("log_level")
+        for p in self.config_params:
+            self.log.debug("Updating {} with values from {}".format(p, self.config_file), extra=self.extra)
+            try:
+                self.pm.update_parameter(p, self.config_params[p])
+            except AttributeError as e:
+                self.log.critical("Updating {} failed with: {}".format(p, e), extra=self.extra)
 
-        try:
-            self.pm.update_parameter("layout_file", self.config_params["layout_file"])
-        except KeyError:
-            error_list.append("layout_file")
-
-        try:
-            self.pm.register_parameter("rider_weight", self.extra["module_name"])
-            self.pm.update_parameter("rider_weight", self.config_params["rider_weight"])
-
-        except AttributeError:
-            error_list.append("rider_weight")
-
-        try:
-            self.pm.update_parameter("wheel_size", self.config_params["wheel_size"])
-        except AttributeError:
-            error_list.append("wheel_size")
-        try:
-            self.pm.update_parameter("wheel_circumference", self.config_params["wheel_circumference"])
-        except AttributeError:
-            # Optional in config
-            pass
-
-        ## @var reference_altitude
-        #  Home altitude. Used as reference altitude for calculation of pressure at sea level and subsequent altitude calculations.
-        #  It is being set through the notification system - see \link notification \endlink function
-        try:
-            self.pm.register_parameter("reference_altitude", self.extra["module_name"], raw_unit="m")
-            self.pm.update_parameter("reference_altitude", self.config_params["reference_altitude"])
-        except AttributeError:
-            error_list.append("reference_altitude")
-
-        try:
-            self.pm.update_parameter("odometer", self.config_params["odometer"])
-        except AttributeError:
-            error_list.append("odometer")
-
-#        try:
-#            self.pm.update_parameter("total_ride_time", self.config_params["total_ride_time"])
-#            self.pm.update_parameter("total_ride_time",
-#                                    dict(value=float(self.config_params["total_ride_time"]),
-#                                         raw_unit="s"))
-#        except AttributeError:
-#            error_list.append("total_ride_time")
-
-        try:
-            self.pm.update_parameter("speed", self.config_params["speed"])
-        except AttributeError:
-            error_list.append("speed")
-
-        try:
-            self.pm.update_parameter("temperature", self.config_params["temperature"])
-        except AttributeError:
-            error_list.append("temperature")
-
-        try:
-            self.pm.update_parameter("heart_rate_device_name", self.config_params["heart_rate_device_name"])
-        except AttributeError:
-            error_list.append("heart_rate_device_name")
-
-        try:
-            self.pm.register_parameter("heart_rate_device_address", self.extra["module_name"])
-            self.pm.update_parameter("heart_rate_device_address", self.config_params["heart_rate_device_address"])
-        except AttributeError:
-            error_list.append("heart_rate_device_address")
-
-        try:
-            self.pm.update_parameter("cadence_speed_device_name", self.config_params["cadence_speed_device_name"])
-        except AttributeError:
-            error_list.append("cadence_speed_device_name")
-
-        try:
-            self.pm.register_parameter("cadence_speed_device_address", self.extra["module_name"])
-            self.pm.update_parameter("cadence_speed_device_address", self.config_params["cadence_speed_device_address"])
-        except AttributeError:
-            error_list.append("cadence_speed_device_address")
-
-        if len(error_list) > 0:
-            for item in error_list:
-                self.log.error("Missing or invalid: {} in config file".format(item), extra=self.extra)
-            error_list = []
         self.log.debug("read_config finished", extra=self.extra)
 
     ## Function that writes config file.
     #  @param self The python object self
     def write_config(self):
         self.log.debug("Writing config file started", extra=self.extra)
-        c = {}
-        c["log_level"] = self.pm.parameters["log_level"]
-        c["layout_file"] = self.pm.parameters["layout_file"]
-        c["rider_weight"] = self.pm.parameters["rider_weight"]
-        c["wheel_size"] = self.pm.parameters["wheel_size"]
-        c["wheel_circumference"] = self.pm.parameters["wheel_circumference"]
-        c["reference_altitude"] = self.pm.parameters["reference_altitude"]
-        c["odometer"] = self.pm.parameters["odometer"]
-        #c["total_ride_time"] = self.pm.parameters["total_ride_time"]
-        c["speed"] = self.pm.parameters["speed"]
-        c["temperature"] = self.pm.parameters["temperature"]
-        c["heart_rate_device_name"] = self.pm.parameters["heart_rate_device_name"]
-        c["heart_rate_device_address"] = self.pm.parameters["heart_rate_device_address"]
-        c["cadence_speed_device_name"] = self.pm.parameters["cadence_speed_device_name"]
-        c["cadence_speed_device_address"] = self.pm.parameters["cadence_speed_device_address"]
+        storage = {}
+        for p in self.pm.parameters:
+            if self.pm.parameters[p]['store']:
+                storage[p] = self.pm.parameters[p]
         self.log.debug("Data ready for config file", extra=self.extra)
         # FIXME error handling for file operation
         f = open(self.config_file, "w")

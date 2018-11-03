@@ -18,11 +18,8 @@ CODING STYLE:
 
 REAL WORLD PROBLEMS:
 - move all wheel_size/wheel_circumference code to compute.py
-- plugin_manager.parameters should have field indicating if they need to be stored in config.file
 - session distance changes after odometer edition.
 - tidy up current/default layout loading. Dafault is a backup, current is the currently used.
-- no custom actions in cofig.py (wheel_size/wheel_circumference). Simple read/restore
-- config module should determine what to read and what to write using the content of config file. Currently it's hardcoded.
 - Unit syncronistion. I.e. Odometer and session distance
 - Max speed will be false sooner or later after a single invalid measurement. Kalman filter required.
 - Average cadence to be calculated for ride time (reset with ride time?)
@@ -253,3 +250,6 @@ TypeError: argument 1 must be pygame.Surface, not None
 109. [DONE] - When starting from rc.local script session time will jump after time adjustments by ntp. The same will happen with GPS, RTC clock needed
 110. [DONE] - reduce debug settings to 1 screen 2x4
 111. [DONE] - list selector (editor) - required for ble scan and better wheel size selection
+112. [DONE] - plugin_manager.parameters should have field indicating if they need to be stored in config.file
+113. [DONE] - no custom actions in cofig.py (wheel_size/wheel_circumference). Simple read/restore
+114. [DONE] - config module should determine what to read and what to write using the content of config file. Currently it's hardcoded.

@@ -31,6 +31,7 @@ class ble_sc(ble_sensor.ble_sensor):
         self.pm.register_parameter("odometer", self.extra["module_name"], raw_unit="m", unit="km")
         self.pm.register_parameter("cadence", self.extra["module_name"], value=numbers.NAN, raw_unit="RPM")
         self.pm.register_parameter("cadence_notification_beat", self.extra["module_name"])
+        self.pm.register_parameter("cadence_speed_device_address", self.extra["module_name"])
         self.pm.request_parameter("cadence_speed_device_address", self.extra["module_name"])
         self.pm.request_parameter("wheel_circumference", self.extra["module_name"])
         self.delegate_class = sc_delegate

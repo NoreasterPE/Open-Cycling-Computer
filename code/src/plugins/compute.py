@@ -38,6 +38,7 @@ class compute(plugin.plugin):
         self.pm.request_parameter("wheel_circumference", self.extra["module_name"])
         self.wheel_circumference = numbers.NAN
         self.pm.register_parameter("session_time", self.extra["module_name"], value=0.0, value_default=numbers.NAN, raw_unit="s")
+        self.pm.register_parameter("rider_weight", self.extra["module_name"])
         self.pm.request_parameter("odometer", self.extra["module_name"])
         self.odometer = None
         self.odometer_delta_cumulative = 0.0
