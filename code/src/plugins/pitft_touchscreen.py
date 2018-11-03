@@ -18,8 +18,7 @@ class pitft_touchscreen(plugin.plugin):
         super().__init__()
         self.device = evdev.InputDevice(device_path)
         if self.device is None:
-            #FIXME replace with log
-            print("Input device {} not found".format(device_path))
+            self.log.critical("Input device {} not found".format(device_path), extra=self.extra)
             exit()
         #FIXME Add event structure documentation
         self.event = {}
