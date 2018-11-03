@@ -25,7 +25,7 @@ fix_mode = {0: "No data",
 class gps_mtk3339(threading.Thread):
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'gps'}
+    extra = {'module_name': __qualname__}
 
     def __init__(self, simulate=False):
         threading.Thread.__init__(self)

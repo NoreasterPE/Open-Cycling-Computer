@@ -14,7 +14,7 @@ import time
 class ble_sc(ble_sensor.ble_sensor):
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'ble_sc'}
+    extra = {'module_name': __qualname__}
     # FIXME - replace with proper service & characteristic scan
     HANDLE = 0x000f  # FIXME - explain
     ENABLE_NOTIFICATIONS = bytes("10", 'UTF-8')    # FIXME - explain, try "01" is fails
@@ -100,7 +100,7 @@ class ble_sc(ble_sensor.ble_sensor):
 class sc_delegate(bluepy.btle.DefaultDelegate):
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'ble_sc_dgte'}
+    extra = {'module_name': __qualname__}
     WHEEL_REV_DATA_PRESENT = 0x01
     CRANK_REV_DATA_PRESENT = 0x02
     ## @var WAIT_TIME

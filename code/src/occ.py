@@ -30,7 +30,7 @@ class singleton(type):
 class open_cycling_computer(object, metaclass=singleton):
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'OCC'}
+    extra = {'module_name': __qualname__}
 
     ## The constructor
     #  @param self The python object self

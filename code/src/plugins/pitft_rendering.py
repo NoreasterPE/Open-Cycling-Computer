@@ -13,7 +13,7 @@ import time
 class pitft_rendering(plugin.plugin):
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'pitft_rendering'}
+    extra = {'module_name': __qualname__}
 
     ## The constructor
     #  @param self The python object self

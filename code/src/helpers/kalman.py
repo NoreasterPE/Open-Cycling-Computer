@@ -8,7 +8,7 @@ class kalman():
     'Class for Kalman filter helper'
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'kalman'}
+    extra = {'module_name': __qualname__}
 
     def __init__(self, Q=None, R=None, P=None, P_previous=None, K=None):
         # FIXME Add detailed comments

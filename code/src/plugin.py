@@ -12,7 +12,7 @@ import time
 class plugin(threading.Thread):
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'a_plugin'}
+    extra = {'module_name': __qualname__}
 
     def __init__(self):
         super().__init__()

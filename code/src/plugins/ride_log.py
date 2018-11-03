@@ -16,7 +16,7 @@ import yaml
 class ride_log(plugin.plugin):
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'ride_log'}
+    extra = {'module_name': __qualname__}
 
     ## @var RIDE_LOG_UPDATE
     # Period of time in s between ride log update events.

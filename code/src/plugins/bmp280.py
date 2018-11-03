@@ -15,7 +15,7 @@ class bmp280(plugin.plugin):
     'Class for Bosch BMP280 pressure and temperature sensor with SPI/I2C interfaces as sold by Adafruit. Currently only SPI is supported'
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'bmp280'}
+    extra = {'module_name': __qualname__}
 
     def __init__(self):
         # Run init for super class

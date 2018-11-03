@@ -11,7 +11,7 @@ import time
 class mma8451(threading.Thread):
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'mma8451'}
+    extra = {'module_name': __qualname__}
 
     DEVICE_ADDR = 29
     DEVICE_ID = 26

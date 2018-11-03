@@ -11,9 +11,8 @@ import plugin_manager
 # Class for handling events from piTFT
 class pitft_touchscreen(plugin.plugin):
     ## @var extra
-    # FIXME - use class name instead hard coded string
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'pitft_touchscreen'}
+    extra = {'module_name': __qualname__}
 
     def __init__(self, device_path="/dev/input/touchscreen"):
         super().__init__()

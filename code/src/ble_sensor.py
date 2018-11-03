@@ -12,7 +12,7 @@ import time
 class ble_sensor(plugin.plugin):
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'ble_sensor'}
+    extra = {'module_name': __qualname__}
     #Overwrite in real device class
     HANDLE = 0x000f
     #Overwrite in real device class

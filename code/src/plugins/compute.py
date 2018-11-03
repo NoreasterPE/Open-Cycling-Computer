@@ -15,7 +15,7 @@ import wheel
 class compute(plugin.plugin):
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'compute'}
+    extra = {'module_name': __qualname__}
 
     ## The constructor
     #  @param self The python object self

@@ -11,7 +11,7 @@ import functools.reduce as reduce
 class mtk3339():
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'mtk3339'}
+    extra = {'module_name': __qualname__}
 
     def __init__(self, device):
         # NMEA sentences handled by this class

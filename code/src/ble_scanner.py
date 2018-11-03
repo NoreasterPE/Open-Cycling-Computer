@@ -24,7 +24,7 @@ class ScanDelegate(bluepy.btle.DefaultDelegate):
 class ble_scanner(object):
     ## @var extra
     # Module name used for logging and prefixing data
-    extra = {'module_name': 'ble_scanner'}
+    extra = {'module_name': __qualname__}
 
     ## The constructor
     #  @param self The python object self
