@@ -59,7 +59,7 @@ class ride_log(plugin.plugin):
         self.pm.request_parameter("real_time", self.extra["module_name"])
         self.last_log_entry = 0.0
 
-    ## Function that reads config file with ride_log format
+    ## Notification handler, reacts to real_time and ride_log_config changes
     #  @param self The python object self
     def read_config(self):
         self.log.debug("read_config started", extra=self.extra)
@@ -85,6 +85,8 @@ class ride_log(plugin.plugin):
                 self.last_log_entry = self.pm.parameters['real_time']['value']
                 self.add_entry()
 
+    ## Function responsible for formatting and adding entries to ride log
+    #  @param self The python object self
     def add_entry(self):
         self.log.debug("Adding ride log entry", extra=self.extra)
         for p in self.ex:
@@ -109,7 +111,7 @@ class ride_log(plugin.plugin):
                     pass
             else:
                 try:
-                    value  = string_format % value
+                    value = string_format % value
                 except (ValueError, TypeError):
                     pass
             self.ex[p] = value
