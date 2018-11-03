@@ -30,12 +30,7 @@ class pitft_touchscreen(plugin.plugin):
         if self.device is None:
             self.log.critical("Input device {} not found".format(device_path), extra=self.extra)
             exit()
-        self.event = {}
-        self.event['time'] = None
-        self.event['id'] = None
-        self.event['x'] = None
-        self.event['y'] = None
-        self.event['touch'] = None
+        self.event = dict(time=None, id=None, x=None, y=None, touch=None)
         self.events = queue.Queue()
         self.pm = plugin_manager.plugin_manager()
         self.pm.register_input_queue(self.extra['module_name'], self.events)
