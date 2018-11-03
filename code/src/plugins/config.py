@@ -88,17 +88,13 @@ class config(plugin.plugin):
 
         try:
             self.pm.update_parameter("wheel_size", self.config_params["wheel_size"])
-            import wheel
-            w = wheel.wheel()
-            wc = w.get_circumference(self.pm.parameters["wheel_size"]["value"])
         except AttributeError:
-            wc = 0.0
             error_list.append("wheel_size")
         try:
             self.pm.update_parameter("wheel_circumference", self.config_params["wheel_circumference"])
         except AttributeError:
-            self.pm.update_parameter("wheel_circumference", dict(value=wc))
-            error_list.append("wheel_circumference")
+            # Optional in config
+            pass
 
         ## @var reference_altitude
         #  Home altitude. Used as reference altitude for calculation of pressure at sea level and subsequent altitude calculations.

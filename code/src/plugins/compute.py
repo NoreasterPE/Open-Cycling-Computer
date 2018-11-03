@@ -34,6 +34,9 @@ class compute(plugin.plugin):
         self.pm.register_parameter("wheel_size", self.extra["module_name"], value=numbers.NAN, raw_unit="m")
         self.pm.request_parameter("wheel_size", self.extra["module_name"])
         self.wheel_size = numbers.NAN
+        self.pm.register_parameter("wheel_circumference", self.extra["module_name"], value=numbers.NAN, raw_unit="m")
+        self.pm.request_parameter("wheel_circumference", self.extra["module_name"])
+        self.wheel_circumference = numbers.NAN
         self.pm.register_parameter("session_time", self.extra["module_name"], value=0.0, value_default=numbers.NAN, raw_unit="s")
         self.pm.request_parameter("odometer", self.extra["module_name"])
         self.odometer = None
@@ -61,6 +64,11 @@ class compute(plugin.plugin):
             except KeyError:
                 #FIXME That should give user feedback that something went wrong
                 self.log.critical("Unknown wheel_circumference for wheel_size {}.".format(self.wheel_size), extra=self.extra)
+        if self.wheel_circumference != self.pm.parameters['wheel_circumference']['value']:
+            self.log.debug("wheel_circumference changed from {} to {}.".format(self.wheel_circumference, self.pm.parameters['wheel_circumference']['value']), extra=self.extra)
+            self.wheel_circumference = self.pm.parameters['wheel_circumference']['value']
+            #FIXME Reverse check wheel helper for wheel_size or just set it to 'User'?
+            #FIXME Make wheel module a plugin?
         previous_altitude = self.altitude
         self.altitude = self.pm.parameters["altitude"]["value"]
         try:
