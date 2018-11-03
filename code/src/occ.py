@@ -37,7 +37,7 @@ class open_cycling_computer(object, metaclass=singleton):
     #  @param config_file Location of config file
     #  @param width Width of screen or window. Default value is 240 pixels
     #  @param height Height of screen or window.  Default value is 320 pixels
-    def __init__(self, config_file=None, layout_file=None, fonts_dir=None, width=240, height=320):
+    def __init__(self, config_file=None, ride_log_config=None, layout_file=None, fonts_dir=None, width=240, height=320):
         ## @var log
         #  Handle to system logger
         self.log = logging.getLogger('system')
@@ -57,6 +57,7 @@ class open_cycling_computer(object, metaclass=singleton):
         self.pm.register_parameter("layout_file", self.extra["module_name"], value=layout_file)
         self.pm.register_parameter("fonts_dir", self.extra["module_name"], value=fonts_dir)
         self.pm.register_parameter("display_size", self.extra["module_name"], value=(width, height))
+        self.pm.register_parameter("ride_log_config", self.extra["module_name"], value=ride_log_config)
         ## @var ble_scanner
         #  Handle to ble_scanner instance
         ##self.log.debug("Initialising ble_scanner", extra=self.extra)
@@ -104,12 +105,15 @@ def quit_handler(signal, frame):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print('Argument 1: config file, argument 2: layout file, argument 3: fonts directory')
+    if len(sys.argv) != 5:
+        print('Need 4 args')
+        print('Argument 1: config file, argument 2: ride log config, argument 3: layout file, argument 4: fonts directory')
         quit()
+    #FIXME Make proper option parsing
     config_file = sys.argv[1]
-    layout_file = sys.argv[2]
-    fonts_dir = sys.argv[3]
+    ride_log_config = sys.argv[2]
+    layout_file = sys.argv[3]
+    fonts_dir = sys.argv[4]
     ## @var sys_log_filename
     # Log filename, helper variable
     sys_log_filename = "log/debug." + time.strftime("%Y-%m-%d-%H:%M:%S") + ".log"
@@ -136,7 +140,7 @@ if __name__ == "__main__":
     p_manager.start()
     ## @var main_window
     # OCC main window. It's instance of open_cycling_computer class
-    main_window = open_cycling_computer(config_file, layout_file, fonts_dir)
+    main_window = open_cycling_computer(config_file, ride_log_config, layout_file, fonts_dir)
     sys_logger.debug("Starting events loop", extra=ex)
     main_window.events.run()
     main_window.stop()

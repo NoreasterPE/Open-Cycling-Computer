@@ -2,10 +2,8 @@
 # -*- coding: utf-8 -*-
 ## @package ride_log
 #  Module for handling ride parameters logging to file
-from shutil import copyfile
 import datetime
 import logging
-import numbers
 import plugin
 import plugin_manager
 import time
@@ -27,13 +25,43 @@ class ride_log(plugin.plugin):
     def __init__(self):
         # Run init for super class
         super().__init__()
-        ## @var log
-        # System logger handle
-        self.log = logging.getLogger('system')
-        self.read_config()
-        self.init_log()
+        self.pm = plugin_manager.plugin_manager()
+        self.pm.request_parameter("real_time", self.extra["module_name"])
+        self.last_log_entry = 0.0
+        self.pm.request_parameter("ride_log_config", self.extra["module_name"])
+        try:
+            self.ride_log_config = self.pm.parameters['ride_log_config']['value']
+        except KeyError:
+            pass
+        self.log_initialised = False
+        if self.ride_log_config is not None:
+            self.read_config()
+            self.init_log()
 
+    ## Function that reads config file with ride_log format
+    #  @param self The python object self
+    def read_config(self):
+        self.log.debug("read_config started", extra=self.extra)
+        try:
+            with open(self.ride_log_config) as f:
+                self.config_params = yaml.safe_load(f)
+        except IOError:
+            self.log.error("I/O Error when trying to parse rede log config file. Overwriting with copy of ride log base_config", extra=self.extra)
+            from shutil import copyfile
+            self.base_ride_log_config = 'config/ride_log_base_config.yaml'
+            copyfile(self.base_ride_log_config, self.ride_log_config)
+            self.ride_log_config = self.base_ride_log_config
+            try:
+                with open(self.ride_log_config) as f:
+                    self.config_params = yaml.safe_load(f)
+            except IOError:
+                #FIXME no hardcoded ride log yet
+                self.log.critical("I/O Error when trying to parse overwritten config. Hardcoded format will be used!", extra=self.extra)
+
+    ## Set up logging file and logging format.
+    #  @param self The python object self
     def init_log(self):
+        self.log.debug("init_log started", extra=self.extra)
         ride_log_filename = "log/ride." + time.strftime("%Y-%m-%d-%H:%M:%S") + ".log"
         logging.getLogger('ride').setLevel(logging.INFO)
 
@@ -55,31 +83,23 @@ class ride_log(plugin.plugin):
         logging.getLogger('ride').addHandler(ride_log_handler)
         self.ride_logger = logging.getLogger('ride')
         self.ride_logger.info('', extra=self.ex)
-        self.pm = plugin_manager.plugin_manager()
-        self.pm.request_parameter("real_time", self.extra["module_name"])
-        self.last_log_entry = 0.0
+        self.log_initialised = True
+        self.log.debug("init_log finished", extra=self.extra)
 
     ## Notification handler, reacts to real_time and ride_log_config changes
     #  @param self The python object self
-    def read_config(self):
-        self.log.debug("read_config started", extra=self.extra)
-        #FIXME Replace with request parameter and an entry in the main config file
-        self.config_file_path = 'config/ride_log_config.yaml'
-        self.base_config_file_path = 'config/ride_log_base_config.yaml'
-        try:
-            with open(self.config_file_path) as f:
-                self.config_params = yaml.safe_load(f)
-        except IOError:
-            self.log.error("I/O Error when trying to parse rede log config file. Overwriting with copy of ride log base_config", extra=self.extra)
-            copyfile(self.base_config_file_path, self.config_file_path)
-            self.config_file_path = self.config_file_path
-            try:
-                with open(self.config_file_path) as f:
-                    self.config_params = yaml.safe_load(f)
-            except IOError:
-                self.log.critical("I/O Error when trying to parse overwritten config. Hardcoded format will be used!", extra=self.extra)
-
     def notification(self):
+        if self.pm.parameters['ride_log_config']['value'] is not None:
+            if self.pm.parameters['ride_log_config']['value'] != self.ride_log_config:
+                self.log.info("ride log config changed from {} to {}".format(self.ride_log_config, self.pm.parameters['ride_log_config']['value']), extra=self.extra)
+                try:
+                    self.ride_log_config = self.pm.parameters['ride_log_config']['value']
+                except KeyError:
+                    pass
+                if self.ride_log_config is not None:
+                    self.read_config()
+                if not self.log_initialised:
+                    self.init_log()
         if self.pm.parameters['real_time']['value'] is not None:
             if self.pm.parameters['real_time']['value'] - self.last_log_entry > self.RIDE_LOG_UPDATE:
                 self.last_log_entry = self.pm.parameters['real_time']['value']
