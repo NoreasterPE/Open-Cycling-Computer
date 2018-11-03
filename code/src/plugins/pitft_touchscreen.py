@@ -8,7 +8,12 @@ import plugin
 import plugin_manager
 
 
-# Class for handling events from piTFT
+## Class for handling events from piTFT
+# Input event structure:
+# On touch
+#{'time': 1541236849.210577, 'y': 148, 'x': 54, 'id': 20, 'touch': 1}
+# On touch end
+#{'time': 1541236849.222711, 'y': None, 'x': None, 'id': -1, 'touch': 0}
 class pitft_touchscreen(plugin.plugin):
     ## @var extra
     # Module name used for logging and prefixing data
@@ -20,7 +25,6 @@ class pitft_touchscreen(plugin.plugin):
         if self.device is None:
             self.log.critical("Input device {} not found".format(device_path), extra=self.extra)
             exit()
-        #FIXME Add event structure documentation
         self.event = {}
         self.event['time'] = None
         self.event['id'] = None
