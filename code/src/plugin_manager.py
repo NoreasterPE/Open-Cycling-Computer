@@ -238,6 +238,7 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
                            units_allowed=list(),
                            required_by=list(),
                            force_notification=False,
+                           store=False,
                            reset=False):
 
         self.log.debug("Trying to register {} by {}".format(parameter_name, plugin_name), extra=self.extra)
@@ -268,6 +269,7 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
                                                    units_allowed=units_allowed,
                                                    required_by=required_by,
                                                    force_notification=force_notification,
+                                                   store=store,
                                                    reset=False)
         #self.log.debug("after register_parameter {} is {}".format(parameter_name, self.parameters[parameter_name]), extra=self.extra)
 
