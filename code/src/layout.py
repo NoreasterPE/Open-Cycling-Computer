@@ -820,7 +820,7 @@ class layout(threading.Thread):
     def reboot(self):
         self.quit()
         time.sleep(2)
-        os.system("sudor reboot")
+        os.system("sudo reboot")
 
     def halt(self):
         self.quit()
