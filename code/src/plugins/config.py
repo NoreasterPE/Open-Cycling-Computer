@@ -89,7 +89,7 @@ class config(plugin.plugin):
         # FIXME error handling for file operation
         f = open(self.config_file, "w")
         self.log.debug("Writing config file", extra=self.extra)
-        yaml.dump(c, f, default_flow_style=False, allow_unicode=True)
+        yaml.dump(storage, f, default_flow_style=False, allow_unicode=True)
         self.log.debug("Closing config file", extra=self.extra)
         f.close()
         self.log.debug("Writing config file finished", extra=self.extra)
