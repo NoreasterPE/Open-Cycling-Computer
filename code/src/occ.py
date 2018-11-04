@@ -41,9 +41,6 @@ class open_cycling_computer(object, metaclass=singleton):
         ## @var log
         #  Handle to system logger
         self.log = logging.getLogger('system')
-        ## @var running
-        #  Variable controlling if OCC should keep running
-        self.running = True
         ## @var cleaning
         #  Variable indicating is cleaning is in progress
         self.cleaning = False
@@ -75,7 +72,6 @@ class open_cycling_computer(object, metaclass=singleton):
     def stop(self):
         self.log.debug("occ stop called", extra=self.extra)
         self.cleanup()
-        self.running = False
 
     ## Clean up function. Writes config and layout and ends OCC. Should never be user it the real device once the code is ready. Used on development version.
     #  @param self The python object self

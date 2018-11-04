@@ -151,7 +151,6 @@ class events():
             except AttributeError:
                 pass
         self.log.debug("event loop finsished", extra=self.extra)
-        self.touchscreen.stop()
 
     ## Stops main event loop
     #  @param self The python object self
