@@ -576,7 +576,6 @@ class layout(threading.Thread):
                      "load_current_layout": self.load_current_layout,
                      "next_page": self.next_page,
                      "prev_page": self.prev_page,
-                     "reboot": self.reboot,
                      "quit": self.quit}
         try:
             if functions[parameter] is not None:
@@ -817,11 +816,6 @@ class layout(threading.Thread):
 
     def quit(self):
         quit()
-
-    def reboot(self):
-        self.quit()
-        time.sleep(2)
-        os.system("sudo reboot")
 
     def log_level(self):
         log_level = self.log.getEffectiveLevel()

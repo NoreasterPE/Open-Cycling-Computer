@@ -20,3 +20,8 @@ class syscalls(plugin.plugin):
         print('halt')
         import os
         os.system("sudo halt")
+
+    def reboot(self):
+        print('reboot')
+        import os
+        os.system("sudo reboot")
