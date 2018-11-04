@@ -531,6 +531,7 @@ pages:
          fg_colour: FFFFFF
          fields:
                 - parameter: halt
+                  run: syscalls, halt
                   x: 60
                   y: 40
                   text: Halt

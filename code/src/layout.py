@@ -572,7 +572,6 @@ class layout(threading.Thread):
                      "ed_prev": self.ed_prev,
                      "ed_prev_item": self.ed_prev_item,
                      "ed_prev_unit": self.ed_prev_unit,
-                     "halt": self.halt,
                      "load_default_layout": self.load_default_layout,
                      "load_current_layout": self.load_current_layout,
                      "next_page": self.next_page,
@@ -823,11 +822,6 @@ class layout(threading.Thread):
         self.quit()
         time.sleep(2)
         os.system("sudo reboot")
-
-    def halt(self):
-        self.quit()
-        time.sleep(2)
-        os.system("sudo halt")
 
     def log_level(self):
         log_level = self.log.getEffectiveLevel()
