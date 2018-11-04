@@ -7,7 +7,6 @@ import cairo_helper
 import datetime
 import logging
 import num
-import os
 import pyplum
 import queue
 import sys
@@ -72,6 +71,8 @@ class layout(threading.Thread):
                 ev_type, position, click = self.pm.event_queue.get(block=True, timeout=1)
                 if ev_type == 'touch':
                     self.check_click(position, click)
+                if ev_type == 'show_main_page':
+                    self.use_main_page()
                 if ev_type == 'refresh':
                     self.refresh_display()
                     if not self.stop_timer:
@@ -457,15 +458,17 @@ class layout(threading.Thread):
                 if self.point_in_rect(position, r[1]):
                     self.log.debug("CLICK on {} {}".format(parameter, r), extra=self.extra)
                     for f in self.current_page['fields']:
-                        try:
-                            if f['run']:
-                                plugin, method = f['run'].split(',')
-                                plugin = plugin.strip()
-                                method = method.strip()
-                                method_to_call = getattr(self.pm.plugins[plugin], method)
-                                method_to_call()
-                        except KeyError:
-                            pass
+                        if f['parameter'] == parameter:
+                            try:
+                                if f['run']:
+                                    plugin, method = f['run'].split(',')
+                                    plugin = plugin.strip()
+                                    method = method.strip()
+                                    method_to_call = getattr(self.pm.plugins[plugin], method)
+                                    method_to_call()
+                            except KeyError as e:
+                                pass
+            self.pm.render['refresh'] = True
         elif click == 'LONG':
             self.render_pressed_button(position)
             for parameter, r in self.parameter_rect_list.items():
@@ -552,6 +555,9 @@ class layout(threading.Thread):
             else:
                 self.log.critical("Unknown editor {} called for parameter {}, ignoring".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
                 return
+            #editor call
+            #FIXME not nice, a check if editor plugin is loaded?
+            self.pm.plugins['editor'].set_up(self.editor_fields)
             self.use_page(self.editor_fields["editor"])
         elif resettable:
             self.log.debug("Resetting {} with list: {}".format(parameter_for_reset, reset_list), extra=self.extra)
@@ -562,16 +568,6 @@ class layout(threading.Thread):
         functions = {"page_0": self.load_page_0,
                      "settings": self.load_settings_page,
                      "log_level": self.log_level,
-                     "ed_accept": self.ed_accept,
-                     "ed_cancel": self.ed_cancel,
-                     "ed_decrease": self.ed_decrease,
-                     "ed_increase": self.ed_increase,
-                     "ed_next": self.ed_next,
-                     "ed_next_item": self.ed_next_item,
-                     "ed_next_unit": self.ed_next_unit,
-                     "ed_prev": self.ed_prev,
-                     "ed_prev_item": self.ed_prev_item,
-                     "ed_prev_unit": self.ed_prev_unit,
                      "load_default_layout": self.load_default_layout,
                      "load_current_layout": self.load_current_layout,
                      "next_page": self.next_page,
@@ -589,176 +585,6 @@ class layout(threading.Thread):
 
     def load_settings_page(self):
         self.use_page("settings_0")
-
-    def ed_accept(self):
-        self.accept_edit()
-        self.editor_fields = None
-        self.use_main_page()
-
-    def ed_cancel(self):
-        self.editor_fields = None
-        self.use_main_page()
-
-    def ed_decrease(self):
-        u = self.editor_fields["value"]
-        i = self.editor_fields["index"]
-        ui = u[i]
-        if str.isdigit(ui):
-            if ui == "0":
-                ui = "9"
-            else:
-                ui = format(int(ui) - 1)
-        elif str.isupper(ui):
-            ui = format(chr(ord(ui) - 1))
-            if not str.isalpha(ui):
-                ui = "Z"
-        else:
-            # Not a letter or digit, ignore
-            pass
-        un = u[:i] + ui + u[i + 1:]
-        self.editor_fields["value"] = un
-        self.pm.render['refresh'] = True
-
-    def ed_increase(self):
-        u = self.editor_fields["value"]
-        i = self.editor_fields["index"]
-        ui = u[i]
-        if str.isdigit(ui):
-            if ui == "9":
-                ui = "0"
-            else:
-                ui = format(int(ui) + 1)
-        elif str.isupper(ui):
-            ui = format(chr(ord(ui) + 1))
-            if not str.isalpha(ui):
-                ui = "A"
-        else:
-            # Not a capital letter or digit, ignore
-            pass
-        un = u[:i] + ui + u[i + 1:]
-        self.editor_fields["value"] = un
-        self.pm.render['refresh'] = True
-
-    def ed_next(self):
-        u = self.editor_fields["value"]
-        i = self.editor_fields["index"]
-        strip_zero = True
-        try:
-            # Preserve leading zero if the value is less than 1.0
-            if float(u) < 1.0:
-                strip_zero = False
-        except (TypeError, ValueError):
-            pass
-        if u[0] == '0' and strip_zero:
-            u = u[1:]
-            self.editor_fields["value"] = u
-        else:
-            i += 1
-        le = len(u) - 1
-        if i > le:
-            i = le
-        else:
-            ui = u[i]
-            # FIXME localisation points to be used here
-            if (ui == ".") or (ui == ","):
-                i += 1
-        self.editor_fields["index"] = i
-        self.pm.render['refresh'] = True
-
-    def ed_prev(self):
-        u = self.editor_fields["value"]
-        i = self.editor_fields["index"]
-        i -= 1
-        if i < 0:
-            i = 0
-            uv = "0" + u
-            self.editor_fields["value"] = uv
-        else:
-            ui = u[i]
-            # FIXME localisation points to be used here
-            if (ui == ".") or (ui == ","):
-                i -= 1
-        self.editor_fields["index"] = i
-        self.pm.render['refresh'] = True
-
-    def slice_list_elements(self, a_list, index):
-        list_len = len(a_list)
-        circular_list_slice = (a_list * 3)[index + list_len - 1:index + list_len + 2]
-        self.editor_fields["previous_list_element"] = circular_list_slice[0]
-        self.editor_fields["value"] = circular_list_slice[1]
-        self.editor_fields["next_list_element"] = circular_list_slice[2]
-
-    def ed_next_item(self):
-        index = self.editor_fields["index"]
-        index += 1
-        p = self.editor_fields["parameter"]
-        value_list = self.pm.parameters[p]["value_list"]
-        self.slice_list_elements(value_list, index)
-        if index > len(self.pm.parameters[p]["value_list"]) - 1:
-            self.editor_fields["index"] = 0
-        else:
-            self.editor_fields["index"] = index
-
-    def ed_prev_item(self):
-        index = self.editor_fields["index"]
-        index -= 1
-        p = self.editor_fields["parameter"]
-        value_list = self.pm.parameters[p]["value_list"]
-        self.slice_list_elements(value_list, index)
-        if index < 0:
-            self.editor_fields["index"] = len(self.pm.parameters[p]["value_list"]) - 1
-        else:
-            self.editor_fields["index"] = index
-
-    def ed_change_unit(self, direction):
-        # direction to be 1 (next) or 0 (previous)
-        variable = self.editor_fields["parameter"]
-        variable_unit = self.editor_fields["unit"]
-        variable_value = self.editor_fields["value"]
-        current_unit_index = self.pm.parameters[self.editor_fields["parameter"]]["units_allowed"].index(variable_unit)
-        self.log.debug("variable: {} units_allowed: {}".format(variable, self.pm.parameters[self.editor_fields["parameter"]]["units_allowed"]), extra=self.extra)
-        if direction == 1:
-            try:
-                next_unit = self.pm.parameters[self.editor_fields["parameter"]]["units_allowed"][current_unit_index + 1]
-            except IndexError:
-                next_unit = self.pm.parameters[self.editor_fields["parameter"]]["units_allowed"][0]
-        else:
-            try:
-                next_unit = self.pm.parameters[self.editor_fields["parameter"]]["units_allowed"][current_unit_index - 1]
-            except IndexError:
-                next_unit = self.pm.parameters[self.editor_fields["parameter"]]["units_allowed"][-1]
-        self.editor_fields["unit"] = next_unit
-        self.editor_fields["value"] = variable_value
-
-    def ed_next_unit(self):
-        self.ed_change_unit(1)
-        self.pm.render['refresh'] = True
-
-    def ed_prev_unit(self):
-        self.ed_change_unit(0)
-        self.pm.render['refresh'] = True
-
-    def accept_edit(self):
-        self.log.debug("accept_edit started", extra=self.extra)
-        parameter = self.editor_fields["parameter"]
-        parameter_unit = self.editor_fields["unit"]
-        parameter_value = self.editor_fields["value"]
-        self.log.debug("parameter: {}, parameter_unit: {}, parameter_value: {}".format(parameter, parameter_unit, parameter_value), extra=self.extra)
-        if self.editor_fields["editor"] == "editor_units":
-            self.pm.parameters[parameter]["unit"] = parameter_unit
-        if self.editor_fields["editor"] == "editor_numbers":
-            unit_raw = self.pm.parameters[parameter]["raw_unit"]
-            value = self.uc.convert(float(parameter_value), parameter_unit, unit_raw)
-            self.pm.parameters[parameter]["value"] = float(value)
-        if self.editor_fields["editor"] == "editor_string" or \
-                self.editor_fields["editor"] == "editor_list":
-            self.pm.parameters[parameter]["value"] = parameter_value
-#        if self.self.editor_fields["ediotr"] == "ble_selector":
-#            (name, addr, dev_type) = parameter_value
-#            self.pm.set_ble_device(name, addr, dev_type)
-        self.pm.parameters[parameter]["time_stamp"] = time.time()
-        self.pm.render['refresh'] = True
-        self.log.debug("accept_edit finished", extra=self.extra)
 
     def get_page(self, page_type, page_no):
         self.log.debug("get_page {} {} ".format(page_type, page_no), extra=self.extra)

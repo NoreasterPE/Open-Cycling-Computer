@@ -779,6 +779,7 @@ pages:
          fg_colour: FFFFFF
          fields:
                 - parameter: ed_accept
+                  run: editor, ed_accept
                   x: 60
                   y: 30
                   font_size: 30
@@ -790,6 +791,7 @@ pages:
                           h: 60
 
                 - parameter: ed_cancel
+                  run: editor, ed_cancel
                   x: 180
                   y: 30
                   font_size: 30
@@ -811,6 +813,7 @@ pages:
                   font_size: 60
 
                 - parameter: ed_prev_unit
+                  run: editor, ed_prev_unit
                   x: 60
                   y: 290
                   text: ←
@@ -821,6 +824,7 @@ pages:
                           h: 60
 
                 - parameter: ed_next_unit
+                  run: editor, ed_next_unit
                   x: 180
                   y: 290
                   text: →
@@ -841,6 +845,7 @@ pages:
          fg_colour: FFFFFF
          fields:
                 - parameter: ed_accept
+                  run: editor, ed_accept
                   x: 60
                   y: 30
                   text: Accept
@@ -851,6 +856,7 @@ pages:
                           h: 60
 
                 - parameter: ed_cancel
+                  run: editor, ed_cancel
                   x: 180
                   y: 30
                   text: Cancel
@@ -876,6 +882,7 @@ pages:
                   y: 180
 
                 - parameter: ed_decrease
+                  run: editor, ed_decrease
                   x: 60
                   y: 230
                   font_size: 50
@@ -887,6 +894,7 @@ pages:
                           h: 60
 
                 - parameter: ed_increase
+                  run: editor, ed_increase
                   x: 180
                   y: 230
                   font_size: 50
@@ -898,6 +906,7 @@ pages:
                           h: 60
 
                 - parameter: ed_prev
+                  run: editor, ed_prev
                   x: 60
                   y: 290
                   font_size: 50
@@ -909,6 +918,7 @@ pages:
                           h: 60
 
                 - parameter: ed_next
+                  run: editor, ed_next
                   x: 180
                   y: 290
                   font_size: 50
@@ -930,6 +940,7 @@ pages:
          fg_colour: FFFFFF
          fields:
                 - parameter: ed_accept
+                  run: editor, ed_accept
                   x: 60
                   y: 30
                   text: Accept
@@ -940,6 +951,7 @@ pages:
                           h: 60
 
                 - parameter: ed_cancel
+                  run: editor, ed_cancel
                   x: 180
                   y: 30
                   text: Cancel
@@ -961,6 +973,7 @@ pages:
                   font_size: 40
 
                 - parameter: ed_decrease
+                  run: editor, ed_decrease
                   x: 60
                   y: 230
                   font_size: 50
@@ -972,6 +985,7 @@ pages:
                           h: 60
 
                 - parameter: ed_increase
+                  run: editor, ed_increase
                   x: 180
                   y: 230
                   font_size: 50
@@ -983,6 +997,7 @@ pages:
                           h: 60
 
                 - parameter: ed_prev
+                  run: editor, ed_prev
                   x: 60
                   y: 290
                   font_size: 50
@@ -994,6 +1009,7 @@ pages:
                           h: 60
 
                 - parameter: ed_next
+                  run: editor, ed_next
                   x: 180
                   y: 290
                   font_size: 50
@@ -1026,6 +1042,7 @@ pages:
                           h: 60
 
                 - parameter: ed_cancel
+                  run: editor, ed_cancel
                   x: 180
                   y: 30
                   font_size: 30
@@ -1092,6 +1109,7 @@ pages:
          fg_colour: FFFFFF
          fields:
                 - parameter: ed_accept
+                  run: editor, ed_accept
                   x: 60
                   y: 30
                   font_size: 30
@@ -1103,6 +1121,7 @@ pages:
                           h: 60
 
                 - parameter: ed_cancel
+                  run: editor, ed_cancel
                   x: 180
                   y: 30
                   font_size: 30
@@ -1134,6 +1153,7 @@ pages:
                   font_size: 40
 
                 - parameter: ed_prev_item
+                  run: editor, ed_prev_item
                   x: 60
                   y: 290
                   text: ↑
@@ -1144,6 +1164,7 @@ pages:
                           h: 60
 
                 - parameter: ed_next_item
+                  run: editor, ed_next_item
                   x: 180
                   y: 290
                   text: ↓
