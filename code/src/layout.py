@@ -533,8 +533,8 @@ class layout(threading.Thread):
                     self.editor_fields["value"] = self.editor_fields["format"] % value
                 except TypeError:
                     self.editor_fields["value"] = value
-            elif (self.editor_fields["editor"] == 'editor_string' or
-                  self.editor_fields["editor"] == 'editor_units'):
+            elif self.editor_fields["editor"] == 'editor_string' or \
+                    self.editor_fields["editor"] == 'editor_units':
                 self.editor_fields["value"] = self.pm.parameters[p]["value"]
             elif self.editor_fields["editor"] == 'editor_list':
                 v = self.pm.parameters[p]["value"]
@@ -747,8 +747,8 @@ class layout(threading.Thread):
             unit_raw = self.pm.parameters[parameter]["raw_unit"]
             value = self.uc.convert(float(parameter_value), parameter_unit, unit_raw)
             self.pm.parameters[parameter]["value"] = float(value)
-        if (self.editor_fields["editor"] == "editor_string" or
-            self.editor_fields["editor"] == "editor_list"):
+        if self.editor_fields["editor"] == "editor_string" or \
+                self.editor_fields["editor"] == "editor_list":
             self.pm.parameters[parameter]["value"] = parameter_value
 #        if self.self.editor_fields["ediotr"] == "ble_selector":
 #            (name, addr, dev_type) = parameter_value
