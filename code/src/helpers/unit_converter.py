@@ -3,7 +3,7 @@
 ## @package units
 #  Package for converting units. When run independently shows a pseudo-test.
 
-import numbers
+import num
 
 ## Main unit converter class
 #  Allows conversion of a value in source unit to target unit.
@@ -49,7 +49,7 @@ class unit_converter():
             return self.convert_pressure(value, source_unit, target_unit)
 
     def convert_distance(self, value, source_unit, target_unit):
-        result = numbers.NAN
+        result = num.NAN
         try:
             result = value * self.distance[source_unit] / self.distance[target_unit]
         except TypeError:
@@ -62,7 +62,7 @@ class unit_converter():
     #  @param source_unit source unit
     #  @param target_unit target unit
     def convert_temperature(self, value, source_unit, target_unit):
-        result = numbers.NAN
+        result = num.NAN
         try:
             if source_unit == target_unit:
                 result = value
@@ -80,7 +80,7 @@ class unit_converter():
     #  @param source_unit source unit
     #  @param target_unit target unit
     def convert_speed(self, value, source_unit, target_unit):
-        result = numbers.NAN
+        result = num.NAN
         try:
             result = value * self.speed[source_unit] / self.speed[target_unit]
         except TypeError:
@@ -93,7 +93,7 @@ class unit_converter():
     #  @param source_unit source unit
     #  @param target_unit target unit
     def convert_mass(self, value, source_unit, target_unit):
-        result = numbers.NAN
+        result = num.NAN
         try:
             result = value * self.mass[source_unit] / self.mass[target_unit]
         except TypeError:
@@ -106,7 +106,7 @@ class unit_converter():
     #  @param source_unit source unit
     #  @param target_unit target unit
     def convert_slope(self, value, source_unit, target_unit):
-        result = numbers.NAN
+        result = num.NAN
         try:
             if source_unit == target_unit:
                 result = value
@@ -124,7 +124,7 @@ class unit_converter():
     #  @param source_unit source unit
     #  @param target_unit target unit
     def convert_pressure(self, value, source_unit, target_unit):
-        result = numbers.NAN
+        result = num.NAN
         try:
             result = value * self.pressure[source_unit] / self.pressure[target_unit]
         except TypeError:

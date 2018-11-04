@@ -4,7 +4,7 @@
 #  Abstract base class for all plugins.
 import logging
 import threading
-import numbers
+import num
 import time
 
 

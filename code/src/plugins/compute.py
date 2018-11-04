@@ -4,7 +4,7 @@
 #  Module for handling calculations that require more than sensor data
 
 import math
-import numbers
+import num
 import plugin
 import pyplum
 import time
@@ -25,19 +25,19 @@ class compute(plugin.plugin):
 
         self.pm = pyplum.pyplum()
         self.pm.register_parameter("real_time", self.extra["module_name"])
-        self.pm.register_parameter("slope", self.extra["module_name"], value=numbers.NAN, raw_unit="m/m", unit="%", units_allowed=["m/m", "%"])
-        self.pm.register_parameter("speed", self.extra["module_name"], value=numbers.NAN, raw_unit="m/s", unit="km/h", units_allowed=["m/s", "km/h", "mi/h"])
+        self.pm.register_parameter("slope", self.extra["module_name"], value=num.NAN, raw_unit="m/m", unit="%", units_allowed=["m/m", "%"])
+        self.pm.register_parameter("speed", self.extra["module_name"], value=num.NAN, raw_unit="m/s", unit="km/h", units_allowed=["m/s", "km/h", "mi/h"])
         self.pm.register_parameter("session_start_time", self.extra["module_name"], value=time.time(), raw_unit="s")
         self.pm.register_parameter("session_distance", self.extra["module_name"], value=0.0, raw_unit="m", unit="km", units_allowed=["m", "km", "mi"])
-        self.pm.register_parameter("session_odometer_start", self.extra["module_name"], value=numbers.NAN, raw_unit="m")
+        self.pm.register_parameter("session_odometer_start", self.extra["module_name"], value=num.NAN, raw_unit="m")
         self.session_start_time = self.pm.parameters['session_start_time']['value']
-        self.pm.register_parameter("wheel_size", self.extra["module_name"], value=numbers.NAN, raw_unit="m")
+        self.pm.register_parameter("wheel_size", self.extra["module_name"], value=num.NAN, raw_unit="m")
         self.pm.request_parameter("wheel_size", self.extra["module_name"])
-        self.wheel_size = numbers.NAN
-        self.pm.register_parameter("wheel_circumference", self.extra["module_name"], value=numbers.NAN, raw_unit="m")
+        self.wheel_size = num.NAN
+        self.pm.register_parameter("wheel_circumference", self.extra["module_name"], value=num.NAN, raw_unit="m")
         self.pm.request_parameter("wheel_circumference", self.extra["module_name"])
-        self.wheel_circumference = numbers.NAN
-        self.pm.register_parameter("session_time", self.extra["module_name"], value=0.0, value_default=numbers.NAN, raw_unit="s")
+        self.wheel_circumference = num.NAN
+        self.pm.register_parameter("session_time", self.extra["module_name"], value=0.0, value_default=num.NAN, raw_unit="s")
         self.pm.register_parameter("rider_weight", self.extra["module_name"])
         self.pm.request_parameter("odometer", self.extra["module_name"])
         self.odometer = None

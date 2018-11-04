@@ -3,7 +3,7 @@
 ## @package ble_sensor
 #  Abstract base BLE sensor handling module.
 import bluepy.btle
-import numbers
+import num
 import plugin
 import pyplum
 import time
@@ -36,7 +36,7 @@ class ble_sensor(plugin.plugin):
         self.state = 0
         self.device_address = None
         self.device_name = None
-        self.battery_level = numbers.NAN
+        self.battery_level = num.NAN
 
         self.notifications_enabled = False
         #Delegate class handling notification has to be set be the real device class in __init__
@@ -197,7 +197,7 @@ class ble_sensor(plugin.plugin):
         return name
 
     def get_battery_level(self):
-        level = numbers.NAN
+        level = num.NAN
         try:
             b = self.peripherial.getCharacteristics(uuid=bluepy.btle.AssignedNumbers.batteryLevel)
             level = ord(b[0].read())

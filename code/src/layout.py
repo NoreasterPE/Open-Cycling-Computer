@@ -6,7 +6,7 @@ import cairo
 import cairo_helper
 import datetime
 import logging
-import numbers
+import num
 import os
 import pyplum
 import queue
@@ -269,7 +269,7 @@ class layout(threading.Thread):
                         ru = self.pm.parameters[parameter]["raw_unit"]
                         u = self.pm.parameters[parameter]["unit"]
                         value = self.uc.convert(v, ru, u)
-                        value = numbers.sanitise(value)
+                        value = num.sanitise(value)
                     except (KeyError, TypeError):
                         value = None
             elif show == "tenths":
@@ -293,7 +293,7 @@ class layout(threading.Thread):
                     ru = self.pm.parameters[parameter]["raw_unit"]
                     u = self.pm.parameters[parameter]["unit"]
                     value = self.uc.convert(v, ru, u)
-                    value = numbers.sanitise(value)
+                    value = num.sanitise(value)
                 except KeyError:
                     value = None
             elif show == "avg":
@@ -302,7 +302,7 @@ class layout(threading.Thread):
                     ru = self.pm.parameters[parameter]["raw_unit"]
                     u = self.pm.parameters[parameter]["unit"]
                     value = self.uc.convert(v, ru, u)
-                    value = numbers.sanitise(value)
+                    value = num.sanitise(value)
                 except KeyError:
                     value = None
             elif show == "max":
@@ -311,7 +311,7 @@ class layout(threading.Thread):
                     ru = self.pm.parameters[parameter]["raw_unit"]
                     u = self.pm.parameters[parameter]["unit"]
                     value = self.uc.convert(v, ru, u)
-                    value = numbers.sanitise(value)
+                    value = num.sanitise(value)
                 except KeyError:
                     value = None
             if value is None:

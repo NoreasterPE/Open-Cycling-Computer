@@ -5,7 +5,7 @@
 import ble_sensor
 import bluepy.btle
 import math
-import numbers
+import num
 import time
 
 
@@ -27,7 +27,7 @@ class ble_sc(ble_sensor.ble_sensor):
         self.pm.register_parameter("wheel_revolution_time", self.extra["module_name"], raw_unit="s")
         self.pm.register_parameter("wheel_revolutions", self.extra["module_name"])
         self.pm.register_parameter("odometer", self.extra["module_name"], raw_unit="m", unit="km")
-        self.pm.register_parameter("cadence", self.extra["module_name"], value=numbers.NAN, raw_unit="RPM")
+        self.pm.register_parameter("cadence", self.extra["module_name"], value=num.NAN, raw_unit="RPM")
         self.pm.register_parameter("cadence_notification_beat", self.extra["module_name"])
         self.pm.register_parameter("cadence_speed_device_address", self.extra["module_name"])
         self.pm.request_parameter("cadence_speed_device_address", self.extra["module_name"])
@@ -160,10 +160,10 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
                 self.wheel_revolution_time_stamp = self.wheel_time_stamp
             else:
                 if (self.wheel_time_stamp - self.wheel_revolution_time_stamp) > self.EXPIRY_TIME:
-                    self.wheel_revolution_time = numbers.NAN
+                    self.wheel_revolution_time = num.NAN
         else:
-            self.wheel_time_stamp = numbers.NAN
-            self.wheel_revolution_time = numbers.NAN
+            self.wheel_time_stamp = num.NAN
+            self.wheel_revolution_time = num.NAN
 
         self.log.debug('Last wheel event time: {:10.3f}, delta {:10.3f}'.format(self.wheel_last_time_event, self.wheel_last_time_delta), extra=self.extra)
         self.log.debug('Wheel cumul revs: {:5d}'.format(wh_cr), extra=self.extra)
@@ -191,18 +191,18 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
                 self.crank_last_measurement = self.cadence_time_stamp
             else:
                 if (self.cadence_time_stamp - self.crank_last_measurement) > self.EXPIRY_TIME:
-                    self.crank_rev_time = numbers.NAN
-                    self.cadence = numbers.NAN
+                    self.crank_rev_time = num.NAN
+                    self.cadence = num.NAN
         else:
-            self.cadence_time_stamp = numbers.NAN
-            self.cadence = numbers.NAN
+            self.cadence_time_stamp = num.NAN
+            self.cadence = num.NAN
 
         #Ignore first 3 measurements to avoid "wild" values
         if self.measurement_no < 3:
             self.log.debug('Ignoring measurement no {}'.format(self.measurement_no), extra=self.extra)
-            self.wheel_revolution_time = numbers.NAN
-            self.crank_rev_time = numbers.NAN
-            self.cadence = numbers.NAN
+            self.wheel_revolution_time = num.NAN
+            self.crank_rev_time = num.NAN
+            self.cadence = num.NAN
             self.wheel_revolution_time_stamp = time.time()
 
         if (not math.isnan(self.cadence)):
@@ -229,7 +229,7 @@ class sc_delegate(bluepy.btle.DefaultDelegate):
                 cd_avg = (self.cadence * self.time_delta + (cd_avg_current * self.measurement_time)) / (self.measurement_time + self.time_delta)
                 self.measurement_time += self.time_delta
             except ZeroDivisionError:
-                cd_avg = numbers.NAN
+                cd_avg = num.NAN
         self.cadence_avg = cd_avg
         self.log.debug("cadence_avg {}".format(self.cadence_avg), extra=self.extra)
 

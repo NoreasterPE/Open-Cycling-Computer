@@ -5,7 +5,7 @@
 #from bluepy.btle import BTLEException
 import copy
 import logging
-import numbers
+import num
 import threading
 import time
 
@@ -154,9 +154,9 @@ class pyplum(threading.Thread, metaclass=Singleton):
                            parameter_name,
                            plugin_name=None,
                            value=None,
-                           value_min=numbers.INF,
-                           value_avg=numbers.NAN,
-                           value_max=numbers.INF_MIN,
+                           value_min=num.INF,
+                           value_avg=num.NAN,
+                           value_max=num.INF_MIN,
                            value_default=None,
                            value_list=None,
                            raw_unit=None,
@@ -237,11 +237,11 @@ class pyplum(threading.Thread, metaclass=Singleton):
             if suffix == '':
                 self.parameters[parameter]['value'] = self.parameters[parameter]['value_default']
             elif suffix == 'min':
-                self.parameters[parameter]['value_min'] = numbers.INF
+                self.parameters[parameter]['value_min'] = num.INF
             elif suffix == 'avg':
-                self.parameters[parameter]['value_avg'] = numbers.NAN
+                self.parameters[parameter]['value_avg'] = num.NAN
             elif suffix == 'max':
-                self.parameters[parameter]['value_max'] = numbers.INF_MIN
+                self.parameters[parameter]['value_max'] = num.INF_MIN
 
     ## Function for registering cairo context linked with a display. Only one plugin is allowed to register it
     #  @param self The python object self

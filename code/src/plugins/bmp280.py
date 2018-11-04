@@ -5,7 +5,7 @@
 
 import kalman
 import math
-import numbers
+import num
 import plugin
 import pyplum
 import time
@@ -38,14 +38,14 @@ class bmp280(plugin.plugin):
         self.pm.request_parameter("mean_sea_level_pressure", self.extra["module_name"])
         ## @var pressure_unfiltered
         #  Pressure as reported by the sensor. Might be IIR filtered, depending on the sensor configureaion
-        self.pressure_unfiltered = numbers.NAN
+        self.pressure_unfiltered = num.NAN
         ## @var reference_altitude
         #  Reference altitude used to calculate current altitude
-        self.reference_altitude = numbers.NAN
+        self.reference_altitude = num.NAN
         self.ignore_reference_altitude_change = False
         ## @var mean_sea_level_pressure
         #  Mean sea-level pressure. Calculations are based on reference altitude or might be set by the user as MSLP METAR
-        self.mean_sea_level_pressure = numbers.NAN
+        self.mean_sea_level_pressure = num.NAN
         self.measure()
         # Initialise Kalman filter
         self.kalman = kalman.kalman(Q=0.02, R=1.0)
@@ -140,10 +140,10 @@ class bmp280(plugin.plugin):
                 try:
                     self.mean_sea_level_pressure = float(self.pm.parameters["pressure"]["value"] / pow((1 - ref_alt / 44330), 5.255))
                 except TypeError:
-                    self.mean_sea_level_pressure = numbers.NAN
+                    self.mean_sea_level_pressure = num.NAN
             else:
                 self.log.debug("Reference altitude over 43300: {}, can't calculate pressure at sea level".format(ref_alt), extra=self.extra)
-                self.mean_sea_level_pressure = numbers.NAN
+                self.mean_sea_level_pressure = num.NAN
         except TypeError:
             pass
         self.pm.parameters['mean_sea_level_pressure']['value'] = self.mean_sea_level_pressure
@@ -153,7 +153,7 @@ class bmp280(plugin.plugin):
     #  Saves calculated value to self.pm.parameters["altitude]"
     #  @param self The python object self
     def calculate_altitude(self, pressure):
-        altitude = numbers.NAN
+        altitude = num.NAN
         try:
             if pressure != 0:
                 altitude = round(44330.0 * (1 - pow((pressure / self.mean_sea_level_pressure), (1 / 5.255))), 2)

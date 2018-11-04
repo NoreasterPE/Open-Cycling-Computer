@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-## @package numbers
+## @package num
 #  Helper module with number definitions
 
 import math

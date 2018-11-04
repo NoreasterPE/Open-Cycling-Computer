@@ -5,7 +5,7 @@
 import ble_sensor
 import bluepy.btle
 import math
-import numbers
+import num
 import time
 
 
@@ -23,7 +23,7 @@ class ble_hr(ble_sensor.ble_sensor):
         super().__init__()
         self.pm.register_parameter("heart_rate_device_name", self.extra["module_name"])
         self.pm.register_parameter("heart_rate_battery_level", self.extra["module_name"])
-        self.pm.register_parameter("heart_rate", self.extra["module_name"], value=numbers.NAN, raw_unit="BPM", unit="BPM", units_allowed=["BMP"])
+        self.pm.register_parameter("heart_rate", self.extra["module_name"], value=num.NAN, raw_unit="BPM", unit="BPM", units_allowed=["BMP"])
         self.pm.register_parameter("heart_rate_notification_beat", self.extra["module_name"])
         self.pm.register_parameter("heart_rate_device_address", self.extra["module_name"])
         self.pm.request_parameter("heart_rate_device_address", self.extra["module_name"])
@@ -112,7 +112,7 @@ class hr_delegate(bluepy.btle.DefaultDelegate):
         # 0   RR-Interval values are not present.
         # 1   One or more RR-Interval values are present.
 
-        hr = numbers.NAN
+        hr = num.NAN
         if data_b[0] & HR_VALUE_FORMAT:
             # UINT16
             hr = 0xff * data_b[2] + data_b[1]
@@ -125,13 +125,13 @@ class hr_delegate(bluepy.btle.DefaultDelegate):
         if hr != 0:
             self.heart_rate = hr
         else:
-            self.heart_rate = numbers.NAN
+            self.heart_rate = num.NAN
 
         #Ignore first 3 measurements to avoid "wild" values
         # FIXME Kalman fiter to absolete this piece of code
         if self.measurement_no < 3:
             self.log.debug('Ignoring measurement no {}'.format(self.measurement_no), extra=self.extra)
-            self.heart_rate = numbers.NAN
+            self.heart_rate = num.NAN
 
         if (not math.isnan(self.heart_rate) and
                 self.heart_rate != 0):
@@ -154,7 +154,7 @@ class hr_delegate(bluepy.btle.DefaultDelegate):
                 hr_avg = (self.heart_rate * self.time_delta + (hr_avg_current * self.measurement_time)) / (self.measurement_time + self.time_delta)
                 self.measurement_time += self.time_delta
             except ZeroDivisionError:
-                hr_avg = numbers.NAN
+                hr_avg = num.NAN
             self.heart_rate_avg = hr_avg
         self.log.debug("heart_rate_avg {}".format(self.heart_rate_avg), extra=self.extra)
 
@@ -163,10 +163,10 @@ class hr_delegate(bluepy.btle.DefaultDelegate):
     def reset_data(self):
         self.time_stamp = time.time()
         self.time_stamp_previous = self.time_stamp
-        self.heart_rate = numbers.NAN
-        self.heart_rate_min = numbers.INF
-        self.heart_rate_avg = numbers.NAN
-        self.heart_rate_max = numbers.INF_MIN
+        self.heart_rate = num.NAN
+        self.heart_rate_min = num.INF
+        self.heart_rate_avg = num.NAN
+        self.heart_rate_max = num.INF_MIN
         # Internal measuremet time, indicates for how long there was a valid measurement.
         self.measurement_time = 0.0
         self.heart_rate_notification_beat = 0

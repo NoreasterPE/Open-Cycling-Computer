@@ -10,7 +10,7 @@ import mtk3339
 import os
 import threading
 import time
-import numbers
+import num
 
 
 ## @var fix_mode
@@ -165,21 +165,21 @@ class gps_mtk3339(threading.Thread):
     #  @param self The python object self
     def reset_gps_data(self):
         self.log.debug("Setting null values to GPS params", extra=self.extra)
-        self.latitude = numbers.NAN
-        self.longitude = numbers.NAN
+        self.latitude = num.NAN
+        self.longitude = num.NAN
         self.utc = None
-        self.climb_gps = numbers.NAN
-        self.speed_gps = numbers.NAN
-        self.altitude_gps = numbers.NAN
+        self.climb_gps = num.NAN
+        self.speed_gps = num.NAN
+        self.altitude_gps = num.NAN
         self.fix_mode_gps = fix_mode[1]
-        self.fix_time_gps = numbers.NAN
+        self.fix_time_gps = num.NAN
         self.satellites = 0
         self.satellitesused = 0
-        self.track_gps = numbers.NAN
-        self.eps = numbers.NAN
-        self.epx = numbers.NAN
-        self.epv = numbers.NAN
-        self.ept = numbers.NAN
+        self.track_gps = num.NAN
+        self.eps = num.NAN
+        self.epx = num.NAN
+        self.epv = num.NAN
+        self.ept = num.NAN
 
     ## Returns dictionary withvalues describing current location
     #  @param self The python object self
