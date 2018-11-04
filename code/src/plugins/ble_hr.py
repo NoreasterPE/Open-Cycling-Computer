@@ -6,7 +6,6 @@ import ble_sensor
 import bluepy.btle
 import math
 import numbers
-import pyplum
 import time
 
 
@@ -22,7 +21,6 @@ class ble_hr(ble_sensor.ble_sensor):
 
     def __init__(self):
         super().__init__()
-        self.pm = pyplum.pyplum()
         self.pm.register_parameter("heart_rate_device_name", self.extra["module_name"])
         self.pm.register_parameter("heart_rate_battery_level", self.extra["module_name"])
         self.pm.register_parameter("heart_rate", self.extra["module_name"], value=numbers.NAN, raw_unit="BPM", unit="BPM", units_allowed=["BMP"])

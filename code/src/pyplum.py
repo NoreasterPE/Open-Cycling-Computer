@@ -9,39 +9,6 @@ import numbers
 import threading
 import time
 
-## @var RECONNECT_DELAY
-# Time between check if BLE connection need to be re-established
-RECONNECT_DELAY = 2.0
-
-
-## @var STATE_HOST
-# BLE host states. Linked with different icons.
-#  - disabled (state 0)
-#  - present (state 1)
-#  - scanning (state 2,3)
-#  - connected 1 device (state 4)
-#  - connected 2 devices (state 5)
-#  - connected 3 devices (state 6)
-#  - connected 4 devices (state 7)
-
-#STATE_HOST = {'disabled': 0,
-#              'enabled': 1,
-#              'scanning_1': 2,
-#              'scanning_2': 3,
-#              'connected_1': 4,
-#              'connected_2': 5,
-#              'connected_3': 6,
-#              'connected_4': 7}
-
-## @var STATE_DEV
-# BLE device states.
-#  - disconnected (state 0)
-#  - connecting (state 1)
-#  - connected (state 2)
-#STATE_DEV = {'disconnected': 0,
-#             'connecting': 1,
-#             'connected': 2}
-
 
 class Singleton(type):
     _instances = {}
@@ -95,16 +62,6 @@ class pyplum(threading.Thread, metaclass=Singleton):
         #  Name of the module that registered event queue
         self.event_queue_owner = None
         self.plugins = dict()
-        self.register_parameter("ble_host_state", self.extra["module_name"], value=0)
-        ## @var no_of_connected
-        # Number of connected BLE devices
-        self.no_of_connected = 0
-        ## @var connecting
-        # Indicates if host is currently trying to establish connection
-        self.connecting = False
-        ## @var connected
-        # Dict keeping track of which sensor is connected
-        self.connected = dict()
 
     ## Functon that loads plugins from a subdirectory. The subdirectory name in 'plugins' by default.
     #  @param self The python object self
@@ -141,13 +98,13 @@ class pyplum(threading.Thread, metaclass=Singleton):
             notify = list()
             for parameter, content in self.parameters.items():
                 try:
-                    if (self.previous_parameters[parameter]["force_notification"] or
-                       self.previous_parameters[parameter]["value"] != content["value"]):
+                    if self.previous_parameters[parameter]["force_notification"] or \
+                       self.previous_parameters[parameter]["value"] != content["value"]:
                         self.parameters[parameter]["force_notification"] = False
                         if content["required_by"] is not None:
                             for m in content["required_by"]:
                                 notify.append(m)
-                except KeyError as e:
+                except KeyError:
                     pass
             for module in notify:
                 try:
@@ -155,36 +112,7 @@ class pyplum(threading.Thread, metaclass=Singleton):
                 except AttributeError:
                     # Ignore error - module might not exist anymore/yet
                     pass
-
-            self.set_ble_host_state()
         self.log.debug("run finished", extra=self.extra)
-
-    ## Helper function for setting ble_host_state parameter.
-    #  @param self The python object self
-    def set_ble_host_state(self):
-        self.no_of_connected = 0
-        self.connecting = False
-        for name in self.plugins:
-            try:
-                s = self.plugins[name].is_connected()
-                if s and name.startswith("ble"):
-                    self.no_of_connected += 1
-            except AttributeError:
-                #Sensor is not ready yet, let's wait
-                pass
-        self.parameters["ble_host_state"]["value"] = self.no_of_connected + 3  # Temporary fix
-#        if self.no_of_connected == 0:
-#            self.parameters["ble_host_state"]["value"] = STATE_HOST['enabled']
-#        if self.no_of_connected == 1:
-#            self.parameters["ble_host_state"]["value"] = STATE_HOST['connected_1']
-#        if self.no_of_connected == 2:
-#            self.parameters["ble_host_state"]["value"] = STATE_HOST['connected_2']
-#        if self.no_of_connected == 3:
-#            self.parameters["ble_host_state"]["value"] = STATE_HOST['connected_3']
-#        if self.no_of_connected == 4:
-#            self.parameters["ble_host_state"]["value"] = STATE_HOST['connected_4']
-#        if self.connecting:
-#            self.parameters["ble_host_state"]["value"] = STATE_HOST['scanning_1']
 
     ## The destructor
     #  @param self The python object self
@@ -197,7 +125,6 @@ class pyplum(threading.Thread, metaclass=Singleton):
         self.log.debug("stop started", extra=self.extra)
         self.running = False
         for s in self.plugins:
-            self.connected[s] = False
             self.log.debug("Stopping {} thread".format(s), extra=self.extra)
             try:
                 self.plugins[s].stop()

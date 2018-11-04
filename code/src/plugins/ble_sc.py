@@ -6,7 +6,6 @@ import ble_sensor
 import bluepy.btle
 import math
 import numbers
-import pyplum
 import time
 
 
@@ -23,7 +22,6 @@ class ble_sc(ble_sensor.ble_sensor):
     def __init__(self):
         super().__init__()
         self.log.debug("{} __init__ started".format(__name__), extra=self.extra)
-        self.pm = pyplum.pyplum()
         self.pm.register_parameter("cadence_speed_device_name", self.extra["module_name"])
         self.pm.register_parameter("cadence_speed_battery_level", self.extra["module_name"])
         self.pm.register_parameter("wheel_revolution_time", self.extra["module_name"], raw_unit="s")
