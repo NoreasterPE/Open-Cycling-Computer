@@ -41,7 +41,7 @@ class pyplum(threading.Thread, metaclass=Singleton):
         # Dict with parameters
         self.parameters = dict()
         ## @var parameter_requests
-        # Dict with parameters requested by a module
+        # Dict with parameters requested by a module. Should be empty if all requered parameters are provided by loaded plugins
         self.parameter_requests = dict()
         ## @var render
         #  owner   - name of the module that registered cairo context,
@@ -61,7 +61,6 @@ class pyplum(threading.Thread, metaclass=Singleton):
         ## @var event_queue_owner
         #  Name of the module that registered event queue
         self.event_queue_owner = None
-        self.plugins = dict()
 
     ## Functon that loads plugins from a subdirectory. The subdirectory name in 'plugins' by default.
     #  @param self The python object self
