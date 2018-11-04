@@ -553,6 +553,7 @@ pages:
                           h: 80
 
                 - parameter: quit
+                  run: syscalls, quit
                   x: 60
                   y: 120
                   text: Quit

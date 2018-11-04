@@ -25,3 +25,7 @@ class syscalls(plugin.plugin):
         print('reboot')
         import os
         os.system("sudo reboot")
+
+    def quit(self):
+        print('quit')
+        quit()

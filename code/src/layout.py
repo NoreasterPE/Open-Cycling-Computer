@@ -575,8 +575,7 @@ class layout(threading.Thread):
                      "load_default_layout": self.load_default_layout,
                      "load_current_layout": self.load_current_layout,
                      "next_page": self.next_page,
-                     "prev_page": self.prev_page,
-                     "quit": self.quit}
+                     "prev_page": self.prev_page}
         try:
             if functions[parameter] is not None:
                 self.log.debug("Calling function for parameter {}".format(parameter), extra=self.extra)
@@ -813,9 +812,6 @@ class layout(threading.Thread):
 
     def load_default_layout(self):
         self.load_layout_by_name("default.yaml")
-
-    def quit(self):
-        quit()
 
     def log_level(self):
         log_level = self.log.getEffectiveLevel()
