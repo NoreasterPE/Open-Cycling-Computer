@@ -448,17 +448,24 @@ class layout(threading.Thread):
     def check_click(self, position, click):
         resettable = False
         editable = False
+        plugin = None
+        method = None
         parameter_for_reset = None
         if click == 'SHORT':
             self.render_pressed_button(position)
-            clicked_parameter = None
             for parameter, r in self.parameter_rect_list.items():
                 if self.point_in_rect(position, r[1]):
                     self.log.debug("CLICK on {} {}".format(parameter, r), extra=self.extra)
-                    clicked_parameter = parameter
-            if clicked_parameter:
-                self.log.debug("run_function for {}".format(clicked_parameter), extra=self.extra)
-                self.run_function(clicked_parameter)
+                    for f in self.current_page['fields']:
+                        try:
+                            if f['run']:
+                                plugin, method = f['run'].split(',')
+                                plugin = plugin.strip()
+                                method = method.strip()
+                                method_to_call = getattr(self.pm.plugins[plugin], method)
+                                method_to_call()
+                        except KeyError:
+                            pass
         elif click == 'LONG':
             self.render_pressed_button(position)
             for parameter, r in self.parameter_rect_list.items():
@@ -570,7 +577,6 @@ class layout(threading.Thread):
                      "load_current_layout": self.load_current_layout,
                      "next_page": self.next_page,
                      "prev_page": self.prev_page,
-                     "write_config": self.write_config,
                      "reboot": self.reboot,
                      "quit": self.quit}
         try:
@@ -812,10 +818,6 @@ class layout(threading.Thread):
 
     def quit(self):
         quit()
-
-    #FIXME That will be gone when functions are no longer hard coded
-    def write_config(self):
-        self.pm.parameters['write_config_requested']['value'] = True
 
     def reboot(self):
         self.quit()

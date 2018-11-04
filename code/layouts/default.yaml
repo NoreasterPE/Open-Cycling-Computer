@@ -570,8 +570,7 @@ pages:
                   y: 140
 
                 - parameter: write_config
-                  #FIXME Add soft defined function calls to layout
-                  #function: config.write_config
+                  run: config, write_config
                   button:
                           x0: 120
                           y0: 80

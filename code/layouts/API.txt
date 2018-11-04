@@ -17,6 +17,7 @@ Page header construction
 
 Field construction:
                 - parameter: session_time                           - mandatory, parameter name, for labels use 'label'
+                  run: [plugin], [function]                         - optional, short click will run [function] from [plugin]
                   resettable: yes                                   - optional, indictes if parameter can be resetted, cannot be used editable
                   editable: yes                                     - optional, indictes if parameter can be edited, cannot be used with resetteble
                   editor_title: Odometer                            - editor title, required if editable is 'yes'
