@@ -5,7 +5,7 @@
 import cairo
 import mmap
 import plugin
-import plugin_manager
+import pyplum
 import time
 
 
@@ -20,7 +20,7 @@ class pitft_rendering(plugin.plugin):
     def __init__(self):
         # Run init for super class
         super().__init__()
-        self.pm = plugin_manager.plugin_manager()
+        self.pm = pyplum.pyplum()
         ## @var width
         #  Window/screen width
         ## @var height

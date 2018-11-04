@@ -6,7 +6,7 @@
 import math
 import numbers
 import plugin
-import plugin_manager
+import pyplum
 import time
 import wheel
 
@@ -23,7 +23,7 @@ class compute(plugin.plugin):
         # Run init for super class
         super().__init__()
 
-        self.pm = plugin_manager.plugin_manager()
+        self.pm = pyplum.pyplum()
         self.pm.register_parameter("real_time", self.extra["module_name"])
         self.pm.register_parameter("slope", self.extra["module_name"], value=numbers.NAN, raw_unit="m/m", unit="%", units_allowed=["m/m", "%"])
         self.pm.register_parameter("speed", self.extra["module_name"], value=numbers.NAN, raw_unit="m/s", unit="km/h", units_allowed=["m/s", "km/h", "mi/h"])

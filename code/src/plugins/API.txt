@@ -5,7 +5,7 @@ This a draft version
     - function 'start' that can run in a separate thread, inheritance from plugin.plugin or threading.Thread to provide function 'run'
 
 2. Plugin can:
-    - after obtaining instance of plugin_manager s = plugin_manager.plugin_manager() plugin can access all core parameters and parameters registered by other plugins:
+    - after obtaining instance of plugin manager pyplum pm = pyplum.pyplum() plugin can access all core parameters and parameters registered by other plugins:
         pressure = s.parameters['pressure']['value']
         full list in layouts/valid_values or with 'git grep register_parameter | grep -v sensors.py'
     - registration of a parameter with s.register_parameter, see sensors.py for the details

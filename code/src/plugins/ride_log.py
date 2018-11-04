@@ -5,7 +5,7 @@
 import datetime
 import logging
 import plugin
-import plugin_manager
+import pyplum
 import time
 import yaml
 
@@ -25,7 +25,7 @@ class ride_log(plugin.plugin):
     def __init__(self):
         # Run init for super class
         super().__init__()
-        self.pm = plugin_manager.plugin_manager()
+        self.pm = pyplum.pyplum()
         self.pm.request_parameter("real_time", self.extra["module_name"])
         self.last_log_entry = 0.0
         self.pm.request_parameter("ride_log_config", self.extra["module_name"])

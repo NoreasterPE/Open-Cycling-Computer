@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-## @package plugin_manager
+## @package pyplum
 #  Sensors module. Responsible for connecting to, starting and stopping plugins.
 
 #from bluepy.btle import BTLEException
@@ -53,7 +53,7 @@ class Singleton(type):
 
 
 ## Class for handling starting/stopping plugins in separate threads
-class plugin_manager(threading.Thread, metaclass=Singleton):
+class pyplum(threading.Thread, metaclass=Singleton):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': __qualname__}
@@ -117,7 +117,7 @@ class plugin_manager(threading.Thread, metaclass=Singleton):
             self.log.debug("Initialising plugin {}".format(plugin), extra=self.extra)
             self.plugins[plugin] = plugin_class()
 
-    ## Main loop of plugin_manager module.Makes snap shot of parameters and after a delay compares it to the current state.
+    ## Main loop of pyplum module.Makes snap shot of parameters and after a delay compares it to the current state.
     # Changes of parameters are used to notify plugins that requested relevant parameters.
     #  @param self The python object self
     def run(self):

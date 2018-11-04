@@ -10,7 +10,7 @@ import events
 import layout
 import logging
 import logging.handlers
-import plugin_manager
+import pyplum
 import signal
 import sys
 import time
@@ -48,10 +48,10 @@ class open_cycling_computer(object, metaclass=singleton):
         #  Variable indicating is cleaning is in progress
         self.cleaning = False
         self.log.debug("Screen size is {} x {}".format(width, height), extra=self.extra)
-        self.log.debug("Getting plugin_manager", extra=self.extra)
+        self.log.debug("Getting plugin manager pyplum", extra=self.extra)
         ## @var pm
-        #  Handle to plugin_manager instance
-        self.pm = plugin_manager.plugin_manager()
+        #  Handle to pyplum instance
+        self.pm = pyplum.pyplum()
         self.pm.register_parameter("log_level", self.extra["module_name"], value='debug')
         self.pm.register_parameter("config_file", self.extra["module_name"], value=config_file)
         self.pm.register_parameter("layout_file", self.extra["module_name"], value=layout_file)
@@ -135,7 +135,7 @@ if __name__ == "__main__":
     ex = {'module_name': 'Main'}
     sys_logger.debug("Log start", extra=ex)
     sys_logger.debug("Setting up plugin manager", extra=ex)
-    p_manager = plugin_manager.plugin_manager()
+    p_manager = pyplum.pyplum()
     sys_logger.debug("Starting plugin manager", extra=ex)
     p_manager.start()
     ## @var main_window

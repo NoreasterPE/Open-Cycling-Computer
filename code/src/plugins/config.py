@@ -5,7 +5,7 @@
 import yaml
 from shutil import copyfile
 import plugin
-import plugin_manager
+import pyplum
 
 
 ## Main config class
@@ -21,7 +21,7 @@ class config(plugin.plugin):
     def __init__(self):
         # Run init for super class
         super().__init__()
-        self.pm = plugin_manager.plugin_manager()
+        self.pm = pyplum.pyplum()
         self.pm.register_parameter("write_config_requested", self.extra["module_name"], value=False)
         self.pm.request_parameter("write_config_requested", self.extra["module_name"])
         self.pm.request_parameter("config_file", self.extra["module_name"])

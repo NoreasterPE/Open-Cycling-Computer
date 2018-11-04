@@ -7,7 +7,7 @@ import kalman
 import math
 import numbers
 import plugin
-import plugin_manager
+import pyplum
 import time
 
 
@@ -27,7 +27,7 @@ class bmp280(plugin.plugin):
         #  Time between measurements in [s]
         self.measurement_delay = 1.0
 
-        self.pm = plugin_manager.plugin_manager()
+        self.pm = pyplum.pyplum()
         self.pm.register_parameter("pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])
         self.pm.register_parameter("pressure_nof", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])
         self.pm.register_parameter("mean_sea_level_pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])

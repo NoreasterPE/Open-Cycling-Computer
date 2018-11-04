@@ -1,5 +1,6 @@
 PRIORITY
 -ble scanner/picker
+- clean pyplum
 
 UI
 - overlay for showing messages to user

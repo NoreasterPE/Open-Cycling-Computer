@@ -6,7 +6,7 @@ sys.path.insert(0, '../helpers')
 sys.path.insert(0, '../')
 import ble_hr
 import logging
-import plugin_manager
+import pyplum
 
 
 if __name__ == '__main__':
@@ -19,7 +19,7 @@ if __name__ == '__main__':
     logging.getLogger('system').addHandler(sys_log_handler)
     sys_logger = logging.getLogger('system')
     sys_logger.debug("Log start", extra=ex)
-    s = plugin_manager.plugin_manager()
+    s = pyplum.pyplum()
 
     try:
         sys_logger.debug("Initialising BLE device...", extra=ex)

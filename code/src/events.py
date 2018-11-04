@@ -7,7 +7,7 @@
 import logging
 import operator
 import queue
-import plugin_manager
+import pyplum
 
 ## @var LONG_CLICK
 # Time of long click in ms All clicks over 0.8s are considered "long".
@@ -39,7 +39,7 @@ class events():
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
-        self.pm = plugin_manager.plugin_manager()
+        self.pm = pyplum.pyplum()
         self.running = False
         self.ignore_touch = False
         self.event_queue = queue.Queue()

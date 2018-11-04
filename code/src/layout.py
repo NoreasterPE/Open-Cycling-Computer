@@ -8,7 +8,7 @@ import datetime
 import logging
 import numbers
 import os
-import plugin_manager
+import pyplum
 import queue
 import sys
 import threading
@@ -31,7 +31,7 @@ class layout(threading.Thread):
         self.font_initialised = False
         ## @var s
         #  Sensors instance
-        self.pm = plugin_manager.plugin_manager()
+        self.pm = pyplum.pyplum()
         ## @var layout_file
         #  Location of layout file
         self.layout_file = self.pm.parameters['layout_file']['value']

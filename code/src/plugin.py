@@ -49,7 +49,7 @@ class plugin(threading.Thread):
     def reset_data(self):
         pass
 
-    ## Usedb by module plugin_manager to notify about change of a reqired parameter. Overwrite with code that needs to be executed on change of the parameters.
+    ## Usedb by module pyplum to notify about change of a reqired parameter. Overwrite with code that needs to be executed on change of the parameters.
     #  @param self The python object self
     #  @param reqired Dict with new values for require parameters
     def notification(self):
