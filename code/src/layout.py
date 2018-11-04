@@ -525,7 +525,7 @@ class layout(threading.Thread):
         elif click == 'L_TO_R':  # Swipe LEFT to RIGHT
             self.run_function("prev_page")
         elif click == 'B_TO_T':  # Swipe BOTTOM to TOP
-            self.run_function("page_0")
+            self.use_main_page()
         elif click == 'T_TO_B':  # Swipe TOP to BOTTOM
             self.run_function("settings")
 
@@ -565,8 +565,7 @@ class layout(threading.Thread):
             self.parameter_for_reset = None
 
     def run_function(self, parameter):
-        functions = {"page_0": self.load_page_0,
-                     "settings": self.load_settings_page,
+        functions = { "settings": self.load_settings_page,
                      "log_level": self.log_level,
                      "load_default_layout": self.load_default_layout,
                      "load_current_layout": self.load_current_layout,
@@ -579,9 +578,6 @@ class layout(threading.Thread):
             self.log.debug("CLICK on non-clickable {}".format(parameter), extra=self.extra)
             return
         functions[parameter]()
-
-    def load_page_0(self):
-        self.use_main_page()
 
     def load_settings_page(self):
         self.use_page("settings_0")
