@@ -12,29 +12,28 @@ UI
 CODING STYLE:
 - move formatting code to numbers module and use in layout and ride_log
 - make draft plugin API document
-- move all editor functions from layout.py to a separate module
-- allow for plugin.function in layout file
 - some "available" function to check if a parameter is present and has a meaningful value (not None, not NAN). Used to safe guard math calcs
 
 REAL WORLD PROBLEMS:
 - proper command line argument parsing in occ.py
-- session distance changes after odometer edition.
 - tidy up current/default layout loading. Dafault is a backup, current is the currently used.
 - Unit syncronistion. I.e. Odometer and session distance
-- Max speed will be false sooner or later after a single invalid measurement. Kalman filter required.
-- Average cadence to be calculated for ride time (reset with ride time?)
 - Do not try to initialise subsystems too many times. If GPS/other sensor is not there it won't magically show up. Log error and give up.
 - Add a module to allow real live raw data monitoring
-- Use Kalman filter for speed - BLE SC goes crazy sometimes
-- Use Kalman filter for heart rate - ble_hr goes crazy sometimes
-- Use Kalman filter for cadence - ble_sc goes crazy sometimes
 - Quit/Halt should render some exit screen
 - BLE device name might be too long for assigned space. Split or cut. Use i4oled code if needed.
 - Set up low battery warning/shutdown. Pimoroni Lipo shim informs about battery state.
 - units_allowed should come from unit_converter
-- slope in % needs different formatting than in m/m
-- changing MSLP or reference_altitude triggers crazy slope. Reset slope calcs variables or filter the jump
 - add description to each parameter in the code. That might be used in the future in layout editor and to generate valid layout values file TBC, maybe doxygen strings?
+
+DATA QUALITY:
+- Use Kalman filter for speed - BLE SC goes crazy sometimes
+- Use Kalman filter for heart rate - ble_hr goes crazy sometimes
+- Use Kalman filter for cadence - ble_sc goes crazy sometimes
+- changing MSLP or reference_altitude triggers crazy slope. Reset slope calcs variables or filter the jump
+- Average cadence to be calculated for ride time (reset with ride time?)
+- Max speed will be false sooner or later after a single invalid measurement. Kalman filter required.
+- session distance changes after odometer edition.
 
 CODE ERRORS:
 - Threads write to log aftred log end [ERROR]
@@ -60,7 +59,7 @@ OPTIONAL:
 - Button maps with colour images
 - Auto reload layout on date time of modification change might be handy
 - Explore python-osmgpsmap
-- Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense
+- Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense. slope in % needs different formatting than in m/m
 
 FUTURE
 - Use real ff fonts instead of the "toy" cairo API [POSTPONED, no pycairo support. cairo_helper used instead]
@@ -254,3 +253,5 @@ TypeError: argument 1 must be pygame.Surface, not None
 114. [DONE] - config module should determine what to read and what to write using the content of config file. Currently it's hardcoded.
 115. [DONE] - move all wheel_size/wheel_circumference code to compute.py
 116. [DONE] - create editor_list for list selection (wheel size)
+117. [DONE] - move all editor functions from layout.py to a separate module
+118. [DONE] - allow for plugin.function in layout file
