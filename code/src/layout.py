@@ -48,7 +48,7 @@ class layout(threading.Thread):
         self.uc = unit_converter.unit_converter()
         self.editor_fields = None
         self.pages = {}
-        self.parameter_rect_list = {}
+        self.button_rectangles = {}
         self.current_image_list = {}
         self.load_layout(self.layout_file)
         self.stop_timer = False
@@ -181,7 +181,7 @@ class layout(threading.Thread):
         self.parse_font()
         self.parse_text_colour()
 
-        self.parameter_rect_list = {}
+        self.button_rectangles = {}
         if self.current_page['fields'] is not None:
             for field in self.current_page['fields']:
                 self.parse_parameter(field)
@@ -231,7 +231,7 @@ class layout(threading.Thread):
             except KeyError:
                 self.log.critical("Button field present, but invalid x0, y0, w or b detected at parameter {} on page {}.".format(name, self.current_page), extra=self.extra)
                 self.log.critical("Button for {} won't work.".format(name), extra=self.extra)
-            self.parameter_rect_list[meta_name] = (name, rect)
+            self.button_rectangles[meta_name] = (name, rect)
         except KeyError:
             pass
         try:
@@ -460,7 +460,7 @@ class layout(threading.Thread):
 
     def render_all_buttons(self):
         # LAYOUT DEBUG FUNCION
-        for parameter, r in self.parameter_rect_list.items():
+        for parameter, r in self.button_rectangles.items():
             fr = r[1]
             self.ctx.set_source_rgb(0.0, 1.0, 0.0)
             self.ctx.rectangle(fr[0], fr[1], fr[2], fr[3])
@@ -474,7 +474,7 @@ class layout(threading.Thread):
         if self.ctx is None:
             return
         self.log.debug("render_pressed_button started", extra=self.extra)
-        for parameter, r in self.parameter_rect_list.items():
+        for parameter, r in self.button_rectangles.items():
             if self.point_in_rect(pressed_pos, r[1]):
                 fr = r[1]
                 self.ctx.set_source_surface(self.buttons_image, 0, 0)
@@ -491,7 +491,7 @@ class layout(threading.Thread):
         parameter_for_reset = None
         if click == 'SHORT':
             self.render_pressed_button(position)
-            for parameter, r in self.parameter_rect_list.items():
+            for parameter, r in self.button_rectangles.items():
                 if self.point_in_rect(position, r[1]):
                     self.log.debug("CLICK on {} {}".format(parameter, r), extra=self.extra)
                     for f in self.current_page['fields']:
@@ -508,7 +508,7 @@ class layout(threading.Thread):
             self.pm.render['refresh'] = True
         elif click == 'LONG':
             self.render_pressed_button(position)
-            for parameter, r in self.parameter_rect_list.items():
+            for parameter, r in self.button_rectangles.items():
                 if self.point_in_rect(position, r[1]):
                     for f in self.current_page['fields']:
                         try:
