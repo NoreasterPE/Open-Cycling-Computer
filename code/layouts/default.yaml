@@ -597,6 +597,7 @@ pages:
                           h: 80
 
                 - parameter: log_level
+                  run: syscalls, cycle_log_level
                   x: 180
                   y: 200
                   text:

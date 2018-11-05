@@ -76,6 +76,12 @@ class layout(threading.Thread):
                     self.check_click(position, click)
                 if ev_type == 'show_main_page':
                     self.use_main_page()
+                if ev_type == 'reload_layout':
+                     self.reload_layout()
+                if ev_type == 'next_page':
+                    self.next_page()
+                if ev_type == 'prev_page':
+                    self.prev_page()
                 if ev_type == 'refresh':
                     self.refresh_display()
                     if not self.stop_timer:
@@ -524,9 +530,9 @@ class layout(threading.Thread):
                             else:
                                 self.log.debug("LONG CLICK on non-clickable {}".format(r[0]), extra=self.extra)
         elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
-            self.run_function("next_page")
+            self.next_page()
         elif click == 'L_TO_R':  # Swipe LEFT to RIGHT
-            self.run_function("prev_page")
+            self.prev_page()
         elif click == 'B_TO_T':  # Swipe BOTTOM to TOP
             self.use_main_page()
         elif click == 'T_TO_B':  # Swipe TOP to BOTTOM
@@ -566,20 +572,6 @@ class layout(threading.Thread):
             self.log.debug("Resetting {} with list: {}".format(parameter_for_reset, reset_list), extra=self.extra)
             self.pm.parameter_reset(parameter_for_reset, reset_list)
             self.parameter_for_reset = None
-
-    def run_function(self, parameter):
-        functions = {"log_level": self.log_level,
-                     "load_default_layout": self.load_default_layout,
-                     "load_current_layout": self.load_current_layout,
-                     "next_page": self.next_page,
-                     "prev_page": self.prev_page}
-        try:
-            if functions[parameter] is not None:
-                self.log.debug("Calling function for parameter {}".format(parameter), extra=self.extra)
-        except KeyError:
-            self.log.debug("CLICK on non-clickable {}".format(parameter), extra=self.extra)
-            return
-        functions[parameter]()
 
     def get_page(self, page_type, page_no):
         self.log.debug("get_page {} {} ".format(page_type, page_no), extra=self.extra)
@@ -625,27 +617,8 @@ class layout(threading.Thread):
             except KeyError:
                 self.log.critical("Page {} of type {} not found!".format(self.max_page_id, page_type), extra=self.extra)
 
-    def load_layout_by_name(self, name):
-        self.load_layout("layouts/" + name)
-
-    def load_current_layout(self):
-        self.load_layout_by_name("current.yaml")
-
-    def load_default_layout(self):
-        self.load_layout_by_name("default.yaml")
-
-    #FIXME Move it to a better location
-    def log_level(self):
-        log_level = self.log.getEffectiveLevel()
-        log_level += 10
-        if log_level > 50:
-            log_level = 10
-        log_level_name = logging.getLevelName(log_level)
-        self.log.debug("Changing log level to: {}".format(log_level_name), extra=self.extra)
-        try:
-            self.pm.parameters['log_level']['value'] = log_level_name
-        except KeyError:
-            pass
+    def reload_layout(self, name):
+        self.load_layout(self.layout_file)
 
     def png_to_cairo_surface(self, file_path):
         png_surface = cairo.ImageSurface.create_from_png(file_path)
