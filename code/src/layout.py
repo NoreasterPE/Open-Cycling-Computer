@@ -194,23 +194,38 @@ class layout(threading.Thread):
         self.parameter_rect_list = {}
         if self.current_page['fields'] is not None:
             for field in self.current_page['fields']:
-                try:
-                    b = field['button']
-                except KeyError:
-                    b = None
-                if (b is not None):
-                    rect = (int(b.get('x0')), int(b.get('y0')), int(b.get('w')), int(b.get('h')))
-                    name = field.get('parameter')
-                    try:
-                        meta_name = name + "_" + field['show']
-                    except KeyError:
-                        meta_name = name
-                    self.parameter_rect_list[meta_name] = (name, rect)
-                    try:
-                        if (field['file'] is not None):
-                            self.current_image_list[field['file']] = self.load_image(field['file'])
-                    except KeyError:
-                        pass
+                self.parse_parameter(field)
+
+    def parse_parameter(self, field):
+        try:
+            name = field['parameter']
+        except KeyError:
+            self.log.critical("Parameter {} on page {}. Parameter field is mandatory.".format(name, self.current_page), extra=self.extra)
+            name = None
+        try:
+            show = field['show']
+        except KeyError:
+            show = ''
+        meta_name = name + "_" + show
+        meta_name = meta_name.strip('_')
+        try:
+            b = field['button']
+            try:
+                rect = (int(b['x0']),
+                        int(b['y0']),
+                        int(b['w']),
+                        int(b['h']))
+            except KeyError:
+                self.log.critical("Button field present, but invalid x0, y0, w or b detected at parameter {} on page {}.".format(name, self.current_page), extra=self.extra)
+                self.log.critical("Button for {} won't work.".format(name), extra=self.extra)
+            self.parameter_rect_list[meta_name] = (name, rect)
+        except KeyError:
+            pass
+        try:
+            image_file = field['file']
+            self.current_image_list[image_file] = self.load_image(image_file)
+        except KeyError:
+            image_file = None
 
     def load_image(self, image_path):
         try:
