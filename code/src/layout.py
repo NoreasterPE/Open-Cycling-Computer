@@ -184,13 +184,13 @@ class layout(threading.Thread):
         self.page_font_size = self.current_page['font_size']
         if (self.font == ""):
             self.font = None
-        self.fg_colour_rgb = self.current_page['fg_colour']
-        fg_colour_rgb = self.fg_colour_rgb
-        if fg_colour_rgb[0] == '#':
-            fg_colour_rgb = fg_colour_rgb[1:]
-        r, g, b = fg_colour_rgb[:2], fg_colour_rgb[2:4], fg_colour_rgb[4:]
+        self.text_colour_rgb = self.current_page['text_colour']
+        text_colour_rgb = self.text_colour_rgb
+        if text_colour_rgb[0] == '#':
+            text_colour_rgb = text_colour_rgb[1:]
+        r, g, b = text_colour_rgb[:2], text_colour_rgb[2:4], text_colour_rgb[4:]
         r, g, b = [int(n, 16) for n in (r, g, b)]
-        self.fg_colour = (r, g, b)
+        self.text_colour = (r, g, b)
         self.parameter_rect_list = {}
         if self.current_page['fields'] is not None:
             for field in self.current_page['fields']:
@@ -421,7 +421,7 @@ class layout(threading.Thread):
             # 18 is font size for which font_extents has height. So far no scaled_font_extents function
             y_shift = 0.5 * self.font_extents[2] * fs / 18
             if string_format != "zoomed_digit":
-                self.text_to_surface(uv, position_x + x_shift, position_y + y_shift, self.fg_colour)
+                self.text_to_surface(uv, position_x + x_shift, position_y + y_shift, self.text_colour)
             else:
                 SCALE = 1.4
                 uv = self.editor_fields["value"]
@@ -442,8 +442,8 @@ class layout(threading.Thread):
 
                 self.text_to_surface(rv2, rv2_x, position_y + SCALE * y_shift, (1.0, 0.0, 0.0))
                 self.ctx.set_font_size(fs)
-                self.text_to_surface(rv1, rv1_x, position_y + y_shift, self.fg_colour)
-                self.text_to_surface(rv3, rv3_x, position_y + y_shift, self.fg_colour)
+                self.text_to_surface(rv1, rv1_x, position_y + y_shift, self.text_colour)
+                self.text_to_surface(rv3, rv3_x, position_y + y_shift, self.text_colour)
 
     def render_all_buttons(self):
         # LAYOUT DEBUG FUNCION

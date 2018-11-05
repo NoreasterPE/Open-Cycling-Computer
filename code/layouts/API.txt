@@ -12,7 +12,7 @@ Page header construction
          buttons: images/button_pressed.png                         - image with button, rendered when button is pressed
          font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"   - page font, currently only one font per layout is allowed due to pycairo workaround
          font_size: 20                                              - page fotn sie, used if font is not directly defined in field (see below)
-         fg_colour: FFFFFF                                          - not yet used
+         text_colour: FFFFFF                                        - text colour
          fields:                                                    - begining of section with field definitions
 
 Field construction:

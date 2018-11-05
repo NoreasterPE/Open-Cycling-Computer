@@ -7,7 +7,7 @@ pages:
          buttons: images/button_pressed.png
          font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
          font_size: 30
-         fg_colour: FFFFFF
+         text_colour: FFFFFF
          fields:
                 - parameter: real_time
                   format: time

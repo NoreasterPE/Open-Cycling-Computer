@@ -7,7 +7,7 @@ pages:
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 20
-         fg_colour: FFFFFF
+         text_colour: FFFFFF
          fields:
                 - parameter: speed
                   x: 85
@@ -170,7 +170,7 @@ pages:
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 24
-         fg_colour: FFFFFF
+         text_colour: FFFFFF
          fields:
                 - parameter: real_time
                   format: time
@@ -315,7 +315,7 @@ pages:
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 16
-         fg_colour: FFFFFF
+         text_colour: FFFFFF
          fields:
 #               - parameter: latitude
 #                  x: 60
@@ -376,7 +376,7 @@ pages:
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 20
-         fg_colour: FFFFFF
+         text_colour: FFFFFF
          fields:
                 - parameter: label
                   x: 60
@@ -528,7 +528,7 @@ pages:
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 24
-         fg_colour: FFFFFF
+         text_colour: FFFFFF
          fields:
                 - parameter: halt
                   run: syscalls, halt
@@ -615,7 +615,7 @@ pages:
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 20
-         fg_colour: FFFFFF
+         text_colour: FFFFFF
          fields:
                 - parameter: label
                   x: 60
@@ -777,7 +777,7 @@ pages:
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 50
-         fg_colour: FFFFFF
+         text_colour: FFFFFF
          fields:
                 - parameter: ed_accept
                   run: editor, ed_accept
@@ -843,7 +843,7 @@ pages:
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 30
-         fg_colour: FFFFFF
+         text_colour: FFFFFF
          fields:
                 - parameter: ed_accept
                   run: editor, ed_accept
@@ -938,7 +938,7 @@ pages:
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 30
-         fg_colour: FFFFFF
+         text_colour: FFFFFF
          fields:
                 - parameter: ed_accept
                   run: editor, ed_accept
@@ -1029,7 +1029,7 @@ pages:
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 16
-         fg_colour: FFFFFF
+         text_colour: FFFFFF
          fields:
                 - parameter: ble_scan
                   x: 60
@@ -1107,7 +1107,7 @@ pages:
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 50
-         fg_colour: FFFFFF
+         text_colour: FFFFFF
          fields:
                 - parameter: ed_accept
                   run: editor, ed_accept
