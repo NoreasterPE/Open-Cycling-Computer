@@ -48,7 +48,6 @@ class layout(threading.Thread):
         self.uc = unit_converter.unit_converter()
         self.editor_fields = None
         self.page_list = {}
-        self.page_index = {}
         self.parameter_rect_list = {}
         self.current_image_list = {}
         self.load_layout(self.layout_file)
@@ -120,7 +119,6 @@ class layout(threading.Thread):
         self.max_page_id = 0
         self.max_settings_id = 0
         self.page_list = {}
-        self.page_index = {}
         try:
             with open(layout_file) as f:
                 self.log.debug("Loading layout {}".format(layout_file), extra=self.extra)
@@ -145,7 +143,6 @@ class layout(threading.Thread):
         for page in self.layout_tree['pages']:
             page_id = page['id']
             self.page_list[page_id] = page
-            self.page_index[page_id] = page['name']
             page_type = page['type']
             _number = page['number']
             if page_type == 'normal':
