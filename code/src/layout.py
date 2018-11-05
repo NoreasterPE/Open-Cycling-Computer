@@ -493,11 +493,14 @@ class layout(threading.Thread):
                             try:
                                 if f['resettable']:
                                     resettable = True
-                                try:
-                                    if f['reset']:
-                                        reset_list = f['reset'].split(',')
-                                except KeyError:
-                                        reset_list = []
+                                    try:
+                                        if f['reset']:
+                                            reset_list = f['reset'].split(',')
+                                    except KeyError:
+                                            reset_list = []
+                                    reset_list.append(show)
+                                    parameter_for_reset = f["parameter"]
+                                    break
                             except KeyError:
                                     resettable = False
                             try:
@@ -518,16 +521,11 @@ class layout(threading.Thread):
                                         self.editor_fields["format"] = f["format"]
                                     except KeyError:
                                         self.editor_fields["format"] = "%.0f"
+                                    self.editor_fields["parameter"] = r[0]
+                                    break
                             except KeyError:
                                     editable = False
-                            if resettable:
-                                reset_list.append(show)
-                                parameter_for_reset = f["parameter"]
-                                break
-                            elif editable:
-                                self.editor_fields["parameter"] = r[0]
-                                break
-                            else:
+                            if not(resettable and editable):
                                 self.log.debug("LONG CLICK on non-clickable {}".format(r[0]), extra=self.extra)
         elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
             self.next_page()
