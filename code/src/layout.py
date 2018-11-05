@@ -117,7 +117,7 @@ class layout(threading.Thread):
         # Check if cairo context has changed
         if self.ctx != self.pm.render['ctx']:
             self.ctx = self.pm.render['ctx']
-        if not self.font_initialised:
+        if not self.font_initialised and self.ctx is not None:
             try:
                 # Only one font is allowed for now due to cairo_helper workaround
                 self.log.debug("Calling cairo_helper for {}".format(self.fonts_dir + self.font), extra=self.extra)
