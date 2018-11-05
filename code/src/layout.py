@@ -427,8 +427,8 @@ class layout(threading.Thread):
 
                 self.text_to_surface(rv2, rv2_x, position_y + SCALE * y_shift, (1.0, 0.0, 0.0))
                 self.ctx.set_font_size(fs)
-                self.text_to_surface(rv1, rv1_x, position_y + y_shift, rgb_colour)
-                self.text_to_surface(rv3, rv3_x, position_y + y_shift, rgb_colour)
+                self.text_to_surface(rv1, rv1_x, position_y + y_shift, self.fg_colour)
+                self.text_to_surface(rv3, rv3_x, position_y + y_shift, self.fg_colour)
 
     def render_all_buttons(self):
         # LAYOUT DEBUG FUNCION
