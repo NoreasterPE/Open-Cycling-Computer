@@ -3,6 +3,7 @@ PRIORITY
 - clean pyplum
 
 UI
+- refresh screenshots for README/web page
 - overlay for showing messages to user
 - BLE device list expiry time. Currently never expires
 - There is no way to disconnect from a BLE device
