@@ -27,6 +27,8 @@ class layout(threading.Thread):
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
+        ## @var font_initialised
+        #  Indicates if cairo font has been initialised.
         self.font_initialised = False
         ## @var s
         #  Sensors instance
@@ -45,12 +47,24 @@ class layout(threading.Thread):
         ## @var cr
         #  Handle to cairo context
         self.ctx = self.pm.render['ctx']
+        ## @var uc
+        #  Handle of unit_converter. Helper for converting units.
         self.uc = unit_converter.unit_converter()
+        ## @var editor_fields
+        #  Dict with data for editor pages.
         self.editor_fields = None
+        ## @var pages
+        #  Dict with parsed pages from layout file.
         self.pages = {}
+        ## @var button_rectangles
+        #  Dict with buttons. Parsed for layout file
         self.button_rectangles = {}
+        ## @var images
+        #  Dict with images loaded with png_to_cairo_surface. Currently only pngs are supported.
         self.images = {}
         self.load_layout(self.layout_file)
+        ## @var  stop_timer
+        #  Control variable of the refresh event. Set to True to stop calling generate_refresh_event
         self.stop_timer = False
         self.start()
         #FIXME timer and layout module are unstoppable ;-) to be fixed
