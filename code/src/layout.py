@@ -49,7 +49,7 @@ class layout(threading.Thread):
         self.editor_fields = None
         self.pages = {}
         self.button_rectangles = {}
-        self.current_image_list = {}
+        self.images = {}
         self.load_layout(self.layout_file)
         self.stop_timer = False
         self.start()
@@ -236,7 +236,7 @@ class layout(threading.Thread):
             pass
         try:
             image_file = field['file']
-            self.current_image_list[image_file] = self.load_image(image_file)
+            self.images[image_file] = self.load_image(image_file)
         except KeyError:
             image_file = None
 
@@ -411,9 +411,9 @@ class layout(threading.Thread):
             except (KeyError, TypeError):
                 pass
             if image_path is not None:
-                if image_path not in self.current_image_list:
-                    self.current_image_list[image_path] = self.load_image(image_path)
-                image = self.current_image_list[image_path]
+                if image_path not in self.images:
+                    self.images[image_path] = self.load_image(image_path)
+                image = self.images[image_path]
                 if image is not None:
                     self.image_to_surface(image, position_x, position_y)
             try:
