@@ -196,4 +196,4 @@ class editor(plugin.plugin):
 
     def finish_editing(self):
         if self.pm.event_queue is not None:
-            self.pm.event_queue.put(('show_main_page', None, None))
+            self.pm.event_queue.put(('show_main_page',))

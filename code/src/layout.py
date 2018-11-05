@@ -58,7 +58,7 @@ class layout(threading.Thread):
 
     def generate_refresh_event(self):
         if self.pm.event_queue is not None:
-            self.pm.event_queue.put(('refresh', None, None))
+            self.pm.event_queue.put(('refresh',))
 
     def run(self):
         self.timer = threading.Timer(0.5, self.generate_refresh_event)
@@ -68,8 +68,11 @@ class layout(threading.Thread):
         self.running = True
         while self.running:
             try:
-                ev_type, position, click = self.pm.event_queue.get(block=True, timeout=1)
+                event = self.pm.event_queue.get(block=True, timeout=1)
+                ev_type = event[0]
                 if ev_type == 'touch':
+                    position = event[1]
+                    click = event[2]
                     self.check_click(position, click)
                 if ev_type == 'show_main_page':
                     self.use_main_page()
@@ -83,6 +86,8 @@ class layout(threading.Thread):
             except AttributeError:
                 #queue doesn't exist
                 pass
+            except IndexError:
+                self.log.crirtical("Invalid event: {}".format(event), extra=self.extra)
 
     def refresh_display(self):
         # Check if cairo context has changed
@@ -563,7 +568,7 @@ class layout(threading.Thread):
             self.parameter_for_reset = None
 
     def run_function(self, parameter):
-        functions = { "log_level": self.log_level,
+        functions = {"log_level": self.log_level,
                      "load_default_layout": self.load_default_layout,
                      "load_current_layout": self.load_current_layout,
                      "next_page": self.next_page,
