@@ -22,6 +22,10 @@ class layout(threading.Thread):
     # Module name used for logging and prefixing data
     extra = {'module_name': __qualname__}
 
+    ## @var DISPLAY_REFRESH
+    # Time between display refresh events. This is not display fps!
+    DISPLAY_REFRESH = 0.5
+
     def __init__(self):
         super().__init__()
         ## @var log
@@ -63,9 +67,9 @@ class layout(threading.Thread):
         #  Dict with images loaded with png_to_cairo_surface. Currently only pngs are supported.
         self.images = {}
         self.load_layout(self.layout_file)
-        ## @var  stop_timer
-        #  Control variable of the refresh event. Set to True to stop calling generate_refresh_event
-        self.stop_timer = False
+        ## @var  schedule_display_refresh
+        #  Control variable of the display refresh event. Set to True to stop calling generate_refresh_event
+        self.schedule_display_refresh = True
         self.start()
         #FIXME timer and layout module are unstoppable ;-) to be fixed
 
@@ -74,7 +78,7 @@ class layout(threading.Thread):
             self.pm.event_queue.put(('refresh',))
 
     def run(self):
-        self.timer = threading.Timer(0.5, self.generate_refresh_event)
+        self.timer = threading.Timer(self.DISPLAY_REFRESH, self.generate_refresh_event)
         self.timer.start()
         while self.pm.event_queue is None:
             time.sleep(0.5)
@@ -97,8 +101,8 @@ class layout(threading.Thread):
                     self.prev_page()
                 if ev_type == 'refresh':
                     self.refresh_display()
-                    if not self.stop_timer:
-                        self.timer = threading.Timer(0.5, self.generate_refresh_event)
+                    if self.schedule_display_refresh:
+                        self.timer = threading.Timer(self.DISPLAY_REFRESH, self.generate_refresh_event)
                         self.timer.start()
             except queue.Empty:
                 pass
