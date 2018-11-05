@@ -25,6 +25,7 @@ class config(plugin.plugin):
         self.pm.register_parameter("write_config_requested", self.extra["module_name"], value=False)
         self.pm.request_parameter("write_config_requested", self.extra["module_name"])
         self.pm.request_parameter("config_file", self.extra["module_name"])
+        self.pm.request_parameter("log_level", self.extra["module_name"])
         self.log_level = None
         #FIXME Add config safe copy
         ## @var config_file
