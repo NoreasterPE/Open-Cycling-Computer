@@ -77,7 +77,7 @@ class layout(threading.Thread):
                 if ev_type == 'show_main_page':
                     self.use_main_page()
                 if ev_type == 'reload_layout':
-                     self.reload_layout()
+                    self.reload_layout()
                 if ev_type == 'next_page':
                     self.next_page()
                 if ev_type == 'prev_page':
