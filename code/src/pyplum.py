@@ -5,6 +5,7 @@
 #from bluepy.btle import BTLEException
 import copy
 import logging
+import math
 import num
 import threading
 import time
@@ -96,10 +97,21 @@ class pyplum(threading.Thread, metaclass=Singleton):
             time.sleep(1.0)
             notify = list()
             for parameter, content in self.parameters.items():
+                curr_val = content['value']
+                prev_val = self.previous_parameters[parameter]["value"]
+                try:
+                    if math.isnan(curr_val) and math.isnan(prev_val):
+                        # Skip comparison if previous and current values are nan. nan != nan is always True
+                        continue
+                except TypeError:
+                    # TypeError on NoneType or not float type
+                    pass
                 try:
                     if self.previous_parameters[parameter]["force_notification"] or \
-                       self.previous_parameters[parameter]["value"] != content["value"]:
+                       prev_val != curr_val:
                         self.parameters[parameter]["force_notification"] = False
+                        #print('change in {}'.format(parameter))
+                        #print('{} >> {}'.format(prev_val, curr_val))
                         if content["required_by"] is not None:
                             for m in content["required_by"]:
                                 notify.append(m)
