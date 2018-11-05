@@ -1,6 +1,8 @@
 #!/bin/sh
-CONFIG='config/config_weather.yaml'
-LAYOUT='layouts/weather.yaml'
-HELPERS='src/helpers'
-PYTHONPATH=$HELPERS python3 src/occ.py $CONFIG $LAYOUT
-
+PWD=$(pwd)
+CONFIG=$PWD'/config/config_weather.yaml'
+LOG_CONFIG=$PWD'/config/weather_log.yaml'
+LAYOUT=$PWD'/layouts/weather.yaml'
+FONTS=$PWD'/fonts/'
+HELPERS=$PWD'/src/helpers'
+PYTHONPATH=$HELPERS python3 src/occ.py $CONFIG $LOG_CONFIG $LAYOUT $FONTS
