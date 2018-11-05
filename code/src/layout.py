@@ -525,7 +525,7 @@ class layout(threading.Thread):
         elif click == 'B_TO_T':  # Swipe BOTTOM to TOP
             self.use_main_page()
         elif click == 'T_TO_B':  # Swipe TOP to BOTTOM
-            self.run_function("settings")
+            self.use_page("settings_0")
 
         if editable:
             self.log.debug("Opening editor {} for {}".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
@@ -563,8 +563,7 @@ class layout(threading.Thread):
             self.parameter_for_reset = None
 
     def run_function(self, parameter):
-        functions = {"settings": self.load_settings_page,
-                     "log_level": self.log_level,
+        functions = { "log_level": self.log_level,
                      "load_default_layout": self.load_default_layout,
                      "load_current_layout": self.load_current_layout,
                      "next_page": self.next_page,
@@ -576,9 +575,6 @@ class layout(threading.Thread):
             self.log.debug("CLICK on non-clickable {}".format(parameter), extra=self.extra)
             return
         functions[parameter]()
-
-    def load_settings_page(self):
-        self.use_page("settings_0")
 
     def get_page(self, page_type, page_no):
         self.log.debug("get_page {} {} ".format(page_type, page_no), extra=self.extra)
