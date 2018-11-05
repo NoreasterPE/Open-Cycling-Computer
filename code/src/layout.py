@@ -394,10 +394,8 @@ class layout(threading.Thread):
                 x_shift = 0.0
             # 18 is font size for which font_extents has height. So far no scaled_font_extents function
             y_shift = 0.5 * self.font_extents[2] * fs / 18
-            #FIXME add rgb_colour to layout files
-            rgb_colour = (1.0, 1.0, 1.0)
             if string_format != "zoomed_digit":
-                self.text_to_surface(uv, position_x + x_shift, position_y + y_shift, rgb_colour)
+                self.text_to_surface(uv, position_x + x_shift, position_y + y_shift, self.fg_colour)
             else:
                 SCALE = 1.4
                 uv = self.editor_fields["value"]
