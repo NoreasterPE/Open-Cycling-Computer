@@ -45,9 +45,10 @@ class layout(threading.Thread):
         self.fonts_dir = self.pm.parameters['fonts_dir']['value']
         ## @var width
         #  Window/screen width
+        self.width = self.pm.parameters['display_size']["value"][0]
         ## @var height
         #  Window/screen height
-        self.width, self.height = self.pm.parameters['display_size']["value"]
+        self.height = self.pm.parameters['display_size']["value"][1]
         ## @var cr
         #  Handle to cairo context
         self.ctx = self.pm.render['ctx']
