@@ -28,4 +28,5 @@ class syscalls(plugin.plugin):
 
     def quit(self):
         print('quit')
+        # FIXME It doesn't stop all threades, so it's useless
         quit()
