@@ -65,6 +65,5 @@ if __name__ == '__main__':
     ble = ble_scanner()
     print('Scanning for 5s')
     ble.scan()
-    print(ble.ble_devices)
     for i in ble.ble_devices:
         print(i)
