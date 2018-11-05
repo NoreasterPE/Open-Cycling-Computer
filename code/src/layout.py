@@ -47,7 +47,7 @@ class layout(threading.Thread):
         self.ctx = self.pm.render['ctx']
         self.uc = unit_converter.unit_converter()
         self.editor_fields = None
-        self.page_list = {}
+        self.pages = {}
         self.parameter_rect_list = {}
         self.current_image_list = {}
         self.load_layout(self.layout_file)
@@ -118,7 +118,7 @@ class layout(threading.Thread):
             return
         self.max_page_id = 0
         self.max_settings_id = 0
-        self.page_list = {}
+        self.pages = {}
         try:
             with open(layout_file) as f:
                 self.log.debug("Loading layout {}".format(layout_file), extra=self.extra)
@@ -142,7 +142,7 @@ class layout(threading.Thread):
 
         for page in self.layout_tree['pages']:
             page_id = page['id']
-            self.page_list[page_id] = page
+            self.pages[page_id] = page
             page_type = page['type']
             _number = page['number']
             if page_type == 'normal':
@@ -157,7 +157,7 @@ class layout(threading.Thread):
         self.log.debug("use_page {}".format(page_id), extra=self.extra)
         self.pm.render['refresh'] = True
         try:
-            self.current_page = self.page_list[page_id]
+            self.current_page = self.pages[page_id]
         except KeyError:
             self.log.critical("Cannot load page {}, loading start page".format(page_id), extra=self.extra)
             self.use_page()
@@ -611,7 +611,7 @@ class layout(threading.Thread):
                 page_no = self.max_settings_id
             if page_no > self.max_settings_id:
                 page_no = 0
-        for p, page in self.page_list.items():
+        for p, page in self.pages.items():
             t = page['type']
             n = page['number']
             if t == page_type and n == page_no:
