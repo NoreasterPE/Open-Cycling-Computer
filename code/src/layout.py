@@ -466,7 +466,7 @@ class layout(threading.Thread):
                                     method = method.strip()
                                     method_to_call = getattr(self.pm.plugins[plugin], method)
                                     method_to_call()
-                            except KeyError as e:
+                            except KeyError:
                                 pass
             self.pm.render['refresh'] = True
         elif click == 'LONG':
@@ -565,7 +565,7 @@ class layout(threading.Thread):
             self.parameter_for_reset = None
 
     def run_function(self, parameter):
-        functions = { "settings": self.load_settings_page,
+        functions = {"settings": self.load_settings_page,
                      "log_level": self.log_level,
                      "load_default_layout": self.load_default_layout,
                      "load_current_layout": self.load_current_layout,
@@ -635,6 +635,7 @@ class layout(threading.Thread):
     def load_default_layout(self):
         self.load_layout_by_name("default.yaml")
 
+    #FIXME Move it to a better location
     def log_level(self):
         log_level = self.log.getEffectiveLevel()
         log_level += 10
