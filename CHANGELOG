@@ -1,3 +1,11 @@
+v0.12
+- plugin methods can be linked to layout buttons, i.e short click on button runs method "do_something_awesome" from plugin "my_plugin"
+- page text colour is now used
+- list editor (select item from list) added. Used for wheel size. Allowed values are stored in config file
+- Code cleaning, refactoring, decoupling and hardening
+- documentation
+- initial version of demo code how tu use pyplum (PYthon PLUgin Manager) to make simple weather station. See weather.sh (WORK IN PROGRESS)
+
 v0.11
 - added draft of plugins and layout API description
 - added simple example of sensor monitoring (weather.py) with independent config and layout
@@ -7,7 +15,7 @@ v0.11
 - use Gidole font, bug fixes, code cleaning and hardening
 
 v0.10
- - Odometer editable from Statistics, editors use zoom & colour, pressure sensor bmp183 replaced with bmp280 (kernel driver), bug fixes & code cleaning
+- Odometer editable from Statistics, editors use zoom & colour, pressure sensor bmp183 replaced with bmp280 (kernel driver), bug fixes & code cleaning
 
 v0.09:
 - Change to notification system, code hardening and lot, lot of code cleaning
