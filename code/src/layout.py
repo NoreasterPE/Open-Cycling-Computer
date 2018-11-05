@@ -180,10 +180,30 @@ class layout(threading.Thread):
             self.log.critical("buttons path = {}".format(self.current_page['buttons']), extra=self.extra)
             self.log.critical("page_id = {}".format(page_id), extra=self.extra)
             raise
-        self.font = self.current_page['font']
-        self.page_font_size = self.current_page['font_size']
-        if (self.font == ""):
-            self.font = None
+
+        self.parse_font()
+        self.parse_text_colour()
+
+        self.parameter_rect_list = {}
+        if self.current_page['fields'] is not None:
+            for field in self.current_page['fields']:
+                self.parse_parameter(field)
+
+    def parse_font(self):
+        self.font = None
+        try:
+            self.font = self.current_page['font']
+        except KeyError:
+            self.log.critical("Page font not found on page {}. font field is mandatory.".format(self.current_page), extra=self.extra)
+        if self.font == '':
+            self.log.critical("Page font found, but it's empry string. font field is mandatory.".format(self.current_page), extra=self.extra)
+        try:
+            self.page_font_size = self.current_page['font_size']
+        except KeyError:
+            self.log.critical("Page font size not found on page {}. font_size field is mandatory. Defaulting to 18".format(self.current_page), extra=self.extra)
+            self.page_font_size = 18
+
+    def parse_text_colour(self):
         self.text_colour_rgb = self.current_page['text_colour']
         text_colour_rgb = self.text_colour_rgb
         if text_colour_rgb[0] == '#':
@@ -191,10 +211,6 @@ class layout(threading.Thread):
         r, g, b = text_colour_rgb[:2], text_colour_rgb[2:4], text_colour_rgb[4:]
         r, g, b = [int(n, 16) for n in (r, g, b)]
         self.text_colour = (r, g, b)
-        self.parameter_rect_list = {}
-        if self.current_page['fields'] is not None:
-            for field in self.current_page['fields']:
-                self.parse_parameter(field)
 
     def parse_parameter(self, field):
         try:
