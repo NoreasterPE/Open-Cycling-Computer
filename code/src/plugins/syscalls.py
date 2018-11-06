@@ -51,3 +51,14 @@ class syscalls(plugin.plugin):
         pm = pyplum.pyplum()
         if pm.event_queue is not None:
             pm.event_queue.put(('reload_layout',))
+
+    def screenshot_mode(self):
+        import pyplum
+        pm = pyplum.pyplum()
+        try:
+            if 'screenshot_mode' not in pm.parameters:
+                pm.register_parameter('screenshot_mode', self.extra['module_name'], value=True)
+            else:
+                pm.parameters['screenshot_mode']['value'] = not pm.parameters['screenshot_mode']['value']
+        except KeyError:
+            pass

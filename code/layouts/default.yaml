@@ -618,6 +618,22 @@ pages:
                           w: 120
                           h: 80
 
+                - parameter: label
+                  text: Screenshots
+                  x: 180
+                  y: 250
+
+                - parameter: screenshot_mode
+                  run: syscalls, screenshot_mode
+                  x: 180
+                  y: 280
+                  text:
+                  button:
+                          x0: 120
+                          y0: 240
+                          w: 120
+                          h: 80
+
        - name: "Units"
          id: settings_2
          up: null

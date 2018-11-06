@@ -83,10 +83,14 @@ class pitft_rendering(plugin.plugin):
                 self.fb_ctx.fill()
                 self.pm.render['refresh'] = False
                 self.pm.render['hold'] = False
-                #FIXME Add parameter to control fps/screenshots?
-                #Uncomment to generate screenshots, also changes fps to 1 to avoid generating too much images
-                #self.fb_surface.write_to_png("sc_" + str(round(time.time())) + ".png")
-                #self.fps = 1.0
+                try:
+                    if self.pm.parameters['screenshot_mode']['value']:
+                        self.fb_surface.write_to_png("sc_" + str(round(time.time())) + ".png")
+                        self.fps = 1.0
+                    else:
+                        self.fps = self.FPS
+                except KeyError:
+                    pass
             #FIXME Set up scheduler instead of waiting
             time.sleep(1.0 / self.fps)
 
