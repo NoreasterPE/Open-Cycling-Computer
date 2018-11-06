@@ -527,6 +527,7 @@ class layout(threading.Thread):
             self.render_pressed_button(position)
             for parameter, r in self.button_rectangles.items():
                 if self.point_in_rect(position, r[1]):
+                    self.log.debug("LONG CLICK on {} {}".format(parameter, r), extra=self.extra)
                     for f in self.current_page['fields']:
                         try:
                             show = f["show"]
@@ -603,14 +604,14 @@ class layout(threading.Thread):
                 index = self.pm.parameters[p]["value_list"].index(v)
                 self.editor_fields['index'] = index
                 value_list = self.pm.parameters[p]["value_list"]
-                self.slice_list_elements(value_list, index)
+                #editor call
+                #FIXME not nice, a check if editor plugin is loaded?
+                self.pm.plugins['editor'].set_up(self.editor_fields)
+                self.pm.plugins['editor'].slice_list_elements(value_list, index)
+                self.use_page(self.editor_fields["editor"])
             else:
                 self.log.critical("Unknown editor {} called for parameter {}, ignoring".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
                 return
-            #editor call
-            #FIXME not nice, a check if editor plugin is loaded?
-            self.pm.plugins['editor'].set_up(self.editor_fields)
-            self.use_page(self.editor_fields["editor"])
         elif resettable:
             self.log.debug("Resetting {} with list: {}".format(parameter_for_reset, reset_list), extra=self.extra)
             self.pm.parameter_reset(parameter_for_reset, reset_list)
