@@ -12,6 +12,7 @@ CODING STYLE:
 - move formatting code to numbers module and use in layout and ride_log
 - amend plugin API document
 - some "available" function to check if a parameter is present and has a meaningful value (not None, not NAN). Used to safe guard math calcs
+- keep ble delegates as lean as possible - they are transient. That should keep the code cleaner
 
 REAL WORLD PROBLEMS:
 - add write_config event
@@ -19,7 +20,6 @@ REAL WORLD PROBLEMS:
 - tidy up current/default layout loading. Dafault is a backup, current is the currently used.
 - Unit syncronistion. I.e. Odometer and session distance
 - Do not try to initialise subsystems too many times. If GPS/other sensor is not there it won't magically show up. Log error and give up.
-- Add a module to allow real live raw data monitoring
 - Quit/Halt should render some exit screen
 - BLE device name might be too long for assigned space. Split or cut. Use i4oled code if needed.
 - Set up low battery warning/shutdown. Pimoroni Lipo shim informs about battery state.
@@ -261,3 +261,4 @@ TypeError: argument 1 must be pygame.Surface, not None
 118. [DONE] - allow for plugin.function in layout file
 119. [DONE] - clean pyplum
 120. [DONE] - refresh screenshots for README/web page
+121. [DONE] - Add a module to allow real live raw data monitoring {json server}
