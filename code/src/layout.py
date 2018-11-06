@@ -139,7 +139,10 @@ class layout(threading.Thread):
         self.load_layout_tree()
         self.pages = {}
         for page in self.layout_tree['pages']:
-            page_id = page['id']
+            try:
+                page_id = page['id']
+            except KeyError:
+                self.log.critical("Page in layout {} has no id field defined. Layout might not work.".format(self.layout_file), extra=self.extra)
             # page 'type' field is optional, add it if not defined
             if 'type' not in page:
                 page['type'] = None
