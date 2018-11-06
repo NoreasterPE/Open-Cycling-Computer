@@ -29,7 +29,7 @@ class editor(plugin.plugin):
     def set_up(self, fields):
         self.fields = fields
 
-    def ed_next_item(self):
+    def next_item(self):
         index = self.fields["index"]
         index += 1
         p = self.fields["parameter"]
@@ -40,7 +40,7 @@ class editor(plugin.plugin):
         else:
             self.fields["index"] = index
 
-    def ed_prev_item(self):
+    def previous_item(self):
         index = self.fields["index"]
         index -= 1
         p = self.fields["parameter"]
@@ -51,18 +51,7 @@ class editor(plugin.plugin):
         else:
             self.fields["index"] = index
 
-    def ed_accept(self):
-        self.accept_edit()
-        self.fields = None
-        #self.use_main_page()
-        self.finish_editing()
-
-    def ed_cancel(self):
-        self.fields = None
-        #self.use_main_page()
-        self.finish_editing()
-
-    def ed_decrease(self):
+    def decrease_digit(self):
         u = self.fields["value"]
         i = self.fields["index"]
         ui = u[i]
@@ -81,7 +70,7 @@ class editor(plugin.plugin):
         un = u[:i] + ui + u[i + 1:]
         self.fields["value"] = un
 
-    def ed_increase(self):
+    def increase_digit(self):
         u = self.fields["value"]
         i = self.fields["index"]
         ui = u[i]
@@ -100,7 +89,7 @@ class editor(plugin.plugin):
         un = u[:i] + ui + u[i + 1:]
         self.fields["value"] = un
 
-    def ed_next(self):
+    def next_char(self):
         u = self.fields["value"]
         i = self.fields["index"]
         strip_zero = True
@@ -125,7 +114,7 @@ class editor(plugin.plugin):
                 i += 1
         self.fields["index"] = i
 
-    def ed_prev(self):
+    def previous_char(self):
         u = self.fields["value"]
         i = self.fields["index"]
         i -= 1
@@ -147,31 +136,37 @@ class editor(plugin.plugin):
         self.fields["value"] = circular_list_slice[1]
         self.fields["next_list_element"] = circular_list_slice[2]
 
-    def ed_change_unit(self, direction):
+    def change_unit(self, direction):
         # direction to be 1 (next) or 0 (previous)
         variable = self.fields["parameter"]
         variable_unit = self.fields["unit"]
         variable_value = self.fields["value"]
         current_unit_index = self.pm.parameters[self.fields["parameter"]]["units_allowed"].index(variable_unit)
         self.log.debug("variable: {} units_allowed: {}".format(variable, self.pm.parameters[self.fields["parameter"]]["units_allowed"]), extra=self.extra)
-        if direction == 1:
+        if direction == 'next':
             try:
                 next_unit = self.pm.parameters[self.fields["parameter"]]["units_allowed"][current_unit_index + 1]
             except IndexError:
                 next_unit = self.pm.parameters[self.fields["parameter"]]["units_allowed"][0]
-        else:
+        elif direction == 'prev':
             try:
                 next_unit = self.pm.parameters[self.fields["parameter"]]["units_allowed"][current_unit_index - 1]
             except IndexError:
                 next_unit = self.pm.parameters[self.fields["parameter"]]["units_allowed"][-1]
+        else:
+            self.log.error("Can't change unit in direction {}".format(direction), extra=self.extra)
         self.fields["unit"] = next_unit
         self.fields["value"] = variable_value
 
-    def ed_next_unit(self):
-        self.ed_change_unit(1)
+    def next_unit(self):
+        self.change_unit('next')
 
-    def ed_prev_unit(self):
-        self.ed_change_unit(0)
+    def previous_unit(self):
+        self.change_unit('prev')
+
+    def cancel_edit(self):
+        self.fields = None
+        self.finish_editing()
 
     def accept_edit(self):
         self.log.debug("accept_edit started", extra=self.extra)
@@ -193,6 +188,8 @@ class editor(plugin.plugin):
 #            self.pm.set_ble_device(name, addr, dev_type)
         self.pm.parameters[parameter]["time_stamp"] = time.time()
         self.log.debug("accept_edit finished", extra=self.extra)
+        self.fields = None
+        self.finish_editing()
 
     def finish_editing(self):
         if self.pm.event_queue is not None:
