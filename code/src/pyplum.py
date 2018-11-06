@@ -64,6 +64,18 @@ class pyplum(threading.Thread, metaclass=Singleton):
         #  Name of the module that registered event queue
         self.event_queue_owner = None
 
+    ## Functon that lists plugins from a subdirectory.
+    #  @param self The python object self
+    def list_plugins(self, directory):
+        plugins_list = []
+        try:
+            plugins = __import__(directory)
+            for plugin in plugins.__all__:
+                plugins_list.append(plugin)
+        except (ImportError, TypeError) as e:
+            self.log.error("Listing plugins in directory {} failed with: {}".format(directory, e), extra=self.extra)
+        return plugins_list
+
     ## Functon that loads plugins from a subdirectory. The subdirectory name in 'plugins' by default.
     #  @param self The python object self
     def load_all_plugins(self, directory='plugins'):
