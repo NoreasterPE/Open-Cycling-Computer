@@ -3,6 +3,10 @@ pages:
          id: page_0
          number: 0
          type: normal
+         up: settings_0
+         down: null
+         left: page_2
+         right: page_1
          background: images/page_0_background.png
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
@@ -166,6 +170,10 @@ pages:
          id: page_1
          number: 1
          type: normal
+         up: settings_0
+         down: null
+         left: page_0
+         right: page_2
          background: images/stats_background.png
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
@@ -311,6 +319,10 @@ pages:
          id: page_2
          number: 2
          type: normal
+         up: settings_0
+         down: null
+         left: page_1
+         right: page_0
          background: images/page_2_background.png
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
@@ -372,6 +384,10 @@ pages:
          id: settings_0
          number: 0
          type: settings
+         up: null
+         down: page_0
+         left: settings_2
+         right: settings_1
          background: images/background_2_x_4.png
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
@@ -524,6 +540,10 @@ pages:
          id: settings_1
          number: 1
          type: settings
+         up: null
+         down: page_0
+         left: settings_0
+         right: settings_2
          background: images/background_2_x_4.png
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
@@ -611,6 +631,10 @@ pages:
          id: settings_2
          number: 2
          type: settings
+         up: null
+         down: page_0
+         left: settings_1
+         right: settings_0
          background: images/background_2_x_4.png
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
