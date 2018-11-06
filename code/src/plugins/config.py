@@ -38,18 +38,27 @@ class config(plugin.plugin):
     ## CNotification handler for config module
     #  @param self The python object self
     def notification(self):
-        if self.config_file != self.pm.parameters['config_file']['value']:
-            # Config path changed, load it
-            self.log.debug("Config file changed from {} to {}".format(self.config_file, self.pm.parameters['config_file']['value']), extra=self.extra)
-            self.config_file = self.pm.parameters['config_file']['value']
-            self.read_config()
-        if self.log_level != self.pm.parameters['log_level']['value']:
-            self.log_level = self.pm.parameters['log_level']['value']
-            self.log.debug("Switching to log_level {}".format(self.log_level), extra=self.extra)
-            self.log.setLevel(self.log_level)
-        if self.pm.parameters['write_config_requested']['value']:
-            self.pm.parameters['write_config_requested']['value'] = False
-            self.write_config()
+        try:
+            if self.config_file != self.pm.parameters['config_file']['value']:
+                # Config path changed, load it
+                self.log.debug("Config file changed from {} to {}".format(self.config_file, self.pm.parameters['config_file']['value']), extra=self.extra)
+                self.config_file = self.pm.parameters['config_file']['value']
+                self.read_config()
+        except KeyError:
+            pass
+        try:
+            if self.log_level != self.pm.parameters['log_level']['value']:
+                self.log_level = self.pm.parameters['log_level']['value']
+                self.log.debug("Switching to log_level {}".format(self.log_level), extra=self.extra)
+                self.log.setLevel(self.log_level)
+        except KeyError:
+            pass
+        try:
+            if self.pm.parameters['write_config_requested']['value']:
+                self.pm.parameters['write_config_requested']['value'] = False
+                self.write_config()
+        except KeyError:
+            pass
 
     ## Function that reads config file.
     #  @param self The python object self
