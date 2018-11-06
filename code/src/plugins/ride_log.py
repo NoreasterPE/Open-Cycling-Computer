@@ -32,7 +32,7 @@ class ride_log(plugin.plugin):
         try:
             self.ride_log_config = self.pm.parameters['ride_log_config']['value']
         except KeyError:
-            pass
+            elf.ride_log_config = None
         self.log_initialised = False
         if self.ride_log_config is not None:
             self.read_config()
