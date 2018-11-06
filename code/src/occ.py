@@ -37,14 +37,13 @@ class open_cycling_computer(object, metaclass=singleton):
     #  @param config_file Location of config file
     #  @param width Width of screen or window. Default value is 240 pixels
     #  @param height Height of screen or window.  Default value is 320 pixels
-    def __init__(self, config_file=None, ride_log_config=None, layout_file=None, fonts_dir=None, width=240, height=320):
+    def __init__(self, config_file=None, layout_file=None, fonts_dir=None):
         ## @var log
         #  Handle to system logger
         self.log = logging.getLogger('system')
         ## @var cleaning
         #  Variable indicating is cleaning is in progress
         self.cleaning = False
-        self.log.debug("Screen size is {} x {}".format(width, height), extra=self.extra)
         self.log.debug("Getting plugin manager pyplum", extra=self.extra)
         ## @var pm
         #  Handle to pyplum instance
@@ -53,8 +52,6 @@ class open_cycling_computer(object, metaclass=singleton):
         self.pm.register_parameter("config_file", self.extra["module_name"], value=config_file)
         self.pm.register_parameter("layout_file", self.extra["module_name"], value=layout_file)
         self.pm.register_parameter("fonts_dir", self.extra["module_name"], value=fonts_dir)
-        self.pm.register_parameter("display_size", self.extra["module_name"], value=(width, height))
-        self.pm.register_parameter("ride_log_config", self.extra["module_name"], value=ride_log_config)
         ## @var ble_scanner
         #  Handle to ble_scanner instance
         ##self.log.debug("Initialising ble_scanner", extra=self.extra)
@@ -132,11 +129,31 @@ if __name__ == "__main__":
     sys_logger.debug("Log start", extra=ex)
     sys_logger.debug("Setting up plugin manager", extra=ex)
     p_manager = pyplum.pyplum()
+    width, height = 240, 320
+    sys_logger.debug("Screen size is {} x {}".format(width, height), extra=ex)
+    # pitft_rendering needs this
+    p_manager.register_parameter("display_size", value=(width, height))
+    # ride_log needs this
+    p_manager.register_parameter("ride_log_config", value=ride_log_config)
+    #print(p_manager.list_plugins('plugins'))
+    plugins = ['ble_hr',
+               'ble_sc',
+               'bmp280',
+               'compute',
+               'config',
+               'editor',
+               #'json_server',
+               'pitft_rendering',
+               'pitft_touchscreen',
+               'ride_log',
+               'syscalls']
+    p_manager.load_plugins('plugins', plugins)
+    # Above code could be replaced with p_manager.load_all_plugins(), it's here for testing
     sys_logger.debug("Starting plugin manager", extra=ex)
     p_manager.start()
     ## @var main_window
     # OCC main window. It's instance of open_cycling_computer class
-    main_window = open_cycling_computer(config_file, ride_log_config, layout_file, fonts_dir)
+    main_window = open_cycling_computer(config_file, layout_file, fonts_dir)
     sys_logger.debug("Starting events loop", extra=ex)
     main_window.events.run()
     main_window.stop()

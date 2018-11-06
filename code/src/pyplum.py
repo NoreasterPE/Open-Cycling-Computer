@@ -66,6 +66,7 @@ class pyplum(threading.Thread, metaclass=Singleton):
 
     ## Functon that lists plugins from a subdirectory.
     #  @param self The python object self
+    #  @param directory The directory with plugin
     def list_plugins(self, directory):
         plugins_list = []
         try:
@@ -76,11 +77,21 @@ class pyplum(threading.Thread, metaclass=Singleton):
             self.log.error("Listing plugins in directory {} failed with: {}".format(directory, e), extra=self.extra)
         return plugins_list
 
-    ## Functon that loads plugins from a subdirectory. The subdirectory name in 'plugins' by default.
+    ## Functon that loads plugins from a subdirectory per provided list. The subdirectory name in 'plugins' by default.
     #  @param self The python object self
-    def load_all_plugins(self, directory='plugins'):
+    #  @param directory The directory with plugin
+    #  @param plugins_list List with plugins
+    def load_plugins(self, directory='plugins', plugins_list=[]):
         plugins = __import__(directory)
-        for plugin in plugins.__all__:
+        for plugin in plugins_list:
+            self.load_plugin(directory, plugin)
+
+    ## Functon that loads all plugins from a subdirectory. The subdirectory name in 'plugins' by default.
+    #  @param self The python object self
+    #  @param directory The directory with plugin
+    def load_all_plugins(self, directory='plugins'):
+        plugins = self.list_plugins(directory)
+        for plugin in plugins:
             self.load_plugin(directory, plugin)
 
     ## Functon that load single plugins from a directory.
@@ -98,7 +109,6 @@ class pyplum(threading.Thread, metaclass=Singleton):
     #  @param self The python object self
     def run(self):
         self.log.debug("run started", extra=self.extra)
-        self.load_all_plugins()
 
         for s in self.plugins:
             self.log.debug("Starting {} thread".format(s), extra=self.extra)
