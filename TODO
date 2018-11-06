@@ -1,9 +1,7 @@
 PRIORITY
 - ble scanner/picker
-- clean pyplum
 
 UI
-- refresh screenshots for README/web page
 - overlay for showing messages to user
 - BLE device list expiry time. Currently never expires
 - There is no way to disconnect from a BLE device
@@ -12,7 +10,7 @@ UI
 
 CODING STYLE:
 - move formatting code to numbers module and use in layout and ride_log
-- make draft plugin API document
+- amend plugin API document
 - some "available" function to check if a parameter is present and has a meaningful value (not None, not NAN). Used to safe guard math calcs
 
 REAL WORLD PROBLEMS:
@@ -27,6 +25,7 @@ REAL WORLD PROBLEMS:
 - Set up low battery warning/shutdown. Pimoroni Lipo shim informs about battery state.
 - units_allowed should come from unit_converter
 - add description to each parameter in the code. That might be used in the future in layout editor and to generate valid layout values file TBC, maybe doxygen strings?
+- add option to load/unload plugins in pyplum instead of loading all
 
 DATA QUALITY:
 - Use Kalman filter for speed - BLE SC goes crazy sometimes
@@ -62,6 +61,9 @@ OPTIONAL:
 - Auto reload layout on date time of modification change might be handy
 - Explore python-osmgpsmap
 - Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense. slope in % needs different formatting than in m/m
+  unit_format:
+    - %: "%.1f"
+    - m/m: "%.2f"
 
 FUTURE
 - Use real ff fonts instead of the "toy" cairo API [POSTPONED, no pycairo support. cairo_helper used instead]
@@ -257,3 +259,5 @@ TypeError: argument 1 must be pygame.Surface, not None
 116. [DONE] - create editor_list for list selection (wheel size)
 117. [DONE] - move all editor functions from layout.py to a separate module
 118. [DONE] - allow for plugin.function in layout file
+119. [DONE] - clean pyplum
+120. [DONE] - refresh screenshots for README/web page
