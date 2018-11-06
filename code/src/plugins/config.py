@@ -16,8 +16,6 @@ class config(plugin.plugin):
 
     ## The constructor
     #  @param self The python object self
-    #  @param config_file path to config file
-    #  @param base_config_file base config file used when for some reason config file can't be read. Also used as seed file during the first run.
     def __init__(self):
         # Run init for super class
         super().__init__()
@@ -34,6 +32,9 @@ class config(plugin.plugin):
         ## @var base_config_file
         #  Hardcoded config file, used if the bain config can't be read.
         self.base_config_file = "config/config_base.yaml"
+
+    def run(self):
+        pass
 
     ## CNotification handler for config module
     #  @param self The python object self
