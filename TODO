@@ -16,6 +16,7 @@ CODING STYLE:
 - some "available" function to check if a parameter is present and has a meaningful value (not None, not NAN). Used to safe guard math calcs
 
 REAL WORLD PROBLEMS:
+- add write_config event
 - proper command line argument parsing in occ.py
 - tidy up current/default layout loading. Dafault is a backup, current is the currently used.
 - Unit syncronistion. I.e. Odometer and session distance

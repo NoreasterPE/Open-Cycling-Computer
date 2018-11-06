@@ -25,7 +25,9 @@ class pitft_rendering(plugin.plugin):
         #  Window/screen width
         ## @var height
         #  Window/screen height
+        #FIXME doxygen won't catch it
         self.width, self.height = self.pm.parameters['display_size']['value']
+        #FIXME add param to control fps/screenshot here
         ## @var running
         #  Variable controlling if rendering module should keep running
         self.running = False
@@ -78,6 +80,7 @@ class pitft_rendering(plugin.plugin):
                 self.fb_ctx.fill()
                 self.pm.render['refresh'] = False
                 self.pm.render['hold'] = False
+                #FIXME Add parameter to control fps/screenshots?
                 #Uncomment to generate screenshots, also changes fps to 1 to avoid generating too much images
                 #self.fb_surface.write_to_png("sc_" + str(round(time.time())) + ".png")
                 #self.fps = 1.0
