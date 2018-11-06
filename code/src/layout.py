@@ -140,6 +140,9 @@ class layout(threading.Thread):
         self.pages = {}
         for page in self.layout_tree['pages']:
             page_id = page['id']
+            # page 'type' field is optional, add it if not defined
+            if 'type' not in page:
+                page['type'] = None
             self.pages[page_id] = page
         self.use_page()
 

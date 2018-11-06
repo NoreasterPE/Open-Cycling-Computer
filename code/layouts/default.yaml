@@ -1,7 +1,6 @@
 pages:
        - name: Main
          id: page_0
-         type: normal
          up: settings_0
          down: null
          left: page_2
@@ -167,7 +166,6 @@ pages:
 
        - name: "Statistics"
          id: page_1
-         type: normal
          up: settings_0
          down: null
          left: page_0
@@ -315,7 +313,6 @@ pages:
 
        - name: "Blank"
          id: page_2
-         type: normal
          up: settings_0
          down: null
          left: page_1
@@ -379,7 +376,6 @@ pages:
 
        - name: "Settings 0"
          id: settings_0
-         type: normal
          up: null
          down: page_0
          left: settings_2
@@ -534,7 +530,6 @@ pages:
 
        - name: "Settings 1"
          id: settings_1
-         type: normal
          up: null
          down: page_0
          left: settings_0
@@ -624,7 +619,6 @@ pages:
 
        - name: "Units"
          id: settings_2
-         type: normal
          up: null
          down: page_0
          left: settings_1
