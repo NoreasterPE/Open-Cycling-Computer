@@ -98,7 +98,13 @@ class pyplum(threading.Thread, metaclass=Singleton):
             notify = list()
             for parameter, content in self.parameters.items():
                 curr_val = content['value']
-                prev_val = self.previous_parameters[parameter]["value"]
+                try:
+                    prev_val = self.previous_parameters[parameter]["value"]
+                except KeyError:
+                    #New position added to dictionary at runtime, copy & force notification
+                    prev_val = curr_val
+                    self.previous_parameters[parameter] = content
+                    self.previous_parameters[parameter]["force_notification"] = True
                 try:
                     if math.isnan(curr_val) and math.isnan(prev_val):
                         # Skip comparison if previous and current values are nan. nan != nan is always True
