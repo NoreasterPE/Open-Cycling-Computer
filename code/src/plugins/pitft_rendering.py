@@ -26,10 +26,18 @@ class pitft_rendering(plugin.plugin):
         self.pm = pyplum.pyplum()
         ## @var width
         #  Window/screen width
-        self.width = self.pm.parameters['display_size']['value'][0]
+        try:
+            self.width = self.pm.parameters['display_size']['value'][0]
+        except KeyError:
+            self.log.critical('pitft_rendering init failed on display_size')
+            raise
         ## @var height
         #  Window/screen height
-        self.height = self.pm.parameters['display_size']['value'][1]
+        try:
+            self.height = self.pm.parameters['display_size']['value'][1]
+        except KeyError:
+            self.log.critical('pitft_rendering init failed on display_size')
+            raise
         #FIXME add param to control fps/screenshot here
         ## @var running
         #  Variable controlling if rendering module should keep running
