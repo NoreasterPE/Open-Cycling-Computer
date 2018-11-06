@@ -89,21 +89,24 @@ class ride_log(plugin.plugin):
     ## Notification handler, reacts to real_time and ride_log_config changes
     #  @param self The python object self
     def notification(self):
-        if self.pm.parameters['ride_log_config']['value'] is not None:
-            if self.pm.parameters['ride_log_config']['value'] != self.ride_log_config:
-                self.log.info("ride log config changed from {} to {}".format(self.ride_log_config, self.pm.parameters['ride_log_config']['value']), extra=self.extra)
-                try:
+        try:
+            if self.pm.parameters['ride_log_config']['value'] is not None:
+                if self.pm.parameters['ride_log_config']['value'] != self.ride_log_config:
+                    self.log.info("ride log config changed from {} to {}".format(self.ride_log_config, self.pm.parameters['ride_log_config']['value']), extra=self.extra)
                     self.ride_log_config = self.pm.parameters['ride_log_config']['value']
-                except KeyError:
-                    pass
-                if self.ride_log_config is not None:
-                    self.read_config()
-                if not self.log_initialised:
-                    self.init_log()
-        if self.pm.parameters['real_time']['value'] is not None:
-            if self.pm.parameters['real_time']['value'] - self.last_log_entry > self.RIDE_LOG_UPDATE:
-                self.last_log_entry = self.pm.parameters['real_time']['value']
-                self.add_entry()
+                    if self.ride_log_config is not None:
+                        self.read_config()
+                    if not self.log_initialised:
+                        self.init_log()
+        except KeyError:
+            pass
+        try:
+            if self.pm.parameters['real_time']['value'] is not None:
+                if self.pm.parameters['real_time']['value'] - self.last_log_entry > self.RIDE_LOG_UPDATE:
+                    self.last_log_entry = self.pm.parameters['real_time']['value']
+                    self.add_entry()
+        except KeyError:
+            pass
 
     ## Function responsible for formatting and adding entries to ride log
     #  @param self The python object self
