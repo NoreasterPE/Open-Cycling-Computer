@@ -4,6 +4,7 @@
 
 #from bluepy.btle import BTLEException
 import copy
+import importlib
 import logging
 import math
 import num
@@ -65,21 +66,27 @@ class pyplum(threading.Thread, metaclass=Singleton):
 
     ## Functon that loads plugins from a subdirectory. The subdirectory name in 'plugins' by default.
     #  @param self The python object self
-    def load_plugins(self, directory='plugins'):
+    def load_all_plugins(self, directory='plugins'):
         plugins = __import__(directory)
-        import importlib
         for plugin in plugins.__all__:
-            module = importlib.import_module(str(directory + '.' + plugin), directory)
-            plugin_class = module.__getattribute__(plugin)
-            self.log.debug("Initialising plugin {}".format(plugin), extra=self.extra)
-            self.plugins[plugin] = plugin_class()
+            self.load_plugin(directory, plugin)
+
+    ## Functon that load single plugins from a directory.
+    #  @param self The python object self
+    #  @param directory The directory with plugin
+    #  @param plugin Name of the plugin
+    def load_plugin(self, directory, plugin):
+        module = importlib.import_module(str(directory + '.' + plugin), directory)
+        plugin_class = module.__getattribute__(plugin)
+        self.log.debug("Initialising plugin {}".format(plugin), extra=self.extra)
+        self.plugins[plugin] = plugin_class()
 
     ## Main loop of pyplum module.Makes snap shot of parameters and after a delay compares it to the current state.
     # Changes of parameters are used to notify plugins that requested relevant parameters.
     #  @param self The python object self
     def run(self):
         self.log.debug("run started", extra=self.extra)
-        self.load_plugins()
+        self.load_all_plugins()
 
         for s in self.plugins:
             self.log.debug("Starting {} thread".format(s), extra=self.extra)
