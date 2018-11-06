@@ -1,7 +1,6 @@
 pages:
        - name: Main
          id: page_0
-         number: 0
          type: normal
          up: settings_0
          down: null
@@ -168,7 +167,6 @@ pages:
 
        - name: "Statistics"
          id: page_1
-         number: 1
          type: normal
          up: settings_0
          down: null
@@ -317,7 +315,6 @@ pages:
 
        - name: "Blank"
          id: page_2
-         number: 2
          type: normal
          up: settings_0
          down: null
@@ -382,8 +379,7 @@ pages:
 
        - name: "Settings 0"
          id: settings_0
-         number: 0
-         type: settings
+         type: normal
          up: null
          down: page_0
          left: settings_2
@@ -538,8 +534,7 @@ pages:
 
        - name: "Settings 1"
          id: settings_1
-         number: 1
-         type: settings
+         type: normal
          up: null
          down: page_0
          left: settings_0
@@ -629,8 +624,7 @@ pages:
 
        - name: "Units"
          id: settings_2
-         number: 2
-         type: settings
+         type: normal
          up: null
          down: page_0
          left: settings_1
@@ -795,7 +789,6 @@ pages:
 
        - name: "Unit Editor"
          id: editor_units
-         number: 0
          type: editor
          background: images/editor_units_background.png
          buttons: images/button_pressed.png
@@ -861,7 +854,6 @@ pages:
 
        - name: "Number Editor"
          id: editor_numbers
-         number: 0
          type: editor
          background: images/editor_number_background.png
          buttons: images/button_pressed.png
@@ -956,7 +948,6 @@ pages:
 
        - name: "List Editor"
          id: editor_string
-         number: 0
          type: editor
          background: images/editor_string_background.png
          buttons: images/button_pressed.png
@@ -1047,7 +1038,6 @@ pages:
 
        - name: "List Picker"
          id: ble_selector
-         number: 0
          type: editor
          background: images/ble_selector.png
          buttons: images/button_pressed.png
@@ -1124,7 +1114,6 @@ pages:
 
        - name: "List Editor"
          id: editor_list
-         number: 0
          type: editor
          #FIXME add separate imgae
          background: images/editor_units_background.png

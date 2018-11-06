@@ -67,7 +67,7 @@ class layout(threading.Thread):
         ## @var images
         #  Dict with images loaded with png_to_cairo_surface. Currently only pngs are supported.
         self.images = {}
-        self.load_layout(self.layout_file)
+        self.load_layout()
         ## @var  schedule_display_refresh
         #  Control variable of the display refresh event. Set to True to stop calling generate_refresh_event
         self.schedule_display_refresh = True
@@ -132,45 +132,37 @@ class layout(threading.Thread):
             self.render_page()
             self.pm.render['hold'] = False
 
-    def load_layout(self, layout_file):
+    def load_layout(self):
         if self.layout_file is None:
+            self.log.critical("Layput file is None, refusing to load", extra=self.extra)
             return
-        self.max_page_id = 0
-        self.max_settings_id = 0
+        self.load_layout_tree()
         self.pages = {}
-        try:
-            with open(layout_file) as f:
-                self.log.debug("Loading layout {}".format(layout_file), extra=self.extra)
-                self.layout_tree = yaml.safe_load(f)
-                f.close()
-            self.layout_file = layout_file
-        except FileNotFoundError:
-            self.log.critical("Loading layout {} failed, falling back to default.yaml".format(layout_file), extra=self.extra)
-            sys_info = "Error details: {}".format(sys.exc_info()[0])
-            self.log.error(sys_info, extra=self.extra)
-            # Fallback to default layout
-            layout_file = "layouts/default.yaml"
-            try:
-                with open(layout_file) as f:
-                    self.log.debug("Loading layout {}".format(layout_file), extra=self.extra)
-                    self.layout_tree = yaml.safe_load(f)
-                    f.close()
-            except FileNotFoundError:
-                self.log.critical("Loading default layout {} failed, Quitting...".format(layout_file), extra=self.extra)
-                raise
-
         for page in self.layout_tree['pages']:
             page_id = page['id']
             self.pages[page_id] = page
-            page_type = page['type']
-            _number = page['number']
-            if page_type == 'normal':
-                number = int(_number)
-                self.max_page_id = max(self.max_page_id, number)
-            if page_type == 'settings':
-                number = int(_number)
-                self.max_settings_id = max(self.max_settings_id, number)
         self.use_page()
+
+    def load_layout_tree(self):
+        try:
+            with open(self.layout_file) as f:
+                self.log.debug("Loading layout {}".format(self.layout_file), extra=self.extra)
+                self.layout_tree = yaml.safe_load(f)
+                f.close()
+        except FileNotFoundError:
+            self.log.critical("Loading layout {} failed, falling back to default.yaml".format(self.layout_file), extra=self.extra)
+            sys_info = "Error details: {}".format(sys.exc_info()[0])
+            self.log.error(sys_info, extra=self.extra)
+            # FIXME Fallback to default layout
+            self.layout_file = "layouts/default.yaml"
+            try:
+                with open(self.layout_file) as f:
+                    self.log.debug("Loading layout {}".format(self.layout_file), extra=self.extra)
+                    self.layout_tree = yaml.safe_load(f)
+                    f.close()
+            except FileNotFoundError:
+                self.log.critical("Loading default layout {} failed, Quitting...".format(self.layout_file), extra=self.extra)
+                raise
 
     def use_page(self, page_id="page_0"):
         self.log.debug("use_page {}".format(page_id), extra=self.extra)
@@ -618,49 +610,21 @@ class layout(threading.Thread):
             self.pm.parameter_reset(parameter_for_reset, reset_list)
             self.parameter_for_reset = None
 
-    def get_page(self, page_type, page_no):
-        self.log.debug("get_page {} {} ".format(page_type, page_no), extra=self.extra)
-        if page_type == 'normal':
-            if page_no == -1:
-                page_no = self.max_page_id
-            if page_no > self.max_page_id:
-                page_no = 0
-        elif page_type == 'settings':
-            if page_no == -1:
-                page_no = self.max_settings_id
-            if page_no > self.max_settings_id:
-                page_no = 0
-        for p, page in self.pages.items():
-            t = page['type']
-            n = page['number']
-            if t == page_type and n == page_no:
-                return page['id']
-
     def next_page(self):
         # Editor is a special page - it cannot be switched, only cancel or accept
         if not self.current_page['type'] == 'editor':
-            number = int(self.current_page['number'])
-            page_id = self.current_page['id']
-            page_type = self.current_page['type']
-            self.log.debug("next_page {} {} {}".format(page_id, page_type, number), extra=self.extra)
-            next_page_id = self.get_page(page_type, number + 1)
             try:
-                self.use_page(next_page_id)
+                self.use_page(self.current_page['right'])
             except KeyError:
-                self.log.critical("Page 0 of type {} not found!".format(page_type), extra=self.extra)
+                pass
 
     def prev_page(self):
         # Editor is a special page - it cannot be switched, only cancel or accept
         if not self.current_page['type'] == 'editor':
-            number = int(self.current_page['number'])
-            page_id = self.current_page['id']
-            page_type = self.current_page['type']
-            self.log.debug("prev_page {} {} {}".format(page_id, page_type, number), extra=self.extra)
-            prev_page_id = self.get_page(page_type, number - 1)
             try:
-                self.use_page(prev_page_id)
+                self.use_page(self.current_page['left'])
             except KeyError:
-                self.log.critical("Page {} of type {} not found!".format(self.max_page_id, page_type), extra=self.extra)
+                pass
 
     def reload_layout(self, name):
         self.load_layout(self.layout_file)
