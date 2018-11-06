@@ -14,6 +14,9 @@ class pitft_rendering(plugin.plugin):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': __qualname__}
+    ## @var FPS
+    #  Desired FPS, very innacurate
+    FPS = 10.0
 
     ## The constructor
     #  @param self The python object self
@@ -33,7 +36,7 @@ class pitft_rendering(plugin.plugin):
         self.running = False
         ## @var fps
         #  Variable controlling numver of frames per second
-        self.fps = 10.0
+        self.fps = self.FPS
         self.cairo_initialised = False
         self.setup_cairo()
 
