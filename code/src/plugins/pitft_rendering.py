@@ -23,10 +23,10 @@ class pitft_rendering(plugin.plugin):
         self.pm = pyplum.pyplum()
         ## @var width
         #  Window/screen width
+        self.width = self.pm.parameters['display_size']['value'][0]
         ## @var height
         #  Window/screen height
-        #FIXME doxygen won't catch it
-        self.width, self.height = self.pm.parameters['display_size']['value']
+        self.height = self.pm.parameters['display_size']['value'][1]
         #FIXME add param to control fps/screenshot here
         ## @var running
         #  Variable controlling if rendering module should keep running
