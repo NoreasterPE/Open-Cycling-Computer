@@ -5,14 +5,17 @@ Layout structure:
 pages: - top level
 Page header construction
        - name: Main                                                 - page name
+         up: settings_0                                             - swiping top-to-bottom switches to page with this page_id
+         down: settings_0                                           - swiping bottom-to-top switches to page with this page_id
+         left: page_1                                               - swiping left-to-right switches to page with this page_id
+         right: page_2                                              - swiping right-to-left switches to page with this page_id
          id: page_0                                                 - page id   
-         number: 0                                                  - page number
-         type: normal                                               - page type, types are: normal, settings, editor
+         type: normal                                               - optional, page type, use 'editor' to disable swiping out ot the page
          background: images/page_0_background.png                   - background image or None for black background
          buttons: images/button_pressed.png                         - image with button, rendered when button is pressed
-         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"   - page font, currently only one font per layout is allowed due to pycairo workaround
-         font_size: 20                                              - page fotn sie, used if font is not directly defined in field (see below)
-         text_colour: FFFFFF                                        - text colour
+         font: "Gidole-Regular.ttf"                                 - page font, currently only one font per layout is allowed due to pycairo workaround
+         font_size: 20                                              - page font size, used if font is not directly defined in field (see below)
+         text_colour: FFFFFF                                        - text colour, RRGGBB
          fields:                                                    - begining of section with field definitions
 
 Field construction:
