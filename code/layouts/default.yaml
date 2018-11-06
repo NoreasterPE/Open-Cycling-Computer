@@ -600,6 +600,7 @@ pages:
                   y: 210
 
                 - parameter: load_default_layout
+                  run: syscalls, reload_layout
                   button:
                           x0: 0
                           y0: 160

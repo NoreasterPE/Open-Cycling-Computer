@@ -45,3 +45,9 @@ class syscalls(plugin.plugin):
             pm.parameters['log_level']['value'] = log_level_name
         except KeyError:
             pass
+
+    def reload_layout(self):
+        import pyplum
+        pm = pyplum.pyplum()
+        if pm.event_queue is not None:
+            pm.event_queue.put(('reload_layout',))

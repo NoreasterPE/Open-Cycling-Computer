@@ -95,7 +95,7 @@ class layout(threading.Thread):
                 if ev_type == 'show_main_page':
                     self.use_main_page()
                 if ev_type == 'reload_layout':
-                    self.reload_layout()
+                    self.load_layout()
                 if ev_type == 'next_page':
                     self.next_page()
                 if ev_type == 'prev_page':
@@ -632,9 +632,6 @@ class layout(threading.Thread):
                 self.use_page(self.current_page['left'])
             except KeyError:
                 pass
-
-    def reload_layout(self, name):
-        self.load_layout(self.layout_file)
 
     def png_to_cairo_surface(self, file_path):
         png_surface = cairo.ImageSurface.create_from_png(file_path)
