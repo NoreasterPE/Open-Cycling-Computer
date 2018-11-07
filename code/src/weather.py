@@ -10,5 +10,5 @@ import time
 p_manager = pyplum.pyplum()
 p_manager.load_plugins('plugins', ['bmp280', 'compute', 'json_server'])
 p_manager.start()
-time.wait(100)
+time.sleep(100)
 p_manager.stop()
