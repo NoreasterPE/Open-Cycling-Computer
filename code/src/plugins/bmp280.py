@@ -92,7 +92,9 @@ class bmp280(plugin.plugin):
         except (FileNotFoundError, OSError) as e:
             # FileNotFoundError: [Errno 2] No such file or directory: '/sys/bus/iio/devices/iio:device0/in_pressure_input'
             # OSError: [Errno 121] Remote I/O error
-            self.log.critical("eading from bmp280 caused exception: {}".format(e), extra=self.extra)
+            self.log.critical("Reading from bmp280 caused exception: {}".format(e), extra=self.extra)
+            self.log.critical("Shutting down the plugin", extra=self.extra)
+            self.stop()
 
     def run(self):
         self.log.debug("Main loop started", extra=self.extra)
