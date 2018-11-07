@@ -9,6 +9,7 @@ UI
 - add option to use plain background color instead of image
 
 CODING STYLE:
+- make compute plugin generic, no rider_weight etc
 - ride_log should not be named ride_log as it might be weather log
 - ride_log should allow to set waiting period. For weather no need to do it every second
 - move formatting code to numbers module and use in layout and ride_log
