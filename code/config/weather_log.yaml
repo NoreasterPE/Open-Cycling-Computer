@@ -1,27 +1,27 @@
 parameters:
-  - name: real_time
+  - name: date
+    parameter: real_time
+    description:  "Date"
+    format: date
+
+  - name: time
+    parameter: real_time
     description:  "Time"
     format: time
-  - name: session_time
-    description:  "Session"
-    format: hhmmss
-  - name: speed
-    description:  "Speed"
-  - name: cadence
-    description:  "Cadence"
-  - name: heart_rate
-    description:  "Heart RT"
+
   - name: pressure
+    parameter: pressure
     description:  "Pressure"
     format: "%.1f"
-  - name: pressure_nof
-    description:  "Pressure nof"
+
+  - name: mean_sea_level_pressure
+    parameter: mean_sea_level_pressure
+    description:  "MSL Pressure"
+
   - name: temperature
+    parameter: temperature
     description:  "Temp"
-  - name: altitude
+
+  - name: altiture
+    parameter: altitude
     description:  "Altitude"
-  - name: odometer
-    description:  "Odometer"
-  - name: slope
-    description:  "Slope"
-    format: '%.3f'
