@@ -32,7 +32,7 @@ class ride_log(plugin.plugin):
         try:
             self.ride_log_config = self.pm.parameters['ride_log_config']['value']
         except KeyError:
-            elf.ride_log_config = None
+            self.ride_log_config = None
         self.log_initialised = False
         if self.ride_log_config is not None:
             self.read_config()
@@ -68,14 +68,30 @@ class ride_log(plugin.plugin):
         ride_log_format = ''
         self.ex = dict()
         self.parameter_format = dict()
+        self.parameters = dict()
         for i in self.config_params['parameters']:
-            ride_log_format += '%(' + i['name'] + ')-12s,'
             try:
-                self.parameter_format[i['name']] = i['format']
+                name = i['name']
             except KeyError:
-                self.parameter_format[i['name']] = '%.1f'
-            self.ex[i['name']] = i['description']
-            self.parameter_format
+                raise
+            try:
+                parameter = i['parameter']
+            except KeyError:
+                raise
+            try:
+                description = i['description']
+            except KeyError:
+                description = 'No description'
+            try:
+                string_format = i['format']
+            except KeyError:
+                string_format = '%.1f'
+
+            ride_log_format += '%(' + name + ')-12s,'
+            self.parameter_format[name] = string_format
+            self.parameters[name] = parameter
+            self.ex[name] = description
+
         ride_log_format = ride_log_format.strip(',')
 
         ride_log_handler = logging.handlers.RotatingFileHandler(ride_log_filename)
@@ -112,9 +128,14 @@ class ride_log(plugin.plugin):
     #  @param self The python object self
     def add_entry(self):
         self.log.debug("Adding ride log entry", extra=self.extra)
-        for p in self.ex:
-            value = self.pm.parameters[p]["value"]
-            string_format = self.parameter_format[p]
+        for name in self.ex:
+            try:
+                parameter = self.parameters[name]
+                value = self.pm.parameters[parameter]["value"]
+            except KeyError:
+                self.log.debug("There is no {} in available paameters".format(name), extra=self.extra)
+                continue
+            string_format = self.parameter_format[name]
             if string_format == "hhmmss":
                 try:
                     minutes, seconds = divmod(int(value), 60)
@@ -137,5 +158,5 @@ class ride_log(plugin.plugin):
                     value = string_format % value
                 except (ValueError, TypeError):
                     pass
-            self.ex[p] = value
+            self.ex[name] = value
         self.ride_logger.info('', extra=self.ex)

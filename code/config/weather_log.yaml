@@ -1,0 +1,27 @@
+parameters:
+  - name: real_time
+    description:  "Time"
+    format: time
+  - name: session_time
+    description:  "Session"
+    format: hhmmss
+  - name: speed
+    description:  "Speed"
+  - name: cadence
+    description:  "Cadence"
+  - name: heart_rate
+    description:  "Heart RT"
+  - name: pressure
+    description:  "Pressure"
+    format: "%.1f"
+  - name: pressure_nof
+    description:  "Pressure nof"
+  - name: temperature
+    description:  "Temp"
+  - name: altitude
+    description:  "Altitude"
+  - name: odometer
+    description:  "Odometer"
+  - name: slope
+    description:  "Slope"
+    format: '%.3f'
