@@ -104,7 +104,7 @@ if __name__ == "__main__":
         quit()
     #FIXME Make proper option parsing
     config_file = sys.argv[1]
-    ride_log_config = sys.argv[2]
+    data_log_config = sys.argv[2]
     layout_file = sys.argv[3]
     fonts_dir = sys.argv[4]
     ## @var sys_log_filename
@@ -133,8 +133,8 @@ if __name__ == "__main__":
     sys_logger.debug("Screen size is {} x {}".format(width, height), extra=ex)
     # pitft_rendering needs this
     p_manager.register_parameter("display_size", value=(width, height))
-    # ride_log needs this
-    p_manager.register_parameter("ride_log_config", value=ride_log_config)
+    # data_log needs this
+    p_manager.register_parameter("data_log_config", value=data_log_config)
     #print(p_manager.list_plugins('plugins'))
     plugins = [#'ble_hr',
                #'ble_sc',
@@ -145,7 +145,7 @@ if __name__ == "__main__":
                #'json_server',
                'pitft_rendering',
                'pitft_touchscreen',
-               'ride_log',
+               'data_log',
                'syscalls']
     p_manager.load_plugins('plugins', plugins)
     # Above code could be replaced with p_manager.load_all_plugins(), it's here for testing
