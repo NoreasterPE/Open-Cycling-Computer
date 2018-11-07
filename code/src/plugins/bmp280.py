@@ -94,6 +94,7 @@ class bmp280(plugin.plugin):
             # OSError: [Errno 121] Remote I/O error
             self.log.critical("Reading from bmp280 caused exception: {}".format(e), extra=self.extra)
             self.log.critical("Shutting down the plugin", extra=self.extra)
+            #FIXME Proper shutdown required
             self.running = False
 
     def run(self):
