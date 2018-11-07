@@ -3,9 +3,10 @@
 #  Package responsible for serving parameters in json format
 
 import bottle
+import math
 import plugin
 import pyplum
-import math
+import socket
 
 
 ## Main json_server class
@@ -20,6 +21,17 @@ class json_server(plugin.plugin):
         # Run init for super class
         super().__init__()
         self.pm = pyplum.pyplum()
+
+    def get_ip(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            s.connect(('10.255.255.255', 1))
+            ip = s.getsockname()[0]
+        except:
+            ip = '127.0.0.1'
+        finally:
+            s.close()
+        return ip
 
     def run(self):
 
@@ -38,4 +50,4 @@ class json_server(plugin.plugin):
                     pass
             return s
 
-        bottle.run(host='192.168.0.33', port=8080)
+        bottle.run(host=self.get_ip(), port=8080)
