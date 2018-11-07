@@ -143,8 +143,8 @@ if __name__ == "__main__":
                'config',
                'editor',
                #'json_server',
-               'pitft_rendering',
-               'pitft_touchscreen',
+               'gtk_rendering',
+               #'pitft_touchscreen',
                'data_log',
                'syscalls']
     p_manager.load_plugins('plugins', plugins)
