@@ -1,4 +1,4 @@
-parameters:
+columns:
   - name: real_time
     parameter: real_time
     description:  "Time"

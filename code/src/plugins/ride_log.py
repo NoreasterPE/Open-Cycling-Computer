@@ -69,7 +69,7 @@ class ride_log(plugin.plugin):
         self.ex = dict()
         self.parameter_format = dict()
         self.parameters = dict()
-        for i in self.config_params['parameters']:
+        for i in self.config_params['columns']:
             try:
                 name = i['name']
             except KeyError:
