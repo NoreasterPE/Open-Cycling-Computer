@@ -9,6 +9,7 @@ UI
 - add option to use plain background color instead of image
 
 CODING STYLE:
+- register surface instead of context
 - make compute plugin generic, no rider_weight etc
 - ride_log should not be named ride_log as it might be weather log
 - ride_log should allow to set waiting period. For weather no need to do it every second
@@ -18,6 +19,7 @@ CODING STYLE:
 - keep ble delegates as lean as possible - they are transient. That should keep the code cleaner
 
 REAL WORLD PROBLEMS:
+- add json_client
 - add write_config event
 - proper command line argument parsing in occ.py
 - tidy up current/default layout loading. Dafault is a backup, current is the currently used.
