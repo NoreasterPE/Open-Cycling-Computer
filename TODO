@@ -9,7 +9,6 @@ UI
 - add option to use plain background color instead of image
 
 CODING STYLE:
-- data_log should allow to set waiting period. For weather no need to do it every second
 - move formatting code to numbers module and use in layout and data_log
 - amend plugin API document
 - some "available" function to check if a parameter is present and has a meaningful value (not None, not NAN). Used to safe guard math calcs
@@ -68,7 +67,6 @@ OPTIONAL:
 
 FUTURE
 - Use real ff fonts instead of the "toy" cairo API [POSTPONED, no pycairo support. cairo_helper used instead]
-- Make library for sensor/plugin handling. Might be useful for other projects like weather station [IN PROGRESS, name pyplum]]
 
 RANDOM ERRORs:
 Exception in thread Thread-1:
@@ -267,3 +265,5 @@ TypeError: argument 1 must be pygame.Surface, not None
 123. [DONE] - ride_log should not be named ride_log as it might be weather log
 124. [DONE] - make compute plugin generic, no rider_weight etc
 125. [DONE] - add write_config event
+126. [DONE] - data_log should allow to set waiting period. For weather no need to do it every second
+127- [DONE] - Make library for sensor/plugin handling. Might be useful for other projects like weather station [name pyplum]
