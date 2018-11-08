@@ -2,10 +2,11 @@
 ## @package config
 #  Package responsible for reading/writing config file. The config file contains different user and system related parameters that should be preserved between OCC starts.
 
-import yaml
 from shutil import copyfile
 import plugin
 import pyplum
+import time
+import yaml
 
 
 ## Main config class
@@ -20,6 +21,8 @@ class config(plugin.plugin):
         # Run init for super class
         super().__init__()
         self.pm = pyplum.pyplum()
+        self.pm.register_parameter("write_config_period", self.extra["module_name"], value=15.0, raw_unit='s', store=True)
+        self.write_config_enabled = True
         self.pm.register_parameter("write_config_requested", self.extra["module_name"], value=False)
         self.pm.request_parameter("write_config_requested", self.extra["module_name"])
         self.pm.request_parameter("config_file", self.extra["module_name"])
@@ -34,7 +37,16 @@ class config(plugin.plugin):
         self.base_config_file = "config/config_base.yaml"
 
     def run(self):
-        pass
+        self.running = True
+        while self.running:
+            period = self.pm.parameters['write_config_period']['value']
+            try:
+                p = float(period)
+            except (ValueError, TypeError) as e:
+                self.log.error("Cannot use {} as time to set writing config. Using 15s .Error: {}".format(period, e), extra=self.extra)
+                p = 15
+            time.sleep(p)
+            self.write_config()
 
     ## CNotification handler for config module
     #  @param self The python object self
@@ -104,3 +116,6 @@ class config(plugin.plugin):
         self.log.debug("Closing config file", extra=self.extra)
         f.close()
         self.log.debug("Writing config file finished", extra=self.extra)
+
+    def stop(self):
+        self.running = False
