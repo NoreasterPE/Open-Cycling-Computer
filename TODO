@@ -9,7 +9,6 @@ UI
 - add option to use plain background color instead of image
 
 CODING STYLE:
-- register surface instead of context
 - data_log should allow to set waiting period. For weather no need to do it every second
 - move formatting code to numbers module and use in layout and data_log
 - amend plugin API document
@@ -49,6 +48,7 @@ HARDWARE:
 - accelerometer + kalman filter could improve altitude drift control
 
 OPTIONAL:
+- register surface instead of context [POSTPONED - the benefits are not clear and double-buffering is not a problem for now]
 - events/rendering module as plugin would allow to do simulation on a different hardware i.e. in GTK window
 - show all available unit s in unit editor
 - add colours to layout
