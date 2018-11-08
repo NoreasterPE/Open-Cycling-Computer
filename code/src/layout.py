@@ -596,9 +596,11 @@ class layout(threading.Thread):
                     self.editor_fields["value"] = self.editor_fields["format"] % value
                 except TypeError:
                     self.editor_fields["value"] = value
+                self.pm.plugins['editor'].set_up(self.editor_fields)
             elif self.editor_fields["editor"] == 'editor_string' or \
                     self.editor_fields["editor"] == 'editor_units':
                 self.editor_fields["value"] = self.pm.parameters[p]["value"]
+                self.pm.plugins['editor'].set_up(self.editor_fields)
             elif self.editor_fields["editor"] == 'editor_list':
                 v = self.pm.parameters[p]["value"]
                 index = self.pm.parameters[p]["value_list"].index(v)
@@ -608,10 +610,10 @@ class layout(threading.Thread):
                 #FIXME not nice, a check if editor plugin is loaded?
                 self.pm.plugins['editor'].set_up(self.editor_fields)
                 self.pm.plugins['editor'].slice_list_elements(value_list, index)
-                self.use_page(self.editor_fields["editor"])
             else:
                 self.log.critical("Unknown editor {} called for parameter {}, ignoring".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
                 return
+            self.use_page(self.editor_fields["editor"])
         elif resettable:
             self.log.debug("Resetting {} with list: {}".format(parameter_for_reset, reset_list), extra=self.extra)
             self.pm.parameter_reset(parameter_for_reset, reset_list)
