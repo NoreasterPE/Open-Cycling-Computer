@@ -22,8 +22,8 @@ def sanitise(value):
     if value == '-0' or value == '-0.0':
         value = "0"
     try:
-        if (math.isinf(float(value)) or
-                math.isnan(float(value))):
+        if math.isinf(float(value)) or \
+                math.isnan(float(value)):
             value = '-'
     except (ValueError, TypeError):
         #Don't deal with invalid types or values
