@@ -22,7 +22,6 @@ class config(plugin.plugin):
         super().__init__()
         self.pm = pyplum.pyplum()
         self.pm.register_parameter("write_config_period", self.extra["module_name"], value=15.0, raw_unit='s', store=True)
-        self.write_config_enabled = True
         self.pm.register_parameter("write_config_requested", self.extra["module_name"], value=False)
         self.pm.request_parameter("write_config_requested", self.extra["module_name"])
         self.pm.request_parameter("config_file", self.extra["module_name"])
