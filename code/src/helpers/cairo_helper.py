@@ -106,20 +106,3 @@ def create_cairo_font_face_for_file(filename, faceindex=0, loadoptions=0):
     # get back Cairo font face as a Python object
     face = cairo_ctx.get_font_face()
     return face
-
-
-if __name__ == '__main__':
-    face = create_cairo_font_face_for_file("/usr/share/fonts/truetype/freefont/FreeSans.ttf", 0)
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 128, 128)
-    ctx = cairo.Context(surface)
-
-    ctx.set_font_face(face)
-    ctx.set_font_size(30)
-    ctx.move_to(0, 44)
-    ctx.show_text("Hello,")
-    ctx.move_to(30, 74)
-    ctx.show_text("world!")
-
-    del ctx
-
-    surface.write_to_png("hello.png")
