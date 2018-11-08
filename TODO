@@ -11,9 +11,8 @@ UI
 CODING STYLE:
 - register surface instead of context
 - make compute plugin generic, no rider_weight etc
-- ride_log should not be named ride_log as it might be weather log
-- ride_log should allow to set waiting period. For weather no need to do it every second
-- move formatting code to numbers module and use in layout and ride_log
+- data_log should allow to set waiting period. For weather no need to do it every second
+- move formatting code to numbers module and use in layout and data_log
 - amend plugin API document
 - some "available" function to check if a parameter is present and has a meaningful value (not None, not NAN). Used to safe guard math calcs
 - keep ble delegates as lean as possible - they are transient. That should keep the code cleaner
@@ -30,7 +29,6 @@ REAL WORLD PROBLEMS:
 - Set up low battery warning/shutdown. Pimoroni Lipo shim informs about battery state.
 - units_allowed should come from unit_converter
 - add description to each parameter in the code. That might be used in the future in layout editor and to generate valid layout values file TBC, maybe doxygen strings?
-- add option to load/unload plugins in pyplum instead of loading all
 
 DATA QUALITY:
 - Use Kalman filter for speed - BLE SC goes crazy sometimes
@@ -267,3 +265,5 @@ TypeError: argument 1 must be pygame.Surface, not None
 119. [DONE] - clean pyplum
 120. [DONE] - refresh screenshots for README/web page
 121. [DONE] - Add a module to allow real live raw data monitoring {json server}
+122. [DONE] - add option to load/unload plugins in pyplum instead of loading all
+123. [DONE] - ride_log should not be named ride_log as it might be weather log
