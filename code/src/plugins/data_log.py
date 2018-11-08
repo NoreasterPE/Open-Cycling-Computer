@@ -16,16 +16,13 @@ class data_log(plugin.plugin):
     # Module name used for logging and prefixing data
     extra = {'module_name': __qualname__}
 
-    ## @var RIDE_LOG_UPDATE
-    # Period of time in s between ride log update events.
-    RIDE_LOG_UPDATE = 0.9
-
     ## The constructor
     #  @param self The python object self
     def __init__(self):
         # Run init for super class
         super().__init__()
         self.pm = pyplum.pyplum()
+        self.pm.register_parameter("data_log_period", self.extra["module_name"], value=0.85, raw_unit='s', store=True)
         self.pm.request_parameter("real_time", self.extra["module_name"])
         self.last_log_entry = 0.0
         self.pm.request_parameter("data_log_config", self.extra["module_name"])
@@ -118,7 +115,7 @@ class data_log(plugin.plugin):
             pass
         try:
             if self.pm.parameters['real_time']['value'] is not None:
-                if self.pm.parameters['real_time']['value'] - self.last_log_entry > self.RIDE_LOG_UPDATE:
+                if self.pm.parameters['real_time']['value'] - self.last_log_entry > self.pm.parameters['data_log_period']['value']:
                     self.last_log_entry = self.pm.parameters['real_time']['value']
                     self.add_entry()
         except KeyError:
