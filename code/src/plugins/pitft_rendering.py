@@ -29,14 +29,14 @@ class pitft_rendering(plugin.plugin):
         try:
             self.width = self.pm.parameters['display_size']['value'][0]
         except KeyError:
-            self.log.critical('pitft_rendering init failed on display_size')
+            self.log.critical('pitft_rendering init failed on display_size', extra=self.extra)
             raise
         ## @var height
         #  Window/screen height
         try:
             self.height = self.pm.parameters['display_size']['value'][1]
         except KeyError:
-            self.log.critical('pitft_rendering init failed on display_size')
+            self.log.critical('pitft_rendering init failed on display_size', extra=self.extra)
             raise
         #FIXME add param to control fps/screenshot here
         ## @var running
@@ -51,7 +51,7 @@ class pitft_rendering(plugin.plugin):
     ## Notification handler
     #  @param self The python object self
     def notification(self):
-        self.log.debug('notification received')
+        self.log.debug('notification received', extra=self.extra)
         if ((self.width, self.height) != self.pm.parameters['display_size']['value'] and
                 not self.cairo_initialised):
             self.width, self.height = self.pm.parameters['display_size']['value']
