@@ -4,6 +4,7 @@
 #  Module for handling ride parameters logging to file
 import datetime
 import logging
+import num
 import plugin
 import pyplum
 import time
@@ -155,5 +156,5 @@ class data_log(plugin.plugin):
                     value = string_format % value
                 except (ValueError, TypeError):
                     pass
-            self.ex[name] = value
+            self.ex[name] = num.sanitise(value)
         self.data_logger.info('', extra=self.ex)

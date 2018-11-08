@@ -19,7 +19,7 @@ NAN = float("nan")
 
 
 def sanitise(value):
-    if value == "-0":
+    if value == '-0' or value == '-0.0':
         value = "0"
     try:
         if (math.isinf(float(value)) or
