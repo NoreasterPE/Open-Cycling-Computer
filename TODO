@@ -10,7 +10,6 @@ UI
 
 CODING STYLE:
 - register surface instead of context
-- make compute plugin generic, no rider_weight etc
 - data_log should allow to set waiting period. For weather no need to do it every second
 - move formatting code to numbers module and use in layout and data_log
 - amend plugin API document
@@ -267,3 +266,4 @@ TypeError: argument 1 must be pygame.Surface, not None
 121. [DONE] - Add a module to allow real live raw data monitoring {json server}
 122. [DONE] - add option to load/unload plugins in pyplum instead of loading all
 123. [DONE] - ride_log should not be named ride_log as it might be weather log
+124. [DONE] - make compute plugin generic, no rider_weight etc

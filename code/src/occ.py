@@ -140,6 +140,7 @@ if __name__ == "__main__":
                'ble_sc',
                'bmp280',
                'compute',
+               'bicycle',
                'config',
                'editor',
                #'json_server',
