@@ -32,6 +32,28 @@ cadence_speed_device_name:
   value_list: null
   value_max: -.inf
   value_min: .inf
+data_log_period:
+  force_notification: false
+  plugin_name: data_log
+  raw_unit: s
+  required_by:
+  - ble_hr
+  - ble_sc
+  - bmp280
+  - bicycle
+  - config
+  - data_log
+  reset: false
+  store: true
+  time_stamp: 0.0
+  unit: s
+  units_allowed: []
+  value: 0.85
+  value_avg: .nan
+  value_default: null
+  value_list: null
+  value_max: -.inf
+  value_min: .inf
 heart_rate_device_address:
   force_notification: false
   plugin_name: null
@@ -185,7 +207,7 @@ temperature:
   units_allowed:
   - C
   - F
-  value: 24.84
+  value: 21.68
   value_avg: .nan
   value_default: null
   value_list: null
@@ -243,7 +265,7 @@ wheel_size:
   value_min: .inf
 write_config_period:
   force_notification: false
-  plugin_name: config
+  plugin_name: null
   raw_unit: s
   required_by:
   - ble_hr
