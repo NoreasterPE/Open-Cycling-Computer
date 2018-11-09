@@ -165,13 +165,21 @@ class pyplum(threading.Thread, metaclass=singleton.singleton):
         self.running = False
         time.sleep(1.0)
         for s in self.plugins:
-            self.log.debug("Stopping {} thread".format(s), extra=self.extra)
+            if self.plugins[s].isAlive():
+                self.log.debug('Thread {} is alive, stopping...'.format(s), extra=self.extra)
+                try:
+                    self.plugins[s].stop()
+                except AttributeError:
+                    pass
+        time.sleep(5)
+        for s in self.plugins:
             try:
-                self.plugins[s].stop()
-                self.log.debug("Stopped {} thread".format(s), extra=self.extra)
+                if self.plugins[s].isAlive():
+                    self.log.warning('Thread {} did not stop yet'.format(s), extra=self.extra)
+                else:
+                    self.plugins[s] = None
             except AttributeError:
                 pass
-            self.plugins[s] = None
 
     ## Function for registering a new parameter. Called by a sensor to provide information about what the sensor is measuring.
     #  @param self The python object self

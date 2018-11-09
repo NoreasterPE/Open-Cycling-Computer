@@ -236,9 +236,6 @@ class ble_sensor(plugin.plugin):
         self.initialise_connection()
         #pass
 
-    def __del__(self):
-        self.stop()
-
     def set_addr(self, addr):
         self.log.debug('address set to {}'.format(addr), extra=self.extra)
         self.device_address = addr
