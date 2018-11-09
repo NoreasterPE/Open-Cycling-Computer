@@ -28,8 +28,9 @@ class syscalls(plugin.plugin):
 
     def quit(self):
         print('quit')
-        # FIXME It doesn't stop all threades, so it's useless
-        quit()
+        import pyplum
+        pm = pyplum.pyplum()
+        pm.parameters['quit']['value'] = True
 
     def cycle_log_level(self):
         import logging

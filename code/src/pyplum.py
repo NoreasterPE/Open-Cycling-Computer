@@ -63,6 +63,8 @@ class pyplum(threading.Thread, metaclass=Singleton):
         ## @var event_queue_owner
         #  Name of the module that registered event queue
         self.event_queue_owner = None
+        # Setting 'quit' parameter to True triggers quit action for all plugins and pyplum
+        self.register_parameter('quit', self.extra['module_name'], value=False)
 
     ## Functon that lists plugins from a subdirectory.
     #  @param self The python object self
@@ -158,6 +160,8 @@ class pyplum(threading.Thread, metaclass=Singleton):
                 except AttributeError:
                     # Ignore error - module might not exist anymore/yet
                     pass
+            if self.parameters['quit']["value"]:
+                self.stop()
         self.log.debug("run finished", extra=self.extra)
 
     ## The destructor
