@@ -51,4 +51,5 @@ class compute(plugin.plugin):
                 self.pm.parameters["session_start_time"]["value"] += session_time_delta
             self.pm.parameters["session_time"]["value"] = t - self.pm.parameters["session_start_time"]["value"]
             self.pm.parameters["real_time"]["value"] = t
+            time.sleep(0.1)
         self.log.debug("Main loop finished", extra=self.extra)
