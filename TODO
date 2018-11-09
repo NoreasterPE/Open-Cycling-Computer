@@ -1,5 +1,8 @@
 PRIORITY
+- make clean quit
 - ble scanner/picker
+- click on altitude -->editing
+- first click in short time after after long is ignored
 
 UI
 - overlay for showing messages to user
@@ -7,6 +10,7 @@ UI
 - There is no way to disconnect from a BLE device
 - Fix icon lines width - it's not consistent
 - add option to use plain background color instead of image
+- align on dot, comma, or any non-digit from the righ side
 
 CODING STYLE:
 - move formatting code to numbers module and use in layout and data_log
@@ -15,6 +19,8 @@ CODING STYLE:
 - keep ble delegates as lean as possible - they are transient. That should keep the code cleaner
 
 REAL WORLD PROBLEMS:
+- develop testing procedure for gui
+- add bulltproof config saving. Quite often the file is gone after saving (crash? error?)
 - add json_client
 - proper command line argument parsing in occ.py
 - tidy up current/default layout loading. Dafault is a backup, current is the currently used.
@@ -66,6 +72,8 @@ OPTIONAL:
     - m/m: "%.2f"
 
 FUTURE
+- graph area to show some data in time
+- wifi status and/or switching on/off
 - Use real ff fonts instead of the "toy" cairo API [POSTPONED, no pycairo support. cairo_helper used instead]
 
 RANDOM ERRORs:
