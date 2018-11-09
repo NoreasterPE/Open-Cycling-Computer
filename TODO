@@ -1,8 +1,6 @@
 PRIORITY
-- make clean quit
 - ble scanner/picker
 - click on altitude -->editing
-- first click in short time after after long is ignored
 
 UI
 - overlay for showing messages to user
@@ -17,6 +15,7 @@ CODING STYLE:
 - amend plugin API document
 - some "available" function to check if a parameter is present and has a meaningful value (not None, not NAN). Used to safe guard math calcs
 - keep ble delegates as lean as possible - they are transient. That should keep the code cleaner
+- define rules for different log levels
 
 REAL WORLD PROBLEMS:
 - develop testing procedure for gui
@@ -275,3 +274,5 @@ TypeError: argument 1 must be pygame.Surface, not None
 125. [DONE] - add write_config event
 126. [DONE] - data_log should allow to set waiting period. For weather no need to do it every second
 127- [DONE] - Make library for sensor/plugin handling. Might be useful for other projects like weather station [name pyplum]
+128. [DONE] - first click in short time after after long is ignored
+129. [DONE] - make clean quit
