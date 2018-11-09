@@ -105,6 +105,9 @@ class layout(threading.Thread):
                     if self.schedule_display_refresh:
                         self.timer = threading.Timer(self.DISPLAY_REFRESH, self.generate_refresh_event)
                         self.timer.start()
+                if ev_type == 'quit':
+                    self.schedule_display_refresh = False
+                    self.running = False
             except queue.Empty:
                 pass
             except AttributeError:
