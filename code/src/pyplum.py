@@ -84,7 +84,7 @@ class pyplum(threading.Thread, metaclass=Singleton):
     #  @param directory The directory with plugin
     #  @param plugins_list List with plugins
     def load_plugins(self, directory='plugins', plugins_list=[]):
-        plugins = __import__(directory)
+        __import__(directory)
         for plugin in plugins_list:
             self.load_plugin(directory, plugin)
 
@@ -92,6 +92,7 @@ class pyplum(threading.Thread, metaclass=Singleton):
     #  @param self The python object self
     #  @param directory The directory with plugin
     def load_all_plugins(self, directory='plugins'):
+        __import__(directory)
         plugins = self.list_plugins(directory)
         for plugin in plugins:
             self.load_plugin(directory, plugin)
@@ -101,6 +102,7 @@ class pyplum(threading.Thread, metaclass=Singleton):
     #  @param directory The directory with plugin
     #  @param plugin Name of the plugin
     def load_plugin(self, directory, plugin):
+        __import__(directory)
         module = importlib.import_module(str(directory + '.' + plugin), directory)
         plugin_class = module.__getattribute__(plugin)
         self.log.debug("Initialising plugin {}".format(plugin), extra=self.extra)
