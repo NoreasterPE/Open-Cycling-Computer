@@ -18,6 +18,7 @@ CODING STYLE:
 - define rules for different log levels
 
 REAL WORLD PROBLEMS:
+- parsing 34k of layout takes ~10 seconds. Split per page might be a sloution, and parse the rest in background.
 - develop testing procedure for gui
 - add bulltproof config saving. Quite often the file is gone after saving (crash? error?)
 - add json_client
