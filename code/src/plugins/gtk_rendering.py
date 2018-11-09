@@ -97,9 +97,9 @@ class gtk_rendering(plugin.plugin):
                 self.pm.render['hold'] = True
                 self.pm.render['refresh'] = False
                 Gdk.threads_enter()
-                self.ctx.set_source_surface(self.surface_buf, 0, 0)
-                self.ctx.rectangle(0, 0, self.width, self.height)
                 try:
+                    self.ctx.set_source_surface(self.surface_buf, 0, 0)
+                    self.ctx.rectangle(0, 0, self.width, self.height)
                     self.ctx.fill()
                 except cairo.Error as e:
                     #Exception in thread None:
