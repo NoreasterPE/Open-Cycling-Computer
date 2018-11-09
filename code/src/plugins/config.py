@@ -114,10 +114,11 @@ class config(plugin.plugin):
                 storage[p] = self.pm.parameters[p]
         self.log.debug("Data ready for config file", extra=self.extra)
         # FIXME error handling for file operation
-        f = open(self.config_file, "w")
+        self.log.debug("Preparing data dump", extra=self.extra)
+        fv = yaml.dump(storage, default_flow_style=False, allow_unicode=True)
         self.log.debug("Writing config file", extra=self.extra)
-        yaml.dump(storage, f, default_flow_style=False, allow_unicode=True)
-        self.log.debug("Closing config file", extra=self.extra)
+        f = open(self.config_file, "w")
+        f.write(fv)
         f.close()
         self.log.debug("Writing config file finished", extra=self.extra)
 
