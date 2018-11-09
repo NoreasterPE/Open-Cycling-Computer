@@ -6,8 +6,9 @@
 
 import logging
 import operator
-import queue
 import pyplum
+import queue
+import time
 
 ## @var LONG_CLICK
 # Time of long click in ms All clicks over 0.8s are considered "long".
@@ -53,7 +54,6 @@ class events():
             self.log.debug("Long click: {} {}".format(dt, self.touch_position), extra=self.extra)
             self.event_queue.put(('touch', self.touch_position, 'LONG'))
             #The finger is still touching the screen, make sure it's ignored to avoid generating ghost events
-            self.reset_motion()
             self.ignore_touch = True
         if (abs(dx)) > SWIPE_LENGTH:
             if dx < 0:
@@ -134,18 +134,19 @@ class events():
         self.log.debug("event loop started", extra=self.extra)
         self.running = True
         self.reset_motion()
+        ev = None
         while self.running:
             try:
                 # If there is no event for more than LONG_CLICK time it is possible that
                 # the finger is on the screen, but in exactly the same position. Long click
                 # should be triggered in that situation
-                e = self.pm.input_queue.get(LONG_CLICK)
-                self.input_event_handler(e)
+                ev = self.pm.input_queue.get(timeout=LONG_CLICK)
+                self.input_event_handler(ev)
             except queue.Empty:
-                # Queue is empty, but the finger is on the screen. Trigger last event with new time_stamp
-                if e['touch'] == 1:
-                    e['time_stamp'] = time.time()
-                    self.input_event_handler(e)
+                # Queue is empty, but the finger is on the screen. Fire last event with new time_stamp
+                if ev is not None and ev['touch'] == 1:
+                    ev['time_stamp'] = time.time()
+                    self.input_event_handler(ev)
             except AttributeError:
                 pass
         self.log.debug("event loop finsished", extra=self.extra)

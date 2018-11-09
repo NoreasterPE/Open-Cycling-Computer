@@ -170,6 +170,7 @@ class pyplum(threading.Thread, metaclass=Singleton):
     def stop(self):
         self.log.debug("stop started", extra=self.extra)
         self.running = False
+        time.sleep(1.0)
         for s in self.plugins:
             self.log.debug("Stopping {} thread".format(s), extra=self.extra)
             try:
