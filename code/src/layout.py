@@ -68,6 +68,7 @@ class layout(threading.Thread):
         #  Dict with images loaded with png_to_cairo_surface. Currently only pngs are supported.
         self.images = {}
         self.load_layout()
+        self.use_page()
         ## @var  schedule_display_refresh
         #  Control variable of the display refresh event. Set to True to stop calling generate_refresh_event
         self.schedule_display_refresh = True
@@ -96,6 +97,7 @@ class layout(threading.Thread):
                     self.use_main_page()
                 if ev_type == 'reload_layout':
                     self.load_layout()
+                    self.use_page()
                 if ev_type == 'next_page':
                     self.next_page()
                 if ev_type == 'prev_page':
@@ -150,7 +152,6 @@ class layout(threading.Thread):
             if 'type' not in page:
                 page['type'] = None
             self.pages[page_id] = page
-        self.use_page()
 
     def load_layout_tree(self):
         try:
