@@ -11,19 +11,11 @@ import pyplum
 
 ## @var LONG_CLICK
 # Time of long click in ms All clicks over 0.8s are considered "long".
-LONG_CLICK = 0.8
+LONG_CLICK = 0.7
 
 ## @var SWIPE_LENGTH
 # Lenght of swipe in pixels. All clicks with length over 50 pixels are considered swipes.
-SWIPE_LENGTH = 70
-
-## @var MAIN_LOOP_BEAT
-# Period oiting time in event main loop
-MAIN_LOOP_BEAT = 0.2
-
-## @var CONFIG_SAVE_TIME
-# Period of time in s between EV_SAVE_CONFIG events.
-CONFIG_SAVE_TIME = 15
+SWIPE_LENGTH = 50
 
 
 ## Events  class
@@ -144,10 +136,16 @@ class events():
         self.reset_motion()
         while self.running:
             try:
-                e = self.pm.input_queue.get(block=True, timeout=1)
+                # If there is no event for more than LONG_CLICK time it is possible that
+                # the finger is on the screen, but in exactly the same position. Long click
+                # should be triggered in that situation
+                e = self.pm.input_queue.get(LONG_CLICK)
                 self.input_event_handler(e)
             except queue.Empty:
-                pass
+                # Queue is empty, but the finger is on the screen. Trigger last event with new time_stamp
+                if e['touch'] == 1:
+                    e['time_stamp'] = time.time()
+                    self.input_event_handler(e)
             except AttributeError:
                 pass
         self.log.debug("event loop finsished", extra=self.extra)
