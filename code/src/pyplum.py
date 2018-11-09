@@ -8,21 +8,13 @@ import importlib
 import logging
 import math
 import num
+import singleton
 import threading
 import time
 
 
-class Singleton(type):
-    _instances = {}
-
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
-
-
 ## Class for handling starting/stopping plugins in separate threads
-class pyplum(threading.Thread, metaclass=Singleton):
+class pyplum(threading.Thread, metaclass=singleton.singleton):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': __qualname__}
@@ -159,17 +151,12 @@ class pyplum(threading.Thread, metaclass=Singleton):
             for module in notify:
                 try:
                     self.plugins[module].notification()
-                except AttributeError:
-                    # Ignore error - module might not exist anymore/yet
+                except (AttributeError, KeyError):
+                    # Ignore error - module might not exist anymore/yet or might be assigned from config file
                     pass
             if self.parameters['quit']["value"]:
                 self.stop()
         self.log.debug("run finished", extra=self.extra)
-
-    ## The destructor
-    #  @param self The python object self
-    def __del__(self):
-        self.stop()
 
     ## Function stopping all plugins. Called by the destructor
     #  @param self The python object self
@@ -185,7 +172,6 @@ class pyplum(threading.Thread, metaclass=Singleton):
             except AttributeError:
                 pass
             self.plugins[s] = None
-        self.log.debug("stop finished", extra=self.extra)
 
     ## Function for registering a new parameter. Called by a sensor to provide information about what the sensor is measuring.
     #  @param self The python object self

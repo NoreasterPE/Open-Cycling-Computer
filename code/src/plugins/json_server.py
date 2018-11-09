@@ -40,7 +40,6 @@ class json_server(plugin.plugin):
             s = {}
             for p in self.pm.parameters:
                 s[p] = self.pm.parameters[p]['value']
-                print(s[p])
                 try:
                     if s[p] is None:
                         s[p] = 'None'
@@ -51,3 +50,6 @@ class json_server(plugin.plugin):
             return s
 
         bottle.run(host=self.get_ip(), port=8080)
+
+    def stop(self):
+        bottle.stop()

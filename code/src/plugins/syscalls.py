@@ -30,7 +30,14 @@ class syscalls(plugin.plugin):
         print('quit')
         import pyplum
         pm = pyplum.pyplum()
+        # Stop pyplum
         pm.parameters['quit']['value'] = True
+        # Stop events
+        if pm.event_queue is not None:
+            pm.event_queue.put(('quit',))
+        import events
+        events_instance = events.events()
+        events_instance.stop()
 
     def cycle_log_level(self):
         import logging

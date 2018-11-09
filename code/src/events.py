@@ -8,6 +8,7 @@ import logging
 import operator
 import pyplum
 import queue
+import singleton
 import time
 
 ## @var LONG_CLICK
@@ -18,10 +19,9 @@ LONG_CLICK = 0.7
 # Lenght of swipe in pixels. All clicks with length over 50 pixels are considered swipes.
 SWIPE_LENGTH = 50
 
-
 ## Events  class
 # Handle input and internal events
-class events():
+class events(metaclass=singleton.singleton):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': __qualname__}

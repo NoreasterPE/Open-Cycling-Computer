@@ -12,22 +12,14 @@ import logging
 import logging.handlers
 import pyplum
 import signal
+import singleton
 import sys
 import time
 
 
-class singleton(type):
-    _instances = {}
-
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(singleton, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
-
-
 ## Main OpenCyclingComputer class
 # Based on RPI model Zero W and PiTFT 2.8" 320x240
-class open_cycling_computer(object, metaclass=singleton):
+class open_cycling_computer(object, metaclass=singleton.singleton):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': __qualname__}
@@ -68,26 +60,6 @@ class open_cycling_computer(object, metaclass=singleton):
     #  @param self The python object self
     def stop(self):
         self.log.debug("occ stop called", extra=self.extra)
-        self.cleanup()
-
-    ## Clean up function. Writes config and layout and ends OCC. Should never be user it the real device once the code is ready. Used on development version.
-    #  @param self The python object self
-    def cleanup(self):
-        if self.cleaning is False:
-            self.log.debug("Cleaning called", extra=self.extra)
-            self.cleaning = True
-        elif self.cleaning:
-            #Already in progress, ignore
-            self.log.debug("Cleaning already in progress", extra=self.extra)
-            return
-        self.events.stop()
-        time.sleep(2.0)
-        try:
-            self.config.write_config()
-        except AttributeError:
-            self.log.debug("self.config.write_config() produced AttributeError", extra=self.extra)
-        # Wait for all processes to finish
-        ##time.sleep(5)
 
 
 ## Quit handler, triggers cleanup function after SIGTERM or SIGINT
@@ -161,4 +133,3 @@ if __name__ == "__main__":
     main_window.stop()
     p_manager.stop()
     sys_logger.debug("Log end", extra=ex)
-    quit()

@@ -562,7 +562,7 @@ pages:
                           w: 120
                           h: 80
 
-                - parameter: quit
+                - parameter: quit_call
                   run: syscalls, quit
                   x: 60
                   y: 120

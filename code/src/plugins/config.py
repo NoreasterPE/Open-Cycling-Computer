@@ -36,6 +36,7 @@ class config(plugin.plugin):
         self.base_config_file = "config/config_base.yaml"
 
     def run(self):
+        self.log.debug("Main loop started", extra=self.extra)
         self.running = True
         while self.running:
             period = self.pm.parameters['write_config_period']['value']
@@ -46,6 +47,7 @@ class config(plugin.plugin):
                 p = 15
             time.sleep(p)
             self.write_config()
+        self.log.debug("Main loop finished", extra=self.extra)
 
     ## CNotification handler for config module
     #  @param self The python object self
