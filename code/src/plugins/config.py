@@ -65,6 +65,9 @@ class config(plugin.plugin):
                 self.log.setLevel(self.log_level)
         except KeyError:
             pass
+        except ValueError:
+            self.log.warning("Switching to log_level {} failed. Using DEBUG".format(self.log_level), extra=self.extra)
+            self.log.setLevel('DEBUG')
         try:
             if self.pm.parameters['write_config_requested']['value']:
                 self.pm.parameters['write_config_requested']['value'] = False
