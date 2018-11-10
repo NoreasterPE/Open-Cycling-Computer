@@ -34,7 +34,7 @@ cadence_speed_device_name:
   value_min: .inf
 data_log_period:
   force_notification: false
-  plugin_name: data_log
+  plugin_name: null
   raw_unit: s
   required_by:
   - ble_hr
@@ -207,7 +207,7 @@ temperature:
   units_allowed:
   - C
   - F
-  value: 21.68
+  value: 22.96
   value_avg: .nan
   value_default: null
   value_list: null
