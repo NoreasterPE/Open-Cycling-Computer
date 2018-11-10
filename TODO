@@ -1,6 +1,5 @@
 PRIORITY
 - ble scanner/picker
-- click on altitude -->editing
 
 UI
 - overlay for showing messages to user
@@ -18,9 +17,9 @@ CODING STYLE:
 - define rules for different log levels
 
 REAL WORLD PROBLEMS:
-- parsing 34k of layout takes ~10 seconds. Split per page might be a sloution, and parse the rest in background.
+- when starting from rc.local the time is wrong (no RTC), so ride log and debug log names are invalid. Rename files? [Wait for RTC]
+- parsing 34k of layout takes ~10 seconds. Split per page might be a solution, and parse the rest in background.
 - develop testing procedure for gui
-- add bulltproof config saving. Quite often the file is gone after saving (crash? error?)
 - add json_client
 - proper command line argument parsing in occ.py
 - tidy up current/default layout loading. Dafault is a backup, current is the currently used.
@@ -277,3 +276,5 @@ TypeError: argument 1 must be pygame.Surface, not None
 127- [DONE] - Make library for sensor/plugin handling. Might be useful for other projects like weather station [name pyplum]
 128. [DONE] - first click in short time after after long is ignored
 129. [DONE] - make clean quit
+130. [DONE] - add bulltproof config saving. Quite often the file is gone after saving (crash? error?) [IMPROVED but splitting dumping and writing]
+131. [DONE] - click on altitude -->editing

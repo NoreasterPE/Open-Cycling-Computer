@@ -265,7 +265,14 @@ pages:
 
                 - parameter: altitude
                   format: "%.1f"
+                  editable: yes
+                  editor: editor_numbers
                   align: left
+                  button:
+                          x0: 0
+                          y0: 200
+                          w: 240
+                          h: 40
                   x: 70
                   y: 220
 
