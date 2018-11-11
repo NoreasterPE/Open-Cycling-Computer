@@ -43,6 +43,12 @@ class pyplum(threading.Thread, metaclass=singleton.singleton):
         #  refresh - flag indicating that the context has been modified,
         #  hold    - flag indicating that rendering should be posponed to avoid flickering
         self.render = dict(owner=None, ctx=None, refresh=False, hold=False)
+        ## @var overlay
+        #  owner   - name of the module that registered cairo context,
+        #  ctx     - cairo context used as overlay graphics,
+        #  refresh - flag indicating that the context has been modified,
+        #  hold    - flag indicating that rendering to overlay should be posponed to avoid flickering
+        self.overlay = dict(owner=None, ctx=None, refresh=False, hold=False)
         ## @var input_queue
         #  Input queue with events from hardware input, i.e. pitft touchscreen
         self.input_queue = None
@@ -302,6 +308,18 @@ class pyplum(threading.Thread, metaclass=singleton.singleton):
             self.render['owner'] = plugin_name
         else:
             self.log.critical("Can't register cairo context by {} as it's already registered by {}".format(plugin_name, self.render['owner']), extra=self.extra)
+
+    ## Function for registering cairo context used as overlay. Only one plugin is allowed to register it
+    #  @param self The python object self
+    #  @param plugin_name Name of the plugin registering cairo context
+    #  @param cairo_context Cairo context used as overlay
+    def register_cairo_overlay(self, plugin_name, cairo_context):
+        self.log.debug("Registering cairo context by {}".format(plugin_name), extra=self.extra)
+        if self.overlay['owner'] is None:
+            self.overlay['ctx'] = cairo_context
+            self.overlay['owner'] = plugin_name
+        else:
+            self.log.critical("Can't register cairo context overlay by {} as it's already registered by {}".format(plugin_name, self.overlay['owner']), extra=self.extra)
 
     ## Function for registering event queue. Only one plugin is allowed to register it
     #  @param self The python object self
