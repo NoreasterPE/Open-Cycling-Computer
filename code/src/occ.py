@@ -119,7 +119,7 @@ if __name__ == "__main__":
                #'gtk_rendering',
                'pitft_rendering',
                'pitft_touchscreen',
-               'pimoroni_lipo_shim',
+               'lipo_shim',
                'data_log',
                'syscalls']
     p_manager.load_plugins('plugins', plugins)
