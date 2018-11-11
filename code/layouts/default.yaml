@@ -625,6 +625,17 @@ pages:
                           w: 120
                           h: 80
 
+                - parameter: overlay
+                  run: syscalls, show_low_battery
+                  x: 60
+                  y: 280
+                  text: Overlay
+                  button:
+                          x0: 0
+                          y0: 240
+                          w: 120
+                          h: 80
+
                 - parameter: label
                   text: Screenshots
                   x: 180
