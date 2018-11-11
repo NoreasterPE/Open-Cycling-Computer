@@ -70,3 +70,9 @@ class syscalls(plugin.plugin):
                 pm.parameters['screenshot_mode']['value'] = not pm.parameters['screenshot_mode']['value']
         except KeyError:
             pass
+
+    def show_low_battery(self):
+        import pyplum
+        pm = pyplum.pyplum()
+        if pm.event_queue is not None:
+            pm.event_queue.put(('show_overlay', 'images/battery-low-warning.png'))
