@@ -52,8 +52,8 @@ class pitft_rendering(plugin.plugin):
     #  @param self The python object self
     def notification(self):
         self.log.debug('notification received', extra=self.extra)
-        if ((self.width, self.height) != self.pm.parameters['display_size']['value'] and
-                not self.cairo_initialised):
+        if (self.width, self.height) != self.pm.parameters['display_size']['value'] and \
+                not self.cairo_initialised:
             self.width, self.height = self.pm.parameters['display_size']['value']
             self.setup_cairo()
 
@@ -80,9 +80,9 @@ class pitft_rendering(plugin.plugin):
     def run(self):
         self.running = True
         while self.running:
-            if (self.width is not None and
-                    self.height is not None and
-                    not self.cairo_initialised):
+            if self.width is not None and \
+                    self.height is not None and \
+                    not self.cairo_initialised:
                 self.setup_cairo()
             if self.pm.render['refresh'] and not self.pm.render['hold']:
                 self.pm.render['hold'] = True

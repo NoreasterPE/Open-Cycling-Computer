@@ -302,9 +302,7 @@ class layout(threading.Thread):
 
     def render_layout(self):
         for field in self.current_page['fields']:
-            #print("{}".format(field))
             parameter = field['parameter']
-            #print("{}".format(parameter))
             try:
                 position_x = field['x']
             except KeyError:
@@ -418,7 +416,6 @@ class layout(threading.Thread):
                 image_path = None
             try:
                 variable = field['variable']
-                #print("{} variable {}".format(parameter, variable))
                 value = self.pm.parameters[variable["name"]]["value"]
                 try:
                     # If there is a variable with frames defined prepare path for relevant icon
@@ -643,6 +640,7 @@ class layout(threading.Thread):
         png_surface = cairo.ImageSurface.create_from_png(file_path)
         return png_surface
 
+    #FIXME misleading names surface --> image, image_to_surface --> render_image?
     def image_to_surface(self, surface, x=0, y=0, w=None, h=None):
         if w is None:
             w = self.width
