@@ -49,7 +49,7 @@ class layout(threading.Thread):
         ## @var height
         #  Window/screen height
         self.height = self.pm.parameters['display_size']["value"][1]
-        ## @var cr
+        ## @var ctx
         #  Handle to cairo context
         self.ctx = self.pm.render['ctx']
         ## @var uc
