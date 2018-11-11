@@ -25,6 +25,9 @@ class layout(threading.Thread):
     ## @var DISPLAY_REFRESH
     # Time between display refresh events. This is not display fps!
     DISPLAY_REFRESH = 0.5
+    ## @var OVERLAY_TIME
+    # Time of overlay visibility
+    OVERLAY_TIME = 5.0
 
     def __init__(self):
         super().__init__()
@@ -52,6 +55,10 @@ class layout(threading.Thread):
         ## @var ctx
         #  Handle to cairo context
         self.ctx = self.pm.render['ctx']
+        ## @var octx
+        #  Handle to cairo context overlay
+        self.octx = self.pm.overlay['ctx']
+        self.overlay_time_start = 0.0
         ## @var uc
         #  Handle of unit_converter. Helper for converting units.
         self.uc = unit_converter.unit_converter()
@@ -86,6 +93,8 @@ class layout(threading.Thread):
             time.sleep(0.5)
         self.running = True
         while self.running:
+            if time.time() - self.overlay_time_start > self.OVERLAY_TIME:
+                self.hide_overlay()
             try:
                 event = self.pm.event_queue.get(block=True, timeout=1)
                 ev_type = event[0]
@@ -102,6 +111,9 @@ class layout(threading.Thread):
                     self.next_page()
                 if ev_type == 'prev_page':
                     self.prev_page()
+                if ev_type == 'show_overlay':
+                    image_file = event[1]
+                    self.show_overlay(image_file)
                 if ev_type == 'refresh':
                     self.refresh_display()
                     if self.schedule_display_refresh:
@@ -649,6 +661,23 @@ class layout(threading.Thread):
         self.ctx.set_source_surface(surface, x, y)
         self.ctx.rectangle(x, y, w, h)
         self.ctx.fill()
+
+    def show_overlay(self, image_path):
+        self.overlay_time_start = time.time()
+        if image_path is not None:
+            if image_path not in self.images:
+                self.images[image_path] = self.load_image(image_path)
+            image = self.images[image_path]
+            if image is not None:
+                self.octx.set_source_rgba(0.0, 0.0, 0.0, 0.0)
+                self.octx.set_source_surface(image, 0, 0)
+                self.octx.paint_with_alpha(1.0)
+
+    def hide_overlay(self):
+        self.octx.set_source_rgba(0.0, 0.0, 0.0, 0.0)
+        self.octx.set_operator(cairo.OPERATOR_CLEAR)
+        self.octx.paint_with_alpha(1.0)
+        self.octx.set_operator(cairo.OPERATOR_SOURCE)
 
     def text_to_surface(self, text, x, y, c):
         self.ctx.set_source_rgb(c[0], c[1], c[2])

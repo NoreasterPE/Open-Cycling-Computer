@@ -67,14 +67,21 @@ class pitft_rendering(plugin.plugin):
             # Framebuffer surface
             self.fb_surface = cairo.ImageSurface.create_for_data(self.fb_map, cairo.FORMAT_RGB16_565, self.width, self.height)
             # Main cairo drawing surface
-            self.surface = cairo.ImageSurface.create_similar(self.fb_surface, cairo.CONTENT_COLOR, self.width, self.height)
+            self.surface = cairo.ImageSurface.create_similar(self.fb_surface, cairo.CONTENT_COLOR_ALPHA, self.width, self.height)
             # Framebuffer context
             self.fb_ctx = cairo.Context(self.fb_surface)
             # Main cairo context
             self.ctx = cairo.Context(self.surface)
             self.ctx.set_source_rgba(0.0, 0.0, 0.0, 1.0)
-            self.ctx.paint_with_alpha(1.0)
+            self.ctx.paint()
             self.pm.register_cairo_context(self.extra['module_name'], self.ctx)
+            # Overlay cairo drawing surface
+            self.overlay_surface = cairo.ImageSurface.create_similar(self.fb_surface, cairo.CONTENT_COLOR_ALPHA, self.width, self.height)
+            # Overlay cairo context
+            self.overlay_ctx = cairo.Context(self.overlay_surface)
+            self.overlay_ctx.set_source_rgba(0.0, 0.0, 0.0, 0.0)
+            self.overlay_ctx.paint_with_alpha(0.0)
+            self.pm.register_cairo_overlay(self.extra['module_name'], self.overlay_ctx)
             self.cairo_initialised = True
 
     def run(self):
@@ -87,8 +94,9 @@ class pitft_rendering(plugin.plugin):
             if self.pm.render['refresh'] and not self.pm.render['hold']:
                 self.pm.render['hold'] = True
                 self.fb_ctx.set_source_surface(self.surface, 0, 0)
-                self.fb_ctx.rectangle(0, 0, self.width, self.height)
-                self.fb_ctx.fill()
+                self.fb_ctx.paint()
+                self.fb_ctx.set_source_surface(self.overlay_surface, 0, 0)
+                self.fb_ctx.paint_with_alpha(0.9)
                 self.pm.render['refresh'] = False
                 self.pm.render['hold'] = False
                 try:
