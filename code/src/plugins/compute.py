@@ -30,11 +30,6 @@ class compute(plugin.plugin):
         self.reset_data()
         self.log.debug("Initialised.", extra=self.extra)
 
-    ## Notification handler
-    #  @param self The python object self
-    def notification(self):
-        pass
-
     def run(self):
         self.log.debug("Main loop started", extra=self.extra)
         self.running = True
