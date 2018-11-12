@@ -99,12 +99,13 @@ class bicycle(plugin.plugin):
                 pass
 
         # Calculate slope
-        try:
-            self.altitude_delta_cumulative += self.altitude_delta
-            self.odometer_delta_cumulative += self.odometer_delta
-            self.calculate_slope()
-        except TypeError:
-            pass
+        if self.odometer_delta > 0.0:
+            try:
+                self.altitude_delta_cumulative += self.altitude_delta
+                self.odometer_delta_cumulative += self.odometer_delta
+                self.calculate_slope()
+            except TypeError:
+                pass
 
     def run(self):
         self.log.debug("Main loop started", extra=self.extra)
