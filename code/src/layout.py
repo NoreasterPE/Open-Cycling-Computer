@@ -194,22 +194,14 @@ class layout(threading.Thread):
         except KeyError:
             self.log.critical("Cannot load page {}, loading start page".format(page_id), extra=self.extra)
             self.use_page()
-        try:
+
+        self.background_image = None
+        if 'background_image' in self.current_page:
             self.background_image = self.load_image(self.current_page['background_image'])
-        except cairo.Error:
-            self.log.critical("{}: Cannot load background image!".format(__name__,), extra=self.extra)
-            self.log.critical("layout_file = {}".format(self.layout_file), extra=self.extra)
-            self.log.critical("background path = {}".format(self.current_page['background_image']), extra=self.extra)
-            self.log.critical("page_id = {}".format(page_id), extra=self.extra)
-            raise
-        try:
+
+        self.buttons_image = None
+        if 'buttons_image' in self.current_page:
             self.buttons_image = self.load_image(self.current_page['buttons'])
-        except cairo.Error:
-            self.log.critical("{}: Cannot load buttons image!".format(__name__,), extra=self.extra)
-            self.log.critical("layout_file = {}".format(self.layout_file), extra=self.extra)
-            self.log.critical("buttons path = {}".format(self.current_page['buttons']), extra=self.extra)
-            self.log.critical("page_id = {}".format(page_id), extra=self.extra)
-            raise
 
         self.parse_font()
         self.parse_text_colour()
@@ -278,7 +270,11 @@ class layout(threading.Thread):
             image = self.png_to_cairo_surface(image_path)
             self.log.debug("Image {} loaded".format(image_path), extra=self.extra)
         except cairo.Error:
-            self.log.critical("Cannot load image {}".format(image_path), extra=self.extra)
+            # background_image invalid
+            self.log.warning("Cannot load image!", extra=self.extra)
+            self.log.warning("layout_file = {}".format(self.layout_file), extra=self.extra)
+            self.log.warning("image path path = {}".format(image_path), extra=self.extra)
+            self.log.warning("page_id = {}".format(page_id), extra=self.extra)
             image = None
         return image
 
