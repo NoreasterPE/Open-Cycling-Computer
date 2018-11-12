@@ -203,8 +203,17 @@ class layout(threading.Thread):
         if 'buttons_image' in self.current_page:
             self.buttons_image = self.load_image(self.current_page['buttons'])
 
-        self.parse_font()
-        self.parse_text_colour()
+        self.background_colour = (0.0, 0.0, 0.0)
+        if 'background_colour' in self.current_page:
+            self.parse_background_colour()
+
+        self.font = None
+        if 'font' in self.current_page:
+            self.parse_font()
+
+        self.text_colour = None
+        if 'text_colour' in self.current_page:
+            self.parse_text_colour()
 
         self.button_rectangles = {}
         if self.current_page['fields'] is not None:
@@ -212,11 +221,7 @@ class layout(threading.Thread):
                 self.parse_parameter(field)
 
     def parse_font(self):
-        self.font = None
-        try:
-            self.font = self.current_page['font']
-        except KeyError:
-            self.log.critical("Page font not found on page {}. font field is mandatory.".format(self.current_page), extra=self.extra)
+        self.font = self.current_page['font']
         if self.font == '':
             self.log.critical("Page font found, but it's empry string. font field is mandatory.".format(self.current_page), extra=self.extra)
         try:
@@ -233,6 +238,15 @@ class layout(threading.Thread):
         r, g, b = text_colour_rgb[:2], text_colour_rgb[2:4], text_colour_rgb[4:]
         r, g, b = [int(n, 16) for n in (r, g, b)]
         self.text_colour = (r, g, b)
+
+    def parse_background_colour(self):
+        self.background_colour_rgb = self.current_page['background_colour']
+        background_colour_rgb = self.background_colour_rgb
+        if background_colour_rgb[0] == '#':
+            background_colour_rgb = background_colour_rgb[1:]
+        r, g, b = background_colour_rgb[:2], background_colour_rgb[2:4], background_colour_rgb[4:]
+        r, g, b = [int(n, 16) for n in (r, g, b)]
+        self.background_colour = (r, g, b)
 
     def parse_parameter(self, field):
         try:
