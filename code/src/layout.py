@@ -195,11 +195,11 @@ class layout(threading.Thread):
             self.log.critical("Cannot load page {}, loading start page".format(page_id), extra=self.extra)
             self.use_page()
         try:
-            self.background_image = self.load_image(self.current_page['background'])
+            self.background_image = self.load_image(self.current_page['background_image'])
         except cairo.Error:
             self.log.critical("{}: Cannot load background image!".format(__name__,), extra=self.extra)
             self.log.critical("layout_file = {}".format(self.layout_file), extra=self.extra)
-            self.log.critical("background path = {}".format(self.current_page['background']), extra=self.extra)
+            self.log.critical("background path = {}".format(self.current_page['background_image']), extra=self.extra)
             self.log.critical("page_id = {}".format(page_id), extra=self.extra)
             raise
         try:
