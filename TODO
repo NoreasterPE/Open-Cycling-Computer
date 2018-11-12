@@ -2,7 +2,6 @@ PRIORITY
 - ble scanner/picker
 
 UI
-- overlay for showing messages to user
 - BLE device list expiry time. Currently never expires
 - There is no way to disconnect from a BLE device
 - Fix icon lines width - it's not consistent
@@ -278,3 +277,4 @@ TypeError: argument 1 must be pygame.Surface, not None
 129. [DONE] - make clean quit
 130. [DONE] - add bulltproof config saving. Quite often the file is gone after saving (crash? error?) [IMPROVED but splitting dumping and writing]
 131. [DONE] - click on altitude -->editing
+132. [DONE] - overlay for showing messages to user
