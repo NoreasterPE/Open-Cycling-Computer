@@ -6,6 +6,7 @@ pages:
          left: page_2
          right: page_1
          background_image: images/page_0_background.png
+         #background_colour: '#000000'
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 20

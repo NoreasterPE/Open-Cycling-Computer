@@ -203,7 +203,7 @@ class layout(threading.Thread):
         if 'buttons_image' in self.current_page:
             self.buttons_image = self.load_image(self.current_page['buttons'])
 
-        self.background_colour = (0.0, 0.0, 0.0)
+        self.background_colour = None
         if 'background_colour' in self.current_page:
             self.parse_background_colour()
 
@@ -296,15 +296,13 @@ class layout(threading.Thread):
         self.use_page()
 
     def render_background(self):
-        try:
+        if self.background_colour is not None:
+            r = self.background_colour[0]
+            g = self.background_colour[1]
+            b = self.background_colour[2]
+            self.ctx.set_source_rgb(r, g, b)
+        if self.background_image is not None:
             self.ctx.set_source_surface(self.background_image, 0, 0)
-        except TypeError as e:
-            self.ctx.set_source_rgb(0.0, 0.0, 0.0)
-            if str(e) == 'must be cairo.Surface, not None':
-                # Allow for empty background
-                pass
-            else:
-                raise
         self.ctx.rectangle(0, 0, self.width, self.height)
         self.ctx.fill()
 
