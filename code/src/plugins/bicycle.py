@@ -26,6 +26,7 @@ class bicycle(plugin.plugin):
         self.pm = pyplum.pyplum()
         self.pm.register_parameter("slope", self.extra["module_name"], value=num.NAN, raw_unit="m/m", unit="%", units_allowed=["m/m", "%"])
         self.pm.register_parameter("speed", self.extra["module_name"], value=num.NAN, raw_unit="m/s", unit="km/h", units_allowed=["m/s", "km/h", "mi/h"])
+        self.pm.parameters["speed"]["time_stamp"] = 0.0
         self.pm.register_parameter("session_distance", self.extra["module_name"], value=0.0, raw_unit="m", unit="km", units_allowed=["m", "km", "mi"])
         self.pm.register_parameter("session_odometer_start", self.extra["module_name"], value=num.NAN, raw_unit="m")
         self.pm.register_parameter("wheel_size", self.extra["module_name"], value=num.NAN, raw_unit="m")
@@ -75,6 +76,20 @@ class bicycle(plugin.plugin):
             self.wheel_circumference = self.pm.parameters['wheel_circumference']['value']
             #FIXME Reverse check wheel helper for wheel_size or just set it to 'User'?
             #FIXME Make wheel module a plugin?
+
+        # Speed calculation
+        if self.wheel_revolution_time != self.pm.parameters["wheel_revolution_time"]["value"]:
+            self.wheel_revolution_time = self.pm.parameters["wheel_revolution_time"]["value"]
+            self.pm.parameters["speed"]["value"] = self.wheel_circumference / self.wheel_revolution_time
+            self.pm.parameters["speed"]["value_max"] = max(self.pm.parameters["speed"]["value_max"], self.pm.parameters["speed"]["value"])
+            self.speed_time_stamp = time.time()
+            self.pm.parameters["speed"]["time_stamp"] = self.speed_time_stamp
+
+        # Expiry speed after 2 s
+        if time.time() - self.speed_time_stamp > 2.0:
+            self.pm.parameters["speed"]["value"] = 0.0
+            self.speed_time_stamp = time.time()
+            self.pm.parameters["speed"]["time_stamp"] = self.speed_time_stamp
 
         # Calculate altitude change
         if self.altitude != self.pm.parameters["altitude"]["value"]:

@@ -49,25 +49,18 @@ class ble_sc(ble_sensor.ble_sensor):
             self.delegate.measurement_time = 0.0
             self.pm.parameters["cadence"]["reset"] = False
         try:
-            if self.delegate.wheel_time_stamp == self.delegate.wheel_revolution_time_stamp:
-                self.pm.parameters["wheel_revolution_time"]["time_stamp"] = self.delegate.wheel_revolution_time_stamp
-                self.pm.parameters["wheel_revolution_time"]["value"] = self.delegate.wheel_revolution_time
-                self.log.debug('wheel_revolution_time {}'.format(self.pm.parameters["wheel_revolution_time"]["value"]), extra=self.extra)
-                # Move to compute module
-                self.pm.parameters["speed"]["value"] = self.pm.parameters["wheel_circumference"]["value"] / self.pm.parameters["wheel_revolution_time"]["value"]
-                self.pm.parameters["speed"]["value_max"] = max(self.pm.parameters["speed"]["value_max"], self.pm.parameters["speed"]["value"])
-            else:
-                self.pm.parameters["speed"]["value"] = 0.0
-            self.pm.parameters["speed"]["time_stamp"] = self.delegate.wheel_time_stamp
+            self.pm.parameters["wheel_revolution_time"]["time_stamp"] = self.delegate.wheel_revolution_time_stamp
+            self.pm.parameters["wheel_revolution_time"]["value"] = self.delegate.wheel_revolution_time
+            self.log.debug('wheel_revolution_time {}'.format(self.pm.parameters["wheel_revolution_time"]["value"]), extra=self.extra)
 
             if self.pm.parameters["wheel_revolutions"]["value"] != self.delegate.wheel_revolutions:
-                self.log.debug('wheel_revolutions {}'.format(self.pm.parameters["wheel_revolutions"]["value"]), extra=self.extra)
                 try:
-                    self.pm.parameters["odometer"]["value"] += (self.delegate.wheel_revolutions -
-                                                               self.pm.parameters["wheel_revolutions"]["value"]) * self.pm.parameters["wheel_circumference"]["value"]
+                    self.pm.parameters["odometer"]["value"] += (self.delegate.wheel_revolutions - self.pm.parameters["wheel_revolutions"]["value"]) \
+                        * self.pm.parameters["wheel_circumference"]["value"]
                 except TypeError:
                     pass
                 self.pm.parameters["wheel_revolutions"]["value"] = self.delegate.wheel_revolutions
+                self.log.debug('wheel_revolutions {}'.format(self.pm.parameters["wheel_revolutions"]["value"]), extra=self.extra)
 
             self.pm.parameters["cadence"]["time_stamp"] = self.delegate.cadence_time_stamp
             self.pm.parameters["cadence"]["value"] = self.delegate.cadence
