@@ -23,6 +23,12 @@ Pimoroni Lipo-Zero:
 https://shop.pimoroni.com/products/zero-lipo
 https://pinout.xyz/pinout/zero_lipo#
 
+Real Time Clock DS3231
+https://www.adafruit.com/product/3013
+Weight: 2.1g
+Dimensions: 23mm x 17.6mm x 7.2mm
+Current: ~0.5mA
+
 GPS [TBC, Matek Ublox SAM-M8Q  might be the replacement]
 http://www.adafruit.com/products/746
 Weight:		8.5 g
