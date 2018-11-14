@@ -9,11 +9,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="744.09448819"
-   height="1052.3622047"
+   width="32"
+   height="32"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.5 r10040"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="heartrate_icon.svg">
   <defs
      id="defs4" />
@@ -22,19 +22,20 @@
      pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="1"
+     inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.2505268"
-     inkscape:cx="432.47436"
-     inkscape:cy="552.32196"
+     inkscape:zoom="18.004214"
+     inkscape:cx="15.238716"
+     inkscape:cy="19.539388"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1680"
-     inkscape:window-height="984"
+     inkscape:window-height="1013"
      inkscape:window-x="0"
-     inkscape:window-y="27"
-     inkscape:window-maximized="1" />
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:pagecheckerboard="true" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -50,59 +51,27 @@
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(0,-1020.3622)">
     <g
        id="g3859-5"
-       transform="matrix(1,0,0,1.4951746,-253.17278,-429.50166)"
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-opacity:1;stroke-width:24.53439197000000149;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round;stroke-linecap:round"
+       transform="matrix(0.1803926,0,0,0.18830658,-96.814555,916.68426)"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:162.77178955;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:export-filename="/run/user/1000/gvfs/sftp:host=192.168.1.33,port=33,user=pi/home/pi/OpenCyclingComputer/images/heartrate_icon.png"
        inkscape:export-xdpi="8.6894464"
        inkscape:export-ydpi="8.6894464">
       <path
-         style="fill:#ffffff;stroke:#ffffff;stroke-width:24.53439197000000149;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;fill-opacity:1"
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:162.77178955;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="m 671.16899,569.77776 c -14.40567,-0.0526 -30.52976,7.35155 -45.94896,24.87167 -15.41921,-17.52012 -31.54331,-24.92428 -45.94901,-24.87167 -45.07575,0.16462 -68.21555,72.64316 45.949,138.80081 114.16455,-66.15766 91.02475,-138.63619 45.94897,-138.80081 z"
          id="path3839-6-6"
          inkscape:connector-curvature="0"
          sodipodi:nodetypes="scscs" />
     </g>
     <path
-       sodipodi:type="star"
-       style="color:#000000;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:#ff0000;stroke-width:24;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="path3956"
-       sodipodi:sides="3"
-       sodipodi:cx="646.02979"
-       sodipodi:cy="348.24136"
-       sodipodi:r1="55.005665"
-       sodipodi:r2="27.502832"
-       sodipodi:arg1="3.1415927"
-       sodipodi:arg2="4.1887902"
-       inkscape:flatsided="true"
-       inkscape:rounded="0"
-       inkscape:randomized="0"
-       d="m 591.02412,348.24136 82.5085,-47.6363 0,95.27261 z"
-       inkscape:transform-center-x="13.751416"
-       transform="translate(-94.629719,54.805173)"
-       inkscape:export-xdpi="6"
-       inkscape:export-ydpi="6" />
-    <path
-       sodipodi:type="star"
-       style="color:#000000;fill:#000fff;fill-opacity:1;fill-rule:nonzero;stroke:#0100ff;stroke-width:24;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="path3956-1"
-       sodipodi:sides="3"
-       sodipodi:cx="646.02979"
-       sodipodi:cy="348.24136"
-       sodipodi:r1="55.005665"
-       sodipodi:r2="27.502832"
-       sodipodi:arg1="3.1415927"
-       sodipodi:arg2="4.1887902"
-       inkscape:flatsided="true"
-       inkscape:rounded="0"
-       inkscape:randomized="0"
-       d="m 591.02412,348.24136 82.5085,-47.6363 0,95.27261 z"
-       inkscape:transform-center-x="13.751416"
-       transform="translate(-94.629719,248.79255)"
-       inkscape:export-filename="/run/user/1000/gvfs/sftp:host=192.168.1.33,port=33,user=pi/home/pi/OpenCyclingComputer/images/path3957.png"
-       inkscape:export-xdpi="6"
-       inkscape:export-ydpi="6" />
+       style="fill:none;fill-rule:evenodd;stroke:#ff0808;stroke-width:1.79999995;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 1.3330213,1042.6422 c 2.6853932,-0.075 4.9277226,2.3035 4.9277226,2.3035 l 3.6813728,-22.7432 3.9435213,27.5492 5.075529,-9.9323 c 0,0 2.122497,2.7494 11.698321,2.4896"
+       id="path819"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc" />
   </g>
 </svg>

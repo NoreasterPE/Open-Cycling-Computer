@@ -15,8 +15,8 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="ble_speed_connected.svg"
-   inkscape:export-filename="/home/przemo/software/occ/OpenCyclingComputer/Open-Cycling-Computer/resources/sc_ble_connected.png"
+   sodipodi:docname="ss_ble_sc_connected.svg"
+   inkscape:export-filename="/run/user/1000/gvfs/sftp:host=occ/home/pi/Open-Cycling-Computer/code/images/sc_ble_connected.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -24,15 +24,15 @@
     <filter
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
-       id="filter1751"
-       x="-0.39166666"
-       width="1.7833333"
-       y="-0.2060065"
-       height="1.412013">
+       id="filter3795"
+       x="-0.28643834"
+       width="1.5728767"
+       y="-0.20651852"
+       height="1.413037">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="4.9963727"
-         id="feGaussianBlur1753" />
+         stdDeviation="6.5862345"
+         id="feGaussianBlur3797" />
     </filter>
   </defs>
   <sodipodi:namedview
@@ -43,8 +43,8 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="154.83933"
-     inkscape:cy="97.878539"
+     inkscape:cx="120.55362"
+     inkscape:cy="119.30711"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -63,7 +63,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -73,7 +73,7 @@
      id="layer1"
      transform="translate(0,-212.33333)">
     <rect
-       style="color:#000000;overflow:visible;opacity:0.83499995;fill:#000000;fill-opacity:0.54646014;fill-rule:nonzero;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter1751)"
+       style="color:#000000;overflow:visible;opacity:0.9;fill:#000000;fill-opacity:0.74336284;fill-rule:nonzero;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter3795)"
        id="rect881"
        width="55.184521"
        height="76.540169"
