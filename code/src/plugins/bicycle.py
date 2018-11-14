@@ -29,9 +29,12 @@ class bicycle(plugin.plugin):
         self.pm.parameters["speed"]["time_stamp"] = 0.0
         self.pm.register_parameter("session_distance", self.extra["module_name"], value=0.0, raw_unit="m", unit="km", units_allowed=["m", "km", "mi"])
         self.pm.register_parameter("session_odometer_start", self.extra["module_name"], value=num.NAN, raw_unit="m")
+        self.pm.register_parameter("gear_ratio", self.extra["module_name"], value=num.NAN)
         self.pm.register_parameter("wheel_size", self.extra["module_name"], value=num.NAN, raw_unit="m")
         self.pm.request_parameter("wheel_size", self.extra["module_name"])
         self.wheel_size = num.NAN
+        self.pm.request_parameter("cadence", self.extra["module_name"])
+        self.cadence = num.NAN
         self.pm.register_parameter("wheel_circumference", self.extra["module_name"], value=num.NAN, raw_unit="m")
         self.pm.request_parameter("wheel_circumference", self.extra["module_name"])
         self.wheel_circumference = num.NAN
@@ -112,6 +115,11 @@ class bicycle(plugin.plugin):
                 self.pm.parameters["session_distance"]["value"] = self.odometer - self.pm.parameters["session_odometer_start"]["value"]
             except (TypeError, ValueError):
                 pass
+
+        # Calculate gear ratio
+        if self.cadence != self.pm.parameters["cadence"]["value"]:
+            self.cadence = self.pm.parameters["cadence"]["value"]
+            self.pm.parameters["gear_ratio"]["value"] = self.wheel_revolution_time / (self.cadence / 60.0)
 
         # Calculate slope
         if self.odometer_delta > 0.0:
