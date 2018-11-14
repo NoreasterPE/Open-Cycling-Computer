@@ -14,7 +14,7 @@ class lipo_shim(plugin.plugin):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': __qualname__}
-    battery_low_overlay_image = 'images/battery-low-warning.png'
+    battery_low_overlay_image = 'images/ol_battery_low_warning.png'
     READ_PERIOD = 10
 
     ## The constructor
