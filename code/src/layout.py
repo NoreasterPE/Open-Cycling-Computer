@@ -511,7 +511,7 @@ class layout(threading.Thread):
             self.ctx.stroke()
 
     def render_pressed_button(self, pressed_pos):
-        if self.ctx is None:
+        if self.ctx is None or self.buttons_image is None:
             return
         self.log.debug("render_pressed_button started", extra=self.extra)
         for parameter, r in self.button_rectangles.items():
