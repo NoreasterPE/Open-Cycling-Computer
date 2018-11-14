@@ -284,11 +284,10 @@ class layout(threading.Thread):
             image = self.png_to_cairo_surface(image_path)
             self.log.debug("Image {} loaded".format(image_path), extra=self.extra)
         except cairo.Error:
-            # background_image invalid
+            # image is invalid
             self.log.warning("Cannot load image!", extra=self.extra)
             self.log.warning("layout_file = {}".format(self.layout_file), extra=self.extra)
             self.log.warning("image path path = {}".format(image_path), extra=self.extra)
-            self.log.warning("page_id = {}".format(page_id), extra=self.extra)
             image = None
         return image
 
