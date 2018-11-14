@@ -28,7 +28,7 @@ class lipo_shim(plugin.plugin):
         self.battery_low = False
 
         RPi.GPIO.setmode(RPi.GPIO.BOARD)
-        RPi.GPIO.setup(7, RPi.GPIO.IN)
+        RPi.GPIO.setup(7, RPi.GPIO.IN, pull_up_down=RPi.GPIO.PUD_UP)
         self.battery_low = bool(RPi.GPIO.input(7))
 
         self.last_read = time.time()
@@ -40,7 +40,7 @@ class lipo_shim(plugin.plugin):
         while self.running:
             if time.time() - self.last_read > self.READ_PERIOD:
                 self.last_read = time.time()
-                self.battery_low = bool(RPi.GPIO.input(7))
+                self.battery_low = not(bool(RPi.GPIO.input(7)))
                 if self.battery_low:
                     self.log.debug('Battery status: low', extra=self.extra)
                 else:
@@ -48,4 +48,5 @@ class lipo_shim(plugin.plugin):
                 self.pm.parameters['battery_low']['value'] = self.battery_low
                 if self.pm.event_queue is not None and self.battery_low:
                     self.pm.event_queue.put(('show_overlay', self.battery_low_overlay_image))
+            time.sleep(1.0)
         self.log.debug("Main loop finished", extra=self.extra)
