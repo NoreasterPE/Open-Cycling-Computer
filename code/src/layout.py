@@ -26,9 +26,9 @@ class layout(threading.Thread):
     ## @var DISPLAY_REFRESH
     # Time between display refresh events. This is not display fps!
     DISPLAY_REFRESH = 0.5
-    ## @var OVERLAY_TIME
-    # Time of overlay visibility
-    OVERLAY_TIME = 5.0
+    ## @var DEFAULT_OVERLAY_TIME
+    # Default time of overlay visibility
+    DEFAULT_OVERLAY_TIME = 3.0
 
     def __init__(self):
         super().__init__()
@@ -60,6 +60,7 @@ class layout(threading.Thread):
         #  Handle to cairo context overlay
         self.octx = self.pm.overlay['ctx']
         self.overlay_time_start = num.NAN
+        self.overlay_show_time = 0
         ## @var overlay_queue
         #  List of overlays waiting to be shown
         self.overlay_queue = list()
@@ -97,7 +98,7 @@ class layout(threading.Thread):
             time.sleep(0.5)
         self.running = True
         while self.running:
-            if time.time() - self.overlay_time_start > self.OVERLAY_TIME:
+            if time.time() - self.overlay_time_start > self.overlay_show_time:
                 self.hide_overlay()
             if len(self.overlay_queue) > 0:
                 self.show_overlay()
@@ -119,7 +120,11 @@ class layout(threading.Thread):
                     self.prev_page()
                 if ev_type == 'show_overlay':
                     image_file = event[1]
-                    self.overlay_queue.append(image_file)
+                    try:
+                        show_time = event[2]
+                    except IndexError:
+                        show_time = self.DEFAULT_OVERLAY_TIME
+                    self.overlay_queue.append((image_file, show_time))
                 if ev_type == 'refresh':
                     self.refresh_display()
                     if self.schedule_display_refresh:
@@ -134,7 +139,7 @@ class layout(threading.Thread):
                 #queue doesn't exist
                 pass
             except IndexError:
-                self.log.crirtical("Invalid event: {}".format(event), extra=self.extra)
+                self.log.critical("Invalid event: {}".format(event), extra=self.extra)
 
     def refresh_display(self):
         # Check if cairo context has changed
@@ -678,7 +683,9 @@ class layout(threading.Thread):
     def show_overlay(self):
         if len(self.overlay_queue) > 0 and math.isnan(self.overlay_time_start):
             self.overlay_time_start = time.time()
-            image_path = self.overlay_queue.pop(0)
+            overlay = self.overlay_queue.pop(0)
+            image_path = overlay[0]
+            self.overlay_show_time = overlay[1]
             if image_path is not None:
                 if image_path not in self.images:
                     self.images[image_path] = self.load_image(image_path)
