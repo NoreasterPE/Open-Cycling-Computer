@@ -42,7 +42,7 @@ class ble_sc(ble_sensor.ble_sensor):
             self.delegate.cadence_avg = self.pm.parameters["cadence"]["value_avg"]
             self.measurement_time = self.delegate.measurement_time
         if self.pm.parameters["cadence"]["reset"]:
-            #Reset by user, reset deletage data
+            #Reset by user, reset delegate data
             self.log.debug('reset request received', extra=self.extra)
             self.delegate.cadence = 0.0
             self.delegate.cadence_avg = 0.0
