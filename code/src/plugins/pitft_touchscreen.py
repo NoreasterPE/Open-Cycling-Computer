@@ -26,8 +26,9 @@ class pitft_touchscreen(plugin.plugin):
 
     def __init__(self, device_path="/dev/input/touchscreen"):
         super().__init__()
-        self.device = evdev.InputDevice(device_path)
-        if self.device is None:
+        try:
+            self.device = evdev.InputDevice(device_path)
+        except FileNotFoundError:
             self.log.critical("Input device {} not found".format(device_path), extra=self.extra)
             exit()
         self.event = dict(time=None, id=None, x=None, y=None, touch=None)
@@ -75,9 +76,12 @@ class pitft_touchscreen(plugin.plugin):
 
     def stop(self):
         self.stopping = True
-        # Inject event to force immediate breaking "for" loop in run procedure.
-        self.device.write(evdev.ecodes.EV_ABS, evdev.ecodes.ABS_X, 1)
-        self.device.write(evdev.ecodes.SYN_REPORT, 0, 0)
+        try:
+            # Inject event to force immediate breaking "for" loop in run procedure.
+            self.device.write(evdev.ecodes.EV_ABS, evdev.ecodes.ABS_X, 1)
+            self.device.write(evdev.ecodes.SYN_REPORT, 0, 0)
+        except AttributeError:
+            pass
 
     def __del__(self):
         self.stop()
