@@ -6,7 +6,6 @@ UI
 - There is no way to disconnect from a BLE device
 - Fix icon lines width - it's not consistent
 - use transparent background for all icons
-- add option to use plain background color instead of image
 - align on dot, comma, or any non-digit from the righ side
 
 CODING STYLE:
@@ -50,15 +49,14 @@ CODE ERRORS:
 
 HARDWARE:
 - Add backlight control
-- Is it possible to read date/time from GPS chip with no fix or a separate clock is needed?
 - Fix lost should be marked in log? {Yes, as DEBUG}
 - accelerometer + kalman filter could improve altitude drift control
 
 OPTIONAL:
 - register surface instead of context [POSTPONED - the benefits are not clear and double-buffering is not a problem for now]
-- events/rendering module as plugin would allow to do simulation on a different hardware i.e. in GTK window
+- events/rendering module as plugin would allow to do simulation on a different hardware i.e. in GTK window [IN PROGRESS, gtk_rendering plugin]
 - show all available unit s in unit editor
-- add colours to layout
+- add tex colours to layout
 - short click to show help
 - grey out not used params, like rider_weight
 - consider splitting layout into one-page-per-file
@@ -285,3 +283,5 @@ TypeError: argument 1 must be pygame.Surface, not None
 133. [DONE] - Set up low battery warning/shutdown. Pimoroni Lipo shim informs about battery state.
 134. [DONE] - when starting from rc.local the time is wrong (no RTC), so ride log and debug log names are invalid. Rename files? {RTC added}
 135. [WONTFIX] - Setting time from GPS for the first time breaks delta (trip time) {RTC added}
+136. [DONE] - add option to use plain background color instead of image
+137. [WONTFIX] - Is it possible to read date/time from GPS chip with no fix or a separate clock is needed? {RTC installed}
