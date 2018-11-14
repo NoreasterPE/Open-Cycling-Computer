@@ -5,6 +5,7 @@ UI
 - BLE device list expiry time. Currently never expires
 - There is no way to disconnect from a BLE device
 - Fix icon lines width - it's not consistent
+- use transparent background for all icons
 - add option to use plain background color instead of image
 - align on dot, comma, or any non-digit from the righ side
 
@@ -20,7 +21,6 @@ REAL WORLD PROBLEMS:
 - add date editor
 - add time editor
 - number_editor needs to deal with numbers with minus character
-- when starting from rc.local the time is wrong (no RTC), so ride log and debug log names are invalid. Rename files? [Wait for RTC]
 - parsing 34k of layout takes ~10 seconds. Split per page might be a solution, and parse the rest in background.
 - develop testing procedure for gui
 - add json_client
@@ -34,6 +34,8 @@ REAL WORLD PROBLEMS:
 - add description to each parameter in the code. That might be used in the future in layout editor and to generate valid layout values file TBC, maybe doxygen strings?
 
 DATA QUALITY:
+- add gear ratio parameter to bicycle plugin and to ride log
+- speed and cadence are strongly linked (gear ratio + wheel size). Use it for filtering cadence.
 - Use Kalman filter for speed - BLE SC goes crazy sometimes
 - Use Kalman filter for heart rate - ble_hr goes crazy sometimes
 - Use Kalman filter for cadence - ble_sc goes crazy sometimes
@@ -44,7 +46,6 @@ DATA QUALITY:
 
 CODE ERRORS:
 - Threads write to log aftred log end [ERROR]
-- Setting time from GPS for the first time breaks delta (trip time)
 - Average cadence and heart rate are invalid [IN PROGRESS, NEEDS TESTING]
 
 HARDWARE:
@@ -282,3 +283,5 @@ TypeError: argument 1 must be pygame.Surface, not None
 131. [DONE] - click on altitude -->editing
 132. [DONE] - overlay for showing messages to user
 133. [DONE] - Set up low battery warning/shutdown. Pimoroni Lipo shim informs about battery state.
+134. [DONE] - when starting from rc.local the time is wrong (no RTC), so ride log and debug log names are invalid. Rename files? {RTC added}
+135. [WONTFIX] - Setting time from GPS for the first time breaks delta (trip time) {RTC added}
