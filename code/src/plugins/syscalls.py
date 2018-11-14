@@ -77,3 +77,4 @@ class syscalls(plugin.plugin):
         pm = pyplum.pyplum()
         if pm.event_queue is not None:
             pm.event_queue.put(('show_overlay', 'images/battery-low-warning.png'))
+            pm.event_queue.put(('show_overlay', 'images/ss_ble_sc_connected.png'))

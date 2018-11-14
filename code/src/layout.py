@@ -6,6 +6,7 @@ import cairo
 import cairo_helper
 import datetime
 import logging
+import math
 import num
 import pyplum
 import queue
@@ -58,7 +59,10 @@ class layout(threading.Thread):
         ## @var octx
         #  Handle to cairo context overlay
         self.octx = self.pm.overlay['ctx']
-        self.overlay_time_start = 0.0
+        self.overlay_time_start = num.NAN
+        ## @var overlay_queue
+        #  List of overlays waiting to be shown
+        self.overlay_queue = list()
         ## @var uc
         #  Handle of unit_converter. Helper for converting units.
         self.uc = unit_converter.unit_converter()
@@ -95,6 +99,8 @@ class layout(threading.Thread):
         while self.running:
             if time.time() - self.overlay_time_start > self.OVERLAY_TIME:
                 self.hide_overlay()
+            if len(self.overlay_queue) > 0:
+                self.show_overlay()
             try:
                 event = self.pm.event_queue.get(block=True, timeout=1)
                 ev_type = event[0]
@@ -113,7 +119,7 @@ class layout(threading.Thread):
                     self.prev_page()
                 if ev_type == 'show_overlay':
                     image_file = event[1]
-                    self.show_overlay(image_file)
+                    self.overlay_queue.append(image_file)
                 if ev_type == 'refresh':
                     self.refresh_display()
                     if self.schedule_display_refresh:
@@ -669,22 +675,25 @@ class layout(threading.Thread):
         self.ctx.rectangle(x, y, w, h)
         self.ctx.fill()
 
-    def show_overlay(self, image_path):
-        self.overlay_time_start = time.time()
-        if image_path is not None:
-            if image_path not in self.images:
-                self.images[image_path] = self.load_image(image_path)
-            image = self.images[image_path]
-            if image is not None:
-                self.octx.set_source_rgba(0.0, 0.0, 0.0, 0.0)
-                self.octx.set_source_surface(image, 0, 0)
-                self.octx.paint_with_alpha(1.0)
+    def show_overlay(self):
+        if len(self.overlay_queue) > 0 and math.isnan(self.overlay_time_start):
+            self.overlay_time_start = time.time()
+            image_path = self.overlay_queue.pop(0)
+            if image_path is not None:
+                if image_path not in self.images:
+                    self.images[image_path] = self.load_image(image_path)
+                image = self.images[image_path]
+                if image is not None:
+                    self.octx.set_source_rgba(0.0, 0.0, 0.0, 0.0)
+                    self.octx.set_source_surface(image, 0, 0)
+                    self.octx.paint_with_alpha(1.0)
 
     def hide_overlay(self):
         self.octx.set_source_rgba(0.0, 0.0, 0.0, 0.0)
         self.octx.set_operator(cairo.OPERATOR_CLEAR)
         self.octx.paint_with_alpha(1.0)
         self.octx.set_operator(cairo.OPERATOR_SOURCE)
+        self.overlay_time_start = num.NAN
 
     def text_to_surface(self, text, x, y, c):
         self.ctx.set_source_rgb(c[0], c[1], c[2])
