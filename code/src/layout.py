@@ -532,8 +532,6 @@ class layout(threading.Thread):
         self.log.debug("render_pressed_button finished", extra=self.extra)
 
     def check_click(self, position, click):
-        plugin = None
-        method = None
         if click == 'SHORT':
             self.render_pressed_button(position)
             # FIXME simplify, single loop has to be enough
