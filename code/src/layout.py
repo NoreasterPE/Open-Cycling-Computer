@@ -538,17 +538,9 @@ class layout(threading.Thread):
             for parameter, r in self.button_rectangles.items():
                 if self.point_in_rect(position, r[1]):
                     self.log.debug("CLICK on {} {}".format(parameter, r), extra=self.extra)
-                    for f in self.current_page['fields']:
-                        if f['parameter'] == parameter:
-                            try:
-                                if f['short_click']:
-                                    plugin, method = f['short_click'].split(',')
-                                    plugin = plugin.strip()
-                                    method = method.strip()
-                                    method_to_call = getattr(self.pm.plugins[plugin], method)
-                                    method_to_call()
-                            except KeyError:
-                                pass
+                    for field in self.current_page['fields']:
+                        if field['parameter'] == parameter:
+                            self.parse_short_click(field)
             self.pm.render['refresh'] = True
         elif click == 'LONG':
             self.render_pressed_button(position)
@@ -556,15 +548,9 @@ class layout(threading.Thread):
             for parameter, r in self.button_rectangles.items():
                 if self.point_in_rect(position, r[1]):
                     self.log.debug("LONG CLICK on {} {}".format(parameter, r), extra=self.extra)
-                    for f in self.current_page['fields']:
-                        try:
-                            show = f["show"]
-                            _f = f["parameter"] + "_" + show
-                        except KeyError:
-                            show = ''
-                            _f = f["parameter"]
-                        if _f == parameter:
-                            self.parse_long_click(f, r[0])
+                    for field in self.current_page['fields']:
+                        if self.get_meta_name(field) == parameter:
+                            self.parse_long_click(field, r[0])
         elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
             self.next_page()
         elif click == 'L_TO_R':  # Swipe LEFT to RIGHT
@@ -573,6 +559,25 @@ class layout(threading.Thread):
             self.use_main_page()
         elif click == 'T_TO_B':  # Swipe TOP to BOTTOM
             self.use_page("settings_0")
+
+    def get_meta_name(self, field):
+        try:
+            show = field["show"]
+            meta_name = field["parameter"] + "_" + show
+        except KeyError:
+            meta_name = field["parameter"]
+        return meta_name
+
+    def parse_short_click(self, field):
+        try:
+            if field['short_click']:
+                plugin, method = field['short_click'].split(',')
+                plugin = plugin.strip()
+                method = method.strip()
+                method_to_call = getattr(self.pm.plugins[plugin], method)
+                method_to_call()
+        except KeyError:
+            pass
 
     def parse_long_click(self, field, parameter):
         try:
