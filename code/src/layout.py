@@ -536,6 +536,7 @@ class layout(threading.Thread):
         method = None
         if click == 'SHORT':
             self.render_pressed_button(position)
+            # FIXME simplify, single loop has to be enough
             for parameter, r in self.button_rectangles.items():
                 if self.point_in_rect(position, r[1]):
                     self.log.debug("CLICK on {} {}".format(parameter, r), extra=self.extra)
@@ -553,6 +554,7 @@ class layout(threading.Thread):
             self.pm.render['refresh'] = True
         elif click == 'LONG':
             self.render_pressed_button(position)
+            # FIXME simplify, single loop has to be enough
             for parameter, r in self.button_rectangles.items():
                 if self.point_in_rect(position, r[1]):
                     self.log.debug("LONG CLICK on {} {}".format(parameter, r), extra=self.extra)
