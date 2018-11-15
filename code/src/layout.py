@@ -69,7 +69,7 @@ class layout(threading.Thread):
         self.uc = unit_converter.unit_converter()
         ## @var editor_fields
         #  Dict with data for editor pages.
-        self.editor_fields = None
+        self.editor_fields = {}
         ## @var pages
         #  Dict with parsed pages from layout file.
         self.pages = {}
@@ -532,7 +532,6 @@ class layout(threading.Thread):
         self.log.debug("render_pressed_button finished", extra=self.extra)
 
     def check_click(self, position, click):
-        editable = False
         plugin = None
         method = None
         if click == 'SHORT':
@@ -564,49 +563,8 @@ class layout(threading.Thread):
                         except KeyError:
                             show = ''
                             _f = f["parameter"]
-
-                        try:
-                            plugin, method = f['long_click'].split(',')
-                            plugin = plugin.strip()
-                            method = method.strip()
-                        except KeyError:
-                            plugin, method = None, None
-                            pass
-                        try:
-                            reset_list = f['reset']
-                        except KeyError:
-                            reset_list = []
-                        reset_list.append(show)
-                        if plugin == 'internal' and method == 'reset':
-                            self.log.debug("Resetting {} with list: {}".format(f["parameter"], reset_list), extra=self.extra)
-                            self.pm.parameter_reset(f["parameter"], reset_list)
-                            break
-
                         if _f == parameter:
-                            try:
-                                if f['editable']:
-                                    editable = True
-                                    self.editor_fields = dict()
-                                    try:
-                                        self.editor_fields["editor"] = f["editor"]
-                                    except KeyError:
-                                        self.editor_fields["editor"] = None
-                                        self.log.critical("Function {} marked as editable, but no editor field found".format(parameter), extra=self.extra)
-                                    try:
-                                        self.editor_fields["editor_title"] = f["editor_title"]
-                                    except KeyError:
-                                        self.editor_fields["editor_title"] = None
-                                        self.log.critical("Function {} marked as editable, but no editor_title field found".format(parameter), extra=self.extra)
-                                    try:
-                                        self.editor_fields["format"] = f["format"]
-                                    except KeyError:
-                                        self.editor_fields["format"] = "%.0f"
-                                    self.editor_fields["parameter"] = r[0]
-                                    break
-                            except KeyError:
-                                    editable = False
-                            if not editable:
-                                self.log.debug("LONG CLICK on non-clickable {}".format(r[0]), extra=self.extra)
+                            self.parse_long_click(f, r[0])
         elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
             self.next_page()
         elif click == 'L_TO_R':  # Swipe LEFT to RIGHT
@@ -616,38 +574,93 @@ class layout(threading.Thread):
         elif click == 'T_TO_B':  # Swipe TOP to BOTTOM
             self.use_page("settings_0")
 
-        if editable:
-            self.log.debug("Opening editor {} for {}".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
-            p = self.editor_fields["parameter"]
-            self.editor_fields["unit"] = self.pm.parameters[p]["unit"]
-            self.editor_fields["index"] = 0
-            if self.editor_fields["editor"] == 'editor_numbers':
-                self.editor_fields["raw_value"] = self.pm.parameters[p]["value"]
-                value = self.uc.convert(self.pm.parameters[p]["value"],
-                                        self.pm.parameters[p]["raw_unit"],
-                                        self.pm.parameters[p]["unit"])
-                try:
-                    self.editor_fields["value"] = self.editor_fields["format"] % value
-                except TypeError:
-                    self.editor_fields["value"] = value
-                self.pm.plugins['editor'].set_up(self.editor_fields)
-            elif self.editor_fields["editor"] == 'editor_string' or \
-                    self.editor_fields["editor"] == 'editor_units':
-                self.editor_fields["value"] = self.pm.parameters[p]["value"]
-                self.pm.plugins['editor'].set_up(self.editor_fields)
-            elif self.editor_fields["editor"] == 'editor_list':
-                v = self.pm.parameters[p]["value"]
-                index = self.pm.parameters[p]["value_list"].index(v)
-                self.editor_fields['index'] = index
-                value_list = self.pm.parameters[p]["value_list"]
-                #editor call
-                #FIXME not nice, a check if editor plugin is loaded?
-                self.pm.plugins['editor'].set_up(self.editor_fields)
-                self.pm.plugins['editor'].slice_list_elements(value_list, index)
-            else:
-                self.log.critical("Unknown editor {} called for parameter {}, ignoring".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
-                return
-            self.use_page(self.editor_fields["editor"])
+    def parse_long_click(self, field, parameter):
+        try:
+            plugin, method = field['long_click'].split(',')
+            plugin = plugin.strip()
+            method = method.strip()
+        except KeyError:
+            plugin, method = None, None
+            pass
+        if plugin == 'internal' and method == 'reset':
+            self.call_internal_reset(field)
+        elif plugin == 'internal' and method == 'editor':
+            self.call_internal_editor(field, parameter)
+        self.log.debug("LONG CLICK on non-clickable {}".format(parameter), extra=self.extra)
+
+    def call_internal_reset(self, field):
+        try:
+            show = field["show"]
+        except KeyError:
+            show = ''
+        try:
+            reset_list = field['reset']
+        except KeyError:
+            reset_list = []
+        reset_list.append(show)
+        self.log.debug("Resetting {} with list: {}".format(field["parameter"], reset_list), extra=self.extra)
+        self.pm.parameter_reset(field["parameter"], reset_list)
+
+    def call_internal_editor(self, field, parameter):
+        print(field)
+        print(parameter)
+        self.editor_fields = {}
+        try:
+            editor = field['editor']
+        except KeyError:
+            self.editor_fields["editor"] = None
+            self.log.error("Field {} defined as editable with long_click pointing to internal editor, but no editor field found".format(parameter), extra=self.extra)
+        try:
+            self.editor_fields["editor"] = editor['type']
+        except KeyError:
+            self.editor_fields["editor"] = None
+            self.log.error("Field {} defined as editable, but no editor type found".format(parameter), extra=self.extra)
+        try:
+            self.editor_fields['editor_title'] = editor['title']
+        except KeyError:
+            self.editor_fields['editor_title'] = ''
+            self.log.warning("Function {} marked as editable, but no editor_title field found".format(parameter), extra=self.extra)
+        try:
+            self.editor_fields["format"] = field['format']
+        except KeyError:
+            self.editor_fields["format"] = '%.0f'
+            self.log.debug("No format found for editing parameter {}, using default format %.0f".format(parameter), extra=self.extra)
+        if self.editor_fields["editor"] is not None:
+            self.editor_fields["parameter"] = parameter
+            self.open_editor()
+
+    def open_editor(self):
+        self.log.debug("Opening editor {} for {}".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
+        p = self.editor_fields["parameter"]
+        self.editor_fields["unit"] = self.pm.parameters[p]["unit"]
+        self.editor_fields["index"] = 0
+        if self.editor_fields["editor"] == 'editor_numbers':
+            self.editor_fields["raw_value"] = self.pm.parameters[p]["value"]
+            value = self.uc.convert(self.pm.parameters[p]["value"],
+                                    self.pm.parameters[p]["raw_unit"],
+                                    self.pm.parameters[p]["unit"])
+            try:
+                self.editor_fields["value"] = self.editor_fields["format"] % value
+            except TypeError:
+                self.editor_fields["value"] = value
+            self.pm.plugins['editor'].set_up(self.editor_fields)
+        elif self.editor_fields["editor"] == 'editor_string' or \
+                self.editor_fields["editor"] == 'editor_unit':
+            self.editor_fields["value"] = self.pm.parameters[p]["value"]
+            self.pm.plugins['editor'].set_up(self.editor_fields)
+        elif self.editor_fields["editor"] == 'editor_list':
+            v = self.pm.parameters[p]["value"]
+            index = self.pm.parameters[p]["value_list"].index(v)
+            self.editor_fields['index'] = index
+            value_list = self.pm.parameters[p]["value_list"]
+            #editor call
+            #FIXME not nice, a check if editor plugin is loaded?
+            self.pm.plugins['editor'].set_up(self.editor_fields)
+            self.pm.plugins['editor'].slice_list_elements(value_list, index)
+        else:
+            self.log.critical("Unknown editor {} called for parameter {}, ignoring".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
+            return
+        self.use_page(self.editor_fields["editor"])
 
     def next_page(self):
         # Editor is a special page - it cannot be switched, only cancel or accept

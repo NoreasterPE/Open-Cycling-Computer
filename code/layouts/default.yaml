@@ -199,9 +199,10 @@ pages:
 
                 - parameter: odometer
                   align: left
-                  editor_title: Odometer
-                  editable: yes
-                  editor: editor_numbers
+                  long_click: internal, editor
+                  editor:
+                      type: editor_numbers
+                      title: Odometer
                   format: "%.1f"
                   x: 70
                   y: 100
@@ -271,8 +272,10 @@ pages:
 
                 - parameter: altitude
                   format: "%.1f"
-                  editable: yes
-                  editor: editor_numbers
+                  long_click: internal, editor
+                  editor:
+                      type: editor_numbers
+                      title: Ref. altitude
                   align: left
                   button:
                           x0: 0
@@ -405,9 +408,10 @@ pages:
                   text: Wheel size
 
                 - parameter: wheel_size
-                  editor_title: Wheel size
-                  editable: yes
-                  editor: editor_list
+                  long_click: internal, editor
+                  editor:
+                      type: editor_list
+                      title: Wheel size
                   x: 60
                   y: 50
                   font_size: 30
@@ -423,9 +427,10 @@ pages:
                   text: Wheel circ.
 
                 - parameter: wheel_circumference
-                  editor_title: Wheel circ.
-                  editable: yes
-                  editor: editor_numbers
+                  long_click: internal, editor
+                  editor:
+                      type: editor_numbers
+                      title: Wheel circ.
                   x: 165
                   y: 50
                   font_size: 30
@@ -447,9 +452,10 @@ pages:
                   text: MSLP METAR
 
                 - parameter: mean_sea_level_pressure
-                  editor_title: Mean sea lvl press.
-                  editable: yes
-                  editor: editor_numbers
+                  long_click: internal, editor
+                  editor:
+                      type: editor_numbers
+                      title: Mean sea lvl press.
                   x: 165
                   y: 130
                   font_size: 30
@@ -471,9 +477,10 @@ pages:
                   text: Reference alt.
 
                 - parameter: reference_altitude
-                  editor_title: Reference alt.
-                  editable: yes
-                  editor: editor_numbers
+                  long_click: internal, editor
+                  editor:
+                      type: editor_numbers
+                      title: Reference alt.
                   x: 45
                   y: 130
                   font_size: 30
@@ -494,9 +501,10 @@ pages:
                   text: Rider weight
 
                 - parameter: rider_weight
-                  editor_title: Rider weight
-                  editable: yes
-                  editor: editor_numbers
+                  long_click: internal, editor
+                  editor:
+                      type: editor_numbers
+                      title: Rider weight
                   x: 45
                   y: 210
                   font_size: 30
@@ -677,9 +685,10 @@ pages:
 
                 - parameter: speed
                   show: unit
-                  editor_title: Speed unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit_background
+                      title: Speed unit
                   x: 60
                   y: 50
                   font_size: 30
@@ -696,9 +705,10 @@ pages:
 
                 - parameter: odometer
                   show: unit
-                  editor_title: Odometer unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit
+                      title: Odometer unit
                   x: 180
                   y: 50
                   font_size: 30
@@ -715,9 +725,10 @@ pages:
 
                 - parameter: rider_weight
                   show: unit
-                  editor_title: Rider weight unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit
+                      title: Rider weight unit
                   x: 60
                   y: 130
                   font_size: 30
@@ -734,9 +745,10 @@ pages:
 
                 - parameter: temperature
                   show: unit
-                  editor_title: Temperature unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit
+                      title: Temperature unit
                   x: 180
                   y: 130
                   font_size: 30
@@ -753,9 +765,10 @@ pages:
 
                 - parameter: slope
                   show: unit
-                  editor_title: Slope unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit
+                      title: Slope unit
                   x: 60
                   y: 210
                   font_size: 30
@@ -772,9 +785,10 @@ pages:
 
                 - parameter: wheel_circumference
                   show: unit
-                  editor_title: Wheel circ. unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit
+                      title: Wheel circ. unit
                   x: 180
                   y: 210
                   font_size: 30
@@ -791,9 +805,10 @@ pages:
 
                 - parameter: pressure
                   show: unit
-                  editor_title: Pressure unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit
+                      title: Pressure unit
                   x: 60
                   y: 290
                   font_size: 30
@@ -810,9 +825,10 @@ pages:
 
                 - parameter: mean_sea_level_pressure
                   show: unit
-                  editor_title: METAR MSLP unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit
+                      title: METAR MSLP unit
                   x: 180
                   y: 290
                   font_size: 30
@@ -823,9 +839,9 @@ pages:
                           h: 80
 
        - name: "Unit Editor"
-         id: editor_units
+         id: editor_unit
          type: editor
-         background_image: images/editor_units_background.png
+         background_image: images/editor_unit_background.png
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 50
@@ -1151,7 +1167,7 @@ pages:
          id: editor_list
          type: editor
          #FIXME add separate imgae
-         background_image: images/editor_units_background.png
+         background_image: images/editor_unit_background.png
          buttons: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 50

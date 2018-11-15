@@ -174,7 +174,7 @@ class editor(plugin.plugin):
         parameter_unit = self.fields["unit"]
         parameter_value = self.fields["value"]
         self.log.debug("parameter: {}, parameter_unit: {}, parameter_value: {}".format(parameter, parameter_unit, parameter_value), extra=self.extra)
-        if self.fields["editor"] == "editor_units":
+        if self.fields["editor"] == "editor_unit":
             self.pm.parameters[parameter]["unit"] = parameter_unit
         if self.fields["editor"] == "editor_numbers":
             unit_raw = self.pm.parameters[parameter]["raw_unit"]
