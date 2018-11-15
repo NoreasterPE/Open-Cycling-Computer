@@ -626,11 +626,11 @@ pages:
                           w: 120
                           h: 80
 
-                - parameter: overlay
-                  run: syscalls, show_low_battery
+                - parameter: ble_scan
+                  run: ble_scanner, scan
                   x: 60
                   y: 280
-                  text: Overlay
+                  text: BLE scan
                   button:
                           x0: 0
                           y0: 240

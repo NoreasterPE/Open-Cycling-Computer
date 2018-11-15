@@ -110,6 +110,7 @@ if __name__ == "__main__":
     #print(p_manager.list_plugins('plugins'))
     plugins = ['ble_hr',
                'ble_sc',
+               'ble_scanner',
                'bmp280',
                'compute',
                'bicycle',
