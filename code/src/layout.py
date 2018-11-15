@@ -586,7 +586,8 @@ class layout(threading.Thread):
             self.call_internal_reset(field)
         elif plugin == 'internal' and method == 'editor':
             self.call_internal_editor(field, parameter)
-        self.log.debug("LONG CLICK on non-clickable {}".format(parameter), extra=self.extra)
+        else:
+            self.log.debug("LONG CLICK on non-clickable {}".format(parameter), extra=self.extra)
 
     def call_internal_reset(self, field):
         try:
