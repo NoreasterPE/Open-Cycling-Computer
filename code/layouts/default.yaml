@@ -60,7 +60,7 @@ pages:
                   y: 185
 
                 - parameter: session_time
-                  resettable: yes
+                  long_click: internal, reset
                   format: hhmmss
                   x: 180
                   y: 225
@@ -87,8 +87,10 @@ pages:
                   file: images/slope_icon_20x32.png
 
                 - parameter: cadence
-                  resettable: yes
-                  reset: avg, max
+                  long_click: internal, reset
+                  reset:
+                      - avg
+                      - max
                   x: 45
                   y: 295
                   font_size: 50
@@ -124,8 +126,11 @@ pages:
                           frames: 2
 
                 - parameter: heart_rate
-                  resettable: yes
-                  reset: min, avg, max
+                  long_click: internal, reset
+                  reset:
+                      - min
+                      - avg
+                      - max
                   x: 165
                   y: 295
                   font_size: 50
@@ -221,7 +226,7 @@ pages:
                   show: max
                   align: left
                   format: "%.1f"
-                  resettable: yes
+                  long_click: internal, reset
                   button:
                           x0: 0
                           y0: 120
@@ -244,7 +249,7 @@ pages:
                 - parameter: speed
                   show: avg
                   align: left
-                  resettable: yes
+                  long_click: internal, reset
                   button:
                           x0: 0
                           y0: 160

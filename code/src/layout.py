@@ -532,11 +532,9 @@ class layout(threading.Thread):
         self.log.debug("render_pressed_button finished", extra=self.extra)
 
     def check_click(self, position, click):
-        resettable = False
         editable = False
         plugin = None
         method = None
-        parameter_for_reset = None
         if click == 'SHORT':
             self.render_pressed_button(position)
             for parameter, r in self.button_rectangles.items():
@@ -566,20 +564,25 @@ class layout(threading.Thread):
                         except KeyError:
                             show = ''
                             _f = f["parameter"]
+
+                        try:
+                            plugin, method = f['long_click'].split(',')
+                            plugin = plugin.strip()
+                            method = method.strip()
+                        except KeyError:
+                            plugin, method = None, None
+                            pass
+                        try:
+                            reset_list = f['reset']
+                        except KeyError:
+                            reset_list = []
+                        reset_list.append(show)
+                        if plugin == 'internal' and method == 'reset':
+                            self.log.debug("Resetting {} with list: {}".format(f["parameter"], reset_list), extra=self.extra)
+                            self.pm.parameter_reset(f["parameter"], reset_list)
+                            break
+
                         if _f == parameter:
-                            try:
-                                if f['resettable']:
-                                    resettable = True
-                                    try:
-                                        if f['reset']:
-                                            reset_list = f['reset'].split(',')
-                                    except KeyError:
-                                            reset_list = []
-                                    reset_list.append(show)
-                                    parameter_for_reset = f["parameter"]
-                                    break
-                            except KeyError:
-                                    resettable = False
                             try:
                                 if f['editable']:
                                     editable = True
@@ -602,7 +605,7 @@ class layout(threading.Thread):
                                     break
                             except KeyError:
                                     editable = False
-                            if not(resettable and editable):
+                            if not editable:
                                 self.log.debug("LONG CLICK on non-clickable {}".format(r[0]), extra=self.extra)
         elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
             self.next_page()
@@ -645,10 +648,6 @@ class layout(threading.Thread):
                 self.log.critical("Unknown editor {} called for parameter {}, ignoring".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
                 return
             self.use_page(self.editor_fields["editor"])
-        elif resettable:
-            self.log.debug("Resetting {} with list: {}".format(parameter_for_reset, reset_list), extra=self.extra)
-            self.pm.parameter_reset(parameter_for_reset, reset_list)
-            self.parameter_for_reset = None
 
     def next_page(self):
         # Editor is a special page - it cannot be switched, only cancel or accept
