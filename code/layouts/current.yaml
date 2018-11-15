@@ -1,11 +1,14 @@
 pages:
        - name: Main
          id: page_0
-         number: 0
-         type: normal
-         background: images/page_0_background.png
+         up: settings_0
+         down: null
+         left: page_2
+         right: page_1
+         background_image: images/page_0_background.png
+         #background_colour: '#000000'
          buttons: images/button_pressed.png
-         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
+         font: "Gidole-Regular.ttf"
          font_size: 20
          text_colour: FFFFFF
          fields:
@@ -40,7 +43,7 @@ pages:
                   y: 5
                   file: images/ble_icon_32x32.png
                   variable:
-                          name: ble_host_state
+                          name: ble_no_of_devices_connected
                           frames: 6
 
                 - parameter: session_distance
@@ -57,7 +60,7 @@ pages:
                   y: 185
 
                 - parameter: session_time
-                  resettable: yes
+                  long_click: internal, reset
                   format: hhmmss
                   x: 180
                   y: 225
@@ -84,8 +87,10 @@ pages:
                   file: images/slope_icon_20x32.png
 
                 - parameter: cadence
-                  resettable: yes
-                  reset: avg, max
+                  long_click: internal, reset
+                  reset:
+                      - avg
+                      - max
                   x: 45
                   y: 295
                   font_size: 50
@@ -121,8 +126,11 @@ pages:
                           frames: 2
 
                 - parameter: heart_rate
-                  resettable: yes
-                  reset: min, avg, max
+                  long_click: internal, reset
+                  reset:
+                      - min
+                      - avg
+                      - max
                   x: 165
                   y: 295
                   font_size: 50
@@ -164,11 +172,13 @@ pages:
 
        - name: "Statistics"
          id: page_1
-         number: 1
-         type: normal
-         background: images/stats_background.png
+         up: settings_0
+         down: null
+         left: page_0
+         right: page_2
+         background_image: images/stats_background.png
          buttons: images/button_pressed.png
-         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
+         font: "Gidole-Regular.ttf"
          font_size: 24
          text_colour: FFFFFF
          fields:
@@ -189,9 +199,10 @@ pages:
 
                 - parameter: odometer
                   align: left
-                  editor_title: Odometer
-                  editable: yes
-                  editor: editor_numbers
+                  long_click: internal, editor
+                  editor:
+                      type: editor_numbers
+                      title: Odometer
                   format: "%.1f"
                   x: 70
                   y: 100
@@ -216,7 +227,7 @@ pages:
                   show: max
                   align: left
                   format: "%.1f"
-                  resettable: yes
+                  long_click: internal, reset
                   button:
                           x0: 0
                           y0: 120
@@ -239,7 +250,7 @@ pages:
                 - parameter: speed
                   show: avg
                   align: left
-                  resettable: yes
+                  long_click: internal, reset
                   button:
                           x0: 0
                           y0: 160
@@ -261,7 +272,16 @@ pages:
 
                 - parameter: altitude
                   format: "%.1f"
+                  long_click: internal, editor
+                  editor:
+                      type: editor_numbers
+                      title: Ref. altitude
                   align: left
+                  button:
+                          x0: 0
+                          y0: 200
+                          w: 240
+                          h: 40
                   x: 70
                   y: 220
 
@@ -309,11 +329,13 @@ pages:
 
        - name: "Blank"
          id: page_2
-         number: 2
-         type: normal
-         background: images/page_2_background.png
+         up: settings_0
+         down: null
+         left: page_1
+         right: page_0
+         background_image: images/page_2_background.png
          buttons: images/button_pressed.png
-         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
+         font: "Gidole-Regular.ttf"
          font_size: 16
          text_colour: FFFFFF
          fields:
@@ -370,11 +392,13 @@ pages:
 
        - name: "Settings 0"
          id: settings_0
-         number: 0
-         type: settings
-         background: images/background_2_x_4.png
+         up: null
+         down: page_0
+         left: settings_2
+         right: settings_1
+         background_image: images/background_2_x_4.png
          buttons: images/button_pressed.png
-         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
+         font: "Gidole-Regular.ttf"
          font_size: 20
          text_colour: FFFFFF
          fields:
@@ -384,9 +408,10 @@ pages:
                   text: Wheel size
 
                 - parameter: wheel_size
-                  editor_title: Wheel size
-                  editable: yes
-                  editor: editor_string
+                  long_click: internal, editor
+                  editor:
+                      type: editor_list
+                      title: Wheel size
                   x: 60
                   y: 50
                   font_size: 30
@@ -402,9 +427,10 @@ pages:
                   text: Wheel circ.
 
                 - parameter: wheel_circumference
-                  editor_title: Wheel circ.
-                  editable: yes
-                  editor: editor_numbers
+                  long_click: internal, editor
+                  editor:
+                      type: editor_numbers
+                      title: Wheel circ.
                   x: 165
                   y: 50
                   font_size: 30
@@ -426,9 +452,10 @@ pages:
                   text: MSLP METAR
 
                 - parameter: mean_sea_level_pressure
-                  editor_title: Mean sea lvl press.
-                  editable: yes
-                  editor: editor_numbers
+                  long_click: internal, editor
+                  editor:
+                      type: editor_numbers
+                      title: Mean sea lvl press.
                   x: 165
                   y: 130
                   font_size: 30
@@ -450,9 +477,10 @@ pages:
                   text: Reference alt.
 
                 - parameter: reference_altitude
-                  editor_title: Reference alt.
-                  editable: yes
-                  editor: editor_numbers
+                  long_click: internal, editor
+                  editor:
+                      type: editor_numbers
+                      title: Reference alt.
                   x: 45
                   y: 130
                   font_size: 30
@@ -473,9 +501,10 @@ pages:
                   text: Rider weight
 
                 - parameter: rider_weight
-                  editor_title: Rider weight
-                  editable: yes
-                  editor: editor_numbers
+                  long_click: internal, editor
+                  editor:
+                      type: editor_numbers
+                      title: Rider weight
                   x: 45
                   y: 210
                   font_size: 30
@@ -522,15 +551,18 @@ pages:
 
        - name: "Settings 1"
          id: settings_1
-         number: 1
-         type: settings
-         background: images/background_2_x_4.png
+         up: null
+         down: page_0
+         left: settings_0
+         right: settings_2
+         background_image: images/background_2_x_4.png
          buttons: images/button_pressed.png
-         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
+         font: "Gidole-Regular.ttf"
          font_size: 24
          text_colour: FFFFFF
          fields:
                 - parameter: halt
+                  short_click: syscalls, halt
                   x: 60
                   y: 40
                   text: Halt
@@ -541,6 +573,7 @@ pages:
                           h: 80
 
                 - parameter: reboot
+                  short_click: syscalls, reboot
                   x: 180
                   y: 40
                   text: Reboot
@@ -550,7 +583,8 @@ pages:
                           w: 120
                           h: 80
 
-                - parameter: quit
+                - parameter: quit_call
+                  short_click: syscalls, quit
                   x: 60
                   y: 120
                   text: Quit
@@ -570,8 +604,7 @@ pages:
                   y: 140
 
                 - parameter: write_config
-                  #FIXME Add soft defined function calls to layout
-                  #function: config.write_config
+                  short_click: config, write_config
                   button:
                           x0: 120
                           y0: 80
@@ -588,6 +621,7 @@ pages:
                   y: 210
 
                 - parameter: load_default_layout
+                  short_click: syscalls, reload_layout
                   button:
                           x0: 0
                           y0: 160
@@ -595,6 +629,7 @@ pages:
                           h: 80
 
                 - parameter: log_level
+                  short_click: syscalls, cycle_log_level
                   x: 180
                   y: 200
                   text:
@@ -604,13 +639,42 @@ pages:
                           w: 120
                           h: 80
 
+                - parameter: ble_scan
+                  short_click: ble_scanner, scan
+                  x: 60
+                  y: 280
+                  text: BLE scan
+                  button:
+                          x0: 0
+                          y0: 240
+                          w: 120
+                          h: 80
+
+                - parameter: label
+                  text: Screenshots
+                  x: 180
+                  y: 250
+
+                - parameter: screenshot_mode
+                  short_click: syscalls, screenshot_mode
+                  x: 180
+                  y: 280
+                  text:
+                  button:
+                          x0: 120
+                          y0: 240
+                          w: 120
+                          h: 80
+
        - name: "Units"
          id: settings_2
-         number: 2
-         type: settings
-         background: images/background_2_x_4.png
+         up: null
+         down: page_0
+         left: settings_1
+         right: settings_0
+         background_image: images/background_2_x_4.png
          buttons: images/button_pressed.png
-         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
+         font: "Gidole-Regular.ttf"
          font_size: 20
          text_colour: FFFFFF
          fields:
@@ -621,9 +685,10 @@ pages:
 
                 - parameter: speed
                   show: unit
-                  editor_title: Speed unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit_background
+                      title: Speed unit
                   x: 60
                   y: 50
                   font_size: 30
@@ -640,9 +705,10 @@ pages:
 
                 - parameter: odometer
                   show: unit
-                  editor_title: Odometer unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit
+                      title: Odometer unit
                   x: 180
                   y: 50
                   font_size: 30
@@ -659,9 +725,10 @@ pages:
 
                 - parameter: rider_weight
                   show: unit
-                  editor_title: Rider weight unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit
+                      title: Rider weight unit
                   x: 60
                   y: 130
                   font_size: 30
@@ -678,9 +745,10 @@ pages:
 
                 - parameter: temperature
                   show: unit
-                  editor_title: Temperature unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit
+                      title: Temperature unit
                   x: 180
                   y: 130
                   font_size: 30
@@ -697,9 +765,10 @@ pages:
 
                 - parameter: slope
                   show: unit
-                  editor_title: Slope unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit
+                      title: Slope unit
                   x: 60
                   y: 210
                   font_size: 30
@@ -716,9 +785,10 @@ pages:
 
                 - parameter: wheel_circumference
                   show: unit
-                  editor_title: Wheel circ. unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit
+                      title: Wheel circ. unit
                   x: 180
                   y: 210
                   font_size: 30
@@ -735,9 +805,10 @@ pages:
 
                 - parameter: pressure
                   show: unit
-                  editor_title: Pressure unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit
+                      title: Pressure unit
                   x: 60
                   y: 290
                   font_size: 30
@@ -754,9 +825,10 @@ pages:
 
                 - parameter: mean_sea_level_pressure
                   show: unit
-                  editor_title: METAR MSLP unit
-                  editable: yes
-                  editor: editor_units
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit
+                      title: METAR MSLP unit
                   x: 180
                   y: 290
                   font_size: 30
@@ -766,20 +838,17 @@ pages:
                           w: 120
                           h: 80
 
-
-
-
        - name: "Unit Editor"
-         id: editor_units
-         number: 0
+         id: editor_unit
          type: editor
-         background: images/editor_units_background.png
+         background_image: images/editor_unit_background.png
          buttons: images/button_pressed.png
-         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
+         font: "Gidole-Regular.ttf"
          font_size: 50
          text_colour: FFFFFF
          fields:
                 - parameter: accept_edit
+                  short_click: editor, accept_edit
                   x: 60
                   y: 30
                   font_size: 30
@@ -791,6 +860,7 @@ pages:
                           h: 60
 
                 - parameter: cancel_edit
+                  short_click: editor, cancel_edit
                   x: 180
                   y: 30
                   font_size: 30
@@ -812,6 +882,7 @@ pages:
                   font_size: 60
 
                 - parameter: previous_unit
+                  short_click: editor, previous_unit
                   x: 60
                   y: 290
                   text: ←
@@ -822,6 +893,7 @@ pages:
                           h: 60
 
                 - parameter: next_unit
+                  short_click: editor, next_unit
                   x: 180
                   y: 290
                   text: →
@@ -833,15 +905,15 @@ pages:
 
        - name: "Number Editor"
          id: editor_numbers
-         number: 0
          type: editor
-         background: images/editor_number_background.png
+         background_image: images/editor_number_background.png
          buttons: images/button_pressed.png
-         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
+         font: "Gidole-Regular.ttf"
          font_size: 30
          text_colour: FFFFFF
          fields:
                 - parameter: accept_edit
+                  short_click: editor, accept_edit
                   x: 60
                   y: 30
                   text: Accept
@@ -852,6 +924,7 @@ pages:
                           h: 60
 
                 - parameter: cancel_edit
+                  short_click: editor, cancel_edit
                   x: 180
                   y: 30
                   text: Cancel
@@ -877,6 +950,7 @@ pages:
                   y: 180
 
                 - parameter: decrease_digit
+                  short_click: editor, decrease_digit
                   x: 60
                   y: 230
                   font_size: 50
@@ -888,6 +962,7 @@ pages:
                           h: 60
 
                 - parameter: increase_digit
+                  short_click: editor, increase_digit
                   x: 180
                   y: 230
                   font_size: 50
@@ -899,6 +974,7 @@ pages:
                           h: 60
 
                 - parameter: previous_char
+                  short_click: editor, previous_char
                   x: 60
                   y: 290
                   font_size: 50
@@ -910,6 +986,7 @@ pages:
                           h: 60
 
                 - parameter: next_char
+                  short_click: editor, next_char
                   x: 180
                   y: 290
                   font_size: 50
@@ -922,15 +999,15 @@ pages:
 
        - name: "List Editor"
          id: editor_string
-         number: 0
          type: editor
-         background: images/editor_string_background.png
+         background_image: images/editor_string_background.png
          buttons: images/button_pressed.png
-         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
+         font: "Gidole-Regular.ttf"
          font_size: 30
          text_colour: FFFFFF
          fields:
                 - parameter: accept_edit
+                  short_click: editor, accept_edit
                   x: 60
                   y: 30
                   text: Accept
@@ -941,6 +1018,7 @@ pages:
                           h: 60
 
                 - parameter: cancel_edit
+                  short_click: editor, cancel_edit
                   x: 180
                   y: 30
                   text: Cancel
@@ -962,6 +1040,7 @@ pages:
                   font_size: 40
 
                 - parameter: decrease_digit
+                  short_click: editor, decrease_digit
                   x: 60
                   y: 230
                   font_size: 50
@@ -973,6 +1052,7 @@ pages:
                           h: 60
 
                 - parameter: increase_digit
+                  short_click: editor, increase_digit
                   x: 180
                   y: 230
                   font_size: 50
@@ -984,6 +1064,7 @@ pages:
                           h: 60
 
                 - parameter: previous_char
+                  short_click: editor, previous_char
                   x: 60
                   y: 290
                   font_size: 50
@@ -995,6 +1076,7 @@ pages:
                           h: 60
 
                 - parameter: next_char
+                  short_click: editor, next_char
                   x: 180
                   y: 290
                   font_size: 50
@@ -1007,11 +1089,10 @@ pages:
 
        - name: "List Picker"
          id: ble_selector
-         number: 0
          type: editor
-         background: images/ble_selector.png
+         background_image: images/ble_selector.png
          buttons: images/button_pressed.png
-         font: "../resources/fonts/GidoleFont/Gidole-Regular.ttf"
+         font: "Gidole-Regular.ttf"
          font_size: 16
          text_colour: FFFFFF
          fields:
@@ -1027,6 +1108,7 @@ pages:
                           h: 60
 
                 - parameter: cancel_edit
+                  short_click: editor, cancel_edit
                   x: 180
                   y: 30
                   font_size: 30
@@ -1080,3 +1162,79 @@ pages:
                           y0: 256
                           w: 240
                           h: 63
+
+       - name: "List Editor"
+         id: editor_list
+         type: editor
+         #FIXME add separate imgae
+         background_image: images/editor_unit_background.png
+         buttons: images/button_pressed.png
+         font: "Gidole-Regular.ttf"
+         font_size: 50
+         text_colour: FFFFFF
+         fields:
+                - parameter: accept_edit
+                  short_click: editor, accept_edit
+                  x: 60
+                  y: 30
+                  font_size: 30
+                  text: Accept
+                  button:
+                          x0: 0
+                          y0: 0
+                          w: 120
+                          h: 60
+
+                - parameter: cancel_edit
+                  short_click: editor, cancel_edit
+                  x: 180
+                  y: 30
+                  font_size: 30
+                  text: Cancel
+                  button:
+                          x0: 120
+                          y0: 0
+                          w: 120
+                          h: 60
+
+                - parameter: editor_title
+                  x: 120
+                  y: 80
+                  font_size: 24
+
+                - parameter: previous_list_element
+                  x: 120
+                  y: 120
+                  font_size: 40
+
+                - parameter: value
+                  x: 120
+                  y: 170
+                  font_size: 60
+
+                - parameter: next_list_element
+                  x: 120
+                  y: 220
+                  font_size: 40
+
+                - parameter: previous_item
+                  short_click: editor, previous_item
+                  x: 60
+                  y: 290
+                  text: ↑
+                  button:
+                          x0: 0
+                          y0: 260
+                          w: 120
+                          h: 60
+
+                - parameter: next_item
+                  short_click: editor, next_item
+                  x: 180
+                  y: 290
+                  text: ↓
+                  button:
+                          x0: 120
+                          y0: 260
+                          w: 120
+                          h: 60
