@@ -549,7 +549,7 @@ pages:
          text_colour: FFFFFF
          fields:
                 - parameter: halt
-                  run: syscalls, halt
+                  short_click: syscalls, halt
                   x: 60
                   y: 40
                   text: Halt
@@ -560,7 +560,7 @@ pages:
                           h: 80
 
                 - parameter: reboot
-                  run: syscalls, reboot
+                  short_click: syscalls, reboot
                   x: 180
                   y: 40
                   text: Reboot
@@ -571,7 +571,7 @@ pages:
                           h: 80
 
                 - parameter: quit_call
-                  run: syscalls, quit
+                  short_click: syscalls, quit
                   x: 60
                   y: 120
                   text: Quit
@@ -591,7 +591,7 @@ pages:
                   y: 140
 
                 - parameter: write_config
-                  run: config, write_config
+                  short_click: config, write_config
                   button:
                           x0: 120
                           y0: 80
@@ -608,7 +608,7 @@ pages:
                   y: 210
 
                 - parameter: load_default_layout
-                  run: syscalls, reload_layout
+                  short_click: syscalls, reload_layout
                   button:
                           x0: 0
                           y0: 160
@@ -616,7 +616,7 @@ pages:
                           h: 80
 
                 - parameter: log_level
-                  run: syscalls, cycle_log_level
+                  short_click: syscalls, cycle_log_level
                   x: 180
                   y: 200
                   text:
@@ -627,7 +627,7 @@ pages:
                           h: 80
 
                 - parameter: ble_scan
-                  run: ble_scanner, scan
+                  short_click: ble_scanner, scan
                   x: 60
                   y: 280
                   text: BLE scan
@@ -643,7 +643,7 @@ pages:
                   y: 250
 
                 - parameter: screenshot_mode
-                  run: syscalls, screenshot_mode
+                  short_click: syscalls, screenshot_mode
                   x: 180
                   y: 280
                   text:
@@ -827,7 +827,7 @@ pages:
          text_colour: FFFFFF
          fields:
                 - parameter: accept_edit
-                  run: editor, accept_edit
+                  short_click: editor, accept_edit
                   x: 60
                   y: 30
                   font_size: 30
@@ -839,7 +839,7 @@ pages:
                           h: 60
 
                 - parameter: cancel_edit
-                  run: editor, cancel_edit
+                  short_click: editor, cancel_edit
                   x: 180
                   y: 30
                   font_size: 30
@@ -861,7 +861,7 @@ pages:
                   font_size: 60
 
                 - parameter: previous_unit
-                  run: editor, previous_unit
+                  short_click: editor, previous_unit
                   x: 60
                   y: 290
                   text: ←
@@ -872,7 +872,7 @@ pages:
                           h: 60
 
                 - parameter: next_unit
-                  run: editor, next_unit
+                  short_click: editor, next_unit
                   x: 180
                   y: 290
                   text: →
@@ -892,7 +892,7 @@ pages:
          text_colour: FFFFFF
          fields:
                 - parameter: accept_edit
-                  run: editor, accept_edit
+                  short_click: editor, accept_edit
                   x: 60
                   y: 30
                   text: Accept
@@ -903,7 +903,7 @@ pages:
                           h: 60
 
                 - parameter: cancel_edit
-                  run: editor, cancel_edit
+                  short_click: editor, cancel_edit
                   x: 180
                   y: 30
                   text: Cancel
@@ -929,7 +929,7 @@ pages:
                   y: 180
 
                 - parameter: decrease_digit
-                  run: editor, decrease_digit
+                  short_click: editor, decrease_digit
                   x: 60
                   y: 230
                   font_size: 50
@@ -941,7 +941,7 @@ pages:
                           h: 60
 
                 - parameter: increase_digit
-                  run: editor, increase_digit
+                  short_click: editor, increase_digit
                   x: 180
                   y: 230
                   font_size: 50
@@ -953,7 +953,7 @@ pages:
                           h: 60
 
                 - parameter: previous_char
-                  run: editor, previous_char
+                  short_click: editor, previous_char
                   x: 60
                   y: 290
                   font_size: 50
@@ -965,7 +965,7 @@ pages:
                           h: 60
 
                 - parameter: next_char
-                  run: editor, next_char
+                  short_click: editor, next_char
                   x: 180
                   y: 290
                   font_size: 50
@@ -986,7 +986,7 @@ pages:
          text_colour: FFFFFF
          fields:
                 - parameter: accept_edit
-                  run: editor, accept_edit
+                  short_click: editor, accept_edit
                   x: 60
                   y: 30
                   text: Accept
@@ -997,7 +997,7 @@ pages:
                           h: 60
 
                 - parameter: cancel_edit
-                  run: editor, cancel_edit
+                  short_click: editor, cancel_edit
                   x: 180
                   y: 30
                   text: Cancel
@@ -1019,7 +1019,7 @@ pages:
                   font_size: 40
 
                 - parameter: decrease_digit
-                  run: editor, decrease_digit
+                  short_click: editor, decrease_digit
                   x: 60
                   y: 230
                   font_size: 50
@@ -1031,7 +1031,7 @@ pages:
                           h: 60
 
                 - parameter: increase_digit
-                  run: editor, increase_digit
+                  short_click: editor, increase_digit
                   x: 180
                   y: 230
                   font_size: 50
@@ -1043,7 +1043,7 @@ pages:
                           h: 60
 
                 - parameter: previous_char
-                  run: editor, previous_char
+                  short_click: editor, previous_char
                   x: 60
                   y: 290
                   font_size: 50
@@ -1055,7 +1055,7 @@ pages:
                           h: 60
 
                 - parameter: next_char
-                  run: editor, next_char
+                  short_click: editor, next_char
                   x: 180
                   y: 290
                   font_size: 50
@@ -1087,7 +1087,7 @@ pages:
                           h: 60
 
                 - parameter: cancel_edit
-                  run: editor, cancel_edit
+                  short_click: editor, cancel_edit
                   x: 180
                   y: 30
                   font_size: 30
@@ -1153,7 +1153,7 @@ pages:
          text_colour: FFFFFF
          fields:
                 - parameter: accept_edit
-                  run: editor, accept_edit
+                  short_click: editor, accept_edit
                   x: 60
                   y: 30
                   font_size: 30
@@ -1165,7 +1165,7 @@ pages:
                           h: 60
 
                 - parameter: cancel_edit
-                  run: editor, cancel_edit
+                  short_click: editor, cancel_edit
                   x: 180
                   y: 30
                   font_size: 30
@@ -1197,7 +1197,7 @@ pages:
                   font_size: 40
 
                 - parameter: previous_item
-                  run: editor, previous_item
+                  short_click: editor, previous_item
                   x: 60
                   y: 290
                   text: ↑
@@ -1208,7 +1208,7 @@ pages:
                           h: 60
 
                 - parameter: next_item
-                  run: editor, next_item
+                  short_click: editor, next_item
                   x: 180
                   y: 290
                   text: ↓

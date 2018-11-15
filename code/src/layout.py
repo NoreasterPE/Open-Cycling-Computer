@@ -545,8 +545,8 @@ class layout(threading.Thread):
                     for f in self.current_page['fields']:
                         if f['parameter'] == parameter:
                             try:
-                                if f['run']:
-                                    plugin, method = f['run'].split(',')
+                                if f['short_click']:
+                                    plugin, method = f['short_click'].split(',')
                                     plugin = plugin.strip()
                                     method = method.strip()
                                     method_to_call = getattr(self.pm.plugins[plugin], method)
