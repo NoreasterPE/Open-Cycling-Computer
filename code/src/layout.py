@@ -1,20 +1,18 @@
 #!/usr/bin/python3
 ## @package layout
-#   Module responsible for loading and rendering layouts. Needs heavy cleaning...
+#   Module responsible for rendering layouts. Needs heavy cleaning...
 
 import cairo
-import cairo_helper
 import datetime
+import layout_loader
 import logging
 import math
 import num
 import pyplum
 import queue
-import sys
 import threading
 import time
 import unit_converter
-import yaml
 
 
 ## Class for handling layouts
@@ -35,18 +33,12 @@ class layout(threading.Thread):
         ## @var log
         # System logger handle
         self.log = logging.getLogger('system')
-        ## @var font_initialised
-        #  Indicates if cairo font has been initialised.
-        self.font_initialised = False
-        ## @var s
-        #  Sensors instance
+        ## @var font_face_set
+        #  Indicates if cairo font face has been set
+        self.font_face_set = False
+        ## @var pm
+        #  PYthon PLUgin Manager instance
         self.pm = pyplum.pyplum()
-        ## @var layout_file
-        #  Location of layout file
-        self.layout_file = self.pm.parameters['layout_file']['value']
-        ## @var fonts_dir
-        #  Location of fonts directory
-        self.fonts_dir = self.pm.parameters['fonts_dir']['value']
         ## @var width
         #  Window/screen width
         self.width = self.pm.parameters['display_size']["value"][0]
@@ -70,18 +62,9 @@ class layout(threading.Thread):
         ## @var editor_fields
         #  Dict with data for editor pages.
         self.editor_fields = {}
-        ## @var pages
-        #  Dict with parsed pages from layout file.
-        self.pages = {}
-        ## @var button_rectangles
-        #  Dict with buttons. Parsed for layout file
-        self.button_rectangles = {}
-        ## @var images
-        #  Dict with images loaded with png_to_cairo_surface. Currently only pngs are supported.
-        self.images = {}
-        self.load_layout()
-        self.use_page()
-        ## @var  schedule_display_refresh
+        self.ll = layout_loader.layout_loader()
+        self.ll.parse_page()
+        ## @var schedule_display_refresh
         #  Control variable of the display refresh event. Set to True to stop calling generate_refresh_event
         self.schedule_display_refresh = True
         self.start()
@@ -108,12 +91,13 @@ class layout(threading.Thread):
                 if ev_type == 'touch':
                     position = event[1]
                     click = event[2]
+                    self.render_pressed_button(position)
                     self.check_click(position, click)
                 if ev_type == 'show_main_page':
                     self.use_main_page()
                 if ev_type == 'reload_layout':
-                    self.load_layout()
-                    self.use_page()
+                    self.ll.load_layout()
+                    self.ll.parse_page()
                 if ev_type == 'next_page':
                     self.next_page()
                 if ev_type == 'prev_page':
@@ -145,174 +129,26 @@ class layout(threading.Thread):
         # Check if cairo context has changed
         if self.ctx != self.pm.render['ctx']:
             self.ctx = self.pm.render['ctx']
-        if not self.font_initialised and self.ctx is not None:
-            try:
-                # Only one font is allowed for now due to cairo_helper workaround
-                self.log.debug("Calling cairo_helper for {}".format(self.fonts_dir + self.font), extra=self.extra)
-                font_face = cairo_helper.create_cairo_font_face_for_file(self.fonts_dir + self.font, 0)
-                self.ctx.set_font_face(font_face)
-                self.font_extents = self.ctx.font_extents()
-                self.font_initialised = True
-            except AttributeError:
-                pass
+        if not self.font_face_set and self.ctx is not None:
+            self.ctx.set_font_face(self.ll.font_face)
+            self.font_face_set = True
+            self.font_extents = self.ctx.font_extents()
         if not self.pm.render['hold'] and self.ctx is not None:
             self.pm.render['hold'] = True
             self.render_page()
             self.pm.render['hold'] = False
 
-    def load_layout(self):
-        if self.layout_file is None:
-            self.log.critical("Layput file is None, refusing to load", extra=self.extra)
-            return
-        self.load_layout_tree()
-        self.pages = {}
-        for page in self.layout_tree['pages']:
-            try:
-                page_id = page['id']
-            except KeyError:
-                self.log.critical("Page in layout {} has no id field defined. Layout might not work.".format(self.layout_file), extra=self.extra)
-            # page 'type' field is optional, add it if not defined
-            if 'type' not in page:
-                page['type'] = None
-            self.pages[page_id] = page
-
-    def load_layout_tree(self):
-        try:
-            with open(self.layout_file) as f:
-                self.log.debug("Loading layout {}".format(self.layout_file), extra=self.extra)
-                self.layout_tree = yaml.safe_load(f)
-                f.close()
-        except FileNotFoundError:
-            self.log.critical("Loading layout {} failed, falling back to default.yaml".format(self.layout_file), extra=self.extra)
-            sys_info = "Error details: {}".format(sys.exc_info()[0])
-            self.log.error(sys_info, extra=self.extra)
-            # FIXME Fallback to default layout
-            self.layout_file = "layouts/default.yaml"
-            try:
-                with open(self.layout_file) as f:
-                    self.log.debug("Loading layout {}".format(self.layout_file), extra=self.extra)
-                    self.layout_tree = yaml.safe_load(f)
-                    f.close()
-            except FileNotFoundError:
-                self.log.critical("Loading default layout {} failed, Quitting...".format(self.layout_file), extra=self.extra)
-                raise
-
-    def use_page(self, page_id="page_0"):
-        self.log.debug("use_page {}".format(page_id), extra=self.extra)
-        self.pm.render['refresh'] = True
-        try:
-            self.current_page = self.pages[page_id]
-        except KeyError:
-            self.log.critical("Cannot load page {}, loading start page".format(page_id), extra=self.extra)
-            self.use_page()
-
-        self.background_image = None
-        if 'background_image' in self.current_page:
-            self.background_image = self.load_image(self.current_page['background_image'])
-
-        self.buttons_image = None
-        if 'buttons_image' in self.current_page:
-            self.buttons_image = self.load_image(self.current_page['buttons'])
-
-        self.background_colour = None
-        if 'background_colour' in self.current_page:
-            self.parse_background_colour()
-
-        self.font = None
-        if 'font' in self.current_page:
-            self.parse_font()
-
-        self.text_colour = None
-        if 'text_colour' in self.current_page:
-            self.parse_text_colour()
-
-        self.button_rectangles = {}
-        if self.current_page['fields'] is not None:
-            for field in self.current_page['fields']:
-                self.parse_parameter(field)
-
-    def parse_font(self):
-        self.font = self.current_page['font']
-        if self.font == '':
-            self.log.critical("Page font found, but it's empry string. font field is mandatory.".format(self.current_page), extra=self.extra)
-        try:
-            self.page_font_size = self.current_page['font_size']
-        except KeyError:
-            self.log.critical("Page font size not found on page {}. font_size field is mandatory. Defaulting to 18".format(self.current_page), extra=self.extra)
-            self.page_font_size = 18
-
-    def parse_text_colour(self):
-        self.text_colour_rgb = self.current_page['text_colour']
-        text_colour_rgb = self.text_colour_rgb
-        if text_colour_rgb[0] == '#':
-            text_colour_rgb = text_colour_rgb[1:]
-        r, g, b = text_colour_rgb[:2], text_colour_rgb[2:4], text_colour_rgb[4:]
-        r, g, b = [int(n, 16) for n in (r, g, b)]
-        self.text_colour = (r, g, b)
-
-    def parse_background_colour(self):
-        self.background_colour_rgb = self.current_page['background_colour']
-        background_colour_rgb = self.background_colour_rgb
-        if background_colour_rgb[0] == '#':
-            background_colour_rgb = background_colour_rgb[1:]
-        r, g, b = background_colour_rgb[:2], background_colour_rgb[2:4], background_colour_rgb[4:]
-        r, g, b = [int(n, 16) for n in (r, g, b)]
-        self.background_colour = (r, g, b)
-
-    def parse_parameter(self, field):
-        try:
-            name = field['parameter']
-        except KeyError:
-            self.log.critical("Parameter {} on page {}. Parameter field is mandatory.".format(name, self.current_page), extra=self.extra)
-            name = None
-        try:
-            show = field['show']
-        except KeyError:
-            show = ''
-        meta_name = name + "_" + show
-        meta_name = meta_name.strip('_')
-        try:
-            b = field['button']
-            try:
-                rect = (int(b['x0']),
-                        int(b['y0']),
-                        int(b['w']),
-                        int(b['h']))
-            except KeyError:
-                self.log.critical("Button field present, but invalid x0, y0, w or b detected at parameter {} on page {}.".format(name, self.current_page), extra=self.extra)
-                self.log.critical("Button for {} won't work.".format(name), extra=self.extra)
-            self.button_rectangles[meta_name] = (name, rect)
-        except KeyError:
-            pass
-        try:
-            image_file = field['file']
-            self.images[image_file] = self.load_image(image_file)
-        except KeyError:
-            image_file = None
-
-    def load_image(self, image_path):
-        try:
-            image = self.png_to_cairo_surface(image_path)
-            self.log.debug("Image {} loaded".format(image_path), extra=self.extra)
-        except cairo.Error:
-            # image is invalid
-            self.log.warning("Cannot load image!", extra=self.extra)
-            self.log.warning("layout_file = {}".format(self.layout_file), extra=self.extra)
-            self.log.warning("image path path = {}".format(image_path), extra=self.extra)
-            image = None
-        return image
-
     def use_main_page(self):
-        self.use_page()
+        self.ll.parse_page()
 
     def render_background(self):
-        if self.background_colour is not None:
-            r = self.background_colour[0]
-            g = self.background_colour[1]
-            b = self.background_colour[2]
+        if self.ll.background_colour is not None:
+            r = self.ll.background_colour[0]
+            g = self.ll.background_colour[1]
+            b = self.ll.background_colour[2]
             self.ctx.set_source_rgb(r, g, b)
-        if self.background_image is not None:
-            self.ctx.set_source_surface(self.background_image, 0, 0)
+        if self.ll.background_image is not None:
+            self.ctx.set_source_surface(self.ll.background_image, 0, 0)
         self.ctx.rectangle(0, 0, self.width, self.height)
         self.ctx.fill()
 
@@ -320,18 +156,12 @@ class layout(threading.Thread):
         self.render_background()
         # LAYOUT DEBUG FUNCION
         #self.render_all_buttons()
-        if self.current_page['fields'] is not None:
+        if self.ll.current_page['fields'] is not None:
             self.render_layout()
         self.pm.render['refresh'] = True
 
-    def make_image_key(self, image_path, value):
-        suffix = "_" + format(value)
-        extension = image_path[-4:]
-        name = image_path[:-4]
-        return (name + suffix + extension)
-
     def render_layout(self):
-        for field in self.current_page['fields']:
+        for field in self.ll.current_page['fields']:
             parameter = field['parameter']
             try:
                 position_x = field['x']
@@ -347,7 +177,7 @@ class layout(threading.Thread):
             except KeyError:
                 show = "value"
             if show == "value":
-                if self.current_page["type"] == "editor":
+                if self.ll.current_page["type"] == "editor":
                     try:
                         value = self.editor_fields[parameter]
                     except (KeyError, TypeError):
@@ -459,16 +289,16 @@ class layout(threading.Thread):
             except (KeyError, TypeError):
                 pass
             if image_path is not None:
-                if image_path not in self.images:
-                    self.images[image_path] = self.load_image(image_path)
-                image = self.images[image_path]
+                if image_path not in self.ll.images:
+                    self.ll.images[image_path] = self.ll.load_image(image_path)
+                image = self.ll.images[image_path]
                 if image is not None:
                     self.image_to_surface(image, position_x, position_y)
             try:
                 fs = field['font_size']
             except KeyError:
                 # Fall back to page font size
-                fs = self.page_font_size
+                fs = self.ll.page_font_size
             self.ctx.set_font_size(fs)
             te = self.ctx.text_extents(uv)
             if align == 'center':
@@ -482,7 +312,7 @@ class layout(threading.Thread):
             # 18 is font size for which font_extents has height. So far no scaled_font_extents function
             y_shift = 0.5 * self.font_extents[2] * fs / 18
             if string_format != "zoomed_digit":
-                self.text_to_surface(uv, position_x + x_shift, position_y + y_shift, self.text_colour)
+                self.text_to_surface(uv, position_x + x_shift, position_y + y_shift, self.ll.text_colour)
             else:
                 SCALE = 1.4
                 uv = self.editor_fields["value"]
@@ -503,12 +333,12 @@ class layout(threading.Thread):
 
                 self.text_to_surface(rv2, rv2_x, position_y + SCALE * y_shift, (1.0, 0.0, 0.0))
                 self.ctx.set_font_size(fs)
-                self.text_to_surface(rv1, rv1_x, position_y + y_shift, self.text_colour)
-                self.text_to_surface(rv3, rv3_x, position_y + y_shift, self.text_colour)
+                self.text_to_surface(rv1, rv1_x, position_y + y_shift, self.ll.text_colour)
+                self.text_to_surface(rv3, rv3_x, position_y + y_shift, self.ll.text_colour)
 
     def render_all_buttons(self):
         # LAYOUT DEBUG FUNCION
-        for parameter, r in self.button_rectangles.items():
+        for parameter, r in self.ll.button_rectangles.items():
             fr = r[1]
             self.ctx.set_source_rgb(0.0, 1.0, 0.0)
             self.ctx.rectangle(fr[0], fr[1], fr[2], fr[3])
@@ -519,13 +349,13 @@ class layout(threading.Thread):
             self.ctx.stroke()
 
     def render_pressed_button(self, pressed_pos):
-        if self.ctx is None or self.buttons_image is None:
+        if self.ctx is None or self.ll.buttons_image is None:
             return
         self.log.debug("render_pressed_button started", extra=self.extra)
-        for parameter, r in self.button_rectangles.items():
+        for parameter, r in self.ll.button_rectangles.items():
             if self.point_in_rect(pressed_pos, r[1]):
                 fr = r[1]
-                self.ctx.set_source_surface(self.buttons_image, 0, 0)
+                self.ctx.set_source_surface(self.ll.buttons_image, 0, 0)
                 self.ctx.rectangle(fr[0], fr[1], fr[2], fr[3])
                 self.ctx.fill()
         self.pm.render['refresh'] = True
@@ -533,22 +363,20 @@ class layout(threading.Thread):
 
     def check_click(self, position, click):
         if click == 'SHORT':
-            self.render_pressed_button(position)
             # FIXME simplify, single loop has to be enough
-            for parameter, r in self.button_rectangles.items():
+            for parameter, r in self.ll.button_rectangles.items():
                 if self.point_in_rect(position, r[1]):
                     self.log.debug("CLICK on {} {}".format(parameter, r), extra=self.extra)
-                    for field in self.current_page['fields']:
+                    for field in self.ll.current_page['fields']:
                         if field['parameter'] == parameter:
                             self.parse_short_click(field)
             self.pm.render['refresh'] = True
         elif click == 'LONG':
-            self.render_pressed_button(position)
             # FIXME simplify, single loop has to be enough
-            for parameter, r in self.button_rectangles.items():
+            for parameter, r in self.ll.button_rectangles.items():
                 if self.point_in_rect(position, r[1]):
                     self.log.debug("LONG CLICK on {} {}".format(parameter, r), extra=self.extra)
-                    for field in self.current_page['fields']:
+                    for field in self.ll.current_page['fields']:
                         if self.get_meta_name(field) == parameter:
                             self.parse_long_click(field, r[0])
         elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
@@ -558,7 +386,7 @@ class layout(threading.Thread):
         elif click == 'B_TO_T':  # Swipe BOTTOM to TOP
             self.use_main_page()
         elif click == 'T_TO_B':  # Swipe TOP to BOTTOM
-            self.use_page("settings_0")
+            self.ll.parse_page("settings_0")
 
     def get_meta_name(self, field):
         try:
@@ -608,8 +436,6 @@ class layout(threading.Thread):
         self.pm.parameter_reset(field["parameter"], reset_list)
 
     def call_internal_editor(self, field, parameter):
-        print(field)
-        print(parameter)
         self.editor_fields = {}
         try:
             editor = field['editor']
@@ -666,37 +492,23 @@ class layout(threading.Thread):
         else:
             self.log.critical("Unknown editor {} called for parameter {}, ignoring".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
             return
-        self.use_page(self.editor_fields["editor"])
+        self.ll.parse_page(self.editor_fields["editor"])
 
     def next_page(self):
         # Editor is a special page - it cannot be switched, only cancel or accept
-        if not self.current_page['type'] == 'editor':
+        if not self.ll.current_page['type'] == 'editor':
             try:
-                self.use_page(self.current_page['right'])
+                self.ll.parse_page(self.ll.current_page['right'])
             except KeyError:
                 pass
 
     def prev_page(self):
         # Editor is a special page - it cannot be switched, only cancel or accept
-        if not self.current_page['type'] == 'editor':
+        if not self.ll.current_page['type'] == 'editor':
             try:
-                self.use_page(self.current_page['left'])
+                self.ll.parse_page(self.ll.current_page['left'])
             except KeyError:
                 pass
-
-    def png_to_cairo_surface(self, file_path):
-        png_surface = cairo.ImageSurface.create_from_png(file_path)
-        return png_surface
-
-    #FIXME misleading names surface --> image, image_to_surface --> render_image?
-    def image_to_surface(self, surface, x=0, y=0, w=None, h=None):
-        if w is None:
-            w = self.width
-        if h is None:
-            h = self.height
-        self.ctx.set_source_surface(surface, x, y)
-        self.ctx.rectangle(x, y, w, h)
-        self.ctx.fill()
 
     def show_overlay(self):
         if len(self.overlay_queue) > 0 and math.isnan(self.overlay_time_start):
@@ -705,9 +517,9 @@ class layout(threading.Thread):
             image_path = overlay[0]
             self.overlay_show_time = overlay[1]
             if image_path is not None:
-                if image_path not in self.images:
-                    self.images[image_path] = self.load_image(image_path)
-                image = self.images[image_path]
+                if image_path not in self.ll.images:
+                    self.ll.images[image_path] = self.ll.load_image(image_path)
+                image = self.ll.images[image_path]
                 if image is not None:
                     self.octx.set_source_rgba(0.0, 0.0, 0.0, 0.0)
                     self.octx.set_source_surface(image, 0, 0)
@@ -739,3 +551,20 @@ class layout(threading.Thread):
             return True
         except TypeError:
             return False
+
+    #FIXME misleading names surface --> image, image_to_surface --> render_image?
+    def image_to_surface(self, surface, x=0, y=0, w=None, h=None):
+        if w is None:
+            w = self.width
+        if h is None:
+            h = self.height
+        self.ctx.set_source_surface(surface, x, y)
+        self.ctx.rectangle(x, y, w, h)
+        self.ctx.fill()
+
+    #FIXME Needs to go to layout_loader
+    def make_image_key(self, image_path, value):
+        suffix = "_" + format(value)
+        extension = image_path[-4:]
+        name = image_path[:-4]
+        return (name + suffix + extension)

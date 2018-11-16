@@ -3,7 +3,9 @@
 #   Module responsible for loading layouts. Needs heavy cleaning...
 
 import cairo
+import cairo_helper
 import logging
+import pyplum
 import sys
 import yaml
 
@@ -30,7 +32,17 @@ class layout_loader():
         ## @var images
         #  Dict with images loaded with png_to_cairo_surface. Currently only pngs are supported.
         self.images = {}
+        ## @var pages
+        #  Dict with parsed pages from layout file.
+        self.pages = {}
+        ## @var button_rectangles
+        #  Dict with buttons. Parsed for layout file
+        self.button_rectangles = {}
+        ## @var font_face_set
+        #  Indicates if cairo font has been initialised.
+        self.font_initialised = False
         self.load_layout()
+        self.parse_page()
 
     def load_layout(self):
         if self.layout_file is None:
@@ -78,6 +90,56 @@ class layout_loader():
         except KeyError:
             self.log.critical("Page font size not found on page {}. font_size field is mandatory. Defaulting to 18".format(self.current_page), extra=self.extra)
             self.page_font_size = 18
+        return (self.font, self.page_font_size)
+
+    def initialise_font(self):
+        try:
+            # Only one font is allowed for now due to cairo_helper workaround
+            self.log.debug("Calling cairo_helper for {}".format(self.fonts_dir + self.font), extra=self.extra)
+            self.font_face = cairo_helper.create_cairo_font_face_for_file(self.fonts_dir + self.font, 0)
+            self.font_initialised = True
+        except AttributeError:
+            pass
+
+    def parse_page(self, page_id="page_0"):
+        self.log.debug("parse_page {}".format(page_id), extra=self.extra)
+        self.pm.render['refresh'] = True
+        try:
+            self.current_page = self.pages[page_id]
+        except KeyError:
+            if page_id == 'page_0':
+                self.log.critical("Cannot load default page_0. Quitting.".format(page_id), extra=self.extra)
+                exit()
+            else:
+                self.log.critical("Cannot load page {}, loading start page".format(page_id), extra=self.extra)
+                self.parse_page()
+
+        self.background_image = None
+        if 'background_image' in self.current_page:
+            self.background_image = self.load_image(self.current_page['background_image'])
+
+        self.buttons_image = None
+        if 'buttons_image' in self.current_page:
+            self.buttons_image = self.load_image(self.current_page['buttons_image'])
+
+        self.background_colour = None
+        if 'background_colour' in self.current_page:
+            self.background_colour = self.parse_background_colour()
+
+        self.font = None
+        if 'font' in self.current_page:
+            self.font, self.font_size = self.parse_font()
+        if not self.font_initialised:
+            self.initialise_font()
+
+        self.text_colour = None
+        if 'text_colour' in self.current_page:
+            self.text_colour = self.parse_text_colour()
+
+        self.button_rectangles = {}
+        if self.current_page['fields'] is not None:
+            for field in self.current_page['fields']:
+                self.parse_parameter(field)
 
     def parse_text_colour(self):
         self.text_colour_rgb = self.current_page['text_colour']
@@ -87,6 +149,7 @@ class layout_loader():
         r, g, b = text_colour_rgb[:2], text_colour_rgb[2:4], text_colour_rgb[4:]
         r, g, b = [int(n, 16) for n in (r, g, b)]
         self.text_colour = (r, g, b)
+        return self.text_colour
 
     def parse_background_colour(self):
         self.background_colour_rgb = self.current_page['background_colour']
@@ -96,6 +159,7 @@ class layout_loader():
         r, g, b = background_colour_rgb[:2], background_colour_rgb[2:4], background_colour_rgb[4:]
         r, g, b = [int(n, 16) for n in (r, g, b)]
         self.background_colour = (r, g, b)
+        return self.background_colour
 
     def parse_parameter(self, field):
         try:

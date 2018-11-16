@@ -207,7 +207,7 @@ temperature:
   units_allowed:
   - C
   - F
-  value: 24.77
+  value: 21.72
   value_avg: .nan
   value_default: null
   value_list: null

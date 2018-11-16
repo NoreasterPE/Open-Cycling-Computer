@@ -7,7 +7,7 @@ pages:
          right: page_1
          background_image: images/page_0_background.png
          #background_colour: '#000000'
-         buttons: images/button_pressed.png
+         buttons_image: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 20
          text_colour: FFFFFF
@@ -177,7 +177,7 @@ pages:
          left: page_0
          right: page_2
          background_image: images/stats_background.png
-         buttons: images/button_pressed.png
+         buttons_image: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 24
          text_colour: FFFFFF
@@ -334,7 +334,7 @@ pages:
          left: page_1
          right: page_0
          background_image: images/page_2_background.png
-         buttons: images/button_pressed.png
+         buttons_image: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 16
          text_colour: FFFFFF
@@ -397,7 +397,7 @@ pages:
          left: settings_2
          right: settings_1
          background_image: images/background_2_x_4.png
-         buttons: images/button_pressed.png
+         buttons_image: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 20
          text_colour: FFFFFF
@@ -556,7 +556,7 @@ pages:
          left: settings_0
          right: settings_2
          background_image: images/background_2_x_4.png
-         buttons: images/button_pressed.png
+         buttons_image: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 24
          text_colour: FFFFFF
@@ -673,7 +673,7 @@ pages:
          left: settings_1
          right: settings_0
          background_image: images/background_2_x_4.png
-         buttons: images/button_pressed.png
+         buttons_image: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 20
          text_colour: FFFFFF
@@ -842,7 +842,7 @@ pages:
          id: editor_unit
          type: editor
          background_image: images/editor_unit_background.png
-         buttons: images/button_pressed.png
+         buttons_image: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 50
          text_colour: FFFFFF
@@ -907,7 +907,7 @@ pages:
          id: editor_numbers
          type: editor
          background_image: images/editor_number_background.png
-         buttons: images/button_pressed.png
+         buttons_image: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 30
          text_colour: FFFFFF
@@ -1001,7 +1001,7 @@ pages:
          id: editor_string
          type: editor
          background_image: images/editor_string_background.png
-         buttons: images/button_pressed.png
+         buttons_image: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 30
          text_colour: FFFFFF
@@ -1091,7 +1091,7 @@ pages:
          id: ble_selector
          type: editor
          background_image: images/ble_selector.png
-         buttons: images/button_pressed.png
+         buttons_image: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 16
          text_colour: FFFFFF
@@ -1168,7 +1168,7 @@ pages:
          type: editor
          #FIXME add separate imgae
          background_image: images/editor_unit_background.png
-         buttons: images/button_pressed.png
+         buttons_image: images/button_pressed.png
          font: "Gidole-Regular.ttf"
          font_size: 50
          text_colour: FFFFFF
