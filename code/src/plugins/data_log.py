@@ -139,7 +139,7 @@ class data_log(plugin.plugin):
                     minutes, seconds = divmod(int(value), 60)
                     hours, minutes = divmod(minutes, 60)
                     value = "{:02.0f}:{:02.0f}:{:02.0f}".format(hours, minutes, seconds)
-                except TypeError:
+                except (TypeError, ValueError):
                     pass
             elif string_format == "time":
                 try:
