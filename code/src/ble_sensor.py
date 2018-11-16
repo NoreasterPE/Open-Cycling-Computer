@@ -112,6 +112,7 @@ class ble_sensor(plugin.plugin):
                 self.notifications_enabled = False
             elif (str(e) == "Error from Bluetooth stack (badstate)" or
                     str(e) == "Error from Bluetooth stack (comerr)"):
+                self.pm.parameters['ble_no_of_devices_connected']['value'] -= 1
                 self.log.error(e, extra=self.extra)
                 self.connected = False
                 self.notifications_enabled = False
