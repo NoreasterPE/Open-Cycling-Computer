@@ -36,3 +36,7 @@ columns:
     parameter: slope
     description:  "Slope"
     format: '%.3f'
+  - name: gear
+    parameter: gear_ratio
+    description:  "Gear"
+    format: '%.4f'
