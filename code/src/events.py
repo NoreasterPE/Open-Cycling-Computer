@@ -19,6 +19,7 @@ LONG_CLICK = 0.7
 # Lenght of swipe in pixels. All clicks with length over 50 pixels are considered swipes.
 SWIPE_LENGTH = 50
 
+
 ## Events  class
 # Handle input and internal events
 class events(metaclass=singleton.singleton):
@@ -140,7 +141,8 @@ class events(metaclass=singleton.singleton):
                 # If there is no event for more than LONG_CLICK time it is possible that
                 # the finger is on the screen, but in exactly the same position. Long click
                 # should be triggered in that situation
-                ev = self.pm.input_queue.get(timeout=LONG_CLICK)
+                #ev = self.pm.input_queue.get(timeout=LONG_CLICK)  #  13% CPU
+                ev = self.pm.input_queue.get(timeout=0.1)
                 self.input_event_handler(ev)
             except queue.Empty:
                 # Queue is empty, but the finger is on the screen. Fire last event with new time_stamp
