@@ -30,9 +30,11 @@ class ble_sc(ble_sensor.ble_sensor):
         self.pm.register_parameter("cadence", self.extra["module_name"], value=num.NAN, raw_unit="RPM")
         self.pm.register_parameter("cadence_notification_beat", self.extra["module_name"])
         self.pm.register_parameter("cadence_speed_device_address", self.extra["module_name"])
+        self.pm.request_parameter("ble_scan_done", self.extra["module_name"])
         self.pm.request_parameter("cadence_speed_device_address", self.extra["module_name"])
         self.pm.request_parameter("wheel_circumference", self.extra["module_name"])
         self.delegate_class = sc_delegate
+        self.editor_fields = {}
 
     ## Process data delivered from delegate
     #  @param self The python object self
@@ -76,6 +78,18 @@ class ble_sc(ble_sensor.ble_sensor):
             self.handle_exception(exception, "process_delegate_data")
 
     def notification(self):
+        if self.pm.parameters['ble_scan_done']['value']:
+            self.pm.parameters['ble_scan_done']['value'] = False
+            self.set_up_editor()
+        if self.pm.parameters["cadence_speed_device_name"]["value"] != self.device_name:
+            # Device name has been changed by ble_scanner
+            self.device_name = self.pm.parameters["cadence_speed_device_name"]["value"]
+            data = self.pm.parameters["cadence_speed_device_name"]["data"]
+            if data is not None:
+                addr = data[1]['addr']
+                #addr_type = data[1]['addr_type']
+                self.device_address = addr
+                self.pm.parameters["cadence_speed_device_address"]["value"] = addr
         if self.pm.parameters["cadence_speed_device_address"]["value"] != self.device_address:
             self.device_address = self.pm.parameters["cadence_speed_device_address"]["value"]
         if self.pm.parameters["cadence_speed_battery_level"]["value"] != self.battery_level:
@@ -85,6 +99,29 @@ class ble_sc(ble_sensor.ble_sensor):
         super().reset_data()
         ## @var cadence_time_stamp
         # Time stamp of the wheel rev measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
+
+    def find_cadence_speed_device(self):
+        #FIXME remote plugin method starting to be added by events queue
+        # Add option for null device
+        # Add option to set up & start editor? Or in ble_sensor?
+        # Add option to set up animation
+        self.pm.plugins['ble_scanner'].find_ble_device()
+
+    def set_up_editor(self):
+        self.editor_fields = {}
+        self.editor_fields["parameter"] = 'cadence_speed_device_name'
+        self.editor_fields["editor"] = 'editor_list'
+        self.editor_fields['type'] = 'editor_list'
+        self.editor_fields['title'] = 'BLE speed/cadence'
+        self.editor_fields["format"] = '%.0f'
+        self.editor_fields['index'] = 0
+        self.editor_fields['parameter'] = 'cadence_speed_device_name'
+        self.editor_fields['value_list'] = []
+        for device in self.pm.parameters['ble_scan_results']['value']:
+            self.editor_fields['value_list'].append((device['name'], device))
+        if self.pm.event_queue is not None:
+            print(self.editor_fields)
+            self.pm.event_queue.put(('open_editor', self.editor_fields))
 
 
 ## Class for handling BLE notifications from cadence and speed sensor

@@ -540,6 +540,7 @@ pages:
                   text: Spd/cadence
 
                 - parameter: cadence_speed_device_name
+                  long_click: ble_sc, find_cadence_speed_device
                   x: 180
                   y: 290
                   font_size: 15

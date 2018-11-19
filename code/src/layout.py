@@ -184,6 +184,8 @@ class layout(threading.Thread):
                 if self.ll.current_page["type"] == "editor":
                     try:
                         value = self.editor_fields[parameter]
+                        if type(value) is tuple:
+                            value = value[0]
                     except (KeyError, TypeError):
                         value = None
                 else:
@@ -401,9 +403,12 @@ class layout(threading.Thread):
         return meta_name
 
     def parse_short_click(self, field):
+        self.call_plugin_method(field, 'short_click')
+
+    def call_plugin_method(self, field, click_type):
         try:
-            if field['short_click']:
-                plugin, method = field['short_click'].split(',')
+            if field[click_type]:
+                plugin, method = field[click_type].split(',')
                 plugin = plugin.strip()
                 method = method.strip()
                 method_to_call = getattr(self.pm.plugins[plugin], method)
@@ -423,6 +428,8 @@ class layout(threading.Thread):
             self.call_internal_reset(field)
         elif plugin == 'internal' and method == 'editor':
             self.call_internal_editor(field, parameter)
+        elif plugin is not None and method is not None:
+            self.call_plugin_method(field, 'long_click')
         else:
             self.log.debug("LONG CLICK on non-clickable {}".format(parameter), extra=self.extra)
 
@@ -461,6 +468,10 @@ class layout(threading.Thread):
         except KeyError:
             self.editor_fields["format"] = '%.0f'
             self.log.debug("No format found for editing parameter {}, using default format %.0f".format(parameter), extra=self.extra)
+        try:
+            self.editor_fields["value_list"] = field['value_list']
+        except KeyError:
+            self.editor_fields['value_list'] = None
         if self.editor_fields["editor"] is not None:
             self.editor_fields["parameter"] = parameter
             self.open_editor()
@@ -486,13 +497,18 @@ class layout(threading.Thread):
             self.pm.plugins['editor'].set_up(self.editor_fields)
         elif self.editor_fields["editor"] == 'editor_list':
             v = self.pm.parameters[p]["value"]
-            index = self.pm.parameters[p]["value_list"].index(v)
-            self.editor_fields['index'] = index
-            value_list = self.pm.parameters[p]["value_list"]
+            if self.editor_fields['value_list'] is None:
+                self.editor_fields['value_list'] = []
+                for el in self.pm.parameters[p]["value_list"]:
+                    self.editor_fields['value_list'].append((el, None))
+                try:
+                    self.editor_fields['index'] = self.editor_fields["value_list"].index((v, None))
+                except ValueError:
+                    self.editor_fields['index'] = 0
             #editor call
             #FIXME not nice, a check if editor plugin is loaded?
             self.pm.plugins['editor'].set_up(self.editor_fields)
-            self.pm.plugins['editor'].slice_list_elements(value_list, index)
+            self.pm.plugins['editor'].slice_list_elements(self.editor_fields["value_list"], self.editor_fields['index'])
         else:
             self.log.critical("Unknown editor {} called for parameter {}, ignoring".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
             return
