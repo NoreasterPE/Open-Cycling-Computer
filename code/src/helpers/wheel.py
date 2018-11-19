@@ -9,7 +9,7 @@ class wheel:
     ## The constructor
     #  @param self The python object self
     def __init__(self):
-        #FIXME move to csv fiel, add more wheels
+        #FIXME move to csv file, add more wheels
         self.wheel_circ = {}
         self.wheel_circ['700X18C'] = 2.070
         self.wheel_circ['700X19C'] = 2.080
@@ -32,3 +32,9 @@ class wheel:
     #  @param name String describing wheel, i.e. 700x25C
     def get_circumference(self, name):
             return self.wheel_circ[name.upper()]
+
+    ## Helper function returning all allowed values for wheel size
+    #  @param self The python object self
+    def get_allowed_values(self):
+        return ('700X18C', '700X19C', '700X20C', '700X23C', '700X25C', '700X28C', '700X30C', '700X32C',
+                '700X35C', '700X38C', '700X40C', '700X42C', '700X44C', '700X45C', '700X47C')
