@@ -17,6 +17,12 @@ CODING STYLE:
 - define rules for different log levels
 
 REAL WORLD PROBLEMS:
+- name "Disconnect' needs to be hanged
+- ble_sc icon stays active
+- BLE icon shows one device connected after "Disconnect" is selected
+- method to preload overlay images - it's shaky sometimes
+- store only parameters marked with store field
+- make list of fields to be filtered out before writing config. I.e. reset or force_notification are not required in the config file
 - add date editor
 - add time editor
 - number_editor needs to deal with numbers with minus character
