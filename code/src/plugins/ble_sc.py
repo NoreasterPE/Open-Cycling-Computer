@@ -112,7 +112,7 @@ class ble_sc(ble_sensor.ble_sensor):
         self.editor_fields["parameter"] = 'cadence_speed_device_name'
         self.editor_fields["editor"] = 'editor_list'
         self.editor_fields['type'] = 'editor_list'
-        self.editor_fields['title'] = 'BLE speed/cadence'
+        self.editor_fields['editor_title'] = 'BLE speed/cadence'
         self.editor_fields["format"] = '%.0f'
         self.editor_fields['index'] = 0
         self.editor_fields['parameter'] = 'cadence_speed_device_name'
