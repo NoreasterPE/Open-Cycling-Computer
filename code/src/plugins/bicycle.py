@@ -121,7 +121,7 @@ class bicycle(plugin.plugin):
             self.cadence = self.pm.parameters["cadence"]["value"]
             try:
                 self.pm.parameters["gear_ratio"]["value"] = self.wheel_revolution_time / (self.cadence / 60.0)
-            except TypeError:
+            except (TypeError, ZeroDivisionError):
                 self.pm.parameters["gear_ratio"]["value"] = num.NAN
 
         # Calculate slope
