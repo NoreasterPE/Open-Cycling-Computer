@@ -28,6 +28,7 @@ class ble_hr(ble_sensor.ble_sensor):
         self.pm.register_parameter("heart_rate_device_address", self.extra["module_name"], store=True)
         self.pm.request_parameter("heart_rate_device_address", self.extra["module_name"])
         self.delegate_class = hr_delegate
+        self.editor_fields = {}
 
     ## Process data delivered from delegate
     #  @param self The python object self
@@ -58,11 +59,49 @@ class ble_hr(ble_sensor.ble_sensor):
         self.log.debug("heart rate = {} @ {}".format(self.pm.parameters["heart_rate"]["value"], time.strftime("%H:%M:%S", time.localtime(self.pm.parameters["heart_rate"]["time_stamp"]))), extra=self.extra)
 
     def notification(self):
+        if self.pm.parameters['ble_scan_done']['value'] and \
+                self.pm.parameters['ble_scan_results']['value'] == 'heart_rate':
+            self.pm.parameters['ble_scan_done']['value'] = False
+            self.set_up_editor()
+        if self.pm.parameters["heart_rate_device_name"]["value"] != self.device_name:
+            # Device name has been changed by ble_scanner
+            if self.pm.parameters["heart_rate_device_address"]["value"] is None:
+                self.pm.parameters["heart_rate_device_name"]["value"] = 'Disconnected'
+            self.device_name = self.pm.parameters["heart_rate_device_name"]["value"]
+            data = self.pm.parameters["heart_rate_device_name"]["data"]
+            if data is not None:
+                addr = data[1]['addr']
+                # FIXME - that might need to be passed to ble_sensor
+                #addr_type = data[1]['addr_type']
+                self.device_address = addr
+                self.pm.parameters["heart_rate_device_address"]["value"] = addr
         if self.pm.parameters["heart_rate_device_address"]["value"] != self.device_address:
             self.device_address = self.pm.parameters["heart_rate_device_address"]["value"]
         if self.pm.parameters["heart_rate_battery_level"]["value"] != self.battery_level:
             self.pm.parameters["heart_rate_battery_level"]["value"] = self.battery_level
 
+
+    def find_heart_rate_device(self):
+        #FIXME remote plugin method starting to be added by events queue
+        # Add option for null device
+        # Add option to set up & start editor? Or in ble_sensor?
+        # Add option to set up animation
+        self.pm.plugins['ble_scanner'].find_ble_device('heart_rate')
+
+    def set_up_editor(self):
+        self.editor_fields = {}
+        self.editor_fields["parameter"] = 'heart_rate_device_name'
+        self.editor_fields["editor"] = 'editor_list'
+        self.editor_fields['type'] = 'editor_list'
+        self.editor_fields['editor_title'] = 'BLE heart rate'
+        self.editor_fields["format"] = '%.0f'
+        self.editor_fields['index'] = 0
+        self.editor_fields['parameter'] = 'heart_rate_device_name'
+        self.editor_fields['value_list'] = []
+        for device in self.pm.parameters['ble_scan_results']['data']:
+            self.editor_fields['value_list'].append((device['name'], device))
+        if self.pm.event_queue is not None:
+            self.pm.event_queue.put(('open_editor', self.editor_fields))
 
 ## Class for handling BLE notifications from heart rate sensor
 class hr_delegate(bluepy.btle.DefaultDelegate):
