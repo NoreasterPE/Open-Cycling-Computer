@@ -120,7 +120,6 @@ class ble_sc(ble_sensor.ble_sensor):
         for device in self.pm.parameters['ble_scan_results']['value']:
             self.editor_fields['value_list'].append((device['name'], device))
         if self.pm.event_queue is not None:
-            print(self.editor_fields)
             self.pm.event_queue.put(('open_editor', self.editor_fields))
 
 

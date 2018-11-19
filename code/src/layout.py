@@ -99,7 +99,6 @@ class layout(threading.Thread):
                     self.ll.load_layout()
                     self.ll.parse_page()
                 if ev_type == 'open_editor':
-                    print(event)
                     self.editor_fields = event[1]
                     self.open_editor()
                 if ev_type == 'next_page':
