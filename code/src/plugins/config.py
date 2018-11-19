@@ -112,6 +112,10 @@ class config(plugin.plugin):
         for p in self.pm.parameters:
             if self.pm.parameters[p]['store']:
                 storage[p] = self.pm.parameters[p]
+                if type(storage[p]['data']) == tuple:
+                    self.log.debug("Tuple detected at 'data' in {}. Setting to None as pyyaml can't handle loading it".format(p), extra=self.extra)
+                    storage[p]['data'] = None
+
         self.log.debug("Data ready for config file", extra=self.extra)
         # FIXME error handling for file operation
         self.log.debug("Preparing data dump", extra=self.extra)
