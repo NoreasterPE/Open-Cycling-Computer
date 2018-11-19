@@ -34,6 +34,9 @@ class config(plugin.plugin):
         ## @var base_config_file
         #  Hardcoded config file, used if the bain config can't be read.
         self.base_config_file = "config/config_base.yaml"
+        ## @var filter_out_fields
+        # Tuple of fields that are not supposed to be written to the config file
+        self.filter_out_fields = ('reset', 'force_notification', 'plugin_name', 'required_by', 'store', 'units_allowed', 'value_default', 'value_list')
 
     def run(self):
         self.log.debug("Main loop started", extra=self.extra)
@@ -111,10 +114,13 @@ class config(plugin.plugin):
         storage = {}
         for p in self.pm.parameters:
             if self.pm.parameters[p]['store']:
-                storage[p] = self.pm.parameters[p]
-                if type(storage[p]['data']) == tuple:
-                    self.log.debug("Tuple detected at 'data' in {}. Setting to None as pyyaml can't handle loading it".format(p), extra=self.extra)
-                    storage[p]['data'] = None
+                storage[p] = {}
+                for f in self.pm.parameters[p]:
+                    if f not in self.filter_out_fields:
+                        storage[p][f] = self.pm.parameters[p][f]
+                        if type(storage[p][f]) == tuple:
+                            self.log.debug("Tuple detected as {} in {}. Setting to None as pyyaml can't handle loading it".format(f, p), extra=self.extra)
+                            storage[p][f] = None
 
         self.log.debug("Data ready for config file", extra=self.extra)
         # FIXME error handling for file operation

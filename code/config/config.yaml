@@ -1,287 +1,162 @@
+altitude:
+  data: null
+  raw_unit: m
+  time_stamp: 0.0
+  unit: m
+  value: 11.63
+  value_avg: .nan
+  value_max: -.inf
+  value_min: .inf
 cadence_speed_device_address:
-  force_notification: false
-  plugin_name: null
+  data: null
   raw_unit: null
-  required_by:
-  - ble_sc
-  reset: false
-  store: true
   time_stamp: 0.0
   unit: null
-  units_allowed: null
   value: FD:DF:0E:4E:76:CF
   value_avg: .nan
-  value_default: null
-  value_list: null
   value_max: -.inf
   value_min: .inf
 cadence_speed_device_name:
-  force_notification: false
-  plugin_name: null
+  data: null
   raw_unit: null
-  required_by:
-  - ble_sc
-  reset: false
-  store: true
   time_stamp: 0.0
   unit: null
-  units_allowed: null
   value: Lezyne S&C 249
   value_avg: .nan
-  value_default: null
-  value_list: null
   value_max: -.inf
   value_min: .inf
 data_log_period:
-  force_notification: false
-  plugin_name: null
+  data: null
   raw_unit: s
-  required_by:
-  - ble_hr
-  - ble_sc
-  - bmp280
-  - bicycle
-  - config
-  - data_log
-  reset: false
-  store: true
   time_stamp: 0.0
   unit: s
-  units_allowed: []
   value: 0.85
   value_avg: .nan
-  value_default: null
-  value_list: null
+  value_max: -.inf
+  value_min: .inf
+heart_rate:
+  data: null
+  raw_unit: BPM
+  time_stamp: 0.0
+  unit: BPM
+  value: .nan
+  value_avg: .nan
   value_max: -.inf
   value_min: .inf
 heart_rate_device_address:
-  force_notification: false
-  plugin_name: null
+  data: null
   raw_unit: null
-  required_by:
-  - ble_hr
-  reset: false
-  store: true
   time_stamp: 0.0
   unit: null
-  units_allowed: null
   value: D6:90:A8:08:F0:E4
   value_avg: .nan
-  value_default: null
-  value_list: null
   value_max: -.inf
   value_min: .inf
 heart_rate_device_name:
-  force_notification: false
-  plugin_name: null
+  data: null
   raw_unit: null
-  required_by: null
-  reset: false
-  store: true
   time_stamp: 0.0
   unit: null
-  units_allowed: null
   value: Tacx HRB 04741
   value_avg: .nan
-  value_default: null
-  value_list: null
-  value_max: -.inf
-  value_min: .inf
-layout_file:
-  force_notification: false
-  plugin_name: null
-  raw_unit: null
-  required_by: null
-  reset: false
-  store: true
-  time_stamp: 0.0
-  unit: null
-  units_allowed: []
-  value: layouts/default.yaml
-  value_avg: .nan
-  value_default: null
-  value_list: null
   value_max: -.inf
   value_min: .inf
 log_level:
-  force_notification: false
-  plugin_name: null
+  data: null
   raw_unit: null
-  required_by: null
-  reset: false
-  store: true
   time_stamp: 0.0
   unit: null
-  units_allowed: null
   value: DEBUG
   value_avg: .nan
-  value_default: null
-  value_list: null
+  value_max: -.inf
+  value_min: .inf
+mean_sea_level_pressure:
+  data: null
+  raw_unit: Pa
+  time_stamp: 0.0
+  unit: hPa
+  value: 101757.37826355212
+  value_avg: .nan
   value_max: -.inf
   value_min: .inf
 odometer:
-  force_notification: false
-  plugin_name: null
+  data: null
   raw_unit: m
-  required_by: null
-  reset: false
-  store: true
   time_stamp: 0.0
   unit: km
-  units_allowed:
-  - m
-  - km
-  - mi
   value: 1382.9850000000065
   value_avg: .nan
-  value_default: null
-  value_list: null
   value_max: -.inf
   value_min: .inf
+pressure:
+  data: null
+  raw_unit: Pa
+  time_stamp: 0.0
+  unit: hPa
+  value: 101617.18612303348
+  value_avg: .nan
+  value_max: 101622.25127371603
+  value_min: 101616.54429034387
 reference_altitude:
-  force_notification: false
-  plugin_name: null
+  data: null
   raw_unit: m
-  required_by:
-  - bmp280
-  reset: false
-  store: true
   time_stamp: 1540155643.1353118
   unit: m
-  units_allowed:
-  - m
-  - km
-  value: 11.47
+  value: 11.41
   value_avg: .nan
-  value_default: null
-  value_list: null
   value_max: -.inf
   value_min: .inf
 rider_weight:
-  force_notification: false
-  plugin_name: null
+  data: null
   raw_unit: kg
-  required_by: null
-  reset: false
-  store: true
   time_stamp: 0.0
   unit: kg
-  units_allowed:
-  - kg
-  - lb
-  - st
   value: '80.0'
   value_avg: .nan
-  value_default: null
-  value_list: null
   value_max: -.inf
   value_min: .inf
 speed:
-  force_notification: false
-  plugin_name: null
+  data: null
   raw_unit: m/s
-  required_by: null
-  reset: true
-  store: true
   time_stamp: 1540638854.585688
   unit: km/h
-  units_allowed:
-  - m/s
-  - km/h
-  - mi/h
   value: 0.0
   value_avg: .inf
-  value_default: null
-  value_list: null
   value_max: 9.753484162895928
   value_min: .inf
 temperature:
-  force_notification: false
-  plugin_name: null
+  data: null
   raw_unit: C
-  required_by: null
-  reset: false
-  store: true
   time_stamp: 0.0
   unit: C
-  units_allowed:
-  - C
-  - F
-  value: 21.72
+  value: 22.72
   value_avg: .nan
-  value_default: null
-  value_list: null
   value_max: 29.51
   value_min: 19.24
 wheel_circumference:
-  force_notification: false
-  plugin_name: null
+  data: null
   raw_unit: m
-  required_by:
-  - ble_sc
-  reset: false
-  store: true
   time_stamp: 1540312597.1810174
   unit: mm
-  units_allowed:
-  - cm
-  - mm
   value: 2.105
   value_avg: .nan
-  value_default: null
-  value_list: null
   value_max: -.inf
   value_min: .inf
 wheel_size:
-  force_notification: false
-  plugin_name: null
+  data: null
   raw_unit: null
-  required_by: null
-  reset: false
-  store: true
   time_stamp: 0.0
   unit: null
-  units_allowed: null
   value: 700X25C
   value_avg: .nan
-  value_default: null
-  value_list:
-  - 700X18C
-  - 700X19C
-  - 700X20C
-  - 700X23C
-  - 700X25C
-  - 700X28C
-  - 700X30C
-  - 700X32C
-  - 700X35C
-  - 700X38C
-  - 700X40C
-  - 700X42C
-  - 700X44C
-  - 700X45C
-  - 700X47C
   value_max: -.inf
   value_min: .inf
 write_config_period:
-  force_notification: false
-  plugin_name: null
+  data: null
   raw_unit: s
-  required_by:
-  - ble_hr
-  - ble_sc
-  - bmp280
-  - bicycle
-  - config
-  - data_log
-  reset: false
-  store: true
   time_stamp: 0.0
   unit: s
-  units_allowed: []
   value: 15.0
   value_avg: .nan
-  value_default: null
-  value_list: null
   value_max: -.inf
   value_min: .inf
