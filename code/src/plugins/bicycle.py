@@ -25,20 +25,21 @@ class bicycle(plugin.plugin):
 
         self.pm = pyplum.pyplum()
         self.pm.register_parameter("slope", self.extra["module_name"], value=num.NAN, raw_unit="m/m", unit="%", units_allowed=["m/m", "%"])
-        self.pm.register_parameter("speed", self.extra["module_name"], value=num.NAN, raw_unit="m/s", unit="km/h", units_allowed=["m/s", "km/h", "mi/h"])
+        self.pm.register_parameter("speed", self.extra["module_name"], value=num.NAN, raw_unit="m/s", unit="km/h", units_allowed=["m/s", "km/h", "mi/h"], store=True)
         self.pm.parameters["speed"]["time_stamp"] = 0.0
         self.pm.register_parameter("session_distance", self.extra["module_name"], value=0.0, raw_unit="m", unit="km", units_allowed=["m", "km", "mi"])
         self.pm.register_parameter("session_odometer_start", self.extra["module_name"], value=num.NAN, raw_unit="m")
         self.pm.register_parameter("gear_ratio", self.extra["module_name"], value=num.NAN)
-        self.pm.register_parameter("wheel_size", self.extra["module_name"], value=num.NAN, raw_unit="m")
+        self.w = wheel.wheel()
+        self.pm.register_parameter("wheel_size", self.extra["module_name"], value=num.NAN, raw_unit="m", value_list=self.w.get_allowed_values(), store=True)
         self.pm.request_parameter("wheel_size", self.extra["module_name"])
         self.wheel_size = num.NAN
         self.pm.request_parameter("cadence", self.extra["module_name"])
         self.cadence = num.NAN
-        self.pm.register_parameter("wheel_circumference", self.extra["module_name"], value=num.NAN, raw_unit="m")
+        self.pm.register_parameter("wheel_circumference", self.extra["module_name"], value=num.NAN, raw_unit="m", store=True)
         self.pm.request_parameter("wheel_circumference", self.extra["module_name"])
         self.wheel_circumference = num.NAN
-        self.pm.register_parameter("rider_weight", self.extra["module_name"])
+        self.pm.register_parameter("rider_weight", self.extra["module_name"], store=True)
         self.pm.request_parameter("odometer", self.extra["module_name"])
         self.odometer = None
         self.odometer_delta_cumulative = 0.0
@@ -66,9 +67,8 @@ class bicycle(plugin.plugin):
         if self.wheel_size != self.pm.parameters['wheel_size']['value']:
             self.log.debug("wheel_size changed from {} to {}.".format(self.wheel_size, self.pm.parameters['wheel_size']['value']), extra=self.extra)
             self.wheel_size = self.pm.parameters['wheel_size']['value']
-            w = wheel.wheel()
             try:
-                self.pm.parameters['wheel_circumference']['value'] = w.get_circumference(self.wheel_size)
+                self.pm.parameters['wheel_circumference']['value'] = self.w.get_circumference(self.wheel_size)
             except KeyError:
                 #FIXME That should give user feedback that something went wrong
                 self.log.critical("Unknown wheel_circumference for wheel_size {}.".format(self.wheel_size), extra=self.extra)

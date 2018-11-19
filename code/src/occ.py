@@ -40,7 +40,7 @@ class open_cycling_computer(object, metaclass=singleton.singleton):
         ## @var pm
         #  Handle to pyplum instance
         self.pm = pyplum.pyplum()
-        self.pm.register_parameter("log_level", self.extra["module_name"], value='debug')
+        self.pm.register_parameter("log_level", self.extra["module_name"], value='debug', store=True)
         self.pm.register_parameter("config_file", self.extra["module_name"], value=config_file)
         self.pm.register_parameter("layout_file", self.extra["module_name"], value=layout_file)
         self.pm.register_parameter("fonts_dir", self.extra["module_name"], value=fonts_dir)

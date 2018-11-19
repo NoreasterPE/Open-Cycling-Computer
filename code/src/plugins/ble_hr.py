@@ -21,11 +21,11 @@ class ble_hr(ble_sensor.ble_sensor):
 
     def __init__(self):
         super().__init__()
-        self.pm.register_parameter("heart_rate_device_name", self.extra["module_name"])
+        self.pm.register_parameter("heart_rate_device_name", self.extra["module_name"], store=True)
         self.pm.register_parameter("heart_rate_battery_level", self.extra["module_name"])
-        self.pm.register_parameter("heart_rate", self.extra["module_name"], value=num.NAN, raw_unit="BPM", unit="BPM", units_allowed=["BMP"])
+        self.pm.register_parameter("heart_rate", self.extra["module_name"], value=num.NAN, raw_unit="BPM", unit="BPM", units_allowed=["BMP"], store=True)
         self.pm.register_parameter("heart_rate_notification_beat", self.extra["module_name"])
-        self.pm.register_parameter("heart_rate_device_address", self.extra["module_name"])
+        self.pm.register_parameter("heart_rate_device_address", self.extra["module_name"], store=True)
         self.pm.request_parameter("heart_rate_device_address", self.extra["module_name"])
         self.delegate_class = hr_delegate
 

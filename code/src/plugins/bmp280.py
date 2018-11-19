@@ -28,12 +28,12 @@ class bmp280(plugin.plugin):
         self.measurement_delay = 1.0
 
         self.pm = pyplum.pyplum()
-        self.pm.register_parameter("pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])
+        self.pm.register_parameter("pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"], store=True)
         self.pm.register_parameter("pressure_nof", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])
-        self.pm.register_parameter("mean_sea_level_pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])
-        self.pm.register_parameter("temperature", self.extra["module_name"], raw_unit="C", unit="C", units_allowed=["C", "F"])
-        self.pm.register_parameter("altitude", self.extra["module_name"], raw_unit="m", unit="m", units_allowed=["m"])
-        self.pm.register_parameter("reference_altitude", self.extra["module_name"], raw_unit="m")
+        self.pm.register_parameter("mean_sea_level_pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"], store=True)
+        self.pm.register_parameter("temperature", self.extra["module_name"], raw_unit="C", unit="C", units_allowed=["C", "F"], store=True)
+        self.pm.register_parameter("altitude", self.extra["module_name"], raw_unit="m", unit="m", units_allowed=["m"], store=True)
+        self.pm.register_parameter("reference_altitude", self.extra["module_name"], raw_unit="m", store=True)
         self.pm.request_parameter("reference_altitude", self.extra["module_name"])
         self.pm.request_parameter("mean_sea_level_pressure", self.extra["module_name"])
         ## @var pressure_unfiltered
