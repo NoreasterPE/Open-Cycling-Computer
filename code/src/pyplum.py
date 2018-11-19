@@ -197,6 +197,7 @@ class pyplum(threading.Thread, metaclass=singleton.singleton):
     #  @param value_max Maximum observed value of the parameter, defaults to -infinity
     #  @param value_default Parameter default to this value after sensor reset
     #  @param value_list List of allowed values, None means all velues are allowed
+    #  @param data Data linked with parameter. I.e. BLE device selection uses it to store device address, device address type, signal strength
     #  @param raw_unit Internal unit, i.e. for odometer it's meter "m"
     #  @param unit Unit used to dispaly the parameter i.e. for odometer it might be km or mi (mile)
     #  @param units_allowed List of units allowed for the parametes. The units has to be covered in unit_converter module
@@ -212,6 +213,7 @@ class pyplum(threading.Thread, metaclass=singleton.singleton):
                            value_avg=num.NAN,
                            value_max=num.INF_MIN,
                            value_default=None,
+                           data=None,
                            value_list=None,
                            raw_unit=None,
                            unit=None,
@@ -244,6 +246,7 @@ class pyplum(threading.Thread, metaclass=singleton.singleton):
                                                    value_max=value_max,
                                                    value_default=value_default,
                                                    value_list=value_list,
+                                                   data=data,
                                                    raw_unit=raw_unit,
                                                    unit=unit,
                                                    units_allowed=units_allowed,
