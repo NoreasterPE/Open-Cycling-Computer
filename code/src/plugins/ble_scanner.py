@@ -45,6 +45,7 @@ class ble_scanner(plugin.plugin):
         # [{'rss': -68, 'addr': 'fd:df:0e:4e:76:cf', 'name': 'Lezyne S&C 249', 'addr_type': 'random'},
         #  {'rss': -71, 'addr': 'd6:90:a8:08:f0:e4', 'name': 'Tacx HRB 04741', 'addr_type': 'random'}]
         self.ble_devices = []
+        self.current_device_type = None
 
     ## Searches for BLE devices over 5 seconds (defaut). Stores found devices in self.ble_devices
     #  @param self The python object self
@@ -70,14 +71,17 @@ class ble_scanner(plugin.plugin):
         # To be fixed after the code is split into ble_sc/ble_hr and ble_scanner part
         devices.append(dict(addr=None, name='Disconnect', addr_type=None, rss=0))
         self.ble_devices = sorted(devices, key=lambda k: k['rss'], reverse=True)
-        self.pm.parameters['ble_scan_results']['value'] = self.ble_devices
+        self.pm.parameters['ble_scan_results']['value'] = self.current_device_type
+        self.current_device_type = None
+        self.pm.parameters['ble_scan_results']['data'] = self.ble_devices
         self.pm.parameters['ble_scan_results']['time_stamp'] = time.time()
         self.pm.parameters['ble_scan_done']['value'] = True
 
     def run(self):
         pass
 
-    def find_ble_device(self):
+    def find_ble_device(self, device_type):
+        self.current_device_type = device_type
         self.set_up_ble_scan_animation()
         threading.Thread(target=self.scan).start()
 

@@ -78,15 +78,19 @@ class ble_sc(ble_sensor.ble_sensor):
             self.handle_exception(exception, "process_delegate_data")
 
     def notification(self):
-        if self.pm.parameters['ble_scan_done']['value']:
+        if self.pm.parameters['ble_scan_done']['value'] and \
+                self.pm.parameters['ble_scan_results']['value'] == 'speed_cadence':
             self.pm.parameters['ble_scan_done']['value'] = False
             self.set_up_editor()
         if self.pm.parameters["cadence_speed_device_name"]["value"] != self.device_name:
             # Device name has been changed by ble_scanner
+            if self.pm.parameters["cadence_speed_device_address"]["value"] is None:
+                self.pm.parameters["cadence_speed_device_name"]["value"] = 'Disconnected'
             self.device_name = self.pm.parameters["cadence_speed_device_name"]["value"]
             data = self.pm.parameters["cadence_speed_device_name"]["data"]
             if data is not None:
                 addr = data[1]['addr']
+                # FIXME - that might need to be passed to ble_sensor
                 #addr_type = data[1]['addr_type']
                 self.device_address = addr
                 self.pm.parameters["cadence_speed_device_address"]["value"] = addr
@@ -105,7 +109,7 @@ class ble_sc(ble_sensor.ble_sensor):
         # Add option for null device
         # Add option to set up & start editor? Or in ble_sensor?
         # Add option to set up animation
-        self.pm.plugins['ble_scanner'].find_ble_device()
+        self.pm.plugins['ble_scanner'].find_ble_device('speed_cadence')
 
     def set_up_editor(self):
         self.editor_fields = {}
@@ -117,7 +121,7 @@ class ble_sc(ble_sensor.ble_sensor):
         self.editor_fields['index'] = 0
         self.editor_fields['parameter'] = 'cadence_speed_device_name'
         self.editor_fields['value_list'] = []
-        for device in self.pm.parameters['ble_scan_results']['value']:
+        for device in self.pm.parameters['ble_scan_results']['data']:
             self.editor_fields['value_list'].append((device['name'], device))
         if self.pm.event_queue is not None:
             self.pm.event_queue.put(('open_editor', self.editor_fields))
