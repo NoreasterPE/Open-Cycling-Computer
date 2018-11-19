@@ -522,10 +522,10 @@ pages:
                 - parameter: label
                   x: 60
                   y: 255
-                  text: Heart rate
+                  text: Spd/cadence
 
-                - parameter: heart_rate_device_name
-                  long_click: ble_hr, find_heart_rate_device
+                - parameter: cadence_speed_device_name
+                  long_click: ble_sc, find_cadence_speed_device
                   x: 60
                   y: 290
                   font_size: 15
@@ -538,10 +538,10 @@ pages:
                 - parameter: label
                   x: 180
                   y: 255
-                  text: Spd/cadence
+                  text: Heart rate
 
-                - parameter: cadence_speed_device_name
-                  long_click: ble_sc, find_cadence_speed_device
+                - parameter: heart_rate_device_name
+                  long_click: ble_hr, find_heart_rate_device
                   x: 180
                   y: 290
                   font_size: 15
