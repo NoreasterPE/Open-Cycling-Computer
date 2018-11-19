@@ -32,10 +32,8 @@ class editor(plugin.plugin):
     def next_item(self):
         index = self.fields["index"]
         index += 1
-        p = self.fields["parameter"]
-        value_list = self.pm.parameters[p]["value_list"]
-        self.slice_list_elements(value_list, index)
-        if index > len(self.pm.parameters[p]["value_list"]) - 1:
+        self.slice_list_elements(self.fields["value_list"], index)
+        if index > len(self.fields["value_list"]) - 1:
             self.fields["index"] = 0
         else:
             self.fields["index"] = index
@@ -43,11 +41,9 @@ class editor(plugin.plugin):
     def previous_item(self):
         index = self.fields["index"]
         index -= 1
-        p = self.fields["parameter"]
-        value_list = self.pm.parameters[p]["value_list"]
-        self.slice_list_elements(value_list, index)
+        self.slice_list_elements(self.fields["value_list"], index)
         if index < 0:
-            self.fields["index"] = len(self.pm.parameters[p]["value_list"]) - 1
+            self.fields["index"] = len(self.fields["value_list"]) - 1
         else:
             self.fields["index"] = index
 
@@ -173,6 +169,9 @@ class editor(plugin.plugin):
         parameter = self.fields["parameter"]
         parameter_unit = self.fields["unit"]
         parameter_value = self.fields["value"]
+        if type(parameter_value) is tuple:
+            parameter_value = parameter_value[0]
+            parameter_data = self.fields['value']
         self.log.debug("parameter: {}, parameter_unit: {}, parameter_value: {}".format(parameter, parameter_unit, parameter_value), extra=self.extra)
         if self.fields["editor"] == "editor_unit":
             self.pm.parameters[parameter]["unit"] = parameter_unit
@@ -183,9 +182,7 @@ class editor(plugin.plugin):
         if self.fields["editor"] == "editor_string" or \
                 self.fields["editor"] == "editor_list":
             self.pm.parameters[parameter]["value"] = parameter_value
-#        if elf.fields["editor"] == "ble_selector":
-#            (name, addr, dev_type) = parameter_value
-#            self.pm.set_ble_device(name, addr, dev_type)
+            self.pm.parameters[parameter]["data"] = parameter_data
         self.pm.parameters[parameter]["time_stamp"] = time.time()
         self.log.debug("accept_edit finished", extra=self.extra)
         self.fields = None
