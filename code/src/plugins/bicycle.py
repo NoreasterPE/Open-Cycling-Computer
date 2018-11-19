@@ -119,7 +119,10 @@ class bicycle(plugin.plugin):
         # Calculate gear ratio
         if self.cadence != self.pm.parameters["cadence"]["value"]:
             self.cadence = self.pm.parameters["cadence"]["value"]
-            self.pm.parameters["gear_ratio"]["value"] = self.wheel_revolution_time / (self.cadence / 60.0)
+            try:
+                self.pm.parameters["gear_ratio"]["value"] = self.wheel_revolution_time / (self.cadence / 60.0)
+            except TypeError:
+                self.pm.parameters["gear_ratio"]["value"] = num.NAN
 
         # Calculate slope
         if self.odometer_delta > 0.0:
