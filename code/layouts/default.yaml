@@ -1205,17 +1205,17 @@ pages:
                 - parameter: previous_list_element
                   x: 120
                   y: 120
-                  font_size: 40
+                  font_size: 25
 
                 - parameter: value
                   x: 120
                   y: 170
-                  font_size: 60
+                  font_size: 30
 
                 - parameter: next_list_element
                   x: 120
                   y: 220
-                  font_size: 40
+                  font_size: 25
 
                 - parameter: previous_item
                   short_click: editor, previous_item
