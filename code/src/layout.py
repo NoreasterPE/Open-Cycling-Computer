@@ -98,6 +98,10 @@ class layout(threading.Thread):
                 if ev_type == 'reload_layout':
                     self.ll.load_layout()
                     self.ll.parse_page()
+                if ev_type == 'open_editor':
+                    print(event)
+                    self.editor_fields = event[1]
+                    self.open_editor()
                 if ev_type == 'next_page':
                     self.next_page()
                 if ev_type == 'prev_page':
