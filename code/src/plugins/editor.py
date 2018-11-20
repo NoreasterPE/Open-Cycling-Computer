@@ -183,6 +183,7 @@ class editor(plugin.plugin):
                 self.fields["editor"] == "editor_list":
             self.pm.parameters[parameter]["value"] = parameter_value
             self.pm.parameters[parameter]["data"] = parameter_data
+            self.pm.parameters[parameter]["force_notification"] = True
         self.pm.parameters[parameter]["time_stamp"] = time.time()
         self.log.debug("accept_edit finished", extra=self.extra)
         self.fields = None
