@@ -17,12 +17,9 @@ CODING STYLE:
 - define rules for different log levels
 
 REAL WORLD PROBLEMS:
-- name "Disconnect' needs to be hanged
-- ble_sc icon stays active
+- ble_sc icon stays active after disconnect
 - BLE icon shows one device connected after "Disconnect" is selected
 - method to preload overlay images - it's shaky sometimes
-- store only parameters marked with store field
-- make list of fields to be filtered out before writing config. I.e. reset or force_notification are not required in the config file
 - add date editor
 - add time editor
 - number_editor needs to deal with numbers with minus character
@@ -275,3 +272,6 @@ TypeError: argument 1 must be pygame.Surface, not None
 136. [DONE] - add option to use plain background color instead of image
 137. [WONTFIX] - Is it possible to read date/time from GPS chip with no fix or a separate clock is needed? {RTC installed}
 138. [DONE] - add gear ratio parameter to bicycle plugin and to ride log
+139. [DONE] - name "Disconnect' needs to be hanged
+140. [DONE] - make list of fields to be filtered out before writing config. I.e. reset or force_notification are not required in the config file
+141. [DONE] - store only parameters marked with store field
