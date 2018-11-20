@@ -80,7 +80,6 @@ class ble_hr(ble_sensor.ble_sensor):
         if self.pm.parameters["heart_rate_battery_level"]["value"] != self.battery_level:
             self.pm.parameters["heart_rate_battery_level"]["value"] = self.battery_level
 
-
     def find_heart_rate_device(self):
         #FIXME remote plugin method starting to be added by events queue
         # Add option for null device
@@ -102,6 +101,7 @@ class ble_hr(ble_sensor.ble_sensor):
             self.editor_fields['value_list'].append((device['name'], device))
         if self.pm.event_queue is not None:
             self.pm.event_queue.put(('open_editor', self.editor_fields))
+
 
 ## Class for handling BLE notifications from heart rate sensor
 class hr_delegate(bluepy.btle.DefaultDelegate):
@@ -172,8 +172,7 @@ class hr_delegate(bluepy.btle.DefaultDelegate):
             self.log.debug('Ignoring measurement no {}'.format(self.measurement_no), extra=self.extra)
             self.heart_rate = num.NAN
 
-        if (not math.isnan(self.heart_rate) and
-                self.heart_rate != 0):
+        if not math.isnan(self.heart_rate) and self.heart_rate != 0:
             self.calculate_avg_heart_rate()
 
         ts_formatted = time.strftime("%H:%M:%S", time.localtime(self.time_stamp))
