@@ -151,7 +151,8 @@ class pyplum(threading.Thread, metaclass=singleton.singleton):
                         #print('{} >> {}'.format(prev_val, curr_val))
                         if content["required_by"] is not None:
                             for m in content["required_by"]:
-                                notify.append(m)
+                                if m not in notify:
+                                    notify.append(m)
                 except KeyError:
                     pass
             for module in notify:
@@ -217,11 +218,16 @@ class pyplum(threading.Thread, metaclass=singleton.singleton):
                            value_list=None,
                            raw_unit=None,
                            unit=None,
-                           units_allowed=list(),
-                           required_by=list(),
+                           units_allowed=None,
+                           required_by=None,
                            force_notification=False,
                            store=False,
                            reset=False):
+
+        if units_allowed is None:
+            units_allowed = list()
+        if required_by is None:
+            required_by = list()
 
         self.log.debug("Trying to register {} by {}".format(parameter_name, plugin_name), extra=self.extra)
         if unit is None:
@@ -268,7 +274,7 @@ class pyplum(threading.Thread, metaclass=singleton.singleton):
         else:
             if parameter_name not in self.parameter_requests:
                 self.parameter_requests[parameter_name] = list()
-                self.parameter_requests[parameter_name].append(plugin_name)
+            self.parameter_requests[parameter_name].append(plugin_name)
         #self.log.debug("after request_parameter for {} parameter_requests is {}".format(parameter_name, self.parameter_requests), extra=self.extra)
 
     ## Update parameter with new content
