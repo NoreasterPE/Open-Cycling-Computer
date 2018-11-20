@@ -36,10 +36,10 @@ class bicycle(plugin.plugin):
         self.wheel_size = num.NAN
         self.pm.request_parameter("cadence", self.extra["module_name"])
         self.cadence = num.NAN
-        self.pm.register_parameter("wheel_circumference", self.extra["module_name"], value=num.NAN, raw_unit="m", store=True)
+        self.pm.register_parameter("wheel_circumference", self.extra["module_name"], value=num.NAN, raw_unit="m", units_allowed=['mm', 'cm', 'm'], store=True)
         self.pm.request_parameter("wheel_circumference", self.extra["module_name"])
         self.wheel_circumference = num.NAN
-        self.pm.register_parameter("rider_weight", self.extra["module_name"], store=True)
+        self.pm.register_parameter("rider_weight", self.extra["module_name"], units_allowed=['kg', 'lb', 'st'], store=True)
         self.pm.request_parameter("odometer", self.extra["module_name"])
         self.odometer = None
         self.odometer_delta_cumulative = 0.0

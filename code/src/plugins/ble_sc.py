@@ -26,7 +26,7 @@ class ble_sc(ble_sensor.ble_sensor):
         self.pm.register_parameter("cadence_speed_battery_level", self.extra["module_name"])
         self.pm.register_parameter("wheel_revolution_time", self.extra["module_name"], raw_unit="s")
         self.pm.register_parameter("wheel_revolutions", self.extra["module_name"])
-        self.pm.register_parameter("odometer", self.extra["module_name"], raw_unit="m", unit="km", store=True)
+        self.pm.register_parameter("odometer", self.extra["module_name"], raw_unit="m", unit="km", units_allowed=["m", "km", "mi"], store=True)
         self.pm.register_parameter("cadence", self.extra["module_name"], value=num.NAN, raw_unit="RPM")
         self.pm.register_parameter("cadence_notification_beat", self.extra["module_name"])
         self.pm.register_parameter("cadence_speed_device_address", self.extra["module_name"], store=True)

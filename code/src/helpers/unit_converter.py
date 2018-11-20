@@ -18,7 +18,7 @@ class unit_converter():
         self.speed = {"m/s": 1.0, "km/h": 0.2777778, "mi/h": 0.44704}
         self.mass = {"kg": 1.0, "st": 6.350293, "lb": 0.4535924}
         self.slope = {"%", "m/m"}
-        self.pressure = {"Pa": 1.0, "hPa": 100.0, "kPa": 1000.0}
+        self.pressure = {"Pa": 1.0, "hPa": 100.0, "kPa": 1000.0, "mmHg": 133.322, "inHg":3386.375258}
 
     ## Main convert function. Returns value in target units
     #  @param self The python object self

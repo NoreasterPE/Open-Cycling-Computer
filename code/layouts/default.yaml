@@ -689,7 +689,7 @@ pages:
                   show: unit
                   long_click: internal, editor
                   editor:
-                      type: editor_unit_background
+                      type: editor_unit
                       title: Speed unit
                   x: 60
                   y: 50

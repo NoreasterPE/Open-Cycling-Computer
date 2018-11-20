@@ -29,8 +29,8 @@ class bmp280(plugin.plugin):
 
         self.pm = pyplum.pyplum()
         self.pm.register_parameter("pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"], store=True)
-        self.pm.register_parameter("pressure_nof", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"])
-        self.pm.register_parameter("mean_sea_level_pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa"], store=True)
+        self.pm.register_parameter("pressure_nof", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa", 'mmHg', 'inHg'])
+        self.pm.register_parameter("mean_sea_level_pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa", 'mmHg', 'inHg'], store=True)
         self.pm.register_parameter("temperature", self.extra["module_name"], raw_unit="C", unit="C", units_allowed=["C", "F"], store=True)
         self.pm.register_parameter("altitude", self.extra["module_name"], raw_unit="m", unit="m", units_allowed=["m"], store=True)
         self.pm.register_parameter("reference_altitude", self.extra["module_name"], raw_unit="m", store=True)
