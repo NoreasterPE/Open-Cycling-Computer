@@ -32,6 +32,7 @@ class ble_sc(ble_sensor.ble_sensor):
         self.pm.register_parameter("cadence_speed_device_address", self.extra["module_name"], store=True)
         self.pm.request_parameter("ble_scan_done", self.extra["module_name"])
         self.pm.request_parameter("cadence_speed_device_address", self.extra["module_name"])
+        self.pm.request_parameter("cadence_speed_device_name", self.extra["module_name"])
         self.pm.request_parameter("wheel_circumference", self.extra["module_name"])
         self.delegate_class = sc_delegate
         self.editor_fields = {}
@@ -83,17 +84,21 @@ class ble_sc(ble_sensor.ble_sensor):
             self.pm.parameters['ble_scan_done']['value'] = False
             self.set_up_editor()
         if self.pm.parameters["cadence_speed_device_name"]["value"] != self.device_name:
-            # Device name has been changed by ble_scanner
-            if self.pm.parameters["cadence_speed_device_address"]["value"] is None:
-                self.pm.parameters["cadence_speed_device_name"]["value"] = 'Disconnected'
-            self.device_name = self.pm.parameters["cadence_speed_device_name"]["value"]
-            data = self.pm.parameters["cadence_speed_device_name"]["data"]
-            if data is not None:
-                addr = data[1]['addr']
-                # FIXME - that might need to be passed to ble_sensor
-                #addr_type = data[1]['addr_type']
+            # Device name has been changed by editor
+            try:
+                data = self.pm.parameters["cadence_speed_device_name"]["data"][1]
+                name = data['name']
+                self.device_name = name
+                self.pm.parameters["cadence_speed_device_name"]["value"] = name
+                addr = data['addr']
                 self.device_address = addr
                 self.pm.parameters["cadence_speed_device_address"]["value"] = addr
+                # FIXME - that might need to be passed to ble_sensor
+                #addr_type = data[1]['addr_type']
+                if addr is None:
+                    self.pm.parameters["cadence_speed_device_name"]["value"] = 'Disconnected'
+            except TypeError:
+                pass
         if self.pm.parameters["cadence_speed_device_address"]["value"] != self.device_address:
             self.device_address = self.pm.parameters["cadence_speed_device_address"]["value"]
         if self.pm.parameters["cadence_speed_battery_level"]["value"] != self.battery_level:
