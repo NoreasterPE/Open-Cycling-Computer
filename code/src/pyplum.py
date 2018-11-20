@@ -125,7 +125,7 @@ class pyplum(threading.Thread, metaclass=singleton.singleton):
             except RuntimeError as e:
                 if str(e) == 'dictionary changed size during iteration':
                     self.log.debug("New parameter added while copying dictionary. Ignoring..", extra=self.extra)
-            time.sleep(1.0)
+            time.sleep(0.8)
             notify = list()
             for parameter, content in self.parameters.items():
                 curr_val = content['value']
