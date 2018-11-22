@@ -267,6 +267,9 @@ class layout(threading.Thread):
                         value = datetime.datetime.fromtimestamp(int(value)).strftime('%Y-%m-%d')
                     except (ValueError, TypeError):
                         pass
+                elif type(string_format) == dict:
+                    u = self.pm.parameters[parameter]['unit']
+                    string_format = string_format[u]
             except (KeyError, ValueError):
                 string_format = "%.0f"
             try:
