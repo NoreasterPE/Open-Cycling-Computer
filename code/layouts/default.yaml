@@ -647,16 +647,16 @@ pages:
                           w: 120
                           h: 80
 
-                - parameter: ble_scan
-                  short_click: ble_scanner, scan
-                  x: 60
-                  y: 280
-                  text: BLE scan
-                  button:
-                          x0: 0
-                          y0: 240
-                          w: 120
-                          h: 80
+#                - parameter: ble_scan
+#                  short_click: ble_scanner, scan
+#                  x: 60
+#                  y: 280
+#                  text: BLE scan
+#                  button:
+#                          x0: 0
+#                          y0: 240
+#                          w: 120
+#                          h: 80
 
                 - parameter: label
                   text: Screenshots
