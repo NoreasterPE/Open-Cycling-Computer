@@ -1,9 +1,6 @@
 PRIORITY
-- ble scanner/picker [IN PROGRESS]
 
 UI
-- BLE device list expiry time. Currently never expires
-- There is no way to disconnect from a BLE device
 - Fix icon lines width - it's not consistent
 - use transparent background for all icons
 - align on dot, comma, or any non-digit from the righ side
@@ -32,7 +29,6 @@ REAL WORLD PROBLEMS:
 - Do not try to initialise subsystems too many times. If GPS/other sensor is not there it won't magically show up. Log error and give up.
 - Quit/Halt should render some exit screen
 - BLE device name might be too long for assigned space. Split or cut. Use i4oled code if needed.
-- units_allowed should come from unit_converter. Add get_allowed_units function.
 - add description to each parameter in the code. That might be used in the future in layout editor and to generate valid layout values file TBC, maybe doxygen strings?
 
 DATA QUALITY:
@@ -56,7 +52,6 @@ HARDWARE:
 
 OPTIONAL:
 - events/rendering module as plugin would allow to do simulation on a different hardware i.e. in GTK window [IN PROGRESS, gtk_rendering plugin]
-- show all available units in unit editor
 - add text colours to layout
 - short click to show help
     or click to switch value i.e. click on temperature to cycle over min/average/max
@@ -67,10 +62,6 @@ OPTIONAL:
 - Button maps with colour images
 - Auto reload layout on date time of modification change might be handy
 - Explore python-osmgpsmap
-- Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense. slope in % needs different formatting than in m/m
-  unit_format:
-    - %: "%.1f"
-    - m/m: "%.2f"
 
 FUTURE
 - graph area to show some data in time
@@ -275,3 +266,12 @@ TypeError: argument 1 must be pygame.Surface, not None
 139. [DONE] - name "Disconnect' needs to be hanged
 140. [DONE] - make list of fields to be filtered out before writing config. I.e. reset or force_notification are not required in the config file
 141. [DONE] - store only parameters marked with store field
+142. [DONE] - ble scanner/picker [IN PROGRESS]
+143. [DONE] - There is no way to disconnect from a BLE device
+144. [WONTFIX] - BLE device list expiry time. Currently never expires {not needed}
+145. [WONTFIX] - units_allowed should come from unit_converter. Add get_allowed_units function. {Can't be done or odometer will have mm and wheel_circumference km}
+146. [DONE] - show all available units in unit editor
+147. [DONE] - Formating might need to be unit dependent. Showing distance in [m] with decimal point doesnt make sense. slope in % needs different formatting than in m/m
+      unit_format:
+        - %: "%.1f"
+        - m/m: "%.2f"
