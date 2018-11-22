@@ -496,6 +496,9 @@ class layout(threading.Thread):
         elif self.editor_fields["editor"] == 'editor_string' or \
                 self.editor_fields["editor"] == 'editor_unit':
             self.editor_fields["value"] = self.pm.parameters[p]["value"]
+            self.editor_fields["allowed_units"] = ' '
+            for u in self.pm.parameters[p]["units_allowed"]:
+                self.editor_fields["allowed_units"] += u + ' '
             self.pm.plugins['editor'].set_up(self.editor_fields)
         elif self.editor_fields["editor"] == 'editor_list':
             v = self.pm.parameters[p]["value"]
