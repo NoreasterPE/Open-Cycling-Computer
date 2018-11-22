@@ -435,7 +435,12 @@ class layout(threading.Thread):
             self.editor_fields['editor_title'] = ''
             self.log.warning("Function {} marked as editable, but no editor_title field found".format(parameter), extra=self.extra)
         try:
-            self.editor_fields["format"] = field['format']
+            f = field['format']
+            if type(f) == dict:
+                u = self.pm.parameters[parameter]['unit']
+                self.editor_fields["format"] = f[u]
+            else:
+                self.editor_fields["format"] = f
         except KeyError:
             self.editor_fields["format"] = '%.0f'
             self.log.debug("No format found for editing parameter {}, using default format %.0f".format(parameter), extra=self.extra)
