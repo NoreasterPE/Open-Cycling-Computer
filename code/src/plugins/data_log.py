@@ -7,6 +7,7 @@ import logging
 import num
 import plugin
 import pyplum
+import threading
 import time
 import yaml
 
@@ -23,7 +24,7 @@ class data_log(plugin.plugin):
         # Run init for super class
         super().__init__()
         self.pm = pyplum.pyplum()
-        self.pm.register_parameter("data_log_period", self.extra["module_name"], value=0.85, raw_unit='s', store=True)
+        self.pm.register_parameter("data_log_period", self.extra["module_name"], value=1.0, raw_unit='s', store=True)
         self.pm.request_parameter("real_time", self.extra["module_name"])
         self.last_log_entry = 0.0
         self.pm.request_parameter("data_log_config", self.extra["module_name"])
@@ -35,6 +36,8 @@ class data_log(plugin.plugin):
         if self.data_log_config is not None:
             self.read_config()
             self.init_log()
+        self.running = True
+        threading.Timer(self.pm.parameters['data_log_period']['value'], self.add_entry).start()
 
     ## Function that reads config file with data_log format
     #  @param self The python object self
@@ -114,13 +117,6 @@ class data_log(plugin.plugin):
                         self.init_log()
         except KeyError:
             pass
-        try:
-            if self.pm.parameters['real_time']['value'] is not None:
-                if self.pm.parameters['real_time']['value'] - self.last_log_entry > self.pm.parameters['data_log_period']['value']:
-                    self.last_log_entry = self.pm.parameters['real_time']['value']
-                    self.add_entry()
-        except KeyError:
-            pass
 
     ## Function responsible for formatting and adding entries to ride log
     #  @param self The python object self
@@ -158,3 +154,6 @@ class data_log(plugin.plugin):
                     pass
             self.ex[name] = num.sanitise(value)
         self.data_logger.info('', extra=self.ex)
+        # Schedule next data entry event
+        if self.running:
+            threading.Timer(self.pm.parameters['data_log_period']['value'], self.add_entry).start()
