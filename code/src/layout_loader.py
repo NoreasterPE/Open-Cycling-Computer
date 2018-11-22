@@ -4,6 +4,7 @@
 
 import cairo
 import cairo_helper
+import datetime
 import logging
 import pyplum
 import sys
@@ -191,6 +192,47 @@ class layout_loader():
             self.images[image_file] = self.load_image(image_file)
         except KeyError:
             image_file = None
+
+    def format_parameter(self, format_field, parameter, value):
+        if type(format_field) == dict:
+            u = self.pm.parameters[parameter]['unit']
+            format_string = format_field[u]
+        elif format_field is not None:
+            format_string = format_field
+        else:
+            format_string = '%.0f'
+
+        if format_string == "hhmmss.s":
+            try:
+                minutes, seconds = divmod(value, 60)
+                hours, minutes = divmod(minutes, 60)
+                value = "{:02.0f}:{:02.0f}:{:02.1f}".format(hours, minutes, seconds)
+            except TypeError:
+                pass
+        elif format_string == "hhmmss":
+            try:
+                minutes, seconds = divmod(int(value), 60)
+                hours, minutes = divmod(minutes, 60)
+                value = "{:02.0f}:{:02.0f}:{:02.0f}".format(hours, minutes, seconds)
+            except TypeError:
+                pass
+        elif format_string == "time":
+            try:
+                value = datetime.datetime.fromtimestamp(int(value)).strftime('%H:%M:%S')
+            except (TypeError, ValueError):
+                # ValueError: invalid literal for int() with base 10: ''
+                pass
+        elif format_string == "date":
+            try:
+                value = datetime.datetime.fromtimestamp(int(value)).strftime('%Y-%m-%d')
+            except (ValueError, TypeError):
+                pass
+        else:
+            try:
+                value = format_string % float(value)
+            except (TypeError, ValueError):
+                value = format(value)
+        return value, format_string
 
     def load_image(self, image_path):
         try:

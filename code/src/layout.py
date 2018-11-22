@@ -3,7 +3,6 @@
 #   Module responsible for rendering layouts. Needs heavy cleaning...
 
 import cairo
-import datetime
 import layout_loader
 import logging
 import math
@@ -244,38 +243,11 @@ class layout(threading.Thread):
                 except KeyError:
                     value = ""
             try:
-                align = field["align"]
+                format_field = field['format']
             except KeyError:
-                align = "center"
-            try:
-                string_format = field["format"]
-                if string_format == "hhmmss":
-                    try:
-                        minutes, seconds = divmod(int(value), 60)
-                        hours, minutes = divmod(minutes, 60)
-                        value = "{:02.0f}:{:02.0f}:{:02.0f}".format(hours, minutes, seconds)
-                    except TypeError:
-                        pass
-                elif string_format == "time":
-                    try:
-                        value = datetime.datetime.fromtimestamp(int(value)).strftime('%H:%M:%S')
-                    except (TypeError, ValueError):
-                        # ValueError: invalid literal for int() with base 10: ''
-                        pass
-                elif string_format == "date":
-                    try:
-                        value = datetime.datetime.fromtimestamp(int(value)).strftime('%Y-%m-%d')
-                    except (ValueError, TypeError):
-                        pass
-                elif type(string_format) == dict:
-                    u = self.pm.parameters[parameter]['unit']
-                    string_format = string_format[u]
-            except (KeyError, ValueError):
-                string_format = "%.0f"
-            try:
-                uv = string_format % float(value)
-            except (TypeError, ValueError):
-                uv = format(value)
+                format_field = None
+            value, format_string = self.ll.format_parameter(format_field, parameter, value)
+
             variable = None
             # Get icon image
             try:
@@ -284,14 +256,14 @@ class layout(threading.Thread):
                 image_path = None
             try:
                 variable = field['variable']
-                value = self.pm.parameters[variable["name"]]["value"]
+                v = self.pm.parameters[variable["name"]]["value"]
                 try:
                     # If there is a variable with frames defined prepare path for relevant icon
                     frames = field['variable']['frames']
-                    if value > frames:
-                        self.log.error("Variable {} value {} is greater than number of frames ({}) for image file {}".format(variable['name'], value, frames, image_path), extra=self.extra)
-                        value = frames
-                    image_path = self.make_image_key(image_path, value)
+                    if v > frames:
+                        self.log.error("Variable {} value {} is greater than number of frames ({}) for image file {}".format(variable['name'], v, frames, image_path), extra=self.extra)
+                        v = frames
+                    image_path = self.make_image_key(image_path, v)
                 except KeyError:
                     pass
             except (KeyError, TypeError):
@@ -308,7 +280,11 @@ class layout(threading.Thread):
                 # Fall back to page font size
                 fs = self.ll.page_font_size
             self.ctx.set_font_size(fs)
-            te = self.ctx.text_extents(uv)
+            te = self.ctx.text_extents(value)
+            try:
+                align = field["align"]
+            except KeyError:
+                align = "center"
             if align == 'center':
                 x_shift = -1.0 * te.width / 2.0
             elif align == 'right':
@@ -319,19 +295,19 @@ class layout(threading.Thread):
                 x_shift = 0.0
             # 18 is font size for which font_extents has height. So far no scaled_font_extents function
             y_shift = 0.5 * self.font_extents[2] * fs / 18
-            if string_format != "zoomed_digit":
-                self.text_to_surface(uv, position_x + x_shift, position_y + y_shift, self.ll.text_colour)
+            if format_string != "zoomed_digit":
+                self.text_to_surface(value, position_x + x_shift, position_y + y_shift, self.ll.text_colour)
             else:
                 SCALE = 1.4
-                uv = self.editor_fields["value"]
+                value = self.editor_fields["value"]
                 i = self.editor_fields["index"]
                 #Head
-                rv1 = uv[:i]
+                rv1 = value[:i]
                 te1 = self.ctx.text_extents(rv1)
                 #Tail
-                rv3 = uv[i + 1:]
+                rv3 = value[i + 1:]
                 #Currently edited digit
-                rv2 = uv[i]
+                rv2 = value[i]
                 self.ctx.set_font_size(SCALE * fs)
                 te2 = self.ctx.text_extents(rv2)
 
