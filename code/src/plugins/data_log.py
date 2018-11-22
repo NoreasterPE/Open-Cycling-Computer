@@ -130,9 +130,16 @@ class data_log(plugin.plugin):
                 self.log.debug("There is no {} in available paameters".format(name), extra=self.extra)
                 continue
             string_format = self.parameter_format[name]
-            if string_format == "hhmmss":
+            if string_format == "hhmmss.s":
                 try:
-                    minutes, seconds = divmod(int(value), 60)
+                    minutes, seconds = divmod(value, 60)
+                    hours, minutes = divmod(minutes, 60)
+                    value = "{:02.0f}:{:02.0f}:{:02.1f}".format(hours, minutes, seconds)
+                except (TypeError, ValueError):
+                    pass
+            elif string_format == "hhmmss":
+                try:
+                    minutes, seconds = divmod(value, 60)
                     hours, minutes = divmod(minutes, 60)
                     value = "{:02.0f}:{:02.0f}:{:02.0f}".format(hours, minutes, seconds)
                 except (TypeError, ValueError):
