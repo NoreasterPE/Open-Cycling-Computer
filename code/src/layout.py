@@ -165,14 +165,7 @@ class layout(threading.Thread):
     def render_layout(self):
         for field in self.ll.current_page['fields']:
             parameter = field['parameter']
-            try:
-                position_x = field['x']
-            except KeyError:
-                position_x = 0
-            try:
-                position_y = field['y']
-            except KeyError:
-                position_y = 0
+            position_x, position_y = self.ll.get_position(field)
             # Show value of parameter by default
             try:
                 show = field["show"]

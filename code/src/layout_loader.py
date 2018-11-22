@@ -249,3 +249,14 @@ class layout_loader():
     def png_to_cairo_surface(self, file_path):
         png_surface = cairo.ImageSurface.create_from_png(file_path)
         return png_surface
+
+    def get_position(self, field):
+        try:
+            x = field['x']
+        except KeyError:
+            x = 0
+        try:
+            y = field['y']
+        except KeyError:
+            y = 0
+        return x, y
