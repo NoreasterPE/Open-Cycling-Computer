@@ -4,6 +4,7 @@ UI
 - Fix icon lines width - it's not consistent
 - use transparent background for all icons
 - align on dot, comma, or any non-digit from the righ side
+- add editing reference altitude units
 
 CODING STYLE:
 - split layout parsing and rendering [IN PROGRESS]
