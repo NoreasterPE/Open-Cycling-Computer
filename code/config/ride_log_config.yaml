@@ -6,7 +6,7 @@ columns:
   - name: session_time
     parameter: session_time
     description:  "Session"
-    format: hhmmss
+    format: hhmmss.s
   - name: speed
     parameter: speed
     description:  "Speed"
