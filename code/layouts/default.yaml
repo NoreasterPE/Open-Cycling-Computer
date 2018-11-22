@@ -889,6 +889,11 @@ pages:
                   y: 160
                   font_size: 60
 
+#                - parameter: allowed_units
+#                  font_size: 30
+#                  x: 120
+#                  y: 220
+
                 - parameter: previous_unit
                   short_click: editor, previous_unit
                   x: 60
