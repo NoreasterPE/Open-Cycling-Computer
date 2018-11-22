@@ -74,11 +74,14 @@ pages:
                 - parameter: slope
                   x: 50
                   y: 200
-                  font_size: 50
+                  font_size: 45
+                  format:
+                    m/m: "%.2f"
+                    "%": "%.0f"
 
                 - parameter: slope
                   show: unit
-                  x: 105
+                  x: 100
                   y: 230
 
                 - parameter: slope_icon
@@ -456,9 +459,12 @@ pages:
                   editor:
                       type: editor_numbers
                       title: Mean sea lvl press.
-                  x: 165
+                  x: 160
                   y: 130
                   font_size: 30
+                  format:
+                    hPa: "%.0f"
+                    inHg: "%.2f"
                   button:
                           x0: 120
                           y0: 80
