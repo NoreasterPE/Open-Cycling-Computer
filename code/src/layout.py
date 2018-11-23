@@ -348,13 +348,11 @@ class layout(threading.Thread):
                     self.parse_short_click(field)
             self.pm.render['refresh'] = True
         elif click == 'LONG':
-            # FIXME simplify, single loop has to be enough
             for parameter, r in self.ll.button_rectangles.items():
                 if self.point_in_rect(position, r[1]):
                     self.log.debug("LONG CLICK on {} {}".format(parameter, r), extra=self.extra)
-                    for field in self.ll.current_page['fields']:
-                        if self.get_meta_name(field) == parameter:
-                            self.parse_long_click(field, r[0])
+                    field = self.ll.current_page_d['parameters'][parameter]
+                    self.parse_long_click(field, r[0])
         elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
             self.next_page()
         elif click == 'L_TO_R':  # Swipe LEFT to RIGHT
