@@ -341,13 +341,11 @@ class layout(threading.Thread):
 
     def check_click(self, position, click):
         if click == 'SHORT':
-            # FIXME simplify, single loop has to be enough
             for parameter, r in self.ll.button_rectangles.items():
                 if self.point_in_rect(position, r[1]):
                     self.log.debug("CLICK on {} {}".format(parameter, r), extra=self.extra)
-                    for field in self.ll.current_page['fields']:
-                        if field['parameter'] == parameter:
-                            self.parse_short_click(field)
+                    field = self.ll.current_page_d['parameters'][parameter]
+                    self.parse_short_click(field)
             self.pm.render['refresh'] = True
         elif click == 'LONG':
             # FIXME simplify, single loop has to be enough
