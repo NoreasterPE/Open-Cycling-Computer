@@ -51,7 +51,6 @@ class layout_loader():
             return
         self.load_layout_tree()
         self.pages = {}
-        self.pages_d = dict()
         for page in self.layout_tree['pages']:
             try:
                 page_id = page['id']
@@ -61,16 +60,14 @@ class layout_loader():
             if 'type' not in page:
                 page['type'] = None
             self.pages[page_id] = page
-
-            self.pages_d[page_id] = page
-            self.pages_d[page_id]['parameters'] = dict()
+            self.pages[page_id]['parameters'] = dict()
             try:
                 for f in page['fields']:
                     try:
                         meta_name = f['parameter'] + "_" + f['show']
                     except KeyError:
                         meta_name = f['parameter']
-                    self.pages_d[page_id]['parameters'][meta_name] = f
+                    self.pages[page_id]['parameters'][meta_name] = f
             except TypeError:
                 pass
 
@@ -120,7 +117,6 @@ class layout_loader():
         self.pm.render['refresh'] = True
         try:
             self.current_page = self.pages[page_id]
-            self.current_page_d = self.pages_d[page_id]
         except KeyError:
             if page_id == 'page_0':
                 self.log.critical("Cannot load default page_0. Quitting.".format(page_id), extra=self.extra)
