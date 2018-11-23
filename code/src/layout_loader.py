@@ -182,8 +182,8 @@ class layout_loader():
                         int(b['w']),
                         int(b['h']))
             except KeyError:
-                self.log.critical("Button field present, but invalid x0, y0, w or b detected at parameter {} on page {}.".format(name, self.current_page), extra=self.extra)
-                self.log.critical("Button for {} won't work.".format(name), extra=self.extra)
+                self.log.error("Button field present, but invalid x0, y0, w or b detected at parameter {} on page {}.".format(name, self.current_page), extra=self.extra)
+                self.log.error("Button for {} won't work.".format(name), extra=self.extra)
             self.button_rectangles[meta_name] = (name, rect)
         except KeyError:
             pass
