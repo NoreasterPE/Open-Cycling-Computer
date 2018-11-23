@@ -187,11 +187,6 @@ class layout_loader():
             self.button_rectangles[meta_name] = (name, rect)
         except KeyError:
             pass
-        try:
-            image_file = field['file']
-            self.images[image_file] = self.load_image(image_file)
-        except KeyError:
-            image_file = None
 
     def format_parameter(self, format_field, parameter, value):
         if type(format_field) == dict:
