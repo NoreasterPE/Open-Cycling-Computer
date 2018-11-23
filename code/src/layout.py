@@ -247,26 +247,27 @@ class layout(threading.Thread):
                 image_path = field['file']
             except KeyError:
                 image_path = None
+            # Get icon image for parameter current value
             try:
                 variable = field['variable']
-                v = self.pm.parameters[variable["name"]]["value"]
-                try:
-                    # If there is a variable with frames defined prepare path for relevant icon
-                    frames = field['variable']['frames']
-                    if v > frames:
-                        self.log.error("Variable {} value {} is greater than number of frames ({}) for image file {}".format(variable['name'], v, frames, image_path), extra=self.extra)
-                        v = frames
-                    image_path = self.make_image_key(image_path, v)
-                except KeyError:
-                    pass
+                p = variable["name"]
+                # Get current value of the parameter
+                v = self.pm.parameters[p]["value"]
+                # Get number of frames
+                frames = field['variable']['frames']
+                if v > frames:
+                    self.log.error("Variable {} value {} is greater than number of frames ({}) for image file {}".format(p, v, frames, image_path), extra=self.extra)
+                    v = frames
+                image_path = self.make_image_key(image_path, v)
             except (KeyError, TypeError):
                 pass
-            if image_path is not None:
-                if image_path not in self.ll.images:
-                    self.ll.images[image_path] = self.ll.load_image(image_path)
+            if image_path is not None and image_path not in self.ll.images:
+                self.ll.images[image_path] = self.ll.load_image(image_path)
+            try:
                 image = self.ll.images[image_path]
-                if image is not None:
-                    self.image_to_surface(image, position_x, position_y)
+                self.image_to_surface(image, position_x, position_y)
+            except KeyError:
+                pass
             try:
                 fs = field['font_size']
             except KeyError:
