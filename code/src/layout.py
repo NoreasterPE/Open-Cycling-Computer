@@ -84,6 +84,7 @@ class layout(threading.Thread):
                 self.hide_overlay()
             if len(self.overlay_queue) > 0:
                 self.show_overlay()
+            #FIXME the try is too wide
             try:
                 event = self.pm.event_queue.get(block=True, timeout=1)
                 ev_type = event[0]
