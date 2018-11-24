@@ -437,6 +437,11 @@ pages:
                   x: 165
                   y: 50
                   font_size: 30
+                  format:
+                    mm: '%.0f'
+                    cm: '%.1f'
+                    m: '%.3f'
+                    in: '%.1f'
                   button:
                           x0: 120
                           y0: 0
