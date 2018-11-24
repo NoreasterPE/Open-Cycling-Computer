@@ -168,13 +168,12 @@ class layout(threading.Thread):
         ru = self.pm.parameters[parameter]["raw_unit"]
         u = self.pm.parameters[parameter]["unit"]
         value = self.uc.convert(v, ru, u)
-        value = num.sanitise(value)
-        return value
+        self.value = num.sanitise(value)
 
     def render_layout(self):
         for field in self.ll.current_page['fields']:
             parameter = field['parameter']
-            position_x, position_y = self.ll.get_position(field)
+            self.pos_x, self.pos_y = self.ll.get_position(field)
             try:
                 show = field["show"]
             except KeyError:
@@ -184,43 +183,45 @@ class layout(threading.Thread):
                 # For editors use parameter value from editor_fields
                 if self.ll.current_page["type"] == "editor":
                     try:
-                        value = self.editor_fields[parameter]
-                        if type(value) is tuple:
-                            value = value[0]
+                        self.value = self.editor_fields[parameter]
+                        if type(self.value) is tuple:
+                            self.value = self.value[0]
                     except (KeyError, TypeError):
-                        value = None
+                        self.value = None
                 else:
                     try:
-                        value = self.get_value(parameter, 'value')
+                        self.get_value(parameter, 'value')
                     except (KeyError, TypeError):
-                        value = None
+                        self.value = None
             elif show == "tenths":
                 try:
-                    value = self.get_value(parameter, 'value')
-                    tenths_string = "{}".format(value - int(value))
-                    value = format(tenths_string)[2:3]
+                    self.get_value(parameter, 'value')
+                    tenths_string = "{}".format(self.value - int(self.value))
+                    self.value = format(tenths_string)[2:3]
                 except (KeyError, TypeError, ValueError):
-                    value = None
+                    self.value = None
             elif show == "unit":
                 try:
-                    value = self.pm.parameters[parameter]["unit"]
+                    self.value = self.pm.parameters[parameter]["unit"]
                 except KeyError:
-                    value = None
+                    self.value = None
             elif show in ('min', 'avg', 'max'):
                 try:
-                    value = self.get_value(parameter, 'value_' + show)
+                    self.get_value(parameter, 'value_' + show)
                 except KeyError:
-                    value = None
-            if value is None:
+                    self.value = None
+            # Try to use field 'text' if there is no value determined so far
+            if self.value is None:
                 try:
-                    value = field['text']
+                    self.value = field['text']
                 except KeyError:
-                    value = ""
+                    self.value = ""
+            # Get format field and format parameter using it
             try:
                 format_field = field['format']
             except KeyError:
                 format_field = None
-            value, format_string = self.ll.format_parameter(format_field, parameter, value)
+            self.value, format_string = self.ll.format_parameter(format_field, parameter, self.value)
 
             variable = None
             # Get icon image
@@ -246,54 +247,60 @@ class layout(threading.Thread):
                 self.ll.images[image_path] = self.ll.load_image(image_path)
             try:
                 image = self.ll.images[image_path]
-                self.image_to_surface(image, position_x, position_y)
+                self.image_to_surface(image, self.pos_x, self.pos_y)
             except KeyError:
                 pass
+            # Get font size or if it's not defined fall back to the page font size
             try:
-                fs = field['font_size']
+                self.fs = field['font_size']
             except KeyError:
                 # Fall back to page font size
-                fs = self.ll.page_font_size
-            self.ctx.set_font_size(fs)
-            te = self.ctx.text_extents(value)
+                self.fs = self.ll.page_font_size
+            self.ctx.set_font_size(self.fs)
+            self.te = self.ctx.text_extents(self.value)
+            # Get text alignment or if it's not defined use center
             try:
                 align = field["align"]
             except KeyError:
                 align = "center"
+            # Calculate text horizontal shift
             if align == 'center':
-                x_shift = -1.0 * te.width / 2.0
+                self.shift_x = -1.0 * self.te.width / 2.0
             elif align == 'right':
-                x_shift = -1.0 * te.width
+                self.shift_x = -1.0 * self.te.width
             elif align == 'left':
-                x_shift = 0.0
+                self.shift_x = 0.0
             else:
-                x_shift = 0.0
+                self.shift_x = 0.0
             # 18 is font size for which font_extents has height. So far no scaled_font_extents function
-            y_shift = 0.5 * self.font_extents[2] * fs / 18
+            self.shift_y = 0.5 * self.font_extents[2] * self.fs / 18
             if format_string != "zoomed_digit":
-                self.text_to_surface(value, position_x + x_shift, position_y + y_shift, self.ll.text_colour)
+                self.text_to_surface(self.value, self.pos_x + self.shift_x, self.pos_y + self.shift_y, self.ll.text_colour)
             else:
-                SCALE = 1.4
-                value = self.editor_fields["value"]
-                i = self.editor_fields["index"]
-                #Head
-                rv1 = value[:i]
-                te1 = self.ctx.text_extents(rv1)
-                #Tail
-                rv3 = value[i + 1:]
-                #Currently edited digit
-                rv2 = value[i]
-                self.ctx.set_font_size(SCALE * fs)
-                te2 = self.ctx.text_extents(rv2)
+                self.render_zoomed_digit_text()
 
-                rv1_x = position_x - te.width / 2.0
-                rv2_x = position_x - te.width / 2.0 + te1.x_advance
-                rv3_x = position_x - te.width / 2.0 + te1.x_advance + te2.x_advance
+    def render_zoomed_digit_text(self):
+        SCALE = 1.4
+        self.value = self.editor_fields["value"]
+        i = self.editor_fields["index"]
+        #Head
+        rv1 = self.value[:i]
+        te1 = self.ctx.text_extents(rv1)
+        #Tail
+        rv3 = self.value[i + 1:]
+        #Currently edited digit
+        rv2 = self.value[i]
+        self.ctx.set_font_size(SCALE * self.fs)
+        te2 = self.ctx.text_extents(rv2)
 
-                self.text_to_surface(rv2, rv2_x, position_y + SCALE * y_shift, (1.0, 0.0, 0.0))
-                self.ctx.set_font_size(fs)
-                self.text_to_surface(rv1, rv1_x, position_y + y_shift, self.ll.text_colour)
-                self.text_to_surface(rv3, rv3_x, position_y + y_shift, self.ll.text_colour)
+        rv1_x = self.pos_x - self.te.width / 2.0
+        rv2_x = self.pos_x - self.te.width / 2.0 + te1.x_advance
+        rv3_x = self.pos_x - self.te.width / 2.0 + te1.x_advance + te2.x_advance
+
+        self.text_to_surface(rv2, rv2_x, self.pos_y + SCALE * self.shift_y, (1.0, 0.0, 0.0))
+        self.ctx.set_font_size(self.fs)
+        self.text_to_surface(rv1, rv1_x, self.pos_y + self.shift_y, self.ll.text_colour)
+        self.text_to_surface(rv3, rv3_x, self.pos_y + self.shift_y, self.ll.text_colour)
 
     def render_all_buttons(self):
         # LAYOUT DEBUG FUNCION
@@ -437,13 +444,13 @@ class layout(threading.Thread):
         self.editor_fields["index"] = 0
         if self.editor_fields["editor"] == 'editor_numbers':
             self.editor_fields["raw_value"] = self.pm.parameters[p]["value"]
-            value = self.uc.convert(self.pm.parameters[p]["value"],
+            self.value = self.uc.convert(self.pm.parameters[p]["value"],
                                     self.pm.parameters[p]["raw_unit"],
                                     self.pm.parameters[p]["unit"])
             try:
-                self.editor_fields["value"] = self.editor_fields["format"] % value
+                self.editor_fields["value"] = self.editor_fields["format"] % self.value
             except TypeError:
-                self.editor_fields["value"] = value
+                self.editor_fields["value"] = self.value
             self.pm.plugins['editor'].set_up(self.editor_fields)
         elif self.editor_fields["editor"] == 'editor_string' or \
                 self.editor_fields["editor"] == 'editor_unit':
@@ -540,8 +547,8 @@ class layout(threading.Thread):
         self.ctx.fill()
 
     #FIXME Needs to go to layout_loader
-    def make_image_key(self, image_path, value):
-        suffix = "_" + format(value)
+    def make_image_key(self, image_path):
+        suffix = "_" + format(self.value)
         extension = image_path[-4:]
         name = image_path[:-4]
         return (name + suffix + extension)
