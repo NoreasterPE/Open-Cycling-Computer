@@ -175,12 +175,13 @@ class layout(threading.Thread):
         for field in self.ll.current_page['fields']:
             parameter = field['parameter']
             position_x, position_y = self.ll.get_position(field)
-            # Show value of parameter by default
             try:
                 show = field["show"]
             except KeyError:
+                # Show value of parameter by default
                 show = "value"
             if show == "value":
+                # For editors use parameter value from editor_fields
                 if self.ll.current_page["type"] == "editor":
                     try:
                         value = self.editor_fields[parameter]
