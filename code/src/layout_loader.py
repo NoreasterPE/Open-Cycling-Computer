@@ -212,14 +212,14 @@ class layout_loader():
                 minutes, seconds = divmod(value, 60)
                 hours, minutes = divmod(minutes, 60)
                 value = "{:02.0f}:{:02.0f}:{:02.1f}".format(hours, minutes, seconds)
-            except TypeError:
+            except (TypeError, ValueError):
                 pass
         elif format_string == "hhmmss":
             try:
                 minutes, seconds = divmod(int(value), 60)
                 hours, minutes = divmod(minutes, 60)
                 value = "{:02.0f}:{:02.0f}:{:02.0f}".format(hours, minutes, seconds)
-            except TypeError:
+            except (TypeError, ValueError):
                 pass
         elif format_string == "time":
             try:
