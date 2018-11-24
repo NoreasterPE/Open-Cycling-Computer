@@ -571,7 +571,7 @@ pages:
          background_image: images/background_2_x_4.png
          buttons_image: images/button_pressed.png
          font: "Gidole-Regular.ttf"
-         font_size: 24
+         font_size: 20
          text_colour: FFFFFF
          fields:
                 - parameter: halt
