@@ -206,19 +206,9 @@ class layout(threading.Thread):
                     value = self.pm.parameters[parameter]["unit"]
                 except KeyError:
                     value = None
-            elif show == "min":
+            elif show in ('min', 'avg', 'max'):
                 try:
-                    value = self.get_value(parameter, 'value_min')
-                except KeyError:
-                    value = None
-            elif show == "avg":
-                try:
-                    value = self.get_value(parameter, 'value_avg')
-                except KeyError:
-                    value = None
-            elif show == "max":
-                try:
-                    value = self.get_value(parameter, 'value_max')
+                    value = self.get_value(parameter, 'value_' + show)
                 except KeyError:
                     value = None
             if value is None:
