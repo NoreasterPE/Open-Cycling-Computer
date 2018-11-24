@@ -163,6 +163,14 @@ class layout(threading.Thread):
             self.render_layout()
         self.pm.render['refresh'] = True
 
+    def get_value(self, parameter, vtype):
+        v = self.pm.parameters[parameter][vtype]
+        ru = self.pm.parameters[parameter]["raw_unit"]
+        u = self.pm.parameters[parameter]["unit"]
+        value = self.uc.convert(v, ru, u)
+        value = num.sanitise(value)
+        return value
+
     def render_layout(self):
         for field in self.ll.current_page['fields']:
             parameter = field['parameter']
@@ -182,19 +190,12 @@ class layout(threading.Thread):
                         value = None
                 else:
                     try:
-                        v = self.pm.parameters[parameter]["value"]
-                        ru = self.pm.parameters[parameter]["raw_unit"]
-                        u = self.pm.parameters[parameter]["unit"]
-                        value = self.uc.convert(v, ru, u)
-                        value = num.sanitise(value)
+                        value = self.get_value(parameter, 'value')
                     except (KeyError, TypeError):
                         value = None
             elif show == "tenths":
                 try:
-                    v = self.pm.parameters[parameter]["value"]
-                    ru = self.pm.parameters[parameter]["raw_unit"]
-                    u = self.pm.parameters[parameter]["unit"]
-                    value = self.uc.convert(v, ru, u)
+                    value = self.get_value(parameter, 'value')
                     tenths_string = "{}".format(value - int(value))
                     value = format(tenths_string)[2:3]
                 except (KeyError, TypeError, ValueError):
@@ -206,29 +207,17 @@ class layout(threading.Thread):
                     value = None
             elif show == "min":
                 try:
-                    v = self.pm.parameters[parameter]["value_min"]
-                    ru = self.pm.parameters[parameter]["raw_unit"]
-                    u = self.pm.parameters[parameter]["unit"]
-                    value = self.uc.convert(v, ru, u)
-                    value = num.sanitise(value)
+                    value = self.get_value(parameter, 'value_min')
                 except KeyError:
                     value = None
             elif show == "avg":
                 try:
-                    v = self.pm.parameters[parameter]["value_avg"]
-                    ru = self.pm.parameters[parameter]["raw_unit"]
-                    u = self.pm.parameters[parameter]["unit"]
-                    value = self.uc.convert(v, ru, u)
-                    value = num.sanitise(value)
+                    value = self.get_value(parameter, 'value_avg')
                 except KeyError:
                     value = None
             elif show == "max":
                 try:
-                    v = self.pm.parameters[parameter]["value_max"]
-                    ru = self.pm.parameters[parameter]["raw_unit"]
-                    u = self.pm.parameters[parameter]["unit"]
-                    value = self.uc.convert(v, ru, u)
-                    value = num.sanitise(value)
+                    value = self.get_value(parameter, 'value_max')
                 except KeyError:
                     value = None
             if value is None:
