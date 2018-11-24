@@ -652,19 +652,29 @@ pages:
                           w: 120
                           h: 80
 
-#                - parameter: ble_scan
-#                  short_click: ble_scanner, scan
-#                  x: 60
-#                  y: 280
-#                  text: BLE scan
-#                  button:
-#                          x0: 0
-#                          y0: 240
-#                          w: 120
-#                          h: 80
+                - parameter: label
+                  x: 60
+                  y: 255
+                  text: Reference alt.
+
+                - parameter: reference_altitude
+                  show: unit
+                  long_click: internal, editor
+                  editor:
+                      type: editor_unit
+                      title: Reference alt. unit
+                  x: 60
+                  y: 280
+                  font_size: 20
+                  button:
+                          x0: 0
+                          y0: 240
+                          w: 120
+                          h: 80
 
                 - parameter: label
                   text: Screenshots
+                  font_size: 20
                   x: 180
                   y: 250
 
