@@ -199,14 +199,7 @@ class layout_loader():
             pass
 
     def format_parameter(self, format_field, parameter, value):
-        if type(format_field) == dict:
-            u = self.pm.parameters[parameter]['unit']
-            format_string = format_field[u]
-        elif format_field is not None:
-            format_string = format_field
-        else:
-            format_string = '%.0f'
-
+        format_string = self.get_format_string(format_field, parameter)
         if format_string == "hhmmss.s":
             try:
                 minutes, seconds = divmod(value, 60)
@@ -250,6 +243,15 @@ class layout_loader():
             self.log.warning("image path path = {}".format(image_path), extra=self.extra)
             image = None
         return image
+
+    def get_format_string(self, format_field, parameter):
+        format_string = '%.0f'
+        if type(format_field) == dict:
+            u = self.pm.parameters[parameter]['unit']
+            format_string = format_field[u]
+        elif format_field is not None:
+            format_string = format_field
+        return format_string
 
     def png_to_cairo_surface(self, file_path):
         png_surface = cairo.ImageSurface.create_from_png(file_path)
