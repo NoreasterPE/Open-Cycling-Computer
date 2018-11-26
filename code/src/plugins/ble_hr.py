@@ -61,13 +61,16 @@ class ble_hr(ble_sensor.ble_sensor):
         self.log.debug("heart rate = {} @ {}".format(self.pm.parameters["heart_rate"]["value"], time.strftime("%H:%M:%S", time.localtime(self.pm.parameters["heart_rate"]["time_stamp"]))), extra=self.extra)
 
     def notification(self):
+        # BLE Scan end, consume results using editor_list
         if self.pm.parameters['ble_scan_done']['value'] and \
                 self.pm.parameters['ble_scan_results']['value'] == 'heart_rate':
             self.pm.parameters['ble_scan_done']['value'] = False
+            if self.connected or self.device_name is not None:
+                self.pm.parameters['ble_scan_results']['data'].append({'name': 'Disconnect', 'addr': None, 'addr_type': None})
             self.set_up_editor()
+
+        # Device name has been changed by editor
         if self.pm.parameters["heart_rate_device_name"]["value"] != self.device_name:
-            # Device name has been changed by editor
-            self.device_name = self.pm.parameters["heart_rate_device_name"]["value"]
             try:
                 data = self.pm.parameters["heart_rate_device_name"]["data"][1]
                 name = data['name']
@@ -78,20 +81,22 @@ class ble_hr(ble_sensor.ble_sensor):
                 self.pm.parameters["heart_rate_device_address"]["value"] = addr
                 # FIXME - that might need to be passed to ble_sensor
                 #addr_type = data[1]['addr_type']
-                if addr is None:
-                    self.pm.parameters["heart_rate_device_name"]["value"] = 'Disconnected'
             except TypeError:
                 pass
+
+        # Device address changed
         if self.pm.parameters["heart_rate_device_address"]["value"] != self.device_address:
             self.device_address = self.pm.parameters["heart_rate_device_address"]["value"]
+            if self.device_address is None:
+                self.pm.parameters["heart_rate_device_name"]["value"] = 'Disconnected'
+                self.device_name = self.pm.parameters["heart_rate_device_name"]["value"]
+                self.safe_disconnect()
+
+        # Update battery level, level read from physical sensor
         if self.pm.parameters["heart_rate_battery_level"]["value"] != self.battery_level:
             self.pm.parameters["heart_rate_battery_level"]["value"] = self.battery_level
 
     def find_heart_rate_device(self):
-        #FIXME remote plugin method starting to be added by events queue
-        # Add option for null device
-        # Add option to set up & start editor? Or in ble_sensor?
-        # Add option to set up animation
         self.pm.plugins['ble_scanner'].find_ble_device('heart_rate')
 
     def set_up_editor(self):
