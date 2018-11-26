@@ -1,3 +1,15 @@
+v0.13
+- More formats, units and layouts
+- BLE scanning and device selection
+- More flexibility in layout/plugin design with long_click and short_click calls
+- Updated documentation [WIP]
+- Approximate gear ratio calculation in bicycle plugin
+- Graphical overlays to show messages to the user. Used for BLE scanning and battery status
+- Pimoroni LiPo shim plugin to show battery status
+- Split data dumping and writing to file to avoid file corruption
+- Fixed problem with finger on the screen, but not moving (long click)
+- Code cleaning and hardening
+
 v0.12
 - plugin methods can be linked to layout buttons, i.e short click on button runs method "do_something_awesome" from plugin "my_plugin"
 - page text colour is now used
