@@ -82,6 +82,3 @@ class pitft_touchscreen(plugin.plugin):
             self.device.write(evdev.ecodes.SYN_REPORT, 0, 0)
         except AttributeError:
             pass
-
-    def __del__(self):
-        self.stop()

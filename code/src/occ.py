@@ -27,16 +27,12 @@ class open_cycling_computer(object, metaclass=singleton.singleton):
     ## The constructor
     #  @param self The python object self
     #  @param config_file Location of config file
-    #  @param width Width of screen or window. Default value is 240 pixels
-    #  @param height Height of screen or window.  Default value is 320 pixels
+    #  @param layout_file Location of layout file
+    #  @param fonts_dir Location of font directory
     def __init__(self, config_file=None, layout_file=None, fonts_dir=None):
         ## @var log
         #  Handle to system logger
         self.log = logging.getLogger('system')
-        ## @var cleaning
-        #  Variable indicating is cleaning is in progress
-        self.cleaning = False
-        self.log.debug("Getting plugin manager pyplum", extra=self.extra)
         ## @var pm
         #  Handle to pyplum instance
         self.pm = pyplum.pyplum()
@@ -44,10 +40,6 @@ class open_cycling_computer(object, metaclass=singleton.singleton):
         self.pm.register_parameter("config_file", self.extra["module_name"], value=config_file)
         self.pm.register_parameter("layout_file", self.extra["module_name"], value=layout_file)
         self.pm.register_parameter("fonts_dir", self.extra["module_name"], value=fonts_dir)
-        ## @var ble_scanner
-        #  Handle to ble_scanner instance
-        ##self.log.debug("Initialising ble_scanner", extra=self.extra)
-        ##self.ble_scanner = ble_scanner(self)
         ## @var layout
         #  Handle to layout instance
         self.layout = layout.layout()
@@ -60,12 +52,14 @@ class open_cycling_computer(object, metaclass=singleton.singleton):
     #  @param self The python object self
     def stop(self):
         self.log.debug("occ stop called", extra=self.extra)
+        self.pm.plugins['syscalls'].quit()
 
 
 ## Quit handler, triggers cleanup function after SIGTERM or SIGINT
 #  @param signal TBC
 #  @param frame TBC
 def quit_handler(signal, frame):
+    main_window = open_cycling_computer()
     main_window.stop()
 
 
@@ -124,7 +118,6 @@ if __name__ == "__main__":
                'data_log',
                'syscalls']
     p_manager.load_plugins('plugins', plugins)
-    # Above code could be replaced with p_manager.load_all_plugins(), it's here for testing
     sys_logger.debug("Starting plugin manager", extra=ex)
     p_manager.start()
     ## @var main_window
@@ -132,6 +125,5 @@ if __name__ == "__main__":
     main_window = open_cycling_computer(config_file, layout_file, fonts_dir)
     sys_logger.debug("Starting events loop", extra=ex)
     main_window.events.run()
-    main_window.stop()
     p_manager.stop()
     sys_logger.debug("Log end", extra=ex)
