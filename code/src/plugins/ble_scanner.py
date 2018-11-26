@@ -67,10 +67,6 @@ class ble_scanner(plugin.plugin):
                     if local_name is None:
                         local_name = dev.addr
                 devices.append(dict(addr=dev.addr, name=local_name, addr_type=dev.addrType, rss=dev.rssi))
-        # Add null device used to disconnect currently connected device
-        # FIXME That might be conditional, dependng on currently connected device
-        # To be fixed after the code is split into ble_sc/ble_hr and ble_scanner part
-        devices.append(dict(addr=None, name='Disconnect', addr_type=None, rss=0))
         self.ble_devices = sorted(devices, key=lambda k: k['rss'], reverse=True)
         self.pm.parameters['ble_scan_results']['value'] = self.current_device_type
         self.current_device_type = None
@@ -95,6 +91,7 @@ class ble_scanner(plugin.plugin):
         threading.Thread(target=self.scan).start()
 
     def set_up_ble_scan_animation(self):
+        #FIXME tidy it up, flexible time, etc.
         if self.pm.event_queue is not None:
             for i in range(1):
                 self.pm.event_queue.put(('show_overlay', 'images/ol_ble_scanning.png', 1.0))
