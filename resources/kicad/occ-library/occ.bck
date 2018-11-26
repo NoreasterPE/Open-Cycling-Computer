@@ -1,8 +1,11 @@
 EESchema-DOCLIB  Version 2.0
 #
-$CMP C
-D Unpolarized capacitor
-K cap capacitor
+$CMP bmp_280
+D Pressure and temperature sensor Bosch bmp280
+$ENDCMP
+#
+$CMP ds3231
+D Pressure and temperature sensor Bosch bmp280
 $ENDCMP
 #
 #End Doc Library

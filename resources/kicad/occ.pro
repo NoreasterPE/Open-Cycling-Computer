@@ -1,4 +1,4 @@
-update=nie, 23 wrz 2018, 19:55:16
+update=pon, 26 lis 2018, 09:16:06
 version=1
 last_client=kicad
 [pcbnew]
@@ -27,7 +27,7 @@ NetIExt=net
 version=1
 [eeschema]
 version=1
-LibDir=/home/przemo/software/occ/schematic/kicad-symbols;/home/przemo/software/occ/schematic/occ-library
+LibDir=/home/przemo/software/occ/schematic/kicad-symbols;/home/przemo/software/occ/schematic/occ-library;../kicad;occ-library
 [eeschema/libraries]
 LibName1=occ-rescue
 LibName2=power
@@ -63,3 +63,15 @@ LibName31=atmel
 LibName32=contrib
 LibName33=valves
 LibName34=occ-library/occ
+LibName35=/run/user/1000/gvfs/sftp:host=occ/home/pi/Open-Cycling-Computer/resources/kicad/occ-rescue
+LibName36=/run/user/1000/gvfs/sftp:host=occ/home/pi/Open-Cycling-Computer/resources/kicad/occ-library/occ
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
