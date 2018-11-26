@@ -32,7 +32,6 @@ class ble_sensor(plugin.plugin):
         self.log.debug('WAIT_TIME {}'.format(self.WAIT_TIME), extra=self.extra)
 
         self.pm = pyplum.pyplum()
-        self.pm.register_parameter('ble_no_of_devices_connected', self.extra['module_name'], value=0)
         self.state = 0
         self.device_address = None
         self.device_name = None
@@ -74,7 +73,6 @@ class ble_sensor(plugin.plugin):
                 self.peripherial.connect(self.device_address, addrType='random')
                 self.log.debug('Connected', extra=self.extra)
                 self.connected = True
-                self.pm.parameters['ble_no_of_devices_connected']['value'] += 1
                 self.state = 2
                 self.log.debug('Getting device name', extra=self.extra)
                 self.device_name = self.get_device_name()
@@ -101,24 +99,21 @@ class ble_sensor(plugin.plugin):
                 self.connected = False
                 self.notifications_enabled = False
             elif str(e) == "Device disconnected":
-                self.pm.parameters['ble_no_of_devices_connected']['value'] -= 1
                 self.log.info(e, extra=self.extra)
                 self.connected = False
                 self.notifications_enabled = False
             elif str(e) == "Helper exited":
-                self.pm.parameters['ble_no_of_devices_connected']['value'] -= 1
                 self.log.error(e, extra=self.extra)
                 self.connected = False
                 self.notifications_enabled = False
-            elif (str(e) == "Error from Bluetooth stack (badstate)" or
-                    str(e) == "Error from Bluetooth stack (comerr)"):
-                self.pm.parameters['ble_no_of_devices_connected']['value'] -= 1
+            elif str(e) == "Error from Bluetooth stack (badstate)" or \
+                    str(e) == "Error from Bluetooth stack (comerr)":
                 self.log.error(e, extra=self.extra)
                 self.connected = False
                 self.notifications_enabled = False
-            elif (str(e) == "Unexpected response (rd)" or
-                    str(e) == "Unexpected response (find)" or
-                    str(e) == "Unexpected response (wr)"):
+            elif str(e) == "Unexpected response (rd)" or \
+                    str(e) == "Unexpected response (find)" or \
+                    str(e) == "Unexpected response (wr)":
                 self.log.info(e, extra=self.extra)
             else:
                 self.log.error('Uncontrolled error {} in {}'.format(e, caller), extra=self.extra)
@@ -140,7 +135,6 @@ class ble_sensor(plugin.plugin):
                 if self.connected and self.notifications_enabled:
                     try:
                         if self.peripherial.waitForNotifications(self.WAIT_TIME):
-                            #if self.time_stamp != self.delegate.time_stamp:
                             self.process_delegate_data()
                     except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
                         self.handle_exception(e, "waitForNotifications")
@@ -151,6 +145,11 @@ class ble_sensor(plugin.plugin):
                     self.set_notifications(enable=True)
                     time.sleep(1.0)
             else:
+                try:
+                    if self.peripherial is not None:
+                        self.safe_disconnect()
+                except AttributeError:
+                    pass
                 #Waiting for ble address
                 self.log.debug('address is None, waiting...', extra=self.extra)
                 time.sleep(1.0)
@@ -180,9 +179,9 @@ class ble_sensor(plugin.plugin):
             # Not connected yet
             self.log.error('AttributeError: {}'.format(e), extra=self.extra)
             pass
-        self.pm.parameters['ble_no_of_devices_connected']['value'] -= 1
         self.log.debug('State = {}. Waiting {} s to reconnect'.format(self.state, self.RECONNECT_WAIT_TIME), extra=self.extra)
         time.sleep(self.RECONNECT_WAIT_TIME)
+        del self.peripherial
         self.log.debug('safe_disconnect finished', extra=self.extra)
 
     def get_device_name(self):
@@ -231,11 +230,7 @@ class ble_sensor(plugin.plugin):
     #  @param self The python object self
     #  @param required Dict with updated by sensors module
     def notification(self):
-        self.log.debug("notification received", extra=self.extra)
-        #FIXME on device_address change initialise connection to the new device
-        #self.device_address = self.pm.parameters["device_address"]["value"]
-        self.initialise_connection()
-        #pass
+        pass
 
     def set_addr(self, addr):
         self.log.debug('address set to {}'.format(addr), extra=self.extra)

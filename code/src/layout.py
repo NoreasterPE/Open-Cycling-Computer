@@ -551,8 +551,8 @@ class layout(threading.Thread):
         self.ctx.fill()
 
     #FIXME Needs to go to layout_loader
-    def make_image_key(self, image_path):
-        suffix = "_" + format(self.value)
+    def make_image_key(self, image_path, value):
+        suffix = "_" + format(value)
         extension = image_path[-4:]
         name = image_path[:-4]
         return (name + suffix + extension)

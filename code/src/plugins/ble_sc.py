@@ -79,41 +79,39 @@ class ble_sc(ble_sensor.ble_sensor):
             self.handle_exception(exception, "process_delegate_data")
 
     def notification(self):
+        # BLE Scan end, consume results using editor_list
         if self.pm.parameters['ble_scan_done']['value'] and \
                 self.pm.parameters['ble_scan_results']['value'] == 'speed_cadence':
             self.pm.parameters['ble_scan_done']['value'] = False
             self.set_up_editor()
+
+        # Device name has been changed by editor
         if self.pm.parameters["cadence_speed_device_name"]["value"] != self.device_name:
-            # Device name has been changed by editor
             try:
                 data = self.pm.parameters["cadence_speed_device_name"]["data"][1]
                 name = data['name']
                 self.device_name = name
                 self.pm.parameters["cadence_speed_device_name"]["value"] = name
                 addr = data['addr']
-                self.device_address = addr
                 self.pm.parameters["cadence_speed_device_address"]["value"] = addr
                 # FIXME - that might need to be passed to ble_sensor
                 #addr_type = data[1]['addr_type']
-                if addr is None:
-                    self.pm.parameters["cadence_speed_device_name"]["value"] = 'Disconnected'
             except TypeError:
                 pass
+
+        # Device address changed
         if self.pm.parameters["cadence_speed_device_address"]["value"] != self.device_address:
             self.device_address = self.pm.parameters["cadence_speed_device_address"]["value"]
+            if self.device_address is None:
+                self.pm.parameters["cadence_speed_device_name"]["value"] = 'Disconnected'
+                self.device_name = self.pm.parameters["cadence_speed_device_name"]["value"]
+                self.safe_disconnect()
+
+        # Update battery level, level read from physical sensor
         if self.pm.parameters["cadence_speed_battery_level"]["value"] != self.battery_level:
             self.pm.parameters["cadence_speed_battery_level"]["value"] = self.battery_level
 
-    def reset_data(self):
-        super().reset_data()
-        ## @var cadence_time_stamp
-        # Time stamp of the wheel rev measurement, initially set by the constructor to "now", later overridden by time stamp of the notification with measurement.
-
     def find_cadence_speed_device(self):
-        #FIXME remote plugin method starting to be added by events queue
-        # Add option for null device
-        # Add option to set up & start editor? Or in ble_sensor?
-        # Add option to set up animation
         self.pm.plugins['ble_scanner'].find_ble_device('speed_cadence')
 
     def set_up_editor(self):

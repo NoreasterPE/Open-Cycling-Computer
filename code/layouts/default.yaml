@@ -43,8 +43,8 @@ pages:
                   y: 5
                   file: images/ble_icon_32x32.png
                   variable:
-                          name: ble_no_of_devices_connected
-                          frames: 6
+                    name: ble_no_of_devices_connected
+                    frames: 6
 
                 - parameter: session_distance
                   format: "%.1f"

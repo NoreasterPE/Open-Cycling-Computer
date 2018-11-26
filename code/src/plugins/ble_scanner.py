@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 ## @package ble_scanner
-#  BLE scanner module. Provides list of BLE devices.
+#  BLE scanner module. Provides list of BLE devices and info about number of devices connected
 import bluepy
 import plugin
 import pyplum
@@ -36,6 +36,7 @@ class ble_scanner(plugin.plugin):
         self.pm = pyplum.pyplum()
         self.pm.register_parameter("ble_scan_done", self.extra["module_name"], value=False)
         self.pm.register_parameter("ble_scan_results", self.extra["module_name"], value=[])
+        self.pm.register_parameter('ble_no_of_devices_connected', self.extra['module_name'], value=0)
         ## @var scanner
         #  BLE scanner from bluepy
         self.scanner = bluepy.btle.Scanner().withDelegate(ScanDelegate())
@@ -78,7 +79,15 @@ class ble_scanner(plugin.plugin):
         self.pm.parameters['ble_scan_done']['value'] = True
 
     def run(self):
-        pass
+        self.running = True
+        while self.running:
+            connected = 0
+            for pl in self.pm.plugins:
+                if self.pm.plugins[pl].connected:
+                    connected += 1
+            self.pm.parameters['ble_no_of_devices_connected']['value'] = connected
+            self.log.debug("ble_no_of_devices_connected: {}".format(connected), extra=self.extra)
+            time.sleep(1.0)
 
     def find_ble_device(self, device_type):
         self.current_device_type = device_type
