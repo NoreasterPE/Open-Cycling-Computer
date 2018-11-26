@@ -449,8 +449,8 @@ class layout(threading.Thread):
         if self.editor_fields["editor"] == 'editor_numbers':
             self.editor_fields["raw_value"] = self.pm.parameters[p]["value"]
             self.value = self.uc.convert(self.pm.parameters[p]["value"],
-                                    self.pm.parameters[p]["raw_unit"],
-                                    self.pm.parameters[p]["unit"])
+                                         self.pm.parameters[p]["raw_unit"],
+                                         self.pm.parameters[p]["unit"])
             try:
                 self.editor_fields["value"] = self.editor_fields["format"] % self.value
             except TypeError:
