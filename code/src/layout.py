@@ -174,42 +174,13 @@ class layout(threading.Thread):
         for field in self.ll.current_page['fields']:
             parameter = field['parameter']
             self.pos_x, self.pos_y = self.ll.get_position(field)
+            # Get "show" field and get parameter value using it
             try:
                 show = field["show"]
             except KeyError:
                 # Show value of parameter by default
                 show = "value"
-            if show == "value":
-                # For editors use parameter value from editor_fields
-                if self.ll.current_page["type"] == "editor":
-                    try:
-                        self.value = self.editor_fields[parameter]
-                        if type(self.value) is tuple:
-                            self.value = self.value[0]
-                    except (KeyError, TypeError):
-                        self.value = None
-                else:
-                    try:
-                        self.get_value(parameter, 'value')
-                    except (KeyError, TypeError):
-                        self.value = None
-            elif show == "tenths":
-                try:
-                    self.get_value(parameter, 'value')
-                    tenths_string = "{}".format(self.value - int(self.value))
-                    self.value = format(tenths_string)[2:3]
-                except (KeyError, TypeError, ValueError):
-                    self.value = None
-            elif show == "unit":
-                try:
-                    self.value = self.pm.parameters[parameter]["unit"]
-                except KeyError:
-                    self.value = None
-            elif show in ('min', 'avg', 'max'):
-                try:
-                    self.get_value(parameter, 'value_' + show)
-                except KeyError:
-                    self.value = None
+            self.get_parameter_value(show, parameter)
             # Try to use field 'text' if there is no value determined so far
             if self.value is None:
                 try:
@@ -278,6 +249,39 @@ class layout(threading.Thread):
                 self.text_to_surface(self.value, self.pos_x + self.shift_x, self.pos_y + self.shift_y, self.ll.text_colour)
             else:
                 self.render_zoomed_digit_text()
+
+    def get_parameter_value(self, show, parameter):
+        if show == "value":
+            # For editors use parameter value from editor_fields
+            if self.ll.current_page["type"] == "editor":
+                try:
+                    self.value = self.editor_fields[parameter]
+                    if type(self.value) is tuple:
+                        self.value = self.value[0]
+                except (KeyError, TypeError):
+                    self.value = None
+            else:
+                try:
+                    self.get_value(parameter, 'value')
+                except (KeyError, TypeError):
+                    self.value = None
+        elif show == "tenths":
+            try:
+                self.get_value(parameter, 'value')
+                tenths_string = "{}".format(self.value - int(self.value))
+                self.value = format(tenths_string)[2:3]
+            except (KeyError, TypeError, ValueError):
+                self.value = None
+        elif show == "unit":
+            try:
+                self.value = self.pm.parameters[parameter]["unit"]
+            except KeyError:
+                self.value = None
+        elif show in ('min', 'avg', 'max'):
+            try:
+                self.get_value(parameter, 'value_' + show)
+            except KeyError:
+                self.value = None
 
     def render_zoomed_digit_text(self):
         SCALE = 1.4
