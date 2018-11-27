@@ -62,7 +62,8 @@ pages:
                 - parameter: session_time
                   long_click: internal, reset
                   format: hhmmss
-                  x: 180
+                  align: point
+                  x: 200
                   y: 225
                   font_size: 30
                   button:
@@ -186,14 +187,15 @@ pages:
          text_colour: FFFFFF
          fields:
                 - parameter: real_time
-                  format: time
-                  x: 120
-                  y: 60
-
-                - parameter: real_time
                   format: date
                   x: 120
                   y: 20
+
+                - parameter: real_time
+                  format: time
+                  align: point
+                  x: 135
+                  y: 60
 
                 - parameter: odometer_icon
                   x: 10
