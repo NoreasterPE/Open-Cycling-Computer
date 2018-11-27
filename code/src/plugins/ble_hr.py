@@ -63,7 +63,7 @@ class ble_hr(ble_sensor.ble_sensor):
         if self.pm.parameters['ble_scan_done']['value'] and \
                 self.pm.parameters['ble_scan_results']['value'] == 'heart_rate':
             self.pm.parameters['ble_scan_done']['value'] = False
-            if self.connected or self.device_name is not None:
+            if self.connected or self.pm.parameters["heart_rate_device_name"]["value"] is not None:
                 self.pm.parameters['ble_scan_results']['data'].append({'name': 'Disconnect', 'addr': None, 'addr_type': None})
             self.set_up_editor()
 
