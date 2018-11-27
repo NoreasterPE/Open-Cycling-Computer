@@ -293,10 +293,8 @@ class layout(threading.Thread):
         return shift_x
 
     def render_point_aligned_text(self):
-        # Find mostright separator - a non-digit
-        for char in reversed(self.value):
-            if not char.isdigit():
-                break
+        # Find most right separator - a non-digit
+        char = [x for x in self.value if not x.isdigit()][-1]
         # Split text on separator
         self.split_text = self.value.rpartition(char)
         # Get separator width
