@@ -71,8 +71,6 @@ class ble_sc(ble_sensor.ble_sensor):
             self.measurement_time = self.delegate.measurement_time
             self.pm.parameters["cadence"]["value_max"] = max(self.pm.parameters["cadence"]["value_max"], self.delegate.cadence)
             self.pm.parameters["cadence_notification_beat"]["value"] = self.delegate.cadence_notification_beat
-            if self.pm.parameters["cadence_speed_device_name"]["value"] != self.device_name:
-                self.pm.parameters["cadence_speed_device_name"]["value"] = self.device_name
             if self.pm.parameters["cadence_speed_battery_level"]["value"] != self.battery_level:
                 self.pm.parameters["cadence_speed_battery_level"]["value"] = self.battery_level
         except (AttributeError) as exception:
