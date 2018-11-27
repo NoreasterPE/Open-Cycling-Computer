@@ -228,27 +228,23 @@ class layout(threading.Thread):
                 # Fall back to page font size
                 self.fs = self.ll.page_font_size
             self.ctx.set_font_size(self.fs)
-            self.te = self.ctx.text_extents(self.value)
+
             # Get text alignment or if it's not defined use center
             try:
                 align = field["align"]
             except KeyError:
                 align = "center"
-            # Calculate text horizontal shift
-            if align == 'center':
-                self.shift_x = -1.0 * self.te.width / 2.0
-            elif align == 'right':
-                self.shift_x = -1.0 * self.te.width
-            elif align == 'left':
-                self.shift_x = 0.0
-            else:
-                self.shift_x = 0.0
+            shift_x = self.calculate_x_shift(align, self.value)
+
             # 18 is font size for which font_extents has height. So far no scaled_font_extents function
             self.shift_y = 0.5 * self.font_extents[2] * self.fs / 18
-            if format_string != "zoomed_digit":
-                self.text_to_surface(self.value, self.pos_x + self.shift_x, self.pos_y + self.shift_y, self.ll.text_colour)
-            else:
+            if align == 'point':
+                self.render_point_aligned_text()
+            elif format_string == "zoomed_digit":
+                self.scale = 1.4
                 self.render_zoomed_digit_text()
+            else:
+                self.text_to_surface(self.value, self.pos_x + shift_x, self.pos_y + self.shift_y, self.ll.text_colour)
 
     def get_parameter_value(self, show, parameter):
         if show == "value":
@@ -283,8 +279,35 @@ class layout(threading.Thread):
             except KeyError:
                 self.value = None
 
+    def calculate_x_shift(self, align, text):
+        # Calculate text horizontal shift
+        te = self.ctx.text_extents(text)
+        if align == 'center':
+            shift_x = -1.0 * te.width / 2.0
+        elif align == 'right':
+            shift_x = -1.0 * te.width
+        elif align == 'left':
+            shift_x = 0.0
+        else:
+            shift_x = 0.0
+        return shift_x
+
+    def render_point_aligned_text(self):
+        # Find mostright separator - a non-digit
+        for char in reversed(self.value):
+            if not char.isdigit():
+                break
+        # Split text on separator
+        self.split_text = self.value.rpartition(char)
+        # Get separator width
+        te = self.ctx.text_extents(self.split_text[1])
+        width = te.width
+        # Render all parts of the text to the surface
+        for text, align, shift in zip(self.split_text, ('right', 'center', 'left'), (-1 * width, 0, width)):
+            shift_x = self.calculate_x_shift(align, text)
+            self.text_to_surface(text, self.pos_x + shift_x + shift, self.pos_y + self.shift_y, self.ll.text_colour)
+
     def render_zoomed_digit_text(self):
-        SCALE = 1.4
         self.value = self.editor_fields["value"]
         i = self.editor_fields["index"]
         #Head
@@ -294,14 +317,14 @@ class layout(threading.Thread):
         rv3 = self.value[i + 1:]
         #Currently edited digit
         rv2 = self.value[i]
-        self.ctx.set_font_size(SCALE * self.fs)
+        self.ctx.set_font_size(self.scale * self.fs)
         te2 = self.ctx.text_extents(rv2)
 
         rv1_x = self.pos_x - self.te.width / 2.0
         rv2_x = self.pos_x - self.te.width / 2.0 + te1.x_advance
         rv3_x = self.pos_x - self.te.width / 2.0 + te1.x_advance + te2.x_advance
 
-        self.text_to_surface(rv2, rv2_x, self.pos_y + SCALE * self.shift_y, (1.0, 0.0, 0.0))
+        self.text_to_surface(rv2, rv2_x, self.pos_y + self.scale * self.shift_y, (1.0, 0.0, 0.0))
         self.ctx.set_font_size(self.fs)
         self.text_to_surface(rv1, rv1_x, self.pos_y + self.shift_y, self.ll.text_colour)
         self.text_to_surface(rv3, rv3_x, self.pos_y + self.shift_y, self.ll.text_colour)
