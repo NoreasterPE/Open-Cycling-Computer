@@ -75,7 +75,6 @@ class ble_hr(ble_sensor.ble_sensor):
                 self.device_name = name
                 self.pm.parameters["heart_rate_device_name"]["value"] = name
                 addr = data['addr']
-                self.device_address = addr
                 self.pm.parameters["heart_rate_device_address"]["value"] = addr
                 # FIXME - that might need to be passed to ble_sensor
                 #addr_type = data[1]['addr_type']
