@@ -66,7 +66,12 @@ class ble_scanner(plugin.plugin):
                         local_name = value
                     if local_name is None:
                         local_name = dev.addr
-                devices.append(dict(addr=dev.addr, name=local_name, addr_type=dev.addrType, rss=dev.rssi))
+                if dev.connectable:
+                    self.log.debug("device {} connectable, getting services".format(local_name), extra=self.extra)
+                    services = self.get_services(dev.addr, dev.addrType)
+                else:
+                    services = ''
+                devices.append(dict(addr=dev.addr, name=local_name, addr_type=dev.addrType, rss=dev.rssi, services=services))
         self.ble_devices = sorted(devices, key=lambda k: k['rss'], reverse=True)
         self.pm.parameters['ble_scan_results']['value'] = self.current_device_type
         self.current_device_type = None
@@ -93,8 +98,27 @@ class ble_scanner(plugin.plugin):
     def set_up_ble_scan_animation(self):
         #FIXME tidy it up, flexible time, etc.
         if self.pm.event_queue is not None:
-            for i in range(1):
+            for i in range(2):
                 self.pm.event_queue.put(('show_overlay', 'images/ol_ble_scanning.png', 1.0))
                 self.pm.event_queue.put(('show_overlay', 'images/ol_ble_scanning_0.png', 1.0))
                 self.pm.event_queue.put(('show_overlay', 'images/ol_ble_scanning_1.png', 1.0))
                 self.pm.event_queue.put(('show_overlay', 'images/ol_ble_scanning_2.png', 1.0))
+
+    def get_services(self, addr, addr_type):
+        services = ''
+        try:
+            peripherial = bluepy.btle.Peripheral(addr, addrType=addr_type)
+            try:
+                peripherial.getServiceByUUID(bluepy.btle.AssignedNumbers.heartRate)
+                services += 'heart_rate'
+            except bluepy.btle.BTLEException:
+                pass
+            try:
+                peripherial.getServiceByUUID(bluepy.btle.AssignedNumbers.cyclingSpeedAndCadence)
+                services += 'speed_cadence'
+            except bluepy.btle.BTLEException:
+                pass
+        except bluepy.btle.BTLEException:
+            pass
+        self.log.debug("services for {} are {}".format(addr, services), extra=self.extra)
+        return services
