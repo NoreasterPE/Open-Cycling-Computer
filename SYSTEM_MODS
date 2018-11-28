@@ -16,6 +16,7 @@ SUBSYSTEM=="input", ATTRS{name}=="ft6236", ENV{DEVNAME}=="*event*", SYMLINK+="in
 5. Add to /boo/config.txt
 dtoverlay=i2c-sensor,addr=0x77,bmp280
 
-6. sudo setcap 'cap_net_raw,cap_net_admin+eip' /usr/local/lib/python3.4/dist-packages/bluepy-1.2.0-py3.4.egg/bluepy/bluepy-helper
-To be able to do lescan without sudo
+6. To be able to do lescan without sudo
+sudo chmod u+s  /usr/local/lib/python3.4/dist-packages/bluepy-1.3.0-py3.4.egg/bluepy/bluepy-helper
 
+Error in OCC log: ERROR      ble_scanner     Exception Failed to execute management command 'le on' (code: 20, error: Permission Denied)
