@@ -52,10 +52,13 @@ class ble_scanner(plugin.plugin):
     #  @param self The python object self
     #  @param timeout time that scanner should look for BLE devices
     def scan(self, timeout=4.0):
+        self.log.debug("starting scan", extra=self.extra)
         devices = []
         try:
             devices_raw = self.scanner.scan(timeout)
+            self.log.debug("scan finished", extra=self.extra)
         except bluepy.btle.BTLEException as exception:
+            self.log.debug("scan finished with error", extra=self.extra)
             self.log.error("Exception {}".format(exception), extra=self.extra)
         else:
             devices = []

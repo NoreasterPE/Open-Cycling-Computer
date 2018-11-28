@@ -115,6 +115,7 @@ class ble_sc(ble_sensor.ble_sensor):
         self.pm.plugins['ble_scanner'].find_ble_device('speed_cadence')
 
     def set_up_editor(self):
+        # Set up editor fields
         self.editor_fields = {}
         self.editor_fields["parameter"] = 'cadence_speed_device_name'
         self.editor_fields["editor"] = 'editor_list'
