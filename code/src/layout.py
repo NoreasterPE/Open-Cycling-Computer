@@ -318,9 +318,10 @@ class layout(threading.Thread):
         self.ctx.set_font_size(self.scale * self.fs)
         te2 = self.ctx.text_extents(rv2)
 
-        rv1_x = self.pos_x - self.te.width / 2.0
-        rv2_x = self.pos_x - self.te.width / 2.0 + te1.x_advance
-        rv3_x = self.pos_x - self.te.width / 2.0 + te1.x_advance + te2.x_advance
+        te = self.ctx.text_extents(self.value)
+        rv1_x = self.pos_x - te.width / 2.0
+        rv2_x = self.pos_x - te.width / 2.0 + te1.x_advance
+        rv3_x = self.pos_x - te.width / 2.0 + te1.x_advance + te2.x_advance
 
         self.text_to_surface(rv2, rv2_x, self.pos_y + self.scale * self.shift_y, (1.0, 0.0, 0.0))
         self.ctx.set_font_size(self.fs)
