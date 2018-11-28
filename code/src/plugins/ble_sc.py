@@ -81,8 +81,6 @@ class ble_sc(ble_sensor.ble_sensor):
         if self.pm.parameters['ble_scan_done']['value'] and \
                 self.pm.parameters['ble_scan_results']['value'] == 'speed_cadence':
             self.pm.parameters['ble_scan_done']['value'] = False
-            if self.connected or self.pm.parameters["cadence_speed_device_name"]["value"] is not None:
-                self.pm.parameters['ble_scan_results']['data'].append({'name': 'Disconnect', 'addr': None, 'addr_type': None})
             self.set_up_editor()
 
         # Device name has been changed by editor
@@ -126,7 +124,13 @@ class ble_sc(ble_sensor.ble_sensor):
         self.editor_fields['parameter'] = 'cadence_speed_device_name'
         self.editor_fields['value_list'] = []
         for device in self.pm.parameters['ble_scan_results']['data']:
-            self.editor_fields['value_list'].append((device['name'], device))
+            # Filter for devics providing speed_cadence service
+            if 'speed_cadence' in device['services']:
+                self.editor_fields['value_list'].append((device['name'], device))
+        # Add disconnecting option if there was a device connected or defined
+        if self.connected or self.pm.parameters["cadence_speed_device_name"]["value"] is not None:
+            self.editor_fields['value_list'].append(('Disconnect', {'name': 'Disconnect', 'addr': None, 'addr_type': None}))
+        # Send event to open editor
         if self.pm.event_queue is not None:
             self.pm.event_queue.put(('open_editor', self.editor_fields))
 
