@@ -106,6 +106,10 @@ class ble_sensor(plugin.plugin):
                 self.log.error(e, extra=self.extra)
                 self.connected = False
                 self.notifications_enabled = False
+            elif str(e) == 'Error from bluepy-helper (badstate)':
+                self.log.error(e, extra=self.extra)
+                self.connected = False
+                self.notifications_enabled = False
             elif str(e) == "Error from Bluetooth stack (badstate)" or \
                     str(e) == "Error from Bluetooth stack (comerr)":
                 self.log.error(e, extra=self.extra)
