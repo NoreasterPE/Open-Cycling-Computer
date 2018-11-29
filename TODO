@@ -17,7 +17,7 @@ CODING STYLE:
 - proper command line argument parsing in occ.py
 
 REAL WORLD PROBLEMS:
-- BLE icon shows one device connected after "Disconnect" is selected
+- If there is less than 3 items in editor_list it looks weird, especially when there is only one item
 - method to preload overlay images - it's shaky sometimes
 - add date editor
 - add time editor
@@ -276,3 +276,4 @@ TypeError: argument 1 must be pygame.Surface, not None
 149. [DONE] - ble_sc icon stays active after disconnect
 150. [WONTFIX] - short click to show help or click to switch value i.e. click on temperature to cycle over min/average/max {to messy interface}
 151. [WONTFIX] - Fix lost should be marked in log? {Yes, as DEBUG, trivial}
+152. [DONE] - BLE icon shows one device connected after "Disconnect" is selected
