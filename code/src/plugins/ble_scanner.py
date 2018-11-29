@@ -135,7 +135,27 @@ class ble_scanner(plugin.plugin):
                 services += 'speed_cadence'
             except (bluepy.btle.BTLEException, BrokenPipeError):
                 pass
-        except bluepy.btle.BTLEException:
-            pass
+            try:
+                self.log.debug("getting all services for '{}'".format(addr), extra=self.extra)
+                s = peripherial.getServices()
+                self.log.debug("all services for '{}' are:".format(addr), extra=self.extra)
+                for _s in s:
+                    self.log.debug("'{}'".format(_s), extra=self.extra)
+                    c = _s.getCharacteristics()
+                    self.log.debug("all characteristics for service '{}' are".format(_s), extra=self.extra)
+                    for _c in c:
+                        self.log.info("'{}'".format(_c), extra=self.extra)
+            except (bluepy.btle.BTLEException, BrokenPipeError) as e:
+                self.log.info("{}".format(e), extra=self.extra)
+            try:
+                self.log.debug("getting all characteristics for '{}'".format(addr), extra=self.extra)
+                c = peripherial.getCharacteristics()
+                self.log.debug("all characteristics for '{}' are".format(addr), extra=self.extra)
+                for _c in c:
+                    self.log.info("'{}'".format(_c), extra=self.extra)
+            except (bluepy.btle.BTLEException, BrokenPipeError) as e:
+                self.log.debug("{}".format(e), extra=self.extra)
+        except bluepy.btle.BTLEException as e:
+            self.log.info("{}".format(e), extra=self.extra)
         self.log.debug("services for '{}' are '{}'".format(addr, services), extra=self.extra)
         return services
