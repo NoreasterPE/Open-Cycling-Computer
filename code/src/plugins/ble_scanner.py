@@ -128,12 +128,12 @@ class ble_scanner(plugin.plugin):
             try:
                 peripherial.getServiceByUUID(bluepy.btle.AssignedNumbers.heartRate)
                 services += 'heart_rate'
-            except bluepy.btle.BTLEException:
+            except (bluepy.btle.BTLEException, BrokenPipeError):
                 pass
             try:
                 peripherial.getServiceByUUID(bluepy.btle.AssignedNumbers.cyclingSpeedAndCadence)
                 services += 'speed_cadence'
-            except bluepy.btle.BTLEException:
+            except (bluepy.btle.BTLEException, BrokenPipeError):
                 pass
         except bluepy.btle.BTLEException:
             pass
