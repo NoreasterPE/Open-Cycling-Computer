@@ -28,6 +28,17 @@ class editor(plugin.plugin):
 
     def set_up(self, fields):
         self.fields = fields
+        # Make sure list has at least 3 elements
+        try:
+            while len(self.fields["value_list"]) < 3:
+                self.fields["value_list"].append(None)
+            # If the list contains only None items add [empty] item
+            if all(x is None for x in self.fields["value_list"]):
+                self.log.debug("None-only list detected, adding '[empty]' item", extra=self.extra)
+                self.fields["value_list"].append('[empty]')
+                self.fields["index"] = len(self.fields["value_list"]) - 1
+        except TypeError:
+            pass
 
     def next_item(self):
         index = self.fields["index"]
@@ -37,6 +48,8 @@ class editor(plugin.plugin):
             self.fields["index"] = 0
         else:
             self.fields["index"] = index
+        if self.fields['value_list'][self.fields["index"]] is None:
+            self.next_item()
 
     def previous_item(self):
         index = self.fields["index"]
@@ -46,6 +59,8 @@ class editor(plugin.plugin):
             self.fields["index"] = len(self.fields["value_list"]) - 1
         else:
             self.fields["index"] = index
+        if self.fields['value_list'][self.fields["index"]] is None:
+            self.previous_item()
 
     def decrease_digit(self):
         u = self.fields["value"]
@@ -128,6 +143,7 @@ class editor(plugin.plugin):
     def slice_list_elements(self, a_list, index):
         list_len = len(a_list)
         circular_list_slice = (a_list * 3)[index + list_len - 1:index + list_len + 2]
+
         self.fields["previous_list_element"] = circular_list_slice[0]
         self.fields["value"] = circular_list_slice[1]
         self.fields["next_list_element"] = circular_list_slice[2]
@@ -169,6 +185,7 @@ class editor(plugin.plugin):
         parameter = self.fields["parameter"]
         parameter_unit = self.fields["unit"]
         parameter_value = self.fields["value"]
+        parameter_data = None
         if type(parameter_value) is tuple:
             parameter_value = parameter_value[0]
             parameter_data = self.fields['value']
