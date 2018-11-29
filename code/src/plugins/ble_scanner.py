@@ -47,12 +47,18 @@ class ble_scanner(plugin.plugin):
         #  {'rss': -71, 'addr': 'd6:90:a8:08:f0:e4', 'name': 'Tacx HRB 04741', 'addr_type': 'random'}]
         self.ble_devices = []
         self.current_device_type = None
+        self.scan_in_progress = False
+        ## @var animation_frame
+        #  Current number of BLE scan animation frame
+        self.animation_frame = 0
+        self.animation_frame_max = 2
 
     ## Searches for BLE devices over 5 seconds (defaut). Stores found devices in self.ble_devices
     #  @param self The python object self
     #  @param timeout time that scanner should look for BLE devices
     def scan(self, timeout=4.0):
         self.log.debug("starting scan", extra=self.extra)
+        self.scan_in_progress = True
         devices = []
         try:
             devices_raw = self.scanner.scan(timeout)
@@ -60,6 +66,7 @@ class ble_scanner(plugin.plugin):
         except bluepy.btle.BTLEException as exception:
             self.log.debug("scan finished with error", extra=self.extra)
             self.log.error("Exception {}".format(exception), extra=self.extra)
+            self.pm.parameters['ble_scan_results']['data'] = None
         else:
             devices = []
             for dev in devices_raw:
@@ -75,12 +82,15 @@ class ble_scanner(plugin.plugin):
                 else:
                     services = ''
                 devices.append(dict(addr=dev.addr, name=local_name, addr_type=dev.addrType, rss=dev.rssi, services=services))
-        self.ble_devices = sorted(devices, key=lambda k: k['rss'], reverse=True)
-        self.pm.parameters['ble_scan_results']['value'] = self.current_device_type
-        self.current_device_type = None
-        self.pm.parameters['ble_scan_results']['data'] = self.ble_devices
-        self.pm.parameters['ble_scan_results']['time_stamp'] = time.time()
-        self.pm.parameters['ble_scan_done']['value'] = True
+            self.ble_devices = sorted(devices, key=lambda k: k['rss'], reverse=True)
+            self.pm.parameters['ble_scan_results']['data'] = self.ble_devices
+        finally:
+            self.pm.parameters['ble_scan_results']['value'] = self.current_device_type
+            self.current_device_type = None
+            self.pm.parameters['ble_scan_results']['time_stamp'] = time.time()
+            self.pm.parameters['ble_scan_done']['value'] = True
+            self.log.debug("scan finished", extra=self.extra)
+            self.scan_in_progress = False
 
     def run(self):
         self.running = True
@@ -90,22 +100,24 @@ class ble_scanner(plugin.plugin):
                 if self.pm.plugins[pl].connected:
                     connected += 1
             self.pm.parameters['ble_no_of_devices_connected']['value'] = connected
-            self.log.debug("ble_no_of_devices_connected: {}".format(connected), extra=self.extra)
+            #self.log.debug("ble_no_of_devices_connected: {}".format(connected), extra=self.extra)
+            if self.scan_in_progress:
+                self.ble_scan_animation_next_frame()
             time.sleep(1.0)
 
     def find_ble_device(self, device_type):
+        if self.pm.event_queue is not None:
+            self.pm.event_queue.put(('show_overlay', 'images/ol_ble_scanning.png', 1.0))
         self.current_device_type = device_type
-        self.set_up_ble_scan_animation()
         threading.Thread(target=self.scan).start()
 
-    def set_up_ble_scan_animation(self):
-        #FIXME tidy it up, flexible time, etc.
+    def ble_scan_animation_next_frame(self):
         if self.pm.event_queue is not None:
-            for i in range(2):
-                self.pm.event_queue.put(('show_overlay', 'images/ol_ble_scanning.png', 1.0))
-                self.pm.event_queue.put(('show_overlay', 'images/ol_ble_scanning_0.png', 1.0))
-                self.pm.event_queue.put(('show_overlay', 'images/ol_ble_scanning_1.png', 1.0))
-                self.pm.event_queue.put(('show_overlay', 'images/ol_ble_scanning_2.png', 1.0))
+            self.pm.event_queue.put(('show_overlay', 'images/ol_ble_scanning_{}.png'.format(self.animation_frame), 1.0))
+        if self.animation_frame == self.animation_frame_max:
+            self.animation_frame = 0
+        else:
+            self.animation_frame += 1
 
     def get_services(self, addr, addr_type):
         services = ''
