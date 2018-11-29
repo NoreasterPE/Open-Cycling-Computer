@@ -62,12 +62,13 @@ class ble_scanner(plugin.plugin):
         devices = []
         try:
             devices_raw = self.scanner.scan(timeout)
-            self.log.debug("scan finished", extra=self.extra)
+            self.log.debug("got devices from scanner", extra=self.extra)
         except bluepy.btle.BTLEException as exception:
-            self.log.debug("scan finished with error", extra=self.extra)
+            self.log.debug("initial scan finished with error", extra=self.extra)
             self.log.error("Exception {}".format(exception), extra=self.extra)
             self.pm.parameters['ble_scan_results']['data'] = None
         else:
+            self.log.debug("getting services", extra=self.extra)
             devices = []
             for dev in devices_raw:
                 local_name = None
@@ -77,7 +78,7 @@ class ble_scanner(plugin.plugin):
                     if local_name is None:
                         local_name = dev.addr
                 if dev.connectable:
-                    self.log.debug("device {} connectable, getting services".format(local_name), extra=self.extra)
+                    self.log.debug("device {} addr: {} connectable, getting services".format(local_name, dev.addr), extra=self.extra)
                     services = self.get_services(dev.addr, dev.addrType)
                 else:
                     services = ''
@@ -120,6 +121,7 @@ class ble_scanner(plugin.plugin):
             self.animation_frame += 1
 
     def get_services(self, addr, addr_type):
+        self.log.debug("getting services for '{}'".format(addr), extra=self.extra)
         services = ''
         try:
             peripherial = bluepy.btle.Peripheral(addr, addrType=addr_type)
@@ -135,5 +137,5 @@ class ble_scanner(plugin.plugin):
                 pass
         except bluepy.btle.BTLEException:
             pass
-        self.log.debug("services for {} are {}".format(addr, services), extra=self.extra)
+        self.log.debug("services for '{}' are '{}'".format(addr, services), extra=self.extra)
         return services
