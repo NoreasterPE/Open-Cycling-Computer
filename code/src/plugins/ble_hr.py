@@ -83,9 +83,12 @@ class ble_hr(ble_sensor.ble_sensor):
         if self.pm.parameters["heart_rate_device_address"]["value"] != self.device_address:
             self.device_address = self.pm.parameters["heart_rate_device_address"]["value"]
             if self.device_address is None:
-                self.pm.parameters["heart_rate_device_name"]["value"] = 'Disconnected'
-                self.device_name = self.pm.parameters["heart_rate_device_name"]["value"]
                 self.safe_disconnect()
+
+        # Set device as Disconnected if device address in None
+        if self.device_address is None:
+            self.pm.parameters["heart_rate_device_name"]["value"] = 'Disconnected'
+            self.device_name = 'Disconnected'
 
         # Update battery level, level read from physical sensor
         if self.pm.parameters["heart_rate_battery_level"]["value"] != self.battery_level:
@@ -110,7 +113,8 @@ class ble_hr(ble_sensor.ble_sensor):
             if 'heart_rate' in device['services']:
                 self.editor_fields['value_list'].append((device['name'], device))
         # Add disconnecting option if there was a device connected or defined
-        if self.connected or self.pm.parameters["heart_rate_device_name"]["value"] is not None:
+        if self.connected or self.pm.parameters["heart_rate_device_name"]["value"] is not None and \
+            self.pm.parameters["heart_rate_device_name"]["value"] != 'Disconnected':
             self.editor_fields['value_list'].append(('Disconnect', {'name': 'Disconnect', 'addr': None, 'addr_type': None}))
         if self.pm.event_queue is not None:
             self.pm.event_queue.put(('open_editor', self.editor_fields))

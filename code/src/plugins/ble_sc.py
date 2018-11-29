@@ -101,9 +101,12 @@ class ble_sc(ble_sensor.ble_sensor):
         if self.pm.parameters["cadence_speed_device_address"]["value"] != self.device_address:
             self.device_address = self.pm.parameters["cadence_speed_device_address"]["value"]
             if self.device_address is None:
-                self.pm.parameters["cadence_speed_device_name"]["value"] = 'Disconnected'
-                self.device_name = self.pm.parameters["cadence_speed_device_name"]["value"]
                 self.safe_disconnect()
+
+        # Set device as Disconnected if device address in None
+        if self.device_address is None:
+            self.device_name = 'Disconnected'
+            self.pm.parameters["cadence_speed_device_name"]["value"] = 'Disconnected'
 
         # Update battery level, level read from physical sensor
         if self.pm.parameters["cadence_speed_battery_level"]["value"] != self.battery_level:
@@ -128,7 +131,8 @@ class ble_sc(ble_sensor.ble_sensor):
             if 'speed_cadence' in device['services']:
                 self.editor_fields['value_list'].append((device['name'], device))
         # Add disconnecting option if there was a device connected or defined
-        if self.connected or self.pm.parameters["cadence_speed_device_name"]["value"] is not None:
+        if self.connected or self.pm.parameters["cadence_speed_device_name"]["value"] is not None and \
+            self.pm.parameters["cadence_speed_device_name"]["value"] != 'Disconnected':
             self.editor_fields['value_list'].append(('Disconnect', {'name': 'Disconnect', 'addr': None, 'addr_type': None}))
         # Send event to open editor
         if self.pm.event_queue is not None:
