@@ -17,6 +17,11 @@ CODING STYLE:
 - proper command line argument parsing in occ.py
 
 REAL WORLD PROBLEMS:
+- OCC might see a sensor as disconnected, but hcitool shows it's connected:
+pi@raspberrypi:~/Open-Cycling-Computer/code $ hcitool con
+Connections:
+    < Unknown D6:90:A8:08:F0:E4 handle 0 state 5 lm MASTER 
+
 - If there is less than 3 items in editor_list it looks weird, especially when there is only one item
 - method to preload overlay images - it's shaky sometimes
 - add date editor
