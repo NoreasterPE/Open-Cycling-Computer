@@ -124,20 +124,20 @@ class ble_scanner(plugin.plugin):
         self.log.debug("getting services for '{}'".format(addr), extra=self.extra)
         services = ''
         try:
-            peripherial = bluepy.btle.Peripheral(addr, addrType=addr_type)
+            peripheral = bluepy.btle.Peripheral(addr, addrType=addr_type)
             try:
-                peripherial.getServiceByUUID(bluepy.btle.AssignedNumbers.heartRate)
+                peripheral.getServiceByUUID(bluepy.btle.AssignedNumbers.heartRate)
                 services += 'heart_rate'
             except (bluepy.btle.BTLEException, BrokenPipeError):
                 pass
             try:
-                peripherial.getServiceByUUID(bluepy.btle.AssignedNumbers.cyclingSpeedAndCadence)
+                peripheral.getServiceByUUID(bluepy.btle.AssignedNumbers.cyclingSpeedAndCadence)
                 services += 'speed_cadence'
             except (bluepy.btle.BTLEException, BrokenPipeError):
                 pass
             try:
                 self.log.debug("getting all services for '{}'".format(addr), extra=self.extra)
-                s = peripherial.getServices()
+                s = peripheral.getServices()
                 self.log.debug("all services for '{}' are:".format(addr), extra=self.extra)
                 for _s in s:
                     self.log.debug("'{}'".format(_s), extra=self.extra)
@@ -149,7 +149,7 @@ class ble_scanner(plugin.plugin):
                 self.log.info("{}".format(e), extra=self.extra)
             try:
                 self.log.debug("getting all characteristics for '{}'".format(addr), extra=self.extra)
-                c = peripherial.getCharacteristics()
+                c = peripheral.getCharacteristics()
                 self.log.debug("all characteristics for '{}' are".format(addr), extra=self.extra)
                 for _c in c:
                     self.log.info("'{}'".format(_c), extra=self.extra)

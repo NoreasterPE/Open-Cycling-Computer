@@ -46,11 +46,11 @@ class ble_sensor(plugin.plugin):
         self.log.debug('Set notifications started. enable={}'.format(enable), extra=self.extra)
         try:
             if enable:
-                self.peripherial.writeCharacteristic(self.HANDLE, self.ENABLE_NOTIFICATIONS, False)
+                self.peripheral.writeCharacteristic(self.HANDLE, self.ENABLE_NOTIFICATIONS, False)
                 self.log.debug('Notifications enabled', extra=self.extra)
                 self.notifications_enabled = True
             else:
-                self.peripherial.writeCharacteristic(self.HANDLE, self.DISABLE_NOTIFICATIONS, False)
+                self.peripheral.writeCharacteristic(self.HANDLE, self.DISABLE_NOTIFICATIONS, False)
                 self.log.debug('Notifications disabled', extra=self.extra)
                 self.notifications_enabled = False
         except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
@@ -63,14 +63,14 @@ class ble_sensor(plugin.plugin):
             try:
                 self.log.debug('Setting delegate', extra=self.extra)
                 self.delegate = self.delegate_class(self.log)
-                self.log.debug('Setting peripherial', extra=self.extra)
-                self.peripherial = bluepy.btle.Peripheral()
+                self.log.debug('Setting peripheral', extra=self.extra)
+                self.peripheral = bluepy.btle.Peripheral()
                 self.log.debug('Setting notification handler', extra=self.extra)
-                self.peripherial.withDelegate(self.delegate)
+                self.peripheral.withDelegate(self.delegate)
                 self.log.debug('Notification handler set', extra=self.extra)
                 self.log.debug('Connecting to {}'.format(self.device_address), extra=self.extra)
                 self.state = 1
-                self.peripherial.connect(self.device_address, addrType='random')
+                self.peripheral.connect(self.device_address, addrType='random')
                 self.log.debug('Connected', extra=self.extra)
                 self.connected = True
                 self.state = 2
@@ -136,14 +136,14 @@ class ble_sensor(plugin.plugin):
         while self.running:
             self.log.debug('Main loop running, dev addr: {}, conn: {}, notif: {}'.format(self.device_address, self.connected, self.notifications_enabled), extra=self.extra)
             try:
-                state = self.peripherial.getState()
-                self.log.debug('peripherial state: {}'.format(state), extra=self.extra)
+                state = self.peripheral.getState()
+                self.log.debug('peripheral state: {}'.format(state), extra=self.extra)
             except (AttributeError, bluepy.btle.BTLEException):
                 pass
             if self.device_address is not None:
                 if self.connected and self.notifications_enabled:
                     try:
-                        if self.peripherial.waitForNotifications(self.WAIT_TIME):
+                        if self.peripheral.waitForNotifications(self.WAIT_TIME):
                             self.process_delegate_data()
                     except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
                         self.handle_exception(e, "waitForNotifications")
@@ -155,7 +155,7 @@ class ble_sensor(plugin.plugin):
                     time.sleep(1.0)
             else:
                 try:
-                    if self.peripherial is not None:
+                    if self.peripheral is not None:
                         self.safe_disconnect()
                 except AttributeError:
                     pass
@@ -180,7 +180,7 @@ class ble_sensor(plugin.plugin):
             pass
         # Make sure the device is disconnected
         try:
-            self.peripherial.disconnect()
+            self.peripheral.disconnect()
             self.state = 0
         except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
             # Not connected yet
@@ -188,13 +188,13 @@ class ble_sensor(plugin.plugin):
             pass
         self.log.debug('State = {}. Waiting {} s to reconnect'.format(self.state, self.RECONNECT_WAIT_TIME), extra=self.extra)
         time.sleep(self.RECONNECT_WAIT_TIME)
-        del self.peripherial
+        del self.peripheral
         self.log.debug('safe_disconnect finished', extra=self.extra)
 
     def get_device_name(self):
         name = ""
         try:
-            c = self.peripherial.getCharacteristics(uuid=bluepy.btle.AssignedNumbers.deviceName)
+            c = self.peripheral.getCharacteristics(uuid=bluepy.btle.AssignedNumbers.deviceName)
             name = c[0].read()
             self.log.debug('Device name: {}'.format(name), extra=self.extra)
         except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
@@ -206,7 +206,7 @@ class ble_sensor(plugin.plugin):
     def get_battery_level(self):
         level = num.NAN
         try:
-            b = self.peripherial.getCharacteristics(uuid=bluepy.btle.AssignedNumbers.batteryLevel)
+            b = self.peripheral.getCharacteristics(uuid=bluepy.btle.AssignedNumbers.batteryLevel)
             level = ord(b[0].read())
             self.log.debug('Battery lavel: {}'.format(level), extra=self.extra)
         except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
@@ -251,7 +251,7 @@ class ble_sensor(plugin.plugin):
         time.sleep(1)
         self.log.debug('Disconnecting', extra=self.extra)
         try:
-            self.peripherial.disconnect()
+            self.peripheral.disconnect()
         except (bluepy.btle.BTLEException, BrokenPipeError, AttributeError) as e:
             self.handle_exception(e, "stop, disconnecting")
         self.state = 0
