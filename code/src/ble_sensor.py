@@ -134,7 +134,12 @@ class ble_sensor(plugin.plugin):
         self.running = True
         self.state = 0
         while self.running:
-            self.log.debug('Address: {}, connected: {}, notifications: {}'.format(self.device_address, self.connected, self.notifications_enabled), extra=self.extra)
+            self.log.debug('Main loop running, dev addr: {}, conn: {}, notif: {}'.format(self.device_address, self.connected, self.notifications_enabled), extra=self.extra)
+            try:
+                state = self.peripherial.getState()
+                self.log.debug('peripherial state: {}'.format(state), extra=self.extra)
+            except (AttributeError, bluepy.btle.BTLEException):
+                pass
             if self.device_address is not None:
                 if self.connected and self.notifications_enabled:
                     try:
@@ -155,9 +160,7 @@ class ble_sensor(plugin.plugin):
                 except AttributeError:
                     pass
                 #Waiting for ble address
-                self.log.debug('address is None, waiting...', extra=self.extra)
                 time.sleep(1.0)
-            self.log.debug('Main loop running {}'.format(self.running), extra=self.extra)
         self.log.debug('Main loop finished', extra=self.extra)
 
     ## Overwrite in real BLE sensor class
