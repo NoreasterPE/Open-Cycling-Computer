@@ -126,7 +126,7 @@ class ble_hr(ble_sensor.ble_sensor):
                 self.editor_fields['value_list'].append((device['name'], device))
         # Add disconnecting option if there was a device connected or defined
         if self.connected or self.pm.parameters["heart_rate_device_name"]["value"] is not None and \
-            self.pm.parameters["heart_rate_device_name"]["value"] != 'Disconnected':
+                self.pm.parameters["heart_rate_device_name"]["value"] != 'Disconnected':
             self.editor_fields['value_list'].append(('Disconnect', {'name': 'Disconnect', 'addr': None, 'addr_type': None}))
         if self.pm.event_queue is not None:
             self.pm.event_queue.put(('open_editor', self.editor_fields))
