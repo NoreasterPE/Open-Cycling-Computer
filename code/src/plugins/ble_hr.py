@@ -72,7 +72,10 @@ class ble_hr(ble_sensor.ble_sensor):
         if self.pm.parameters['ble_scan_done']['value'] and \
                 self.pm.parameters['ble_scan_results']['value'] == 'heart_rate':
             self.pm.parameters['ble_scan_done']['value'] = False
-            self.set_up_editor()
+            if self.pm.parameters['ble_scan_results']['data'] is not None:
+                self.set_up_editor()
+            else:
+                self.log.error("BLE scan resulta are None, refusing to open editor", extra=self.extra)
 
         # Device name has been changed by editor
         if self.pm.parameters["heart_rate_device_name"]["value"] != self.device_name:
