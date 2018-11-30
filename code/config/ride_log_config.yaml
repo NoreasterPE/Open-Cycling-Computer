@@ -16,6 +16,9 @@ columns:
   - name: heart_rate
     parameter: heart_rate
     description:  "Heart RT"
+  - name: heart_rate_kalman
+    parameter: heart_rate_kalman
+    description:  "Heart RT K"
   - name: pressure
     parameter: pressure
     description:  "Pressure"
