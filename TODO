@@ -8,7 +8,7 @@ UI
 
 CODING STYLE:
 - split layout parsing and rendering [IN PROGRESS]
-- move formatting code to numbers module and use in layout and data_log
+- move formatting code to numbers module and use in layout and data_log. Currently threr is code duplication between data_log and layout_loader
 - amend plugin API document
 - some "available" function to check if a parameter is present and has a meaningful value (not None, not NAN). Used to safe guard math calcs
 - keep ble delegates as lean as possible - they are transient. That should keep the code cleaner

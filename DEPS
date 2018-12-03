@@ -2,7 +2,7 @@ Python module dependencies. Install with "pip3 install <NAME>"
 
 bluepy                    - Python module for interfacing with BLE devices through Bluez
   INSTALLED: 1.2.0 (latest)
-getState function is in PR to the main bluepy repo, currently using forked version: https://github.com/PrzemoF/bluepy/tree/fork
+getState function is in the main bluepy repo needs releasing, currently using forked version: https://github.com/PrzemoF/bluepy/tree/fork
 
 gps                       - GPSD is a service daemon that handles GPSes and other navigation-related sensors [[.]
   INSTALLED: 3.9 (latest)
