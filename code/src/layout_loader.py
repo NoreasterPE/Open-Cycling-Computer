@@ -261,6 +261,13 @@ class layout_loader():
     def get_position(self, field):
         try:
             self.abs_origin = field['abs_origin']
+            self.rel_origin = dict(x=0, y=0)
+        except KeyError:
+            pass
+        try:
+            ro = field['rel_origin']
+            self.rel_origin = dict(x=self.rel_origin.get('x') + ro.get('x'),
+                                   y=self.rel_origin.get('y') + ro.get('y'))
         except KeyError:
             pass
         try:
@@ -271,6 +278,5 @@ class layout_loader():
             y = field['y']
         except KeyError:
             y = 0
-        self.origin = dict(x=self.abs_origin.get('x') + x,
-                           y=self.abs_origin.get('y') + y)
-        return x, y
+        self.origin = dict(x=self.abs_origin.get('x') + self.rel_origin.get('x') + x,
+                           y=self.abs_origin.get('y') + self.rel_origin.get('y') + y)
