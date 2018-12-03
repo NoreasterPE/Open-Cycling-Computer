@@ -135,11 +135,15 @@ class ble_sensor(plugin.plugin):
         self.state = 0
         while self.running:
             self.log.debug('Main loop running, dev addr: {}, conn: {}, notif: {}'.format(self.device_address, self.connected, self.notifications_enabled), extra=self.extra)
+            state = ''
             try:
                 state = self.peripheral.getState()
                 self.log.debug('peripheral state: {}'.format(state), extra=self.extra)
-            except (AttributeError, bluepy.btle.BTLEException):
+            except (AttributeError, bluepy.btle.BTLEException, BrokenPipeError):
                 pass
+            if state == 'conn' and not self.connected:
+                self.log.warning('bluepy reports device connected, but self.connected is False. Reconnecting.', extra=self.extra)
+                self.safe_disconnect()
             if self.device_address is not None:
                 if self.connected and self.notifications_enabled:
                     try:
