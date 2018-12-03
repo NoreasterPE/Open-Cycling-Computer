@@ -187,19 +187,22 @@ pages:
          text_colour: FFFFFF
          fields:
                 - parameter: real_time
+                  abs_origin: { x: 0, y: 0 }
                   format: date
                   x: 120
                   y: 20
 
                 - parameter: real_time
+                  abs_origin: { x: 0, y: 40 }
                   format: time
                   align: point
                   x: 135
-                  y: 60
+                  y: 20
 
                 - parameter: odometer_icon
+                  abs_origin: { x: 0, y: 80 }
                   x: 10
-                  y: 84
+                  y: 4
                   file: images/odometer_icon_32x32.png
 
                 - parameter: odometer
@@ -210,10 +213,10 @@ pages:
                       title: Odometer
                   format: "%.1f"
                   x: 70
-                  y: 100
+                  y: 20
                   button:
                           x0: 0
-                          y0: 80
+                          y0: 0
                           w: 240
                           h: 40
 
@@ -221,11 +224,12 @@ pages:
                   show: unit
                   align: right
                   x: 230
-                  y: 100
+                  y: 20
 
                 - parameter: speed_icon
+                  abs_origin: { x: 0, y: 120}
                   x: 10
-                  y: 124
+                  y: 4
                   file: images/speed_icon_32x32.png
 
                 - parameter: speed
@@ -235,21 +239,22 @@ pages:
                   long_click: internal, reset
                   button:
                           x0: 0
-                          y0: 120
+                          y0: 0
                           w: 240
                           h: 40
                   x: 70
-                  y: 140
+                  y: 20
 
                 - parameter: speed
                   show: unit
                   align: right
                   x: 230
-                  y: 140
+                  y: 20
 
                 - parameter: speed_avg_icon
+                  abs_origin: { x: 0, y: 120}
                   x: 10
-                  y: 164
+                  y: 44
                   file: images/average_speed_icon_32x32.png
 
                 - parameter: speed
@@ -262,17 +267,18 @@ pages:
                           w: 240
                           h: 40
                   x: 70
-                  y: 180
+                  y: 60
 
                 - parameter: speed
                   show: unit
                   align: right
                   x: 230
-                  y: 180
+                  y: 60
 
                 - parameter: altitude_icon
+                  abs_origin: { x: 0, y: 160}
                   x: 10
-                  y: 204
+                  y: 44
                   file: images/altitude_icon_32x32.png
 
                 - parameter: altitude
@@ -284,51 +290,53 @@ pages:
                   align: left
                   button:
                           x0: 0
-                          y0: 200
+                          y0: 40
                           w: 240
                           h: 40
                   x: 70
-                  y: 220
+                  y: 60
 
                 - parameter: altitude
                   show: unit
                   align: right
                   x: 230
-                  y: 220
+                  y: 60
 
                 - parameter: pressure_icon
+                  abs_origin: { x: 0, y: 200}
                   x: 10
-                  y: 244
+                  y: 44
                   file: images/pressure_icon_32x32.png
 
                 - parameter: pressure
                   format: "%.1f"
                   align: left
                   x: 70
-                  y: 260
+                  y: 60
 
                 - parameter: pressure
                   show: unit
                   align: right
                   x: 230
-                  y: 260
+                  y: 60
+
+                - parameter: temperature_icon
+                  abs_origin: { x: 0, y: 240}
+                  x: 16
+                  y: 44
+                  file: images/temperature_icon_20x32.png
 
                 - parameter: temperature
                   format: "%.1f"
                   align: left
                   x: 70
-                  y: 300
-
-                - parameter: temperature_icon
-                  x: 16
-                  y: 284
-                  file: images/temperature_icon_20x32.png
+                  y: 60
 
                 - parameter: temperature
                   show: unit
                   align: right
                   x: 230
-                  y: 300
+                  y: 60
 
 
 
