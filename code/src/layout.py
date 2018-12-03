@@ -299,7 +299,10 @@ class layout(threading.Thread):
 
     def render_point_aligned_text(self):
         # Find most right separator - a non-digit
-        char = [x for x in self.value if not x.isdigit()][-1]
+        try:
+            char = [x for x in self.value if not x.isdigit()][-1]
+        except IndexError:
+            char = '.'
         # Split text on separator
         self.split_text = self.value.rpartition(char)
         # Get separator width
