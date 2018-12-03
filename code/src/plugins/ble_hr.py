@@ -25,7 +25,7 @@ class ble_hr(ble_sensor.ble_sensor):
         self.pm.register_parameter("heart_rate_device_name", self.extra["module_name"], store=True)
         self.pm.register_parameter("heart_rate_battery_level", self.extra["module_name"])
         self.pm.register_parameter("heart_rate", self.extra["module_name"], value=num.NAN, raw_unit="BPM", unit="BPM", units_allowed=["BMP"], store=True)
-        self.pm.register_parameter("heart_rate_kalman", self.extra["module_name"], value=num.NAN, raw_unit="BPM", unit="BPM", units_allowed=["BMP"], store=True)
+        self.pm.register_parameter("heart_rate_nof", self.extra["module_name"], value=num.NAN, raw_unit="BPM", unit="BPM", units_allowed=["BMP"], store=True)
         self.pm.register_parameter("heart_rate_notification_beat", self.extra["module_name"])
         self.pm.register_parameter("heart_rate_device_address", self.extra["module_name"], store=True)
         self.pm.request_parameter("ble_scan_done", self.extra["module_name"])
@@ -51,7 +51,7 @@ class ble_hr(ble_sensor.ble_sensor):
             self.pm.parameters["heart_rate"]["reset"] = False
         try:
             self.pm.parameters["heart_rate"]["time_stamp"] = self.delegate.time_stamp
-            self.pm.parameters["heart_rate"]["value"] = self.delegate.heart_rate
+            self.pm.parameters["heart_rate_nof"]["value"] = self.delegate.heart_rate
             self.pm.parameters["heart_rate"]["value_min"] = min(self.pm.parameters["heart_rate"]["value_min"], self.delegate.heart_rate)
             self.pm.parameters["heart_rate"]["value_avg"] = self.delegate.heart_rate_avg
             self.measurement_time = self.delegate.measurement_time
@@ -60,9 +60,9 @@ class ble_hr(ble_sensor.ble_sensor):
             if self.pm.parameters["heart_rate_battery_level"]["value"] != self.battery_level:
                 self.pm.parameters["heart_rate_battery_level"]["value"] = self.battery_level
             if not math.isnan(self.pm.parameters["heart_rate"]["value"]):
-                self.kalman.update_unfiltered_value(self.pm.parameters["heart_rate"]["value"])
+                self.kalman.update_unfiltered_value(self.pm.parameters["heart_rate_nof"]["value"])
                 self.kalman.update()
-                self.pm.parameters["heart_rate_kalman"]["value"] = self.kalman.value_estimate
+                self.pm.parameters["heart_rate"]["value"] = self.kalman.value_estimate
         except (AttributeError) as exception:
             self.handle_exception(exception, "process_delegate_data")
         self.log.debug("heart rate = {} @ {}".format(self.pm.parameters["heart_rate"]["value"], time.strftime("%H:%M:%S", time.localtime(self.pm.parameters["heart_rate"]["time_stamp"]))), extra=self.extra)

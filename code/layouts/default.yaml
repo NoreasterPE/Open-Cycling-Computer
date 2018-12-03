@@ -12,13 +12,6 @@ pages:
          font_size: 20
          text_colour: FFFFFF
          fields:
-                - parameter: heart_rate_kalman
-                  format: "%.1f"
-                  align: point
-                  font_size: 24
-                  x: 40
-                  y: 145
-
                 - parameter: speed
                   x: 85
                   y: 85
