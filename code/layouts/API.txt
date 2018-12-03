@@ -20,6 +20,7 @@ Page header construction
 
 Field construction:
                 - parameter: session_time                           - mandatory, parameter name, for labels use 'label'
+                  abs_origin|rel_origin                             - optional, absolute or relative position of all coordinates. rel_origin add to previous position
                   run: [plugin], [function]                         - optional, short click will run [function] from [plugin]
                   resettable: yes                                   - optional, indictes if parameter can be resetted, cannot be used editable
                   editable: yes                                     - optional, indictes if parameter can be edited, cannot be used with resetteble
@@ -38,3 +39,5 @@ Field construction:
                           w: 120                                    - width
                           h: 80                                     - height
 
+
+See layouts/default.yaml for examples
