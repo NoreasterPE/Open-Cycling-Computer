@@ -42,9 +42,14 @@ class layout_loader():
         ## @var font_face_set
         #  Indicates if cairo font has been initialised.
         self.font_initialised = False
+        ## @var abs_origin
+        #  Current absolute origin coordinates used to place graphisc/text on cairo surface
+        self.abs_origin = dict(x=0, y=0)
+        ## @var rel_origin
+        #  Current relative origin coordinates used to place graphisc/text on cairo surface
+        self.rel_origin = dict(x=0, y=0)
         self.load_layout()
         self.parse_page()
-        self.abs_origin = dict(x=0, y=0)
 
     def load_layout(self):
         if self.layout_file is None:
@@ -115,6 +120,8 @@ class layout_loader():
 
     def parse_page(self, page_id="page_0"):
         self.log.debug("parse_page {}".format(page_id), extra=self.extra)
+        self.abs_origin = dict(x=0, y=0)
+        self.rel_origin = dict(x=0, y=0)
         self.pm.render['refresh'] = True
         try:
             self.current_page = self.pages[page_id]
@@ -151,6 +158,7 @@ class layout_loader():
         self.button_rectangles = {}
         if self.current_page['fields'] is not None:
             for field in self.current_page['fields']:
+                self.get_position(field)
                 self.parse_parameter(field)
 
     def parse_text_colour(self):
@@ -188,8 +196,8 @@ class layout_loader():
         try:
             b = field['button']
             try:
-                rect = (int(b['x0']),
-                        int(b['y0']),
+                rect = (self.abs_origin['x'] + self.rel_origin['x'] + int(b['x0']),
+                        self.abs_origin['y'] + self.rel_origin['y'] + int(b['y0']),
                         int(b['w']),
                         int(b['h']))
             except KeyError:
