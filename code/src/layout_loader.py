@@ -44,6 +44,7 @@ class layout_loader():
         self.font_initialised = False
         self.load_layout()
         self.parse_page()
+        self.abs_origin = dict(x=0, y=0)
 
     def load_layout(self):
         if self.layout_file is None:
@@ -259,6 +260,10 @@ class layout_loader():
 
     def get_position(self, field):
         try:
+            self.abs_origin = field['abs_origin']
+        except KeyError:
+            pass
+        try:
             x = field['x']
         except KeyError:
             x = 0
@@ -266,4 +271,6 @@ class layout_loader():
             y = field['y']
         except KeyError:
             y = 0
+        self.origin = dict(x=self.abs_origin.get('x') + x,
+                           y=self.abs_origin.get('y') + y)
         return x, y

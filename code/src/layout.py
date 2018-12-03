@@ -171,9 +171,14 @@ class layout(threading.Thread):
         self.value = num.sanitise(value)
 
     def render_layout(self):
+        #FIXME Hack, to be removed when parsing and rendering is split properly
+        self.ll.abs_origin = dict(x=0, y=0)
+        self.ll.rel_origin = dict(x=0, y=0)
         for field in self.ll.current_page['fields']:
             parameter = field['parameter']
-            self.pos_x, self.pos_y = self.ll.get_position(field)
+            self.ll.get_position(field)
+            self.pos_x = self.ll.origin['x']
+            self.pos_y = self.ll.origin['y']
             # Get "show" field and get parameter value using it
             try:
                 show = field["show"]
