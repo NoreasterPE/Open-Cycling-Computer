@@ -17,15 +17,32 @@ class syscalls(plugin.plugin):
         pass
 
     def halt(self):
+        def _halt():
+            import os
+            os.system("sudo halt")
+
         print('halt')
-        import os
-        os.system("sudo halt")
+        import threading
+        import pyplum
+        pm = pyplum.pyplum()
+        if pm.event_queue is not None:
+            pm.event_queue.put(('show_overlay', 'images/ol_shutdown.png', 60.0))
+        threading.Thread(target=_halt).start()
+        self.quit()
 
     def reboot(self):
+        def _reboot():
+            import os
+            os.system("sudo reboot")
+
         print('reboot')
+        import threading
+        import pyplum
+        pm = pyplum.pyplum()
+        if pm.event_queue is not None:
+            pm.event_queue.put(('show_overlay', 'images/ol_shutdown.png', 60.0))
+        threading.Thread(target=_reboot).start()
         self.quit()
-        import os
-        os.system("sudo reboot")
 
     def quit(self):
         print('quit')

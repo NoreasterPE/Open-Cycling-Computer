@@ -17,30 +17,21 @@ CODING STYLE:
 - proper command line argument parsing in occ.py
 
 REAL WORLD PROBLEMS:
-- OCC might see a sensor as disconnected, but hcitool shows it's connected:
-pi@raspberrypi:~/Open-Cycling-Computer/code $ hcitool con
-Connections:
-    < Unknown D6:90:A8:08:F0:E4 handle 0 state 5 lm MASTER 
-
-- If there is less than 3 items in editor_list it looks weird, especially when there is only one item
 - method to preload overlay images - it's shaky sometimes
 - add date editor
 - add time editor
 - number_editor needs to deal with numbers with minus character
 - parsing 34k of layout takes ~10 seconds. Split per page might be a solution, and parse the rest in background.
 - develop testing procedure for gui. Automated testing by event injection.
-- add json_client
 - tidy up current/default layout loading. Dafault is a backup, current is the currently used. {Is it required? layouts are read only, so no corruption}
 - Unit syncronistion. I.e. Odometer and session distance
 - Do not try to initialise subsystems too many times. If GPS/other sensor is not there it won't magically show up. Log error and give up.
-- Quit/Halt should render some exit screen
 - BLE device name might be too long for assigned space. Split or cut. Use i4oled code if needed.
 - add description to each parameter in the code. That might be used in the future in layout editor and to generate valid layout values file TBC, maybe doxygen strings?
 
 DATA QUALITY:
 - speed and cadence are strongly linked (gear ratio + wheel size). Use it for filtering cadence.
 - Use Kalman filter for speed - BLE SC goes crazy sometimes
-- Use Kalman filter for heart rate - ble_hr goes crazy sometimes
 - Use Kalman filter for cadence - ble_sc goes crazy sometimes
 - changing MSLP or reference_altitude triggers crazy slope. Reset slope calcs variables or filter the jump
 - Average cadence to be calculated for ride time (reset with ride time?)
@@ -64,6 +55,7 @@ OPTIONAL:
 - Button maps with colour images
 - Auto reload layout on date time of modification change might be handy
 - Explore python-osmgpsmap
+- add json_client
 
 FUTURE
 - graph area to show some data in time
@@ -282,3 +274,10 @@ TypeError: argument 1 must be pygame.Surface, not None
 150. [WONTFIX] - short click to show help or click to switch value i.e. click on temperature to cycle over min/average/max {to messy interface}
 151. [WONTFIX] - Fix lost should be marked in log? {Yes, as DEBUG, trivial}
 152. [DONE] - BLE icon shows one device connected after "Disconnect" is selected
+153. [DONE] - OCC might see a sensor as disconnected, but hcitool shows it's connected:
+        pi@raspberrypi:~/Open-Cycling-Computer/code $ hcitool con
+        Connections:
+            < Unknown D6:90:A8:08:F0:E4 handle 0 state 5 lm MASTER 
+154. [DONE] - If there is less than 3 items in editor_list it looks weird, especially when there is only one item
+155. [DONE] - Use Kalman filter for heart rate - ble_hr goes crazy sometimes
+156. [DONE] - Quit/Halt should render some exit screen
