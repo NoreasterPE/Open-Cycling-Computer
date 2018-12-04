@@ -115,6 +115,7 @@ class ble_scanner(plugin.plugin):
             time.sleep(1.0)
 
     def find_ble_device(self, device_type):
+        self.preload_images()
         if self.pm.event_queue is not None:
             self.pm.event_queue.put(('show_overlay', 'images/ol_ble_scanning.png', 1.0))
         self.current_device_type = device_type
@@ -134,7 +135,7 @@ class ble_scanner(plugin.plugin):
             period = 1
 
         if self.pm.event_queue is not None:
-            self.pm.event_queue.put(('show_overlay', next_ol_image , period))
+            self.pm.event_queue.put(('show_overlay', next_ol_image, period))
         if self.animation_frame == self.animation_frame_max:
             self.animation_frame = 0
         else:
@@ -181,3 +182,12 @@ class ble_scanner(plugin.plugin):
             self.log.info("{}".format(e), extra=self.extra)
         self.log.debug("services for '{}' are '{}'".format(addr, services), extra=self.extra)
         return services
+
+    def preload_images(self):
+        if self.pm.event_queue is not None:
+            images = ['images/ol_ble_scanning.png', 'images/ol_ble_hr_connected.png']
+            for af in range(self.animation_frame_max + 1):
+                images.append('images/ol_ble_scanning_{}.png'.format(af))
+            for image in images:
+                print(image)
+                self.pm.event_queue.put(('preload_image', image))
