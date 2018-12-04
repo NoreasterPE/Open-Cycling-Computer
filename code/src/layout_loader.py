@@ -52,6 +52,7 @@ class layout_loader():
         self.parse_page()
 
     def load_layout(self):
+        self.images = {}
         if self.layout_file is None:
             self.log.critical("Layput file is None, refusing to load", extra=self.extra)
             return
