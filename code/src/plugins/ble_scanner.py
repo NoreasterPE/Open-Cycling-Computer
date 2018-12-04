@@ -51,7 +51,15 @@ class ble_scanner(plugin.plugin):
         ## @var animation_frame
         #  Current number of BLE scan animation frame
         self.animation_frame = 0
+        ## @var animation_frame_max
+        #  Total number af animation frames
         self.animation_frame_max = 2
+        ## @var heart_rate_device_found
+        #  Variable indicating that a heart rate device has been found. Used to control displaying ovelay image showing that information
+        self.heart_rate_device_found = False
+        ## @var speed_cadence_device_found
+        #  Variable indicating that a speed-cadence device has been found. Used to control displaying ovelay image showing that information
+        self.speed_cadence_device_found = False
 
     ## Searches for BLE devices over 5 seconds (defaut). Stores found devices in self.ble_devices
     #  @param self The python object self
@@ -113,8 +121,20 @@ class ble_scanner(plugin.plugin):
         threading.Thread(target=self.scan).start()
 
     def ble_scan_animation_next_frame(self):
+        if self.heart_rate_device_found:
+            next_ol_image = 'images/ol_ble_hr_connected.png'
+            period = 2
+            self.heart_rate_device_found = False
+        elif self.speed_cadence_device_found:
+            next_ol_image = 'images/ol_ble_sc_connected.png'
+            period = 2
+            self.speed_cadence_device_found = False
+        else:
+            next_ol_image = 'images/ol_ble_scanning_{}.png'.format(self.animation_frame)
+            period = 1
+
         if self.pm.event_queue is not None:
-            self.pm.event_queue.put(('show_overlay', 'images/ol_ble_scanning_{}.png'.format(self.animation_frame), 1.0))
+            self.pm.event_queue.put(('show_overlay', next_ol_image , period))
         if self.animation_frame == self.animation_frame_max:
             self.animation_frame = 0
         else:
@@ -128,11 +148,13 @@ class ble_scanner(plugin.plugin):
             try:
                 peripheral.getServiceByUUID(bluepy.btle.AssignedNumbers.heartRate)
                 services += 'heart_rate'
+                self.heart_rate_device_found = True
             except (bluepy.btle.BTLEException, BrokenPipeError):
                 pass
             try:
                 peripheral.getServiceByUUID(bluepy.btle.AssignedNumbers.cyclingSpeedAndCadence)
                 services += 'speed_cadence'
+                self.speed_cadence_device_found = True
             except (bluepy.btle.BTLEException, BrokenPipeError):
                 pass
             try:
