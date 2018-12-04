@@ -98,6 +98,9 @@ class layout(threading.Thread):
                 if ev_type == 'reload_layout':
                     self.ll.load_layout()
                     self.ll.parse_page()
+                if ev_type == 'preload_image':
+                    image_file = event[1]
+                    self.ll.load_image(image_file)
                 if ev_type == 'open_editor':
                     self.editor_fields = event[1]
                     self.open_editor()
