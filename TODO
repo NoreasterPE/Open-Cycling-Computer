@@ -1,5 +1,4 @@
 PRIORITY
-- Add overlay showing ble devices connected
 None
 
 UI
@@ -18,7 +17,7 @@ CODING STYLE:
 - proper command line argument parsing in occ.py
 
 REAL WORLD PROBLEMS:
-- method to preload overlay images - it's shaky sometimes
+- possible stats: ble device connected, but ble_sensor treats is as disconnected with addr = None. That device doesn't show in ble scan
 - add date editor
 - add time editor
 - number_editor needs to deal with numbers with minus character
@@ -35,7 +34,6 @@ DATA QUALITY:
 - Use Kalman filter for speed - BLE SC goes crazy sometimes
 - Use Kalman filter for cadence - ble_sc goes crazy sometimes
 - changing MSLP or reference_altitude triggers crazy slope. Reset slope calcs variables or filter the jump
-- Average cadence to be calculated for ride time (reset with ride time?)
 - Max speed will be false sooner or later after a single invalid measurement. Kalman filter required.
 - session distance changes after odometer edition.
 
@@ -282,3 +280,6 @@ TypeError: argument 1 must be pygame.Surface, not None
 154. [DONE] - If there is less than 3 items in editor_list it looks weird, especially when there is only one item
 155. [DONE] - Use Kalman filter for heart rate - ble_hr goes crazy sometimes
 156. [DONE] - Quit/Halt should render some exit screen
+157. [DONE] - Add overlay showing ble devices connected
+158. [DONE] - method to preload overlay images - it's shaky sometimes
+159. [DONE] - Average cadence to be calculated for ride time (reset with ride time?) {independent reset}
