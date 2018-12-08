@@ -79,25 +79,17 @@ class layout_loader():
                 pass
 
     def load_layout_tree(self):
+        self.log.debug("Loading layout {}".format(self.layout_file), extra=self.extra)
         try:
             with open(self.layout_file) as f:
-                self.log.debug("Loading layout {}".format(self.layout_file), extra=self.extra)
                 self.layout_tree = yaml.safe_load(f)
                 f.close()
-        except FileNotFoundError:
-            self.log.critical("Loading layout {} failed, falling back to default.yaml".format(self.layout_file), extra=self.extra)
+        except:
+            self.log.critical("Loading layout {} failed, quitting".format(self.layout_file), extra=self.extra)
             sys_info = "Error details: {}".format(sys.exc_info()[0])
-            self.log.error(sys_info, extra=self.extra)
-            # FIXME Fallback to default layout
-            self.layout_file = "layouts/default.yaml"
-            try:
-                with open(self.layout_file) as f:
-                    self.log.debug("Loading layout {}".format(self.layout_file), extra=self.extra)
-                    self.layout_tree = yaml.safe_load(f)
-                    f.close()
-            except FileNotFoundError:
-                self.log.critical("Loading default layout {} failed, Quitting...".format(self.layout_file), extra=self.extra)
-                raise
+            self.log.critical(sys_info, extra=self.extra)
+            # FIXME Proper quit required
+            quit()
 
     def parse_font(self):
         self.font = self.current_page['font']
