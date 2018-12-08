@@ -1,5 +1,6 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 ## @package ble_sensor
 #  Abstract base BLE sensor handling module.
 import bluepy.btle

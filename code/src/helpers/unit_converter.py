@@ -1,5 +1,6 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 ## @package units
 #  Package for converting units. When run independently shows a pseudo-test.
 

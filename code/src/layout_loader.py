@@ -1,5 +1,8 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 ## @package layout
+
 #   Module responsible for loading layouts. Needs heavy cleaning...
 
 import cairo

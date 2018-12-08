@@ -1,5 +1,6 @@
-#!/usr/bin/pyhon
-## @package wheel
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 #  Helper module providing wheel size based on tyre size/width.
 
 
