@@ -1,12 +1,18 @@
-import time
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import bluepy
+import logging
 import sys
+import time
 sys.path.insert(0, '../plugins')
 sys.path.insert(0, '../helpers')
 sys.path.insert(0, '../')
+
 import ble_sc
-from bluepy.btle import BTLEException
-import logging
-from wheel import wheel as w
+import wheel
+
+ADDR = "FD:DF:0E:4E:76:CF"
 
 if __name__ == '__main__':
     ex = {'module_name': 'test_ble_sc'}
@@ -18,13 +24,13 @@ if __name__ == '__main__':
     sys_logger = logging.getLogger('system')
     sys_logger.debug("Log start", extra=ex)
 
-    wheel = w()
+    wheel = wheel.wheel()
     WHEEL_CIRC_700x25 = wheel.get_circumference("700x25C") / 1000.0
     try:
         sys_logger.debug("Initialising BLE device...", extra=ex)
         ble_sc_device = ble_sc.ble_sc()
         sys_logger.debug("Setting address...", extra=ex)
-        ble_sc_device.set_addr("FD:DF:0E:4E:76:CF")
+        ble_sc_device.set_addr(ADDR)
         sys_logger.debug("Starting BLE thread...", extra=ex)
         ble_sc_device.start()
         connected = False
@@ -35,7 +41,7 @@ if __name__ == '__main__':
                 connected = ble_sc_device.is_connected()
                 sys_logger.debug("is_connected returned {}".format(connected), extra=ex)
                 time.sleep(3)
-            except BTLEException as e:
+            except bluepy.btle.BTLEException as e:
                 sys_logger.debug("Error: {}".format(e), extra=ex)
                 sys_logger.debug(".....sensor is not on? Waiting... ", extra=ex)
 

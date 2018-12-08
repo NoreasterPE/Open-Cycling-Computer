@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 ## @package bmp280
-#  Module for handling Bosch BMP280 pressureAand temperature sensor
+#  Module for handling Bosch BMP280 pressure aand temperature sensor
 
 import kalman
 import math
@@ -27,6 +27,8 @@ class bmp280(plugin.plugin):
         #  Time between measurements in [s]
         self.measurement_delay = 1.0
 
+        ## @var pm
+        #  Pythom PLUgin Manager instance
         self.pm = pyplum.pyplum()
         self.pm.register_parameter("pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa", 'mmHg', 'inHg'], store=True)
         self.pm.register_parameter("pressure_nof", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa", 'mmHg', 'inHg'])
@@ -39,6 +41,9 @@ class bmp280(plugin.plugin):
         ## @var pressure_unfiltered
         #  Pressure as reported by the sensor. Might be IIR filtered, depending on the sensor configureaion
         self.pressure_unfiltered = num.NAN
+        ## @var temperature
+        #  Temperature as reported by the sensor.
+        self.temperature = num.NAN
         ## @var reference_altitude
         #  Reference altitude used to calculate current altitude
         self.reference_altitude = num.NAN
