@@ -13,20 +13,23 @@ Page header construction
          type: normal                                               - optional, page type, use 'editor' to disable swiping out ot the page
          background: images/page_0_background.png                   - background image or None for black background
          buttons: images/button_pressed.png                         - image with button, rendered when button is pressed
-         font: "Gidole-Regular.ttf"                                 - page font, currently only one font per layout is allowed due to pycairo workaround
+         font: "Gidole-Regular.ttf"                                 - page font, currently only one font per layout is allowed due to
+									pycairo workaround
          font_size: 20                                              - page font size, used if font is not directly defined in field (see below)
          text_colour: FFFFFF                                        - text colour, RRGGBB
          fields:                                                    - begining of section with field definitions
 
 Field construction:
                 - parameter: session_time                           - mandatory, parameter name, for labels use 'label'
-                  abs_origin|rel_origin                             - optional, absolute or relative position of all coordinates. rel_origin add to previous position
+                  abs_origin|rel_origin                             - optional, absolute or relative position of all coordinates.
+									rel_origin add to previous position
                   run: [plugin], [function]                         - optional, short click will run [function] from [plugin]
                   resettable: yes                                   - optional, indictes if parameter can be resetted, cannot be used editable
                   editable: yes                                     - optional, indictes if parameter can be edited, cannot be used with resetteble
                   editor_title: Odometer                            - editor title, required if editable is 'yes'
                   editor: editor_number                             - editor type, required if editable is 'yes'
-                  format: hhmmss                                    - optional, format, options are: "%.1f" - normal python formatting, hhmmss 00:10:12, time, date, zoomed_digit (for editors)
+                  format: hhmmss                                    - optional, format, options are: "%.1f" - normal python formatting
+									hhmmss 00:10:12, time, date, zoomed_digit (for editors)
                   reset: avg, max                                   - optional, which fields should be resetted
                   show: unit                                        - optional, what should be shown: unit, min, avg, max, tenths
                   align: left                                       - optional, center by default, left or right

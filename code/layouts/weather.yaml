@@ -1,3 +1,5 @@
+# Simple weather station - part of pyplum demo
+
 pages:
        - name: "Statistics"
          id: page_0
