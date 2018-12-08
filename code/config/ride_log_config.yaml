@@ -1,44 +1,57 @@
 columns:
+
   - name: real_time
     parameter: real_time
     description:  "Time"
     format: time
+
   - name: session_time
     parameter: session_time
     description:  "Session"
     format: hhmmss.s
+
   - name: speed
     parameter: speed
     description:  "Speed"
+
   - name: cadence
     parameter: cadence
     description:  "Cadence"
+
   - name: heart_rate
     parameter: heart_rate
     description:  "Heart RT"
+
   - name: heart_rate_nof
     parameter: heart_rate_nof
     description:  "Heart RT NOF"
+
   - name: pressure
     parameter: pressure
     description:  "Pressure"
     format: "%.1f"
+
   - name: pressure_nof
     parameter: pressure_nof
     description:  "Pressure nof"
+
   - name: temperature
     parameter: temperature
     description:  "Temp"
+
   - name: altitude
     parameter: altitude
     description:  "Altitude"
+
   - name: odometer
     parameter: odometer
     description:  "Odometer"
+
   - name: slope
     parameter: slope
     description:  "Slope"
     format: '%.3f'
+
   - name: gear
     parameter: gear_ratio
     description:  "Gear"
