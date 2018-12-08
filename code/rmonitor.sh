@@ -1,4 +1,5 @@
 #!/bin/bash
+#Script tracking last ride log
 
 LAST_LOG=$(ls -1t log/ride* | head -n1)
 echo $LAST_LOG
