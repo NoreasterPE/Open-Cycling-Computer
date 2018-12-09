@@ -14,7 +14,6 @@ CODING STYLE:
 - keep ble delegates as lean as possible - they are transient. That should keep the code cleaner
 - define rules for different log levels
 - consider splitting layout into one-page-per-file
-- proper command line argument parsing in occ.py
 
 REAL WORLD PROBLEMS:
 - possible stats: ble device connected, but ble_sensor treats is as disconnected with addr = None. That device doesn't show in ble scan
@@ -283,3 +282,4 @@ TypeError: argument 1 must be pygame.Surface, not None
 157. [DONE] - Add overlay showing ble devices connected
 158. [DONE] - method to preload overlay images - it's shaky sometimes
 159. [DONE] - Average cadence to be calculated for ride time (reset with ride time?) {independent reset}
+160. [DONE] - proper command line argument parsing in occ.py

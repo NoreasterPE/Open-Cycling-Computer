@@ -6,16 +6,16 @@
 #
 #  http://opencyclingcomputer.eu/
 
-#from ble_scanner import ble_scanner
-import events
-import layout
+import argparse
 import logging
 import logging.handlers
-import pyplum
 import signal
-import singleton
-import sys
 import time
+
+import events
+import layout
+import pyplum
+import singleton
 
 
 ## Main OpenCyclingComputer class
@@ -65,15 +65,17 @@ def quit_handler(signal, frame):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
-        print('Need 4 args')
-        print('Argument 1: config file, argument 2: ride log config, argument 3: layout file, argument 4: fonts directory')
-        quit()
-    #FIXME Make proper option parsing
-    config_file = sys.argv[1]
-    data_log_config = sys.argv[2]
-    layout_file = sys.argv[3]
-    fonts_dir = sys.argv[4]
+    parser = argparse.ArgumentParser(description='Open Cycling Copmuter.')
+    parser.add_argument('-c', '--config', help='Main coonfig yaml file')
+    parser.add_argument('-l', '--layout', help='Layout yaml file')
+    parser.add_argument('-d', '--data-log', help='Diata log coonfig yaml file')
+    parser.add_argument('-f', '--fonts', help='Directory with fonts')
+    args = parser.parse_args()
+    config_file = args.config
+    data_log_config = args.data_log
+    layout_file = args.layout
+    fonts_dir = args.fonts
+
     ## @var sys_log_filename
     # Log filename, helper variable
     sys_log_filename = "log/debug." + time.strftime("%Y-%m-%d-%H:%M:%S") + ".log"
