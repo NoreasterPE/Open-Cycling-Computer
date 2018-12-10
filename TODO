@@ -20,7 +20,10 @@ REAL WORLD PROBLEMS:
 - add date editor
 - add time editor
 - number_editor needs to deal with numbers with minus character
-- parsing 34k of layout takes ~10 seconds. Split per page might be a solution, and parse the rest in background.
+- parsing 34k of layout takes ~10 seconds.
+    * split per page might be a solution
+    * parse the rest in background <-- probably not needed as average parse time per page ~1s
+    * pre-parsing to python file file seems to be another option
 - develop testing procedure for gui. Automated testing by event injection.
 - tidy up current/default layout loading. Dafault is a backup, current is the currently used. {Is it required? layouts are read only, so no corruption}
 - Unit syncronistion. I.e. Odometer and session distance
