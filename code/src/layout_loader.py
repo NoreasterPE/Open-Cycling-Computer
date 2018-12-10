@@ -59,7 +59,7 @@ class layout_loader():
         if self.layout_file is None:
             self.log.critical("Layput file is None, refusing to load", extra=self.extra)
             return
-        self.load_layout_tree()
+        self.load_layout_tree_from_file()
         self.pages = {}
         for page in self.layout_tree['pages']:
             try:
@@ -70,18 +70,19 @@ class layout_loader():
             if 'type' not in page:
                 page['type'] = None
             self.pages[page_id] = page
-            self.pages[page_id]['parameters'] = dict()
             try:
                 for f in page['fields']:
                     try:
                         meta_name = f['parameter'] + "_" + f['show']
                     except KeyError:
                         meta_name = f['parameter']
-                    self.pages[page_id]['parameters'][meta_name] = f
+                    self.pages[page_id]['fields'][meta_name] = f
             except TypeError:
                 pass
 
-    def load_layout_tree(self):
+    ## Loads layout from yaml file.
+    #  @param self The python object self
+    def load_layout_tree_from_file(self):
         self.log.debug("Loading layout {}".format(self.layout_file), extra=self.extra)
         try:
             with open(self.layout_file) as f:

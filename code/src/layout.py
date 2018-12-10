@@ -371,14 +371,14 @@ class layout(threading.Thread):
             for parameter, r in self.ll.button_rectangles.items():
                 if self.point_in_rect(position, r[1]):
                     self.log.debug("CLICK on {} {}".format(parameter, r), extra=self.extra)
-                    field = self.ll.current_page['parameters'][parameter]
+                    field = self.ll.current_page['fields'][parameter]
                     self.parse_short_click(field)
             self.pm.render['refresh'] = True
         elif click == 'LONG':
             for parameter, r in self.ll.button_rectangles.items():
                 if self.point_in_rect(position, r[1]):
                     self.log.debug("LONG CLICK on {} {}".format(parameter, r), extra=self.extra)
-                    field = self.ll.current_page['parameters'][parameter]
+                    field = self.ll.current_page['fields'][parameter]
                     self.parse_long_click(field, r[0])
         elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
             self.next_page()
