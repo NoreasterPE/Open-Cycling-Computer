@@ -6,12 +6,14 @@
 #   Module responsible for loading layouts. Needs heavy cleaning...
 
 import cairo
+import collections
 import ctypes as ct
-import datetime
+#import datetime
 import logging
-import pyplum
 import sys
 import yaml
+
+import pyplum
 
 
 ## Class for loading and parsing layouts
@@ -71,13 +73,16 @@ class layout_loader():
                 page['type'] = None
             self.pages[page_id] = page
             try:
-                for f in page['fields']:
-                    try:
-                        meta_name = f['parameter'] + "_" + f['show']
-                    except KeyError:
-                        meta_name = f['parameter']
+                fields = page['fields']
+                del page['fields']
+                self.pages[page_id]['fields'] = collections.OrderedDict()
+                for f in fields:
+                    meta_name = self.get_meta_name(f)
+                    if meta_name in page['fields']:
+                        #field already in the ordered dict, add location
+                        meta_name = meta_name + '-' + format(f['x']) + '-' + format(f['y'])
                     self.pages[page_id]['fields'][meta_name] = f
-            except TypeError:
+            except TypeError as e:
                 pass
 
     ## Loads layout from yaml file.
@@ -154,7 +159,7 @@ class layout_loader():
 
         self.button_rectangles = {}
         if self.current_page['fields'] is not None:
-            for field in self.current_page['fields']:
+            for parameter, field in self.current_page['fields'].items():
                 self.get_position(field)
                 self.parse_parameter(field)
 
@@ -184,12 +189,7 @@ class layout_loader():
         except KeyError:
             self.log.critical("Parameter {} on page {}. Parameter field is mandatory.".format(name, self.current_page), extra=self.extra)
             name = None
-        try:
-            show = field['show']
-        except KeyError:
-            show = ''
-        meta_name = name + "_" + show
-        meta_name = meta_name.strip('_')
+        meta_name = self.get_meta_name(field)
         try:
             b = field['button']
             try:
@@ -219,17 +219,6 @@ class layout_loader():
                 hours, minutes = divmod(minutes, 60)
                 value = "{:02.0f}:{:02.0f}:{:02.0f}".format(hours, minutes, seconds)
             except (TypeError, ValueError):
-                pass
-        elif format_string == "time":
-            try:
-                value = datetime.datetime.fromtimestamp(int(value)).strftime('%H:%M:%S')
-            except (TypeError, ValueError):
-                # ValueError: invalid literal for int() with base 10: ''
-                pass
-        elif format_string == "date":
-            try:
-                value = datetime.datetime.fromtimestamp(int(value)).strftime('%Y-%m-%d')
-            except (ValueError, TypeError):
                 pass
         else:
             try:

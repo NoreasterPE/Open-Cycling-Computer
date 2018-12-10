@@ -4,6 +4,7 @@
 #   Module responsible for rendering layouts. Needs heavy cleaning...
 
 import cairo
+import datetime
 import logging
 import math
 import queue
@@ -179,7 +180,8 @@ class layout(threading.Thread):
         #FIXME Hack, to be removed when parsing and rendering is split properly
         self.ll.abs_origin = dict(x=0, y=0)
         self.ll.rel_origin = dict(x=0, y=0)
-        for field in self.ll.current_page['fields']:
+        for meta_name, field in self.ll.current_page['fields'].items():
+            self.value = None
             parameter = field['parameter']
             self.ll.get_position(field)
             self.pos_x = self.ll.origin['x']
@@ -271,6 +273,19 @@ class layout(threading.Thread):
                     self.get_value(parameter, 'value')
                 except (KeyError, TypeError):
                     self.value = None
+        elif show == "date":
+            try:
+                self.get_value(parameter, 'value')
+                self.value = datetime.datetime.fromtimestamp(int(self.value)).strftime('%Y-%m-%d')
+            except (ValueError, TypeError):
+                pass
+        elif show == "time":
+            try:
+                self.get_value(parameter, 'value')
+                self.value = datetime.datetime.fromtimestamp(int(self.value)).strftime('%H:%M:%S')
+            except (TypeError, ValueError):
+                # ValueError: invalid literal for int() with base 10: ''
+                pass
         elif show == "tenths":
             try:
                 self.get_value(parameter, 'value')

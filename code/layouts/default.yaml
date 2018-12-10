@@ -188,12 +188,14 @@ pages:
          fields:
                 - parameter: real_time
                   abs_origin: { x: 0, y: 0 }
+                  show: date
                   format: date
                   x: 120
                   y: 20
 
                 - parameter: real_time
                   rel_origin: { x: 0, y: 40 }
+                  show: time
                   format: time
                   align: point
                   x: 135
