@@ -7,7 +7,7 @@ import cairo
 import layout_loader
 import logging
 import math
-import num
+from helpers import num
 import pyplum
 import queue
 import threading

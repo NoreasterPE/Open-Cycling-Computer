@@ -6,7 +6,7 @@ import ble_sensor
 import bluepy.btle
 import kalman
 import math
-import num
+from helpers import num
 import time
 
 

@@ -4,7 +4,7 @@
 ## @package ble_sensor
 #  Abstract base BLE sensor handling module.
 import bluepy.btle
-import num
+from helpers import num
 import plugin
 import pyplum
 import time

@@ -4,7 +4,7 @@
 #  Module for handling bicycle parameters like session_distance or slope
 
 import math
-import num
+from helpers import num
 import plugin
 import pyplum
 import time

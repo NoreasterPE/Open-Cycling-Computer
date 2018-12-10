@@ -5,7 +5,7 @@
 
 import kalman
 import math
-import num
+from helpers import num
 import plugin
 import pyplum
 import time

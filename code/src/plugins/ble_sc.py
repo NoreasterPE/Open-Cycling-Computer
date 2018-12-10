@@ -5,7 +5,7 @@
 import ble_sensor
 import bluepy.btle
 import math
-import num
+from helpers import num
 import time
 
 

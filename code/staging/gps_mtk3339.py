@@ -10,7 +10,7 @@ import mtk3339
 import os
 import threading
 import time
-import num
+from helpers import num
 
 
 ## @var fix_mode

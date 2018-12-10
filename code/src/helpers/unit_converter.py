@@ -4,7 +4,7 @@
 ## @package units
 #  Package for converting units. When run independently shows a pseudo-test.
 
-import num
+from helpers import num
 
 
 ## Main unit converter class
