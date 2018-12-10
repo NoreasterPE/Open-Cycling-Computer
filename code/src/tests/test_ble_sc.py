@@ -6,11 +6,10 @@ import logging
 import sys
 import time
 sys.path.insert(0, '../plugins')
-sys.path.insert(0, '../helpers')
 sys.path.insert(0, '../')
 
 import ble_sc
-from helpers import wheel
+import helpers
 
 ADDR = "FD:DF:0E:4E:76:CF"
 
@@ -24,7 +23,7 @@ if __name__ == '__main__':
     sys_logger = logging.getLogger('system')
     sys_logger.debug("Log start", extra=ex)
 
-    wheel = wheel.wheel()
+    wheel = helpers.wheel()
     WHEEL_CIRC_700x25 = wheel.get_circumference("700x25C") / 1000.0
     try:
         sys_logger.debug("Initialising BLE device...", extra=ex)
