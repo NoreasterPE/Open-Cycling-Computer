@@ -66,10 +66,10 @@ def quit_handler(signal, frame):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Open Cycling Copmuter.')
-    parser.add_argument('-c', '--config', help='Main coonfig yaml file')
-    parser.add_argument('-l', '--layout', help='Layout yaml file')
-    parser.add_argument('-d', '--data-log', help='Diata log coonfig yaml file')
-    parser.add_argument('-f', '--fonts', help='Directory with fonts')
+    parser.add_argument('-c', '--config', help='Main coonfig yaml file', required=True)
+    parser.add_argument('-l', '--layout', help='Layout yaml file', required=True)
+    parser.add_argument('-d', '--data-log', help='Data log config yaml file', required=True)
+    parser.add_argument('-f', '--fonts', help='Directory with fonts', required=True)
     args = parser.parse_args()
     config_file = args.config
     data_log_config = args.data_log
