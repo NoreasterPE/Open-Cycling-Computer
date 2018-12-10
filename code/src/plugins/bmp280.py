@@ -3,12 +3,13 @@
 ## @package bmp280
 #  Module for handling Bosch BMP280 pressure aand temperature sensor
 
-import kalman
 import math
+import time
+
 from helpers import num
+import helpers
 import plugin
 import pyplum
-import time
 
 
 class bmp280(plugin.plugin):
@@ -53,7 +54,7 @@ class bmp280(plugin.plugin):
         self.mean_sea_level_pressure = num.NAN
         self.measure()
         # Initialise Kalman filter
-        self.kalman = kalman.kalman(Q=0.02, R=1.0)
+        self.kalman = helpers.kalman(Q=0.02, R=1.0)
         self.kalman.set_initial_value(self.pressure_unfiltered)
         self.log.debug("Initialised.", extra=self.extra)
 

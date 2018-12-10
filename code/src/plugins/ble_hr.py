@@ -4,7 +4,7 @@
 #  BLE heart rate sensor handling module.
 import ble_sensor
 import bluepy.btle
-import kalman
+import helpers
 import math
 from helpers import num
 import time
@@ -33,7 +33,7 @@ class ble_hr(ble_sensor.ble_sensor):
         self.pm.request_parameter("heart_rate_device_name", self.extra["module_name"])
         self.delegate_class = hr_delegate
         self.editor_fields = {}
-        self.kalman = kalman.kalman(Q=0.01, R=1.0)
+        self.kalman = helpers.kalman(Q=0.01, R=1.0)
         # Initial heart rate assumed to be 60, there is no measurement yet
         self.kalman.set_initial_value(60)
 
