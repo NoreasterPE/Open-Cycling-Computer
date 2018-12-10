@@ -3,10 +3,11 @@
 ## @package editor
 #  Convinience plugin with edior functions
 
+import time
+
+import helpers
 import plugin
 import pyplum
-import time
-import unit_converter
 
 
 ## Convinience plugin with edior functions
@@ -20,7 +21,7 @@ class editor(plugin.plugin):
         super().__init__()
         self.fields = dict()
         self.pm = pyplum.pyplum()
-        self.uc = unit_converter.unit_converter()
+        self.uc = helpers.unit_converter()
 
     def run(self):
         # This plugin doesn't need to run in background in a separate thread

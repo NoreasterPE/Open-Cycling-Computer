@@ -4,15 +4,16 @@
 #   Module responsible for rendering layouts. Needs heavy cleaning...
 
 import cairo
-import layout_loader
 import logging
 import math
-from helpers import num
-import pyplum
 import queue
 import threading
 import time
-import unit_converter
+
+from helpers import num
+import helpers
+import layout_loader
+import pyplum
 
 
 ## Class for handling layouts
@@ -58,7 +59,7 @@ class layout(threading.Thread):
         self.overlay_queue = list()
         ## @var uc
         #  Handle of unit_converter. Helper for converting units.
-        self.uc = unit_converter.unit_converter()
+        self.uc = helpers.unit_converter()
         ## @var editor_fields
         #  Dict with data for editor pages.
         self.editor_fields = {}
