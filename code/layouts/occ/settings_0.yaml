@@ -1,0 +1,168 @@
+name: "Settings 0"
+id: settings_0
+up: null
+down: page_0
+left: settings_2
+right: settings_1
+background_image: images/background_2_x_4.png
+buttons_image: images/button_pressed.png
+font: "Gidole-Regular.ttf"
+font_size: 20
+text_colour: FFFFFF
+fields:
+    - parameter: label
+      x: 60
+      y: 15
+      text: Wheel size
+
+    - parameter: wheel_size
+      long_click: internal, editor
+      editor:
+          type: editor_list
+          title: Wheel size
+      x: 60
+      y: 50
+      font_size: 30
+      button:
+              x0: 0
+              y0: 0
+              w: 120
+              h: 80
+
+    - parameter: label
+      x: 180
+      y: 15
+      text: Wheel circ.
+
+    - parameter: wheel_circumference
+      long_click: internal, editor
+      editor:
+          type: editor_numbers
+          title: Wheel circ.
+      x: 165
+      y: 50
+      font_size: 30
+      format:
+        mm: '%.0f'
+        cm: '%.1f'
+        m: '%.3f'
+        in: '%.1f'
+      button:
+              x0: 120
+              y0: 0
+              w: 120
+              h: 80
+
+    - parameter: wheel_circumference
+      show: unit
+      align: right
+      x: 235
+      y: 50
+
+    - parameter: label
+      x: 180
+      y: 95
+      text: MSLP METAR
+
+    - parameter: mean_sea_level_pressure
+      long_click: internal, editor
+      editor:
+          type: editor_numbers
+          title: Mean sea lvl press.
+      x: 160
+      y: 130
+      font_size: 30
+      format:
+        hPa: "%.0f"
+        inHg: "%.2f"
+      button:
+              x0: 120
+              y0: 80
+              w: 120
+              h: 80
+
+    - parameter: mean_sea_level_pressure
+      show: unit
+      align: right
+      x: 235
+      y: 130
+
+    - parameter: label
+      x: 60
+      y: 95
+      text: Reference alt.
+
+    - parameter: reference_altitude
+      long_click: internal, editor
+      editor:
+          type: editor_numbers
+          title: Reference alt.
+      x: 45
+      y: 130
+      font_size: 30
+      button:
+              x0: 0
+              y0: 80
+              w: 120
+              h: 80
+
+    - parameter: reference_altitude
+      show: unit
+      x: 100
+      y: 130
+
+    - parameter: label
+      x: 60
+      y: 175
+      text: Rider weight
+
+    - parameter: rider_weight
+      long_click: internal, editor
+      editor:
+          type: editor_numbers
+          title: Rider weight
+      x: 45
+      y: 210
+      font_size: 30
+      button:
+              x0: 0
+              y0: 160
+              w: 120
+              h: 80
+
+    - parameter: rider_weight
+      show: unit
+      x: 100
+      y: 210
+
+    - parameter: label
+      x: 60
+      y: 255
+      text: Spd/cadence
+
+    - parameter: cadence_speed_device_name
+      long_click: ble_sc, find_cadence_speed_device
+      x: 60
+      y: 290
+      font_size: 15
+      button:
+              x0: 0
+              y0: 240
+              w: 120
+              h: 80
+
+    - parameter: label
+      x: 180
+      y: 255
+      text: Heart rate
+
+    - parameter: heart_rate_device_name
+      long_click: ble_hr, find_heart_rate_device
+      x: 180
+      y: 290
+      font_size: 15
+      button:
+              x0: 120
+              y0: 240
+              w: 120
+              h: 80

@@ -1,0 +1,126 @@
+name: "Settings 1"
+id: settings_1
+up: null
+down: page_0
+left: settings_0
+right: settings_2
+background_image: images/background_2_x_4.png
+buttons_image: images/button_pressed.png
+font: "Gidole-Regular.ttf"
+font_size: 20
+text_colour: FFFFFF
+fields:
+    - parameter: halt
+      short_click: syscalls, halt
+      x: 60
+      y: 40
+      text: Halt
+      button:
+              x0: 0
+              y0: 0
+              w: 120
+              h: 80
+
+    - parameter: reboot
+      short_click: syscalls, reboot
+      x: 180
+      y: 40
+      text: Reboot
+      button:
+              x0: 120
+              y0: 0
+              w: 120
+              h: 80
+
+    - parameter: quit_call
+      short_click: syscalls, quit
+      x: 60
+      y: 120
+      text: Quit
+      button:
+              x0: 0
+              y0: 80
+              w: 120
+              h: 80
+
+    - parameter: label
+      text: Write
+      x: 180
+      y: 110
+    - parameter: label
+      text: config
+      x: 180
+      y: 140
+
+    - parameter: write_config
+      short_click: config, write_config
+      button:
+              x0: 120
+              y0: 80
+              w: 120
+              h: 80
+
+    - parameter: label
+      text: Load
+      x: 60
+      y: 185
+    - parameter: label
+      text: layout
+      x: 60
+      y: 210
+
+    - parameter: load_default_layout
+      short_click: syscalls, reload_layout
+      button:
+              x0: 0
+              y0: 160
+              w: 120
+              h: 80
+
+    - parameter: log_level
+      short_click: syscalls, cycle_log_level
+      x: 180
+      y: 200
+      text:
+      button:
+              x0: 120
+              y0: 160
+              w: 120
+              h: 80
+
+    - parameter: label
+      x: 60
+      y: 255
+      text: Reference alt.
+
+    - parameter: reference_altitude
+      show: unit
+      long_click: internal, editor
+      editor:
+          type: editor_unit
+          title: Reference alt. unit
+      x: 60
+      y: 280
+      font_size: 20
+      button:
+              x0: 0
+              y0: 240
+              w: 120
+              h: 80
+
+    - parameter: label
+      text: Screenshots
+      font_size: 20
+      x: 180
+      y: 250
+
+    - parameter: screenshot_mode
+      short_click: syscalls, screenshot_mode
+      x: 180
+      y: 280
+      text:
+      button:
+              x0: 120
+              y0: 240
+              w: 120
+              h: 80

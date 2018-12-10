@@ -1,0 +1,171 @@
+name: "Units"
+id: settings_2
+up: null
+down: page_0
+left: settings_1
+right: settings_0
+background_image: images/background_2_x_4.png
+buttons_image: images/button_pressed.png
+font: "Gidole-Regular.ttf"
+font_size: 20
+text_colour: FFFFFF
+fields:
+    - parameter: label
+      x: 60
+      y: 15
+      text: Speed
+
+    - parameter: speed
+      show: unit
+      long_click: internal, editor
+      editor:
+          type: editor_unit
+          title: Speed unit
+      x: 60
+      y: 50
+      font_size: 30
+      button:
+              x0: 0
+              y0: 0
+              w: 120
+              h: 80
+
+    - parameter: label
+      x: 180
+      y: 15
+      text: Odometer
+
+    - parameter: odometer
+      show: unit
+      long_click: internal, editor
+      editor:
+          type: editor_unit
+          title: Odometer unit
+      x: 180
+      y: 50
+      font_size: 30
+      button:
+              x0: 120
+              y0: 0
+              w: 120
+              h: 80
+
+    - parameter: label
+      x: 60
+      y: 95
+      text: Rider weight
+
+    - parameter: rider_weight
+      show: unit
+      long_click: internal, editor
+      editor:
+          type: editor_unit
+          title: Rider weight unit
+      x: 60
+      y: 130
+      font_size: 30
+      button:
+              x0: 0
+              y0: 80
+              w: 120
+              h: 80
+
+    - parameter: label
+      x: 180
+      y: 95
+      text: Temperature
+
+    - parameter: temperature
+      show: unit
+      long_click: internal, editor
+      editor:
+          type: editor_unit
+          title: Temperature unit
+      x: 180
+      y: 130
+      font_size: 30
+      button:
+              x0: 120
+              y0: 80
+              w: 120
+              h: 80
+
+    - parameter: label
+      x: 60
+      y: 175
+      text: Slope
+
+    - parameter: slope
+      show: unit
+      long_click: internal, editor
+      editor:
+          type: editor_unit
+          title: Slope unit
+      x: 60
+      y: 210
+      font_size: 30
+      button:
+              x0: 0
+              y0: 160
+              w: 120
+              h: 80
+
+    - parameter: label
+      x: 180
+      y: 175
+      text: Wheel circ.
+
+    - parameter: wheel_circumference
+      show: unit
+      long_click: internal, editor
+      editor:
+          type: editor_unit
+          title: Wheel circ. unit
+      x: 180
+      y: 210
+      font_size: 30
+      button:
+              x0: 120
+              y0: 160
+              w: 120
+              h: 80
+
+    - parameter: label
+      x: 60
+      y: 255
+      text: Pressure
+
+    - parameter: pressure
+      show: unit
+      long_click: internal, editor
+      editor:
+          type: editor_unit
+          title: Pressure unit
+      x: 60
+      y: 290
+      font_size: 30
+      button:
+              x0: 0
+              y0: 240
+              w: 120
+              h: 80
+
+    - parameter: label
+      x: 180
+      y: 255
+      text: METAR Press.
+
+    - parameter: mean_sea_level_pressure
+      show: unit
+      long_click: internal, editor
+      editor:
+          type: editor_unit
+          title: METAR MSLP unit
+      x: 180
+      y: 290
+      font_size: 30
+      button:
+              x0: 120
+              y0: 240
+              w: 120
+              h: 80

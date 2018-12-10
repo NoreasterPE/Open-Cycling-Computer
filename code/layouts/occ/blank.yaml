@@ -1,0 +1,62 @@
+name: "Blank"
+id: page_2
+up: settings_0
+down: null
+left: page_1
+right: page_0
+background_image: images/page_2_background.png
+buttons_image: images/button_pressed.png
+font: "Gidole-Regular.ttf"
+font_size: 16
+text_colour: FFFFFF
+fields:
+#   - parameter: latitude
+#      x: 60
+#      y: 25
+#      font_size: 25
+#  
+#    - parameter: longitude
+#      x: 60
+#      y: 60
+#      font_size: 25
+#  
+#    - parameter: fix_time_gps
+#      x: 60
+#      y: 95
+#      font_size: 25
+#  
+#    - parameter: fix_gps
+#      x: 60
+#      y: 130
+#      font_size: 25
+#  
+
+#    - parameter: time
+#      x: 120
+#      y: 180
+#      font_size: 25
+
+#    - parameter: date
+#      x: 120
+#      y: 220
+#      font_size: 25
+
+#    - parameter: altitude_gps
+#      button:
+#              x0: 120
+#              y0: 240
+#              w: 120
+#              h: 80
+#      x: 50
+#      y: 290
+#      font_size: 40
+#  
+#    - parameter: altitude_units
+#      x: 110
+#      y: 310
+#      font_size: 1.20
+#  
+#    - parameter: altitude_gps_icon
+#      x: 97
+#      y: 267
+#      file: images/altitude_gps_icon_20x32.png

@@ -1,0 +1,164 @@
+name: "Statistics"
+id: page_1
+up: settings_0
+down: null
+left: page_0
+right: page_2
+background_image: images/stats_background.png
+buttons_image: images/button_pressed.png
+font: "Gidole-Regular.ttf"
+font_size: 24
+text_colour: FFFFFF
+fields:
+    - parameter: real_time
+      abs_origin: { x: 0, y: 0 }
+      format: date
+      x: 120
+      y: 20
+
+    - parameter: real_time
+      rel_origin: { x: 0, y: 40 }
+      format: time
+      align: point
+      x: 135
+      y: 20
+
+    - parameter: odometer_icon
+      rel_origin: { x: 0, y: 40}
+      x: 10
+      y: 4
+      file: images/odometer_icon_32x32.png
+
+    - parameter: odometer
+      align: left
+      long_click: internal, editor
+      editor:
+          type: editor_numbers
+          title: Odometer
+      format: "%.1f"
+      x: 70
+      y: 20
+      button:
+              x0: 0
+              y0: 0
+              w: 240
+              h: 40
+
+    - parameter: odometer
+      show: unit
+      align: right
+      x: 230
+      y: 20
+
+    - parameter: speed_icon
+      rel_origin: { x: 0, y: 40}
+      x: 10
+      y: 4
+      file: images/speed_icon_32x32.png
+
+    - parameter: speed
+      show: max
+      align: left
+      format: "%.1f"
+      long_click: internal, reset
+      button:
+              x0: 0
+              y0: 0
+              w: 240
+              h: 40
+      x: 70
+      y: 20
+
+    - parameter: speed
+      show: unit
+      align: right
+      x: 230
+      y: 20
+
+    - parameter: speed_avg_icon
+      rel_origin: { x: 0, y: 40}
+      x: 10
+      y: 4
+      file: images/average_speed_icon_32x32.png
+
+    - parameter: speed
+      show: avg
+      align: left
+      long_click: internal, reset
+      button:
+              x0: 0
+              y0: 40
+              w: 240
+              h: 40
+      x: 70
+      y: 20
+
+    - parameter: speed
+      show: unit
+      align: right
+      x: 230
+      y: 20
+
+    - parameter: altitude_icon
+      rel_origin: { x: 0, y: 40}
+      x: 10
+      y: 4
+      file: images/altitude_icon_32x32.png
+
+    - parameter: altitude
+      format: "%.1f"
+      long_click: internal, editor
+      editor:
+          type: editor_numbers
+          title: Ref. altitude
+      align: left
+      button:
+              x0: 0
+              y0: 40
+              w: 240
+              h: 40
+      x: 70
+      y: 20
+
+    - parameter: altitude
+      show: unit
+      align: right
+      x: 230
+      y: 20
+
+    - parameter: pressure_icon
+      rel_origin: { x: 0, y: 40}
+      x: 10
+      y: 4
+      file: images/pressure_icon_32x32.png
+
+    - parameter: pressure
+      format: "%.1f"
+      align: left
+      x: 70
+      y: 20
+
+    - parameter: pressure
+      show: unit
+      align: right
+      x: 230
+      y: 20
+
+    - parameter: temperature_icon
+      rel_origin: { x: 0, y: 40}
+      x: 16
+      y: 4
+      file: images/temperature_icon_20x32.png
+
+    - parameter: temperature
+      format: "%.1f"
+      align: left
+      x: 70
+      y: 20
+
+    - parameter: temperature
+      show: unit
+      align: right
+      x: 230
+      y: 20
+

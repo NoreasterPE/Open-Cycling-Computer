@@ -1,0 +1,174 @@
+name: Main
+id: page_0
+up: settings_0
+down: null
+left: page_2
+right: page_1
+background_image: images/page_0_background.png
+#background_colour: '#000000'
+buttons_image: images/button_pressed.png
+font: "Gidole-Regular.ttf"
+font_size: 20
+text_colour: FFFFFF
+fields:
+    - parameter: speed
+      x: 85
+      y: 85
+      font_size: 150
+
+    - parameter: speed
+      show: tenths
+      x: 200
+      y: 115
+      font_size: 80
+
+    - parameter: speed
+      show: unit
+      font_size: 24
+      x: 205
+      y: 65
+
+    - parameter: gps_icon
+      x: 205
+      y: 5
+      file: images/gps_icon_32x32_0.png
+#       file: images/gps_icon_32x32.png
+#       variable:
+#               name: gps_strength
+#               frames: 3
+
+    - parameter: ble_icon
+      x: 170
+      y: 5
+      file: images/ble_icon_32x32.png
+      variable:
+        name: ble_no_of_devices_connected
+        frames: 6
+
+    - parameter: session_distance
+      format: "%.1f"
+      align: right
+      x: 200
+      y: 185
+      font_size: 30
+
+    - parameter: session_distance
+      show: unit
+      align: right
+      x: 230
+      y: 185
+
+    - parameter: session_time
+      long_click: internal, reset
+      format: hhmmss
+      align: point
+      x: 200
+      y: 225
+      font_size: 30
+      button:
+              x0: 120
+              y0: 160
+              w: 120
+              h: 80
+
+    - parameter: slope
+      x: 50
+      y: 200
+      font_size: 45
+      format:
+        m/m: "%.2f"
+        "%": "%.0f"
+
+    - parameter: slope
+      show: unit
+      x: 100
+      y: 230
+
+    - parameter: slope_icon
+      x: 98
+      y: 184
+      file: images/slope_icon_20x32.png
+
+    - parameter: cadence
+      long_click: internal, reset
+      reset:
+         - avg
+         - max
+      x: 45
+      y: 295
+      font_size: 50
+      button:
+              x0: 0
+              y0: 240
+              w: 120
+              h: 80
+
+    - parameter: cadence
+      show: avg
+      x: 60
+      y: 255
+
+    - parameter: cadence
+      show: max
+      x: 100
+      y: 255
+
+    - parameter: cadence
+      show: unit
+      align: right
+      x: 115
+      y: 310
+      font_size: 12
+
+    - parameter: cadence_icon
+      x: 98
+      y: 267
+      file: images/cadence_icon_20x32.png
+      variable:
+              name: cadence_notification_beat
+              frames: 2
+
+    - parameter: heart_rate
+      long_click: internal, reset
+      reset:
+         - min
+         - avg
+         - max
+      x: 165
+      y: 295
+      font_size: 50
+      button:
+              x0: 120
+              y0: 240
+              w: 120
+              h: 80
+
+    - parameter: heart_rate
+      show: min
+      x: 140
+      y: 255
+
+    - parameter: heart_rate
+      show: avg
+      x: 180
+      y: 255
+
+    - parameter: heart_rate
+      show: max
+      x: 220
+      y: 255
+
+    - parameter: heart_rate
+      show: unit
+      align: right
+      x: 235
+      y: 310
+      font_size: 12
+
+    - parameter: heart_rate_icon
+      x: 218
+      y: 267
+      file: images/heart_rate_icon_20x32.png
+      variable:
+              name: heart_rate_notification_beat
+              frames: 2

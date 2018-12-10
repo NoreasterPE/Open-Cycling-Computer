@@ -1,0 +1,90 @@
+name: "String Editor"
+id: editor_string
+type: editor
+background_image: images/editor_string_background.png
+buttons_image: images/button_pressed.png
+font: "Gidole-Regular.ttf"
+font_size: 30
+text_colour: FFFFFF
+fields:
+    - parameter: accept_edit
+      short_click: editor, accept_edit
+      x: 60
+      y: 30
+      text: Accept
+      button:
+              x0: 0
+              y0: 0
+              w: 120
+              h: 60
+
+    - parameter: cancel_edit
+      short_click: editor, cancel_edit
+      x: 180
+      y: 30
+      text: Cancel
+      button:
+              x0: 120
+              y0: 0
+              w: 120
+              h: 60
+
+    - parameter: editor_title
+      x: 120
+      y: 90
+      font_size: 24
+
+    - parameter: value
+      format: zoomed_digit
+      x: 120
+      y: 150
+      font_size: 40
+
+    - parameter: decrease_digit
+      short_click: editor, decrease_digit
+      x: 60
+      y: 230
+      font_size: 50
+      text: "-"
+      button:
+              x0: 0
+              y0: 200
+              w: 120
+              h: 60
+
+    - parameter: increase_digit
+      short_click: editor, increase_digit
+      x: 180
+      y: 230
+      font_size: 50
+      text: "+"
+      button:
+              x0: 120
+              y0: 200
+              w: 120
+              h: 60
+
+    - parameter: previous_char
+      short_click: editor, previous_char
+      x: 60
+      y: 290
+      font_size: 50
+      text: ←
+      button:
+              x0: 0
+              y0: 260
+              w: 120
+              h: 60
+
+    - parameter: next_char
+      short_click: editor, next_char
+      x: 180
+      y: 290
+      font_size: 50
+      text: →
+      button:
+              x0: 120
+              y0: 260
+              w: 120
+              h: 60
+

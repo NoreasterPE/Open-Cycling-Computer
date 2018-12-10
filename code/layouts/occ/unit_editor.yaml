@@ -1,0 +1,69 @@
+name: "Unit Editor"
+id: editor_unit
+type: editor
+background_image: images/editor_unit_background.png
+buttons_image: images/button_pressed.png
+font: "Gidole-Regular.ttf"
+font_size: 50
+text_colour: FFFFFF
+fields:
+    - parameter: accept_edit
+      short_click: editor, accept_edit
+      x: 60
+      y: 30
+      font_size: 30
+      text: Accept
+      button:
+              x0: 0
+              y0: 0
+              w: 120
+              h: 60
+
+    - parameter: cancel_edit
+      short_click: editor, cancel_edit
+      x: 180
+      y: 30
+      font_size: 30
+      text: Cancel
+      button:
+              x0: 120
+              y0: 0
+              w: 120
+              h: 60
+
+    - parameter: editor_title
+      x: 120
+      y: 100
+      font_size: 24
+
+    - parameter: unit
+      x: 120
+      y: 160
+      font_size: 60
+
+    #                - parameter: allowed_units
+    #                  font_size: 30
+    #                  x: 120
+    #                  y: 220
+
+    - parameter: previous_unit
+      short_click: editor, previous_unit
+      x: 60
+      y: 290
+      text: ←
+      button:
+              x0: 0
+              y0: 260
+              w: 120
+              h: 60
+
+    - parameter: next_unit
+      short_click: editor, next_unit
+      x: 180
+      y: 290
+      text: →
+      button:
+              x0: 120
+              y0: 260
+              w: 120
+              h: 60
