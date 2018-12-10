@@ -4,11 +4,12 @@
 #  Module for handling bicycle parameters like session_distance or slope
 
 import math
+import time
+
 from helpers import num
+import helpers
 import plugin
 import pyplum
-import time
-import wheel
 
 
 ## Bicycle  module, handles all bicycle related parameters
@@ -30,7 +31,7 @@ class bicycle(plugin.plugin):
         self.pm.register_parameter("session_distance", self.extra["module_name"], value=0.0, raw_unit="m", unit="km", units_allowed=["m", "km", "mi"])
         self.pm.register_parameter("session_odometer_start", self.extra["module_name"], value=num.NAN, raw_unit="m")
         self.pm.register_parameter("gear_ratio", self.extra["module_name"], value=num.NAN)
-        self.w = wheel.wheel()
+        self.w = helpers.wheel()
         self.pm.register_parameter("wheel_size", self.extra["module_name"], value=num.NAN, raw_unit="m", value_list=self.w.get_allowed_values(), store=True)
         self.pm.request_parameter("wheel_size", self.extra["module_name"])
         self.wheel_size = num.NAN

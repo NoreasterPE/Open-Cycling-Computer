@@ -10,7 +10,7 @@ sys.path.insert(0, '../helpers')
 sys.path.insert(0, '../')
 
 import ble_sc
-import wheel
+from helpers import wheel
 
 ADDR = "FD:DF:0E:4E:76:CF"
 
