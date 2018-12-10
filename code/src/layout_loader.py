@@ -286,6 +286,14 @@ class layout_loader():
         self.origin = dict(x=self.abs_origin.get('x') + self.rel_origin.get('x') + x,
                            y=self.abs_origin.get('y') + self.rel_origin.get('y') + y)
 
+    def get_meta_name(self, field):
+        try:
+            show = field["show"]
+            meta_name = field["parameter"] + "_" + show
+        except KeyError:
+            meta_name = field["parameter"]
+        return meta_name
+
 
 _initialized = False
 

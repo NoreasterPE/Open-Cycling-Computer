@@ -389,14 +389,6 @@ class layout(threading.Thread):
         elif click == 'T_TO_B':  # Swipe TOP to BOTTOM
             self.ll.parse_page("settings_0")
 
-    def get_meta_name(self, field):
-        try:
-            show = field["show"]
-            meta_name = field["parameter"] + "_" + show
-        except KeyError:
-            meta_name = field["parameter"]
-        return meta_name
-
     def parse_short_click(self, field):
         self.call_plugin_method(field, 'short_click')
 
