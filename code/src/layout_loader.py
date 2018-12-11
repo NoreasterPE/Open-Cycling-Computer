@@ -8,9 +8,9 @@
 import cairo
 import collections
 import ctypes as ct
-#import datetime
+import glob
 import logging
-import sys
+import os
 import yaml
 
 import pyplum
@@ -33,8 +33,8 @@ class layout_loader():
         #  Location of fonts directory
         self.fonts_dir = self.pm.parameters['fonts_dir']['value']
         ## @var layout_file
-        #  Location of layout file
-        self.layout_file = self.pm.parameters['layout_file']['value']
+        #  Location of layout file or directory
+        self.layout_location = self.pm.parameters['layout_location']['value']
         ## @var images
         #  Dict with images loaded with png_to_cairo_surface. Currently only pngs are supported.
         self.images = {}
@@ -53,22 +53,33 @@ class layout_loader():
         ## @var rel_origin
         #  Current relative origin coordinates used to place graphisc/text on cairo surface
         self.rel_origin = dict(x=0, y=0)
-        self.load_layout()
+        self.load_layout_from_location()
         self.parse_page()
 
-    def load_layout(self):
+    ## Loads layout from a location (directory with one page per file or file woith all pages) and parses the content into self.pages
+    #  @param self The python object self
+    def load_layout_from_location(self):
+        if os.path.isfile(self.layout_location):
+            self.layout_file = self.layout_location
+            self.layout_tree = self.load_layout_tree_from_file()
+        elif os.path.isdir(self.layout_location):
+            self.layout_dir = self.layout_location
+            self.layout_tree = dict()
+            self.layout_tree['pages'] = dict()
+            files = [f for f in glob.glob(self.layout_dir + "*.yaml")]
+            for f in files:
+                layout_tree = self.load_layout_tree_from_file(f)
+                self.layout_tree['pages'][layout_tree['id']] = layout_tree
+        else:
+            self.log.critical("Layput location is not a file or a directory, refusing to load".format(self.layout_location), extra=self.extra)
+        self.convert_pages()
+
+    ## Converts self.layout_tree into move convinient self.page
+    #  @param self The python object self
+    def convert_pages(self):
         self.images = {}
-        if self.layout_file is None:
-            self.log.critical("Layput file is None, refusing to load", extra=self.extra)
-            return
-        self.load_layout_tree_from_file()
         self.pages = {}
-        for page in self.layout_tree['pages']:
-            try:
-                page_id = page['id']
-            except KeyError:
-                self.log.critical("Page in layout {} has no id field defined. Layout might not work.".format(self.layout_file), extra=self.extra)
-            # page 'type' field is optional, add it if not defined
+        for page_id, page in self.layout_tree['pages'].items():
             if 'type' not in page:
                 page['type'] = None
             self.pages[page_id] = page
@@ -83,22 +94,22 @@ class layout_loader():
                         meta_name = meta_name + '-' + format(f['x']) + '-' + format(f['y'])
                     self.pages[page_id]['fields'][meta_name] = f
             except TypeError as e:
-                pass
+                self.log.error("Error while converting layout {}: {}.".format(page_id, str(e)), extra=self.extra)
 
     ## Loads layout from yaml file.
     #  @param self The python object self
-    def load_layout_tree_from_file(self):
-        self.log.debug("Loading layout {}".format(self.layout_file), extra=self.extra)
+    def load_layout_tree_from_file(self, layout_file):
+        self.log.debug("Loading layout file {}".format(layout_file), extra=self.extra)
+        layout_tree = None
         try:
-            with open(self.layout_file) as f:
-                self.layout_tree = yaml.safe_load(f)
+            with open(layout_file) as f:
+                layout_tree = yaml.safe_load(f)
                 f.close()
-        except:
-            self.log.critical("Loading layout {} failed, quitting".format(self.layout_file), extra=self.extra)
-            sys_info = "Error details: {}".format(sys.exc_info()[0])
-            self.log.critical(sys_info, extra=self.extra)
-            # FIXME Proper quit required
+        except yaml.scanner.ScannerError as e:
+            self.log.critical("Loading layout file {} failed, quitting".format(layout_file), extra=self.extra)
+            self.log.critical("Error details: {}".format(str(e)), extra=self.extra)
             quit()
+        return layout_tree
 
     def parse_font(self):
         self.font = self.current_page['font']

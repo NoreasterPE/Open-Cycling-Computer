@@ -30,7 +30,7 @@ class open_cycling_computer(object, metaclass=singleton.singleton):
     #  @param config_file Location of config file
     #  @param layout_file Location of layout file
     #  @param fonts_dir Location of font directory
-    def __init__(self, config_file=None, layout_file=None, fonts_dir=None):
+    def __init__(self, config_file=None, layout_location=None, fonts_dir=None):
         ## @var log
         #  Handle to system logger
         self.log = logging.getLogger('system')
@@ -39,7 +39,7 @@ class open_cycling_computer(object, metaclass=singleton.singleton):
         self.pm = pyplum.pyplum()
         self.pm.register_parameter("log_level", self.extra["module_name"], value='debug', store=True)
         self.pm.register_parameter("config_file", self.extra["module_name"], value=config_file)
-        self.pm.register_parameter("layout_file", self.extra["module_name"], value=layout_file)
+        self.pm.register_parameter("layout_location", self.extra["module_name"], value=layout_location)
         self.pm.register_parameter("fonts_dir", self.extra["module_name"], value=fonts_dir)
         ## @var layout
         #  Handle to layout instance
@@ -67,15 +67,17 @@ def quit_handler(signal, frame):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Open Cycling Copmuter.')
     parser.add_argument('-c', '--config', help='Main coonfig yaml file', required=True)
-    parser.add_argument('-l', '--layout', help='Layout yaml file', required=True)
+    lt = parser.add_mutually_exclusive_group(required=True)
+    lt.add_argument('-l', '--layout', help='Layout yaml file')
+    lt.add_argument('-L', '--layout-dir', help='directory with Layout yaml files (one page per file)')
     parser.add_argument('-d', '--data-log', help='Data log config yaml file', required=True)
     parser.add_argument('-f', '--fonts', help='Directory with fonts', required=True)
     args = parser.parse_args()
     config_file = args.config
     data_log_config = args.data_log
     layout_file = args.layout
+    layout_dir = args.layout_dir
     fonts_dir = args.fonts
-
     ## @var sys_log_filename
     # Log filename, helper variable
     sys_log_filename = "log/debug." + time.strftime("%Y-%m-%d-%H:%M:%S") + ".log"
@@ -125,7 +127,7 @@ if __name__ == "__main__":
     p_manager.start()
     ## @var main_window
     # OCC main window. It's instance of open_cycling_computer class
-    main_window = open_cycling_computer(config_file, layout_file, fonts_dir)
+    main_window = open_cycling_computer(config_file, layout_file or layout_dir, fonts_dir)
     sys_logger.debug("Starting events loop", extra=ex)
     main_window.events.run()
     p_manager.stop()
