@@ -13,12 +13,14 @@ fields:
     - parameter: real_time
       abs_origin: { x: 0, y: 0 }
       format: date
+      show: date
       x: 120
       y: 20
 
     - parameter: real_time
       rel_origin: { x: 0, y: 40 }
       format: time
+      show: time
       align: point
       x: 135
       y: 20
