@@ -40,6 +40,12 @@ class editor(plugin.plugin):
                 self.fields["index"] = len(self.fields["value_list"]) - 1
         except TypeError:
             pass
+        if self.fields['editor'] == 'editor_numbers':
+            try:
+                if self.fields['value'] is None:
+                    self.fields["value"] = '0'
+            except TypeError:
+                self.fields["value"] = '0'
 
     def next_item(self):
         index = self.fields["index"]
