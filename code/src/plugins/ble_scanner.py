@@ -189,5 +189,4 @@ class ble_scanner(plugin.plugin):
             for af in range(self.animation_frame_max + 1):
                 images.append('images/ol_ble_scanning_{}.png'.format(af))
             for image in images:
-                print(image)
                 self.pm.event_queue.put(('preload_image', image))
