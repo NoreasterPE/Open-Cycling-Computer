@@ -21,7 +21,6 @@ class syscalls(plugin.plugin):
             import os
             os.system("sudo halt")
 
-        print('halt')
         import threading
         import pyplum
         pm = pyplum.pyplum()
@@ -35,7 +34,6 @@ class syscalls(plugin.plugin):
             import os
             os.system("sudo reboot")
 
-        print('reboot')
         import threading
         import pyplum
         pm = pyplum.pyplum()
@@ -45,7 +43,6 @@ class syscalls(plugin.plugin):
         self.quit()
 
     def quit(self):
-        print('quit')
         import pyplum
         pm = pyplum.pyplum()
         # Stop pyplum
