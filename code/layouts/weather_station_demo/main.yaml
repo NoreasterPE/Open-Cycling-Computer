@@ -1,0 +1,119 @@
+# Simple weather station - part of pyplum demo
+name: "Main"
+id: page_0
+number: 0
+type: normal
+background_image: images/settings_1_background.png
+#background_colour: '#000000'
+buttons_image: images/settings_1_background.png
+font: "Gidole-Regular.ttf"
+font_size: 30
+text_colour: FFFFFF
+fields:
+    - parameter: real_time
+      abs_origin: { x: 0, y: 0 }
+      show: date
+      format: date
+      x: 120
+      y: 20
+
+    - parameter: real_time
+      show: time
+      format: time
+      x: 120
+      y: 60
+
+    - parameter: external_temperature
+      rel_origin: { x: 0, y: 80 }
+      format: "%.1f"
+      font_size: 60
+      x: 120
+      y: 40
+
+    - parameter: temperature_icon
+      x: 16
+      y: 25
+      file: images/temperature_icon_20x32.png
+
+    - parameter: external_temperature
+      show: unit
+      align: right
+      x: 225
+      y: 40
+
+    - parameter: pressure_icon
+      rel_origin: { x: 0, y: 80 }
+      x: 10
+      y: 5
+      file: images/pressure_icon_32x32.png
+
+    - parameter: mean_sea_level_pressure
+      rel_origin: { x: 0, y: 0 }
+      format: "%.1f"
+      x: 120
+      y: 20
+
+    - parameter: mean_sea_level_pressure
+      rel_origin: { x: 0, y: 0 }
+      show: unit
+      align: right
+      x: 225
+      y: 20
+
+    - parameter: temperature_icon
+      rel_origin: { x: 0, y: 40 }
+      x: 10
+      y: 5
+      file: images/temperature_icon_20x32.png
+
+    - parameter: temperature
+      rel_origin: { x: 0, y: 0 }
+      format: "%.1f"
+      x: 120
+      y: 20
+
+    - parameter: temperature
+      rel_origin: { x: 0, y: 0 }
+      show: unit
+      align: right
+      x: 225
+      y: 20
+
+    - parameter: pressure_icon
+      rel_origin: { x: 0, y: 40 }
+      x: 10
+      y: 5
+      file: images/pressure_icon_32x32.png
+
+    - parameter: pressure
+      rel_origin: { x: 0, y: 0 }
+      format: "%.1f"
+      x: 120
+      y: 20
+
+    - parameter: pressure
+      rel_origin: { x: 0, y: 0 }
+      show: unit
+      align: right
+      x: 225
+      y: 20
+
+    - parameter: altitude_icon
+      rel_origin: { x: 0, y: 40 }
+      x: 10
+      y: 5
+      file: images/altitude_icon_32x32.png
+
+    - parameter: altitude
+      rel_origin: { x: 0, y: 0 }
+      format: "%.1f"
+      x: 120
+      y: 20
+
+    - parameter: altitude
+      rel_origin: { x: 0, y: 0 }
+      show: unit
+      align: right
+      x: 225
+      y: 20
+
