@@ -19,10 +19,6 @@ class plugin(threading.Thread):
         # System logger handle
         self.log = logging.getLogger('system')
 
-        ## @var params_required
-        # Dict with params required by the plugin to work properly
-        self.required = dict()
-
         ## @var connected
         # Variable indicating it the plugin hardware is currently connected
         self.connected = False
@@ -48,7 +44,7 @@ class plugin(threading.Thread):
     def reset_data(self):
         pass
 
-    ## Usedb by module pyplum to notify about change of a reqired parameter. Overwrite with code that needs to be executed on change of the parameters.
+    ## Usedb by module pyplum to notify about change of a parameter that the plugin subscribed for. Overwrite with code that needs to be executed on change of the parameters.
     #  @param self The python object self
     #  @param reqired Dict with new values for require parameters
     def notification(self):
