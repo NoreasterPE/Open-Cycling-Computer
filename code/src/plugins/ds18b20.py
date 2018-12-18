@@ -23,7 +23,7 @@ class ds18b20(plugin.plugin):
         #  Time between measurements in [s]
         self.measurement_delay = 1.0
 
-        self.pm.register_parameter("cheese_temperature", self.extra["module_name"], raw_unit="C", unit="C", units_allowed=["C", "F"], store=False)
+        self.pm.register_parameter("external_temperature", self.extra["module_name"], raw_unit="C", unit="C", units_allowed=["C", "F"], store=False)
         ## @var temperature
         #  Temperature as reported by the sensor.
         self.temperature = num.NAN
@@ -51,7 +51,7 @@ class ds18b20(plugin.plugin):
             if self.pm.parameters['data_log_period']['value'] != 5:
                 self.pm.parameters["data_log_period"]['value'] = 5
             self.measure()
-            self.pm.parameters['cheese_temperature']['value'] = self.temperature
+            self.pm.parameters['external_temperature']['value'] = self.temperature
             self.log.debug("ds18b20 temperature: {}".format(self.temperature), extra=self.extra)
             time.sleep(self.measurement_delay)
         self.log.debug("Main loop finished", extra=self.extra)
