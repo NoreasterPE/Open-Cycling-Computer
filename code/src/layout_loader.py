@@ -59,13 +59,13 @@ class layout_loader():
     ## Loads layout from a location (directory with one page per file or file woith all pages) and parses the content into self.pages
     #  @param self The python object self
     def load_layout_from_location(self):
+        self.layout_tree = dict()
+        self.layout_tree['pages'] = dict()
         if os.path.isfile(self.layout_location):
             self.layout_file = self.layout_location
-            self.layout_tree = self.load_layout_tree_from_file()
+            self.layout_tree['pages'] = self.load_layout_tree_from_file(self.layout_location)
         elif os.path.isdir(self.layout_location):
             self.layout_dir = self.layout_location
-            self.layout_tree = dict()
-            self.layout_tree['pages'] = dict()
             files = [f for f in glob.glob(self.layout_dir + "*.yaml")]
             for f in files:
                 layout_tree = self.load_layout_tree_from_file(f)
