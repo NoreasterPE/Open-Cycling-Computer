@@ -4,6 +4,7 @@
 #  Module for handling ride parameters logging to file
 import datetime
 import logging
+import logging.handlers
 from helpers import num
 import plugin
 import threading
