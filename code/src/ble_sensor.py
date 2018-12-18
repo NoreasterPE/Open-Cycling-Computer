@@ -6,7 +6,6 @@
 import bluepy.btle
 from helpers import num
 import plugin
-import pyplum
 import time
 
 
@@ -32,7 +31,6 @@ class ble_sensor(plugin.plugin):
         super().__init__()
         self.log.debug('WAIT_TIME {}'.format(self.WAIT_TIME), extra=self.extra)
 
-        self.pm = pyplum.pyplum()
         self.state = 0
         self.device_address = None
         self.device_name = None

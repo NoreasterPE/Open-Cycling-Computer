@@ -9,7 +9,6 @@ import time
 from helpers import num
 import helpers
 import plugin
-import pyplum
 
 
 ## Bicycle  module, handles all bicycle related parameters
@@ -24,7 +23,6 @@ class bicycle(plugin.plugin):
         # Run init for super class
         super().__init__()
 
-        self.pm = pyplum.pyplum()
         self.pm.register_parameter("slope", self.extra["module_name"], value=num.NAN, raw_unit="m/m", unit="%", units_allowed=["m/m", "%"])
         self.pm.register_parameter("speed", self.extra["module_name"], value=num.NAN, raw_unit="m/s", unit="km/h", units_allowed=["m/s", "km/h", "mi/h"], store=True)
         self.pm.parameters["speed"]["time_stamp"] = 0.0

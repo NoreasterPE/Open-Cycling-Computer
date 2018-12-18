@@ -9,7 +9,6 @@ import threading
 
 import events
 import plugin
-import pyplum
 
 
 ## Convinience plugin to system calls like halt, reboot, etc
@@ -26,7 +25,6 @@ class syscalls(plugin.plugin):
         def _halt():
             os.system("sudo halt")
 
-        pm = pyplum.pyplum()
         if pm.event_queue is not None:
             pm.event_queue.put(('show_overlay', 'images/ol_shutdown.png', 60.0))
         threading.Thread(target=_halt).start()

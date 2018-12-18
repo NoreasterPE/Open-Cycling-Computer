@@ -6,7 +6,6 @@
 import math
 from helpers import num
 import plugin
-import pyplum
 import time
 
 
@@ -22,7 +21,6 @@ class compute(plugin.plugin):
         # Run init for super class
         super().__init__()
 
-        self.pm = pyplum.pyplum()
         self.pm.register_parameter("real_time", self.extra["module_name"])
         self.pm.register_parameter("session_start_time", self.extra["module_name"], value=time.time(), raw_unit="s")
         self.session_start_time = self.pm.parameters['session_start_time']['value']

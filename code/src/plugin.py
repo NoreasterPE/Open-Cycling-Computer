@@ -6,6 +6,7 @@ import logging
 import threading
 import time
 
+import pyplum
 
 ## Abstract base class for plugins
 class plugin(threading.Thread):
@@ -22,6 +23,10 @@ class plugin(threading.Thread):
         ## @var connected
         # Variable indicating it the plugin hardware is currently connected
         self.connected = False
+
+        ## @var pm
+        # PYthon PLUgin Manager instance
+        self.pm = pyplum.pyplum()
 
         ## @var name
         # Name of the plugin

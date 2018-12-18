@@ -5,7 +5,6 @@
 import evdev
 import queue
 import plugin
-import pyplum
 
 
 ## Class for handling events from piTFT touchscreen
@@ -33,7 +32,6 @@ class pitft_touchscreen(plugin.plugin):
             exit()
         self.event = dict(time=None, id=None, x=None, y=None, touch=None)
         self.events = queue.Queue()
-        self.pm = pyplum.pyplum()
         self.pm.register_input_queue(self.extra['module_name'], self.events)
 
     def run(self):

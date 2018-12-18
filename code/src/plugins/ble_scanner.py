@@ -3,7 +3,6 @@
 #  BLE scanner module. Provides list of BLE devices and info about number of devices connected
 import bluepy
 import plugin
-import pyplum
 import threading
 import time
 
@@ -33,7 +32,6 @@ class ble_scanner(plugin.plugin):
     def __init__(self):
         # Run init for super class
         super().__init__()
-        self.pm = pyplum.pyplum()
         self.pm.register_parameter("ble_scan_done", self.extra["module_name"], value=False)
         self.pm.register_parameter("ble_scan_results", self.extra["module_name"], value=[])
         self.pm.register_parameter('ble_no_of_devices_connected', self.extra['module_name'], value=0)

@@ -8,7 +8,6 @@ import time
 
 from helpers import num
 import plugin
-import pyplum
 
 
 class ds18b20(plugin.plugin):
@@ -24,9 +23,6 @@ class ds18b20(plugin.plugin):
         #  Time between measurements in [s]
         self.measurement_delay = 1.0
 
-        ## @var pm
-        #  Pythom PLUgin Manager instance
-        self.pm = pyplum.pyplum()
         self.pm.register_parameter("cheese_temperature", self.extra["module_name"], raw_unit="C", unit="C", units_allowed=["C", "F"], store=False)
         ## @var temperature
         #  Temperature as reported by the sensor.

@@ -6,7 +6,6 @@ import datetime
 import logging
 from helpers import num
 import plugin
-import pyplum
 import threading
 import time
 import yaml
@@ -23,7 +22,6 @@ class data_log(plugin.plugin):
     def __init__(self):
         # Run init for super class
         super().__init__()
-        self.pm = pyplum.pyplum()
         self.pm.register_parameter("data_log_period", self.extra["module_name"], value=1.0, raw_unit='s', store=True)
         self.pm.request_parameter("real_time", self.extra["module_name"])
         self.last_log_entry = 0.0

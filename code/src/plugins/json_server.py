@@ -5,7 +5,6 @@
 import bottle
 import math
 import plugin
-import pyplum
 import socket
 
 
@@ -14,13 +13,6 @@ class json_server(plugin.plugin):
     ## @var extra
     # Module name used for logging and prefixing data
     extra = {'module_name': __qualname__}
-
-    ## The constructor
-    #  @param self The python object self
-    def __init__(self):
-        # Run init for super class
-        super().__init__()
-        self.pm = pyplum.pyplum()
 
     def get_ip(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

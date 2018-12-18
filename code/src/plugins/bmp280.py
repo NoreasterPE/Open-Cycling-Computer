@@ -9,7 +9,6 @@ import time
 from helpers import num
 import helpers
 import plugin
-import pyplum
 
 
 class bmp280(plugin.plugin):
@@ -28,9 +27,6 @@ class bmp280(plugin.plugin):
         #  Time between measurements in [s]
         self.measurement_delay = 1.0
 
-        ## @var pm
-        #  Pythom PLUgin Manager instance
-        self.pm = pyplum.pyplum()
         self.pm.register_parameter("pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa", 'mmHg', 'inHg'], store=True)
         self.pm.register_parameter("pressure_nof", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", "kPa", 'mmHg', 'inHg'])
         self.pm.register_parameter("mean_sea_level_pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", 'inHg'], store=True)

@@ -7,7 +7,6 @@ import time
 
 import helpers
 import plugin
-import pyplum
 
 
 ## Convinience plugin with edior functions
@@ -20,7 +19,6 @@ class editor(plugin.plugin):
         # Run init for super class
         super().__init__()
         self.fields = dict()
-        self.pm = pyplum.pyplum()
         self.uc = helpers.unit_converter()
 
     def run(self):

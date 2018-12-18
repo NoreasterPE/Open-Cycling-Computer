@@ -23,7 +23,6 @@ class lipo_shim(plugin.plugin):
         # Run init for super class
         super().__init__()
 
-        self.pm = pyplum.pyplum()
         self.pm.register_parameter("battery_low", self.extra["module_name"], value=False, store=False)
         self.battery_low = False
 

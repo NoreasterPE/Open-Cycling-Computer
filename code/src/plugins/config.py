@@ -4,7 +4,6 @@
 
 from shutil import copyfile
 import plugin
-import pyplum
 import time
 import yaml
 
@@ -20,7 +19,6 @@ class config(plugin.plugin):
     def __init__(self):
         # Run init for super class
         super().__init__()
-        self.pm = pyplum.pyplum()
         self.pm.register_parameter("write_config_period", self.extra["module_name"], value=15.0, raw_unit='s', store=True)
         self.pm.register_parameter("write_config_requested", self.extra["module_name"], value=False)
         self.pm.request_parameter("write_config_requested", self.extra["module_name"])
