@@ -32,6 +32,7 @@ class bmp280(plugin.plugin):
         self.pm.register_parameter("mean_sea_level_pressure", self.extra["module_name"], raw_unit="Pa", unit="hPa", units_allowed=["hPa", 'inHg'], store=True)
         self.pm.register_parameter("temperature", self.extra["module_name"], raw_unit="C", unit="C", units_allowed=["C", "F"], store=True)
         self.pm.register_parameter('altitude', self.extra['module_name'], raw_unit='m', unit='m', units_allowed=['m', 'ft'], store=True)
+        self.pm.register_parameter('altitude_lock', self.extra['module_name'], value=None)
         self.pm.register_parameter('reference_altitude', self.extra['module_name'], raw_unit='m', units_allowed=['m', 'ft'], store=True)
         self.pm.request_parameter("reference_altitude", self.extra["module_name"])
         self.pm.request_parameter("mean_sea_level_pressure", self.extra["module_name"])
@@ -60,6 +61,7 @@ class bmp280(plugin.plugin):
         if 'reference_altitude' not in self.pm.parameters:
             self.log.debug("reference_altitude doesn't exist yet in parameters", extra=self.extra)
             return
+
         # User editer mean_sea_level_pressure, use it and calculate reference_altitude
         if self.pm.parameters["mean_sea_level_pressure"]["value"] != self.mean_sea_level_pressure:
             self.log.debug("mean_sea_level_pressure changed to {}".format(self.pm.parameters['mean_sea_level_pressure']['value']), extra=self.extra)
@@ -113,7 +115,12 @@ class bmp280(plugin.plugin):
             self.pressure = self.kalman.value_estimate
             self.pm.parameters["pressure"]["value"] = self.pressure
             self.pm.parameters["pressure_nof"]["value"] = self.pressure_unfiltered
-            self.pm.parameters['altitude']['value'] = self.calculate_altitude(self.pm.parameters['pressure']['value'])
+
+            if self.pm.parameters["altitude_lock"]["value"]:
+                self.pm.parameters['altitude']['value'] = self.pm.parameters['reference_altitude']['value']
+            else:
+                self.pm.parameters['altitude']['value'] = self.calculate_altitude(self.pm.parameters['pressure']['value'])
+
             self.log.debug("pressure = {} [Pa], temperature = {} [C]".format(self.pm.parameters["pressure"]["value"], self.pm.parameters["temperature"]["value"]), extra=self.extra)
             try:
                 self.pm.parameters["pressure"]["value_min"] = min(self.pm.parameters["pressure"]["value"], self.pm.parameters["pressure"]["value_min"])
