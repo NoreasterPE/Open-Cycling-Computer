@@ -1,3 +1,13 @@
+v0.14
+- Add ds18b20 1-wire thermometer plugin
+- One-page-per-file layouts.
+- Add rel_origin option, abs_origin option in page definition. Allows more consistent definition or repeated elements
+- Add kalman filtered heart rate
+- Add BLE services/characteristics scanning & logging
+- Filter for devices providing required service, so user looking for heart rate BLE device won't see neighbour's TV set
+- Add text alignment on point. Text aligned "on point" will keep the point (comma or any rightmost non-digit) fixed
+- Code cleaning, formatting, typos, and hardening
+
 v0.13
 - More formats, units and layouts
 - BLE scanning and device selection
