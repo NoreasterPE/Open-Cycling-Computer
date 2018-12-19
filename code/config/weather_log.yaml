@@ -9,6 +9,10 @@ columns:
     description:  "Time"
     format: time
 
+  - name: external_temperature
+    parameter: external_temperature
+    description:  "Ext. Temp"
+
   - name: pressure
     parameter: pressure
     description:  "Pressure"
