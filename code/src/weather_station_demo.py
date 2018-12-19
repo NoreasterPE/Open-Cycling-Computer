@@ -9,18 +9,21 @@ import pyplum
 import layout
 
 
-# Uncomment the liste belog to get detailed info what's happening
+def set_up_screen_logging():
+    import logging
+    import sys
+    ex = {'module_name': 'weather'}
+    logging.getLogger('system').setLevel(logging.DEBUG)
+    sys_log_handler = logging.StreamHandler(sys.stdout)
+    sys_log_format = '%(asctime)-25s %(levelname)-10s %(module_name)-12s %(message)s'
+    sys_log_handler.setFormatter(logging.Formatter(sys_log_format))
+    logging.getLogger('system').addHandler(sys_log_handler)
+    sys_logger = logging.getLogger('system')
+    sys_logger.debug("Log start", extra=ex)
 
-#import logging
-#import sys
-#ex = {'module_name': 'weather'}
-#logging.getLogger('system').setLevel(logging.DEBUG)
-#sys_log_handler = logging.StreamHandler(sys.stdout)
-#sys_log_format = '%(asctime)-25s %(levelname)-10s %(module_name)-12s %(message)s'
-#sys_log_handler.setFormatter(logging.Formatter(sys_log_format))
-#logging.getLogger('system').addHandler(sys_log_handler)
-#sys_logger = logging.getLogger('system')
-#sys_logger.debug("Log start", extra=ex)
+
+# Uncomment the line below to get detailed info what's happening
+#set_up_screen_logging()
 
 p_manager = pyplum.pyplum()
 p_manager.register_parameter("display_size", value=(240, 320))
