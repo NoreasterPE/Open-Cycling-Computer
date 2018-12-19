@@ -109,6 +109,11 @@ class bmp280(plugin.plugin):
             if self.mean_sea_level_pressure is not None:
                 if math.isnan(self.mean_sea_level_pressure):
                     self.calculate_mean_sea_level_pressure()
+
+            # MSL Pressure needs to be recalculated after every measurement in altitude-lock mode
+            if self.pm.parameters['altitude_lock']['value']:
+                self.calculate_mean_sea_level_pressure()
+
             self.kalman.update_unfiltered_value(self.pressure_unfiltered)
             self.kalman.update()
             # self.pressure is required for test files
