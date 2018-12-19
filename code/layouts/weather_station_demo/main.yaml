@@ -11,7 +11,6 @@ font_size: 30
 text_colour: FFFFFF
 fields:
     - parameter: real_time
-      abs_origin: { x: 0, y: 0 }
       show: date
       format: date
       x: 120
@@ -48,13 +47,11 @@ fields:
       file: images/pressure_icon_32x32.png
 
     - parameter: mean_sea_level_pressure
-      rel_origin: { x: 0, y: 0 }
       format: "%.1f"
       x: 120
       y: 20
 
     - parameter: mean_sea_level_pressure
-      rel_origin: { x: 0, y: 0 }
       show: unit
       align: right
       x: 225
@@ -67,13 +64,11 @@ fields:
       file: images/temperature_icon_20x32.png
 
     - parameter: temperature
-      rel_origin: { x: 0, y: 0 }
       format: "%.1f"
       x: 120
       y: 20
 
     - parameter: temperature
-      rel_origin: { x: 0, y: 0 }
       show: unit
       align: right
       x: 225
@@ -86,13 +81,11 @@ fields:
       file: images/pressure_icon_32x32.png
 
     - parameter: pressure
-      rel_origin: { x: 0, y: 0 }
       format: "%.1f"
       x: 120
       y: 20
 
     - parameter: pressure
-      rel_origin: { x: 0, y: 0 }
       show: unit
       align: right
       x: 225
@@ -105,13 +98,11 @@ fields:
       file: images/altitude_icon_32x32.png
 
     - parameter: altitude
-      rel_origin: { x: 0, y: 0 }
       format: "%.1f"
       x: 120
       y: 20
 
     - parameter: altitude
-      rel_origin: { x: 0, y: 0 }
       show: unit
       align: right
       x: 225

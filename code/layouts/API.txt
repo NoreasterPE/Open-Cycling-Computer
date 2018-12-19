@@ -1,4 +1,6 @@
-This is a draft as API is not stable yet.
+This is a draft as the API is not stable yet.
+
+There has to be one page with id "page_0". this is the page that is shown by default.
 
 Layout structure:
 
@@ -22,16 +24,16 @@ Page header construction
 Field construction:
                 - parameter: session_time                           - mandatory, parameter name, for labels use 'label'
                   abs_origin|rel_origin                             - optional, absolute or relative position of all coordinates.
-									rel_origin add to previous position
+                                                                        rel_origin add to previous position
                   run: [plugin], [function]                         - optional, short click will run [function] from [plugin]
                   resettable: yes                                   - optional, indictes if parameter can be resetted, cannot be used editable
                   editable: yes                                     - optional, indictes if parameter can be edited, cannot be used with resetteble
                   editor_title: Odometer                            - editor title, required if editable is 'yes'
                   editor: editor_number                             - editor type, required if editable is 'yes'
                   format: hhmmss                                    - optional, format, options are: "%.1f" - normal python formatting
-									hhmmss 00:10:12, time, date, zoomed_digit (for editors)
+                                                                        hhmmss 00:10:12, time, date, zoomed_digit (for editors)
                   reset: avg, max                                   - optional, which fields should be resetted
-                  show: unit                                        - optional, what should be shown: unit, min, avg, max, tenths
+                  show: unit                                        - optional, what should be shown: unit, min, avg, max, tenths, date, time
                   align: left                                       - optional, center by default, left or right
                   x: 180                                            - optional, position x where the parameter should be rendered, defaults to 0
                   y: 225                                            - optional, position y where the parameter should be rendered, defaults to 0
