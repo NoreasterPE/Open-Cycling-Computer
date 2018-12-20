@@ -10,7 +10,7 @@ font: "Gidole-Regular.ttf"
 font_size: 20
 text_colour: FFFFFF
 fields:
-    - parameter: label
+    - parameter: label_1
       x: 60
       y: 15
       text: Wheel size
@@ -29,7 +29,7 @@ fields:
               w: 120
               h: 80
 
-    - parameter: label
+    - parameter: label_2
       x: 180
       y: 15
       text: Wheel circ.
@@ -59,7 +59,7 @@ fields:
       x: 235
       y: 50
 
-    - parameter: label
+    - parameter: label_3
       x: 180
       y: 95
       text: MSLP METAR
@@ -87,7 +87,7 @@ fields:
       x: 235
       y: 130
 
-    - parameter: label
+    - parameter: label_4
       x: 60
       y: 95
       text: Reference alt.
@@ -111,7 +111,7 @@ fields:
       x: 100
       y: 130
 
-    - parameter: label
+    - parameter: label_5
       x: 60
       y: 175
       text: Rider weight
@@ -135,7 +135,7 @@ fields:
       x: 100
       y: 210
 
-    - parameter: label
+    - parameter: label_6
       x: 60
       y: 255
       text: Spd/cadence
@@ -151,7 +151,7 @@ fields:
               w: 120
               h: 80
 
-    - parameter: label
+    - parameter: label_7
       x: 180
       y: 255
       text: Heart rate

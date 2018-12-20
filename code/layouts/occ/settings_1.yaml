@@ -43,11 +43,12 @@ fields:
               w: 120
               h: 80
 
-    - parameter: label
+    - parameter: label_1
       text: Write
       x: 180
       y: 110
-    - parameter: label
+
+    - parameter: label_2
       text: config
       x: 180
       y: 140
@@ -60,11 +61,12 @@ fields:
               w: 120
               h: 80
 
-    - parameter: label
+    - parameter: label_3
       text: Load
       x: 60
       y: 185
-    - parameter: label
+
+    - parameter: label_4
       text: layout
       x: 60
       y: 210
@@ -88,7 +90,7 @@ fields:
               w: 120
               h: 80
 
-    - parameter: label
+    - parameter: label_5
       x: 60
       y: 255
       text: Reference alt.
@@ -108,7 +110,7 @@ fields:
               w: 120
               h: 80
 
-    - parameter: label
+    - parameter: label_6
       text: Screenshots
       font_size: 20
       x: 180

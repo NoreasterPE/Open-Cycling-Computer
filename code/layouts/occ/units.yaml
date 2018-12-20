@@ -10,7 +10,7 @@ font: "Gidole-Regular.ttf"
 font_size: 20
 text_colour: FFFFFF
 fields:
-    - parameter: label
+    - parameter: label_1
       x: 60
       y: 15
       text: Speed
@@ -30,7 +30,7 @@ fields:
               w: 120
               h: 80
 
-    - parameter: label
+    - parameter: label_2
       x: 180
       y: 15
       text: Odometer
@@ -50,7 +50,7 @@ fields:
               w: 120
               h: 80
 
-    - parameter: label
+    - parameter: label_3
       x: 60
       y: 95
       text: Rider weight
@@ -70,7 +70,7 @@ fields:
               w: 120
               h: 80
 
-    - parameter: label
+    - parameter: label_4
       x: 180
       y: 95
       text: Temperature
@@ -90,7 +90,7 @@ fields:
               w: 120
               h: 80
 
-    - parameter: label
+    - parameter: label_5
       x: 60
       y: 175
       text: Slope
@@ -110,7 +110,7 @@ fields:
               w: 120
               h: 80
 
-    - parameter: label
+    - parameter: label_6
       x: 180
       y: 175
       text: Wheel circ.
@@ -130,7 +130,7 @@ fields:
               w: 120
               h: 80
 
-    - parameter: label
+    - parameter: label_7
       x: 60
       y: 255
       text: Pressure
@@ -150,7 +150,7 @@ fields:
               w: 120
               h: 80
 
-    - parameter: label
+    - parameter: label_8
       x: 180
       y: 255
       text: METAR Press.
