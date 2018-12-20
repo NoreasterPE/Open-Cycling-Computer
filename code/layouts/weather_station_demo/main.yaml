@@ -19,7 +19,8 @@ fields:
     - parameter: real_time
       show: time
       format: time
-      x: 110
+      align: point
+      x: 130
       y: 60
 
     - parameter: external_temperature
