@@ -64,13 +64,34 @@ class layout(threading.Thread):
         ## @var editor_fields
         #  Dict with data for editor pages.
         self.editor_fields = {}
+        ## @var page
+        #  Current page provided by layout_loader
+        self.page = None
+        ## @var ll
+        #  Layout loader instance
         self.ll = layout_loader.layout_loader()
-        self.ll.parse_page()
+        ## @var pages
+        #  Copy of all pages loaded by layout_loader
+        self.pages = self.ll.pages.copy()
+        self.use_page()
         ## @var schedule_display_refresh
         #  Control variable of the display refresh event. Set to True to stop calling generate_refresh_event
         self.schedule_display_refresh = True
         self.start()
         #FIXME timer and layout module are unstoppable ;-) to be fixed
+
+    def use_page(self, page_id="page_0"):
+        self.log.debug("switching to page {}".format(page_id), extra=self.extra)
+        self.pm.render['refresh'] = True
+        try:
+            self.page = self.pages[page_id]
+        except KeyError:
+            if page_id == 'page_0':
+                self.log.critical("Cannot load default page_0. Quitting.".format(page_id), extra=self.extra)
+                exit()
+            else:
+                self.log.critical("Cannot load page {}, loading start page".format(page_id), extra=self.extra)
+                self.use_page()
 
     def generate_refresh_event(self):
         if self.pm.event_queue is not None:
@@ -100,7 +121,7 @@ class layout(threading.Thread):
                     self.use_main_page()
                 if ev_type == 'reload_layout':
                     self.ll.load_layout()
-                    self.ll.parse_page()
+                    self.use_page()
                 if ev_type == 'preload_image':
                     image_file = event[1]
                     self.ll.load_image(image_file)
@@ -148,16 +169,16 @@ class layout(threading.Thread):
             self.pm.render['hold'] = False
 
     def use_main_page(self):
-        self.ll.parse_page()
+        self.use_page()
 
     def render_background(self):
-        if self.ll.background_colour is not None:
-            r = self.ll.background_colour[0]
-            g = self.ll.background_colour[1]
-            b = self.ll.background_colour[2]
+        if self.page['background_colour'] is not None:
+            r = self.page['background_colour'][0]
+            g = self.page['background_colour'][1]
+            b = self.page['background_colour'][2]
             self.ctx.set_source_rgb(r, g, b)
-        if self.ll.background_image is not None:
-            self.ctx.set_source_surface(self.ll.background_image, 0, 0)
+        if self.page['background_image'] is not None:
+            self.ctx.set_source_surface(self.page['background_image'], 0, 0)
         self.ctx.rectangle(0, 0, self.width, self.height)
         self.ctx.fill()
 
@@ -165,7 +186,7 @@ class layout(threading.Thread):
         self.render_background()
         # LAYOUT DEBUG FUNCION
         #self.render_all_buttons()
-        if self.ll.current_page['fields'] is not None:
+        if self.page['fields'] is not None:
             self.render_layout()
         self.pm.render['refresh'] = True
 
@@ -177,15 +198,10 @@ class layout(threading.Thread):
         self.value = num.sanitise(value)
 
     def render_layout(self):
-        #FIXME Hack, to be removed when parsing and rendering is split properly
-        self.ll.abs_origin = dict(x=0, y=0)
-        self.ll.rel_origin = dict(x=0, y=0)
-        for meta_name, field in self.ll.current_page['fields'].items():
+        for meta_name, field in self.page['fields'].items():
             self.value = None
             parameter = field['parameter']
-            self.ll.get_position(field)
-            self.pos_x = self.ll.origin['x']
-            self.pos_y = self.ll.origin['y']
+            self.pos_x, self.pos_y = field['origin']
             # Get "show" field and get parameter value using it
             try:
                 show = field["show"]
@@ -238,7 +254,7 @@ class layout(threading.Thread):
                 self.fs = field['font_size']
             except KeyError:
                 # Fall back to page font size
-                self.fs = self.ll.page_font_size
+                self.fs = self.page['font_size']
             self.ctx.set_font_size(self.fs)
 
             # Get text alignment or if it's not defined use center
@@ -261,7 +277,7 @@ class layout(threading.Thread):
     def get_parameter_value(self, show, parameter):
         if show == "value":
             # For editors use parameter value from editor_fields
-            if self.ll.current_page["type"] == "editor":
+            if self.page["type"] == "editor":
                 try:
                     self.value = self.editor_fields[parameter]
                     if type(self.value) is tuple:
@@ -358,7 +374,7 @@ class layout(threading.Thread):
 
     def render_all_buttons(self):
         # LAYOUT DEBUG FUNCION
-        for parameter, r in self.ll.button_rectangles.items():
+        for parameter, r in self.page['button_rectangles'].items():
             fr = r[1]
             self.ctx.set_source_rgb(0.0, 1.0, 0.0)
             self.ctx.rectangle(fr[0], fr[1], fr[2], fr[3])
@@ -369,13 +385,13 @@ class layout(threading.Thread):
             self.ctx.stroke()
 
     def render_pressed_button(self, pressed_pos):
-        if self.ctx is None or self.ll.buttons_image is None:
+        if self.ctx is None or self.page['buttons_image'] is None:
             return
         self.log.debug("render_pressed_button started", extra=self.extra)
-        for parameter, r in self.ll.button_rectangles.items():
+        for parameter, r in self.page['button_rectangles'].items():
             if self.point_in_rect(pressed_pos, r[1]):
                 fr = r[1]
-                self.ctx.set_source_surface(self.ll.buttons_image, 0, 0)
+                self.ctx.set_source_surface(self.page['buttons_image'], 0, 0)
                 self.ctx.rectangle(fr[0], fr[1], fr[2], fr[3])
                 self.ctx.fill()
         self.pm.render['refresh'] = True
@@ -383,17 +399,17 @@ class layout(threading.Thread):
 
     def check_click(self, position, click):
         if click == 'SHORT':
-            for parameter, r in self.ll.button_rectangles.items():
+            for parameter, r in self.page['button_rectangles'].items():
                 if self.point_in_rect(position, r[1]):
                     self.log.debug("CLICK on {} {}".format(parameter, r), extra=self.extra)
-                    field = self.ll.current_page['fields'][parameter]
+                    field = self.page['fields'][parameter]
                     self.parse_short_click(field)
             self.pm.render['refresh'] = True
         elif click == 'LONG':
-            for parameter, r in self.ll.button_rectangles.items():
+            for parameter, r in self.page['button_rectangles'].items():
                 if self.point_in_rect(position, r[1]):
                     self.log.debug("LONG CLICK on {} {}".format(parameter, r), extra=self.extra)
-                    field = self.ll.current_page['fields'][parameter]
+                    field = self.page['fields'][parameter]
                     self.parse_long_click(field, r[0])
         elif click == 'R_TO_L':  # Swipe RIGHT to LEFT
             self.next_page()
@@ -402,7 +418,7 @@ class layout(threading.Thread):
         elif click == 'B_TO_T':  # Swipe BOTTOM to TOP
             self.use_main_page()
         elif click == 'T_TO_B':  # Swipe TOP to BOTTOM
-            self.ll.parse_page("settings_0")
+            self.use_page("settings_0")
 
     def parse_short_click(self, field):
         self.call_plugin_method(field, 'short_click')
@@ -522,21 +538,21 @@ class layout(threading.Thread):
         else:
             self.log.critical("Unknown editor {} called for parameter {}, ignoring".format(self.editor_fields["editor"], self.editor_fields["parameter"]), extra=self.extra)
             return
-        self.ll.parse_page(self.editor_fields["editor"])
+        self.use_page(self.editor_fields["editor"])
 
     def next_page(self):
         # Editor is a special page - it cannot be switched, only cancel or accept
-        if not self.ll.current_page['type'] == 'editor':
+        if not self.page['type'] == 'editor':
             try:
-                self.ll.parse_page(self.ll.current_page['right'])
+                self.use_page(self.page['right'])
             except KeyError:
                 pass
 
     def prev_page(self):
         # Editor is a special page - it cannot be switched, only cancel or accept
-        if not self.ll.current_page['type'] == 'editor':
+        if not self.page['type'] == 'editor':
             try:
-                self.ll.parse_page(self.ll.current_page['left'])
+                self.use_page(self.page['left'])
             except KeyError:
                 pass
 

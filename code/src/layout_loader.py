@@ -41,12 +41,12 @@ class layout_loader():
         ## @var pages
         #  Dict with parsed pages from layout file.
         self.pages = {}
-        ## @var button_rectangles
-        #  Dict with buttons. Parsed for layout file
-        self.button_rectangles = {}
         ## @var font_face_set
         #  Indicates if cairo font has been initialised.
         self.font_initialised = False
+        ## @var font_face
+        #  Font face
+        self.font_face = None
         ## @var abs_origin
         #  Current absolute origin coordinates used to place graphisc/text on cairo surface
         self.abs_origin = dict(x=0, y=0)
@@ -54,7 +54,7 @@ class layout_loader():
         #  Current relative origin coordinates used to place graphisc/text on cairo surface
         self.rel_origin = dict(x=0, y=0)
         self.load_layout_from_location()
-        self.parse_page()
+        #self.parse_page()
 
     ## Loads layout from a location (directory with one page per file or file woith all pages) and parses the content into self.pages
     #  @param self The python object self
@@ -80,19 +80,84 @@ class layout_loader():
         self.images = {}
         self.pages = {}
         for page_id, page in self.layout_tree['pages'].items():
-            if 'type' not in page:
-                page['type'] = None
-            self.pages[page_id] = page
+            self.pages[page_id] = collections.OrderedDict()
+            self.pages[page_id]['top'] = None
+            self.pages[page_id]['botton'] = None
+            self.pages[page_id]['left'] = None
+            self.pages[page_id]['right'] = None
+            self.pages[page_id]['fields'] = collections.OrderedDict()
+            self.pages[page_id]['button_rectangles'] = collections.OrderedDict()
+            abs_x = 0
+            abs_y = 0
+            rel_x = 0
+            rel_y = 0
+            page_fields = collections.OrderedDict()
+            self.pages[page_id]['name'] = None
+            self.pages[page_id]['type'] = None
+            self.pages[page_id]['background_image'] = None
+            self.pages[page_id]['buttons_image'] = None
+            self.pages[page_id]['background_colour'] = (0, 0, 0)
+            self.pages[page_id]['text_colour'] = (255, 255, 255)
+            self.pages[page_id]['font'] = None
+            self.pages[page_id]['font_size'] = 18
             try:
-                fields = page['fields']
-                del page['fields']
-                self.pages[page_id]['fields'] = collections.OrderedDict()
-                for f in fields:
-                    meta_name = self.get_meta_name(f)
-                    if meta_name in page['fields']:
-                        #field already in the ordered dict, add location
-                        meta_name = meta_name + '-' + format(f['x']) + '-' + format(f['y'])
-                    self.pages[page_id]['fields'][meta_name] = f
+                if 'name' in page:
+                    self.pages[page_id]['name'] = page['name']
+                if 'type' in page:
+                    self.pages[page_id]['type'] = page['type']
+                if 'background_image' in page:
+                    self.pages[page_id]['background_image'] = self.load_image(page['background_image'])
+                if 'buttons_image' in page:
+                    self.pages[page_id]['buttons_image'] = self.load_image(page['buttons_image'])
+                if 'background_colour' in page:
+                    self.pages[page_id]['background_colour'] = self.parse_background_colour()
+                if 'text_colour' in page:
+                    self.pages[page_id]['text_colour'] = self.parse_text_colour(page['text_colour'])
+                if 'up' in page:
+                    self.pages[page_id]['up'] = page['up']
+                if 'down' in page:
+                    self.pages[page_id]['down'] = page['down']
+                if 'left' in page:
+                    self.pages[page_id]['left'] = page['left']
+                if 'right' in page:
+                    self.pages[page_id]['right'] = page['right']
+                if 'font' in page:
+                    self.pages[page_id]['font'], self.pages[page_id]['font_size'] = self.parse_font(page['font'], page['font_size'])
+                    if not self.font_initialised:
+                        self.initialise_font(self.pages[page_id]['font'])
+
+                if page['fields'] is not None:
+                    for f in page['fields']:
+                        meta_name = self.get_meta_name(f)
+                        if meta_name in page['fields']:
+                            #field already in the ordered dict, add location
+                            meta_name = meta_name + '-' + format(f['x']) + '-' + format(f['y'])
+                        page_fields[meta_name] = f
+                        if ('abs_origin' in f):
+                            abs_x = f['abs_origin']['x']
+                            abs_y = f['abs_origin']['y']
+                            del page_fields[meta_name]['abs_origin']
+                        if ('rel_origin' in f):
+                            rel_x = f['rel_origin']['x']
+                            rel_y = f['rel_origin']['y']
+                            abs_x += rel_x
+                            abs_y += rel_y
+                            del page_fields[meta_name]['rel_origin']
+                        if ('x' in f) and ('y' in f):
+                            x = f['x']
+                            y = f['y']
+                            del page_fields[meta_name]['x']
+                            del page_fields[meta_name]['y']
+                        else:
+                            x = 0
+                            y = 0
+                        page_fields[meta_name]['origin'] = (abs_x + x, abs_y + y)
+                        button_rect = self.button_rect_from_layout(f)
+                        if button_rect is not None:
+                            button_rect[0] += abs_x
+                            button_rect[1] += abs_y
+                        self.pages[page_id]['button_rectangles'][meta_name] = (f['parameter'], button_rect)
+                    self.pages[page_id]['fields'] = page_fields
             except TypeError as e:
                 self.log.error("Error while converting layout {}: {}.".format(page_id, str(e)), extra=self.extra)
 
@@ -111,71 +176,29 @@ class layout_loader():
             quit()
         return layout_tree
 
-    def parse_font(self):
-        self.font = self.current_page['font']
-        if self.font == '':
-            self.log.critical("Page font found, but it's empry string. font field is mandatory.".format(self.current_page), extra=self.extra)
+    def parse_font(self, font_entry, font_size_entry):
+        # FIXME more advanced check required
+        font = font_entry
+        if font == '':
+            self.log.critical("Page font found, but it's empry string. font field is mandatory.", extra=self.extra)
         try:
-            self.page_font_size = self.current_page['font_size']
+            page_font_size = font_size_entry
         except KeyError:
             self.log.critical("Page font size not found on page {}. font_size field is mandatory. Defaulting to 18".format(self.current_page), extra=self.extra)
-            self.page_font_size = 18
-        return (self.font, self.page_font_size)
+            page_font_size = 18
+        return (font, page_font_size)
 
-    def initialise_font(self):
+    def initialise_font(self, font):
         try:
             # Only one font is allowed for now due to cairo helper workaround.
-            self.log.debug("Calling cairo_helper for {}".format(self.fonts_dir + self.font), extra=self.extra)
-            self.font_face = create_cairo_font_face_for_file(self.fonts_dir + self.font, 0)
+            self.log.debug("Calling cairo_helper for {}".format(self.fonts_dir + font), extra=self.extra)
+            self.font_face = create_cairo_font_face_for_file(self.fonts_dir + font, 0)
             self.font_initialised = True
         except AttributeError:
             pass
 
-    def parse_page(self, page_id="page_0"):
-        self.log.debug("parse_page {}".format(page_id), extra=self.extra)
-        self.abs_origin = dict(x=0, y=0)
-        self.rel_origin = dict(x=0, y=0)
-        self.pm.render['refresh'] = True
-        try:
-            self.current_page = self.pages[page_id]
-        except KeyError:
-            if page_id == 'page_0':
-                self.log.critical("Cannot load default page_0. Quitting.".format(page_id), extra=self.extra)
-                exit()
-            else:
-                self.log.critical("Cannot load page {}, loading start page".format(page_id), extra=self.extra)
-                self.parse_page()
-
-        self.background_image = None
-        if 'background_image' in self.current_page:
-            self.background_image = self.load_image(self.current_page['background_image'])
-
-        self.buttons_image = None
-        if 'buttons_image' in self.current_page:
-            self.buttons_image = self.load_image(self.current_page['buttons_image'])
-
-        self.background_colour = None
-        if 'background_colour' in self.current_page:
-            self.background_colour = self.parse_background_colour()
-
-        self.font = None
-        if 'font' in self.current_page:
-            self.font, self.font_size = self.parse_font()
-        if not self.font_initialised:
-            self.initialise_font()
-
-        self.text_colour = None
-        if 'text_colour' in self.current_page:
-            self.text_colour = self.parse_text_colour()
-
-        self.button_rectangles = {}
-        if self.current_page['fields'] is not None:
-            for parameter, field in self.current_page['fields'].items():
-                self.get_position(field)
-                self.parse_parameter(field)
-
-    def parse_text_colour(self):
-        self.text_colour_rgb = self.current_page['text_colour']
+    def parse_text_colour(self, colour_entry):
+        self.text_colour_rgb = colour_entry
         text_colour_rgb = self.text_colour_rgb
         if text_colour_rgb[0] == '#':
             text_colour_rgb = text_colour_rgb[1:]
@@ -194,26 +217,19 @@ class layout_loader():
         self.background_colour = (r, g, b)
         return self.background_colour
 
-    def parse_parameter(self, field):
-        try:
-            name = field['parameter']
-        except KeyError:
-            self.log.critical("Parameter {} on page {}. Parameter field is mandatory.".format(name, self.current_page), extra=self.extra)
-            name = None
-        meta_name = self.get_meta_name(field)
-        try:
+    def button_rect_from_layout(self, field):
+        rect = None
+        if 'button' in field:
             b = field['button']
             try:
-                rect = (self.abs_origin['x'] + self.rel_origin['x'] + int(b['x0']),
-                        self.abs_origin['y'] + self.rel_origin['y'] + int(b['y0']),
+                rect = [int(b['x0']),
+                        int(b['y0']),
                         int(b['w']),
-                        int(b['h']))
+                        int(b['h'])]
             except KeyError:
-                self.log.error("Button field present, but invalid x0, y0, w or b detected at parameter {} on page {}.".format(name, self.current_page), extra=self.extra)
-                self.log.error("Button for {} won't work.".format(name), extra=self.extra)
-            self.button_rectangles[meta_name] = (name, rect)
-        except KeyError:
-            pass
+                self.log.error("Button field present, but invalid x0, y0, w or b detected at parameter {}.".format(field['parameter']), extra=self.extra)
+                self.log.error("Button for {} won't work.".format(field['parameter']), extra=self.extra)
+        return rect
 
     def format_parameter(self, format_field, parameter, value):
         format_string = self.get_format_string(format_field, parameter)
@@ -262,29 +278,6 @@ class layout_loader():
     def png_to_cairo_surface(self, file_path):
         png_surface = cairo.ImageSurface.create_from_png(file_path)
         return png_surface
-
-    def get_position(self, field):
-        try:
-            self.abs_origin = field['abs_origin']
-            self.rel_origin = dict(x=0, y=0)
-        except KeyError:
-            pass
-        try:
-            ro = field['rel_origin']
-            self.rel_origin = dict(x=self.rel_origin.get('x') + ro.get('x'),
-                                   y=self.rel_origin.get('y') + ro.get('y'))
-        except KeyError:
-            pass
-        try:
-            x = field['x']
-        except KeyError:
-            x = 0
-        try:
-            y = field['y']
-        except KeyError:
-            y = 0
-        self.origin = dict(x=self.abs_origin.get('x') + self.rel_origin.get('x') + x,
-                           y=self.abs_origin.get('y') + self.rel_origin.get('y') + y)
 
     def get_meta_name(self, field):
         try:
