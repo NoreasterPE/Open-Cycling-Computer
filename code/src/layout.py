@@ -272,7 +272,7 @@ class layout(threading.Thread):
                 self.scale = 1.4
                 self.render_zoomed_digit_text()
             else:
-                self.text_to_surface(self.value, self.pos_x + shift_x, self.pos_y + self.shift_y, self.ll.text_colour)
+                self.text_to_surface(self.value, self.pos_x + shift_x, self.pos_y + self.shift_y, self.page['text_colour'])
 
     def get_parameter_value(self, show, parameter):
         if show == "value":
@@ -347,7 +347,7 @@ class layout(threading.Thread):
         # Render all parts of the text to the surface
         for text, align, shift in zip(self.split_text, ('right', 'center', 'left'), (-1 * width, 0, width)):
             shift_x = self.calculate_x_shift(align, text)
-            self.text_to_surface(text, self.pos_x + shift_x + shift, self.pos_y + self.shift_y, self.ll.text_colour)
+            self.text_to_surface(text, self.pos_x + shift_x + shift, self.pos_y + self.shift_y, self.page['text_colour'])
 
     def render_zoomed_digit_text(self):
         self.value = self.editor_fields["value"]
@@ -369,8 +369,8 @@ class layout(threading.Thread):
 
         self.text_to_surface(rv2, rv2_x, self.pos_y + self.scale * self.shift_y, (1.0, 0.0, 0.0))
         self.ctx.set_font_size(self.fs)
-        self.text_to_surface(rv1, rv1_x, self.pos_y + self.shift_y, self.ll.text_colour)
-        self.text_to_surface(rv3, rv3_x, self.pos_y + self.shift_y, self.ll.text_colour)
+        self.text_to_surface(rv1, rv1_x, self.pos_y + self.shift_y, self.page['text_colour'])
+        self.text_to_surface(rv3, rv3_x, self.pos_y + self.shift_y, self.page['text_colour'])
 
     def render_all_buttons(self):
         # LAYOUT DEBUG FUNCION
