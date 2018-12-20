@@ -1,18 +1,19 @@
 This is a draft as the API is not stable yet.
 
 There has to be one page with id "page_0". this is the page that is shown by default.
+Using non-unique parameter names (i.e. temperature_icon twice) will lead to ignoring the first entry
 
 Layout structure:
 
 pages: - top level
 Page header construction
-       - name: Main                                                 - page name
+       - name: Main                                                 - (optional) page name
+         id: page_0                                                 - (mandarory, unique) page id
          up: settings_0                                             - swiping top-to-bottom switches to page with this page_id
          down: settings_0                                           - swiping bottom-to-top switches to page with this page_id
          left: page_1                                               - swiping left-to-right switches to page with this page_id
          right: page_2                                              - swiping right-to-left switches to page with this page_id
-         id: page_0                                                 - page id   
-         type: normal                                               - optional, page type, use 'editor' to disable swiping out ot the page
+         type: normal                                               - (optional) page type, use 'editor' to disable swiping out ot the page
          background: images/page_0_background.png                   - background image or None for black background
          buttons: images/button_pressed.png                         - image with button, rendered when button is pressed
          font: "Gidole-Regular.ttf"                                 - page font, currently only one font per layout is allowed due to
@@ -22,22 +23,22 @@ Page header construction
          fields:                                                    - begining of section with field definitions
 
 Field construction:
-                - parameter: session_time                           - mandatory, parameter name, for labels use 'label'
-                  abs_origin|rel_origin                             - optional, absolute or relative position of all coordinates.
+                - parameter: session_time                           - (mandatory, unique) parameter name, for labels use 'label'
+                  abs_origin|rel_origin                             - (optional) absolute or relative position of all coordinates.
                                                                         rel_origin add to previous position
-                  run: [plugin], [function]                         - optional, short click will run [function] from [plugin]
-                  resettable: yes                                   - optional, indictes if parameter can be resetted, cannot be used editable
-                  editable: yes                                     - optional, indictes if parameter can be edited, cannot be used with resetteble
+                  run: [plugin], [function]                         - (optional) short click will run [function] from [plugin]
+                  resettable: yes                                   - (optional) indictes if parameter can be resetted, cannot be used editable
+                  editable: yes                                     - (optional) indictes if parameter can be edited, cannot be used with resetteble
                   editor_title: Odometer                            - editor title, required if editable is 'yes'
                   editor: editor_number                             - editor type, required if editable is 'yes'
-                  format: hhmmss                                    - optional, format, options are: "%.1f" - normal python formatting
+                  format: hhmmss                                    - (optional) format, options are: "%.1f" - normal python formatting
                                                                         hhmmss 00:10:12, time, date, zoomed_digit (for editors)
-                  reset: avg, max                                   - optional, which fields should be resetted
-                  show: unit                                        - optional, what should be shown: unit, min, avg, max, tenths, date, time
-                  align: left                                       - optional, center by default, left or right
-                  x: 180                                            - optional, position x where the parameter should be rendered, defaults to 0
-                  y: 225                                            - optional, position y where the parameter should be rendered, defaults to 0
-                  font_size: 30                                     - optional, font_size, defaults to page font size
+                  reset: avg, max                                   - (optional) which fields should be resetted
+                  show: unit                                        - (optional) what should be shown: unit, min, avg, max, tenths, date, time
+                  align: left                                       - (optional) center by default, left or right
+                  x: 180                                            - (optional) position x where the parameter should be rendered, defaults to 0
+                  y: 225                                            - (optional) position y where the parameter should be rendered, defaults to 0
+                  font_size: 30                                     - (optional) font_size, defaults to page font size
                   button                                            - for editable or resettable parameters area of button:
                           x0: 120                                   - x
                           y0: 160                                   - y

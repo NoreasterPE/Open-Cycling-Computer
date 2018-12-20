@@ -16,6 +16,7 @@ CODING STYLE:
 - consider splitting layout into one-page-per-file
 
 REAL WORLD PROBLEMS:
+- swipe left-to-right and right-to-left are swapped
 - possible stats: ble device connected, but ble_sensor treats is as disconnected with addr = None. That device doesn't show in ble scan
 - add date editor
 - add time editor
