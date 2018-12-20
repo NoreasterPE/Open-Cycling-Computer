@@ -13,20 +13,20 @@ fields:
     - parameter: real_time
       show: date
       format: date
-      x: 120
+      x: 110
       y: 20
 
     - parameter: real_time
       show: time
       format: time
-      x: 120
+      x: 110
       y: 60
 
     - parameter: external_temperature
       rel_origin: { x: 0, y: 80 }
       format: "%.1f"
       font_size: 60
-      x: 120
+      x: 110
       y: 40
 
     - parameter: external_temperature_icon
@@ -48,7 +48,7 @@ fields:
 
     - parameter: mean_sea_level_pressure
       format: "%.1f"
-      x: 120
+      x: 110
       y: 20
 
     - parameter: mean_sea_level_pressure
@@ -65,7 +65,7 @@ fields:
 
     - parameter: temperature
       format: "%.1f"
-      x: 120
+      x: 110
       y: 20
 
     - parameter: temperature
@@ -82,7 +82,7 @@ fields:
 
     - parameter: pressure
       format: "%.1f"
-      x: 120
+      x: 110
       y: 20
 
     - parameter: pressure
@@ -99,7 +99,7 @@ fields:
 
     - parameter: altitude
       format: "%.1f"
-      x: 120
+      x: 110
       y: 20
 
     - parameter: altitude
