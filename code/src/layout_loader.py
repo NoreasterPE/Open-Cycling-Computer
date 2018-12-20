@@ -124,6 +124,7 @@ class layout_loader():
                 if 'font' in page:
                     self.pages[page_id]['font'], self.pages[page_id]['font_size'] = self.parse_font(page['font'], page['font_size'])
                     if not self.font_initialised:
+                        #FIXME Move to layout.py?
                         self.initialise_font(self.pages[page_id]['font'])
 
                 if page['fields'] is not None:
@@ -189,6 +190,7 @@ class layout_loader():
         return (font, page_font_size)
 
     def initialise_font(self, font):
+        #FIXME Move to layout.py?
         try:
             # Only one font is allowed for now due to cairo helper workaround.
             self.log.debug("Calling cairo_helper for {}".format(self.fonts_dir + font), extra=self.extra)
