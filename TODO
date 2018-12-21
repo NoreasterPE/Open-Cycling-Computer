@@ -13,7 +13,6 @@ CODING STYLE:
 - some "available" function to check if a parameter is present and has a meaningful value (not None, not NAN). Used to safe guard math calcs
 - keep ble delegates as lean as possible - they are transient. That should keep the code cleaner
 - define rules for different log levels
-- consider splitting layout into one-page-per-file
 
 REAL WORLD PROBLEMS:
 - swipe left-to-right and right-to-left are swapped
@@ -287,3 +286,4 @@ TypeError: argument 1 must be pygame.Surface, not None
 158. [DONE] - method to preload overlay images - it's shaky sometimes
 159. [DONE] - Average cadence to be calculated for ride time (reset with ride time?) {independent reset}
 160. [DONE] - proper command line argument parsing in occ.py
+161. [DONE] - consider splitting layout into one-page-per-file
