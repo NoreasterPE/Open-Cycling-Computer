@@ -4,7 +4,6 @@ None
 UI
 - Fix icon lines width - it's not consistent
 - use transparent background for all icons
-- add editing reference altitude units
 
 CODING STYLE:
 - split layout parsing and rendering [IN PROGRESS]
@@ -15,6 +14,8 @@ CODING STYLE:
 - define rules for different log levels
 
 REAL WORLD PROBLEMS:
+- add module to handle inpuit form push button rotary encoder (pbre_input). Cheap touchscreen won't work in wet/cold environment
+- adjust layouts to work with next, prev, click, long click set of possible events (pbre_input)
 - swipe left-to-right and right-to-left are swapped
 - possible stats: ble device connected, but ble_sensor treats is as disconnected with addr = None. That device doesn't show in ble scan
 - add date editor
@@ -44,8 +45,9 @@ CODE ERRORS:
 - Average cadence and heart rate are invalid [IN PROGRESS, NEEDS TESTING]
 
 HARDWARE:
-- Add backlight control
+- Add backlight control {not possible with current piTFT I have)
 - accelerometer + kalman filter could improve altitude drift control
+- jog dial + switch or 6 push buttons will be required. Cheap touchscreen is not any goot for wet & cold weater
 
 OPTIONAL:
 - events/rendering module as plugin would allow to do simulation on a different hardware i.e. in GTK window [IN PROGRESS, gtk_rendering plugin]
@@ -287,3 +289,4 @@ TypeError: argument 1 must be pygame.Surface, not None
 160. [DONE] - proper command line argument parsing in occ.py
 161. [DONE] - consider splitting layout into one-page-per-file
 162. [DONE] - add text colours to layout for individual parameters
+163. [DONE] - add editing reference altitude units
