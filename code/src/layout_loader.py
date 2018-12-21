@@ -153,6 +153,10 @@ class layout_loader():
                             x = 0
                             y = 0
                         page_fields[meta_name]['origin'] = (abs_x + x, abs_y + y)
+
+                        if 'text_colour' in f:
+                            page_fields[meta_name]['text_colour'] = self.parse_text_colour(f['text_colour'])
+
                         button_rect = self.button_rect_from_layout(f)
                         if button_rect is not None:
                             button_rect[0] += abs_x
@@ -200,6 +204,7 @@ class layout_loader():
             pass
 
     def parse_text_colour(self, colour_entry):
+        #FIXME clean code
         self.text_colour_rgb = colour_entry
         text_colour_rgb = self.text_colour_rgb
         if text_colour_rgb[0] == '#':

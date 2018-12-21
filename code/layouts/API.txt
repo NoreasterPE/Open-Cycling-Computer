@@ -33,6 +33,7 @@ Field construction:
                   editor: editor_number                             - editor type, required if editable is 'yes'
                   format: hhmmss                                    - (optional) format, options are: "%.1f" - normal python formatting
                                                                         hhmmss 00:10:12, time, date, zoomed_digit (for editors)
+                  text_colour: FFFFFF                               - (optional) text colour, RRGGBB, defaults to text colour from page
                   reset: avg, max                                   - (optional) which fields should be resetted
                   show: unit                                        - (optional) what should be shown: unit, min, avg, max, tenths, date, time
                   align: left                                       - (optional) center by default, left or right

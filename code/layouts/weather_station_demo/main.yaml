@@ -24,6 +24,7 @@ fields:
       y: 60
 
     - parameter: external_temperature
+      text_colour: 0000FF
       rel_origin: { x: 0, y: 80 }
       format: "%.1f"
       font_size: 60
